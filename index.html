@@ -2870,28 +2870,7 @@ const DB = [
 // ---------- نهاية إضافة النباتات الطبية والعطرية ----------
 
   // ========== المحاصيل الحقلية (صور محسنة) ==========
-  {id:"c1",name:"قمح",nameEn:"Wheat",nameSci:"Triticum aestivum",cat:"fieldcrops",sub:"حبوب",
-   img:"https://i.dzs.cloud/www.echoroukonline.com/wp-content/uploads/2021/03/colza.jpg?resize=1580,888.75",
-   tags:["شتوي","استراتيجي","غذاء رئيسي"],diff:2,pop:99,featured:true,export:false,
-   ov:"القمح المحصول الاستراتيجي الأول في مصر. يزرع في الأراضي القديمة والجديدة، وتعمل الدولة على زيادة الإنتاجية لتقليل الفجوة الغذائية.",
-   soil:{type:"طينية جيدة الصرف",ph:7,drain:"جيد"},climate:{tmin:5,tmax:35,tideal:"15–25°م",humid:"40–60%",sun:"8 ساعات"},
-   regions:["الدقهلية","الشرقية","المنوفية","الغربية","الفيوم"],
-   plant:{s1:{name:"شتوي",months:"نوفمبر–ديسمبر"},best:"نوفمبر"},
-   space:{rows:15,plants:10,depth:5,ppf:400000},seeds:{qty:"60–80 كجم/فدان",germ:"5–10 أيام",age:"مباشر"},
-   stages:[{s:"إنبات",d:"5–10"},{s:"تفريع",d:"30–50"},{s:"استطالة",d:"30–40"},{s:"تزهير",d:"10–15"},{s:"نضج",d:"30–40"}],
-   period:"150–170 يوم",yield:"18–25 أردب/فدان (1 أردب = 150 كجم)",
-   irr:{method:"ري بالغمر أو تنقيط",winter:"كل 10–15 يوم",flower:"كل 10–12 يوم",total:"3500–4500 م³/موسم",crit:["التفريع – ري منتظم","التزهير – ري حرج"],stop:"قبل الحصاد بأسبوعين"},
-   fert:{pre:"150 كجم سوبر فوسفات",sched:[{t:"الزراعة",tp:"P",qty:"150 كجم",m:"أرضي",p:"سوبر فوسفات"},{t:"الرية الأولى",tp:"N",qty:"60 وحدة",m:"أرضي",p:"يوريا"},{t:"الرية الثانية",tp:"N",qty:"40 وحدة",m:"أرضي",p:"يوريا"}],
-    total:{N:"100–120",P:"60–80",K:"50–70"},def:{N:"اصفرار الأوراق",P:"ضعف التفريع"}},
-   diseases:[{name:"الصدأ الأصفر",sci:"Puccinia striiformis",type:"فطري",symp:{e:"خطوط صفراء",a:"جفاف"},prev:["أصناف مقاومة","رش وقائي"],treat:{chem:[{p:"تيبوكونازول",d:"0.5 مل/لتر",int:"كل 10 أيام"}]},sev:"خطير"}],
-   pests:[{name:"المن",type:"حشري",damage:"يمتص العصارة",treat:"إيمداكلوبريد",sev:"متوسط"}],
-   pest:["تيبوكونازول","إيمداكلوبريد"],
-   harvest:{signs:["اصفرار السنابل","صلابة الحبوب"],method:"كومباين",time:"الصباح",intv:"دفعة واحدة",post:{temp:"12–15°م",life:"سنة"}},
-   nutri:{p100:{"كربوهيدرات":"71 جم","بروتين":"13 جم","ألياف":"12 جم"},ben:["مصدر أساسي للطاقة","غني بفيتامينات B"]},
-   econ:{costs:"8000–12000 جنيه/فدان",rev:"10,000–20,000 جنيه",profit:"2,000–8,000 جنيه",best:"أبريل–مايو",markets:["شركات المطاحن","المحليات"]},
-   vars:[{name:"سخا 95",co:"محلي",y:"20–25 أردب",for:"استراتيجي"},{name:"جيزة 171",co:"محلي",y:"18–22 أردب",for:"جودة عالية"}],
-   tips:["الزراعة في موعدها المثالي تزيد الإنتاج 30%","الري في مرحلة التفريع مهم جداً","الرش بمبيدات الصدأ الوقائية ضرورية"]},
-  {id:"c2",name:"ذرة",nameEn:"Corn",nameSci:"Zea mays",cat:"fieldcrops",sub:"حبوب",
+   {id:"c2",name:"ذرة",nameEn:"Corn",nameSci:"Zea mays",cat:"fieldcrops",sub:"حبوب",
    img:"https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=600&q=80",
    tags:["صيفي","علف","غذاء"],diff:2,pop:95,featured:true,export:false,
    ov:"الذرة الشامية محصول صيفي مهم، يستخدم للحبوب والعلف الأخضر. مصر من أكبر منتجي الذرة في المنطقة، وتستخدم في صناعة الأعلاف والزيوت.",
@@ -2916,7 +2895,7 @@ const DB = [
 // ---------- 30 محصول حقلي اقتصادي (وزارة الزراعة ومركز البحوث) ----------
 {
   id: "fld1", name: "قمح", nameEn: "Wheat", nameSci: "Triticum aestivum", cat: "fieldcrops", sub: "حبوب",
-  img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Wheat_field.jpg/640px-Wheat_field.jpg",
+  img : "   ",
   tags: ["شتوي", "استراتيجي", "خبز"], diff: 2, pop: 99, featured: true, export: false,
   ov: "القمح المحصول الاستراتيجي الأول في مصر. يزرع في الأراضي القديمة والجديدة، وتعمل الدولة على زيادة الإنتاجية لتقليل الفجوة الغذائية. موسم الزراعة نوفمبر-ديسمبر.",
   soil: { type: "طينية جيدة الصرف", ph: 7, drain: "جيد" }, climate: { tmin: 5, tmax: 35, tideal: "15-25°م", humid: "40-60%", sun: "8 ساعات" },
@@ -2938,7 +2917,7 @@ const DB = [
 },
 {
   id: "fld2", name: "شعير", nameEn: "Barley", nameSci: "Hordeum vulgare", cat: "fieldcrops", sub: "حبوب",
-  img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Barley_field.jpg/640px-Barley_field.jpg",
+  img: "https://upload.wikimedia.org/wikipedia/commons",
   tags: ["شتوي", "مقاوم للجفاف", "علف"], diff: 1, pop: 88, featured: false, export: true,
   ov: "الشعير يتحمل الجفاف والملوحة أكثر من القمح، يستخدم في صناعة الأعلاف والشعير المستنبت وفي بعض الصناعات الغذائية (الخبز الأسود). يزرع في الأراضي الجديدة والصحراوية.",
   soil: { type: "رملية إلى طينية", ph: 7, drain: "جيد" }, climate: { tmin: 5, tmax: 38, tideal: "15-30°م", humid: "30-50%", sun: "8 ساعات" },
