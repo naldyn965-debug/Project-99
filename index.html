@@ -4528,55 +4528,11 @@ id: "cit28", name: "يوسفي أورلاندو", nameEn: "Orlando Mandarin", na
 
 // ======================== DISEASES DATA ========================
 const DiseasesDB = [
-  {
-    id:"d1",
-    name:"البياض الدقيقي",
-    nameEn:"Powdery Mildew",
-    sci:"Erysiphe cichoracearum, Sphaerotheca fuliginea",
-    img:"https://images.unsplash.com/photo-1585067189945-e9b2f9bbac30?w=600&q=80",
-    type:"فطري",
-    severity:"متوسط",
-    affectedPlants:["طماطم","خيار","فلفل","كوسة","ورد","ياسمين"],
-    symptoms:["ظهور طبقة بيضاء بودرية على الأوراق","تشوه الأوراق والبراعم","جفاف الأوراق مع تقدم الإصابة","توقف النمو"],
-    causes:["رطوبة عالية","تهوية ضعيفة","كثافة زراعية عالية","ظل زائد"],
-    treatment:["رش الكبريت الميكروني 2 جم/لتر","رش توبسين إم 70% 1 جم/لتر","الرش المتكرر كل 7-10 أيام","استخدام مبيدات جهازية مثل تيلت 25%"],
-    prevention:["تهوية جيدة","تجنب الري على الأوراق","زراعة أصناف مقاومة","إزالة الأجزاء المصابة"],
-    description:"مرض فطري شائع يصيب العديد من المحاصيل والخضر والفاكهة. يظهر على شكل طبقة بيضاء تشبه الدقيق على الأوراق والبراعم."
-  },
-  {
-    id:"d2",
-    name:"اللفحة المتأخرة",
-    nameEn:"Late Blight",
-    sci:"Phytophthora infestans",
-    img:"https://images.pexels.com/photos/7195520/pexels-photo-7195520.jpeg?w=600&q=80",
-    type:"فطري",
-    severity:"خطير",
-    affectedPlants:["طماطم","بطاطس","فلفل","باذنجان"],
-    symptoms:["بقع مائية على الأوراق","تتحول إلى بنية سوداء","نمو أبيض على الجانب السفلي في الرطوبة","تعفن الثمار والدرنات"],
-    causes:["رطوبة عالية","درجات حرارة معتدلة (15-20°م)","الري بالرش","تناوب المحاصيل غير الجيد"],
-    treatment:["ريدوميل جولد 2.5 جم/لتر","مانكوزيب 2.5 جم/لتر","أكروبات 2 جم/لتر","يجب التناوب بين المبيدات"],
-    prevention:["زراعة أصناف مقاومة","تجنب الري بالرش","التهوية الجيدة","إزالة النباتات المصابة فوراً","دورة زراعية 3-4 سنوات"],
-    description:"أخطر أمراض الطماطم والبطاطس. يسبب خسائر كبيرة في الحقل والمخزن. ينتشر بسرعة في الطقس البارد الرطب."
-  },
-  {
-    id:"d3",
-    name:"فيروس تجعد الأوراق الصفراء",
-    nameEn:"Tomato Yellow Leaf Curl Virus (TYLCV)",
-    sci:"Begomovirus",
-    img:"https://images.pexels.com/photos/7195521/pexels-photo-7195521.jpeg?w=600&q=80",
-    type:"فيروسي",
-    severity:"خطير",
-    affectedPlants:["طماطم","فلفل","باذنجان","تبغ"],
-    symptoms:["تجعد الأوراق إلى أعلى","اصفرار بين العروق","تقزم النبات","تساقط الأزهار","ضعف الإثمار"],
-    causes:["ينقله الذبابة البيضاء (Bemisia tabaci)","زراعة شتلات ملوثة","وجود عوائل برية","ارتفاع درجة الحرارة"],
-    treatment:["لا يوجد علاج مباشر للفيروس","مكافحة الناقل (الذبابة البيضاء)","إيميداكلوبريد 0.5 مل/لتر","أبامكتين 1 سم/لتر","إزالة النباتات المصابة"],
-    prevention:["استخدام شتلات سليمة","مكافحة الذبابة البيضاء بانتظام","استخدام مصائد صفراء لاصقة","زراعة أصناف مقاومة","عزل المحاصيل"],
-    description:"فيروس خطير يصيب الطماطم والفلفل، ينتقل عن طريق الذبابة البيضاء. يسبب أضراراً كبيرة في الإنتاج وقد يؤدي إلى فقدان كامل للمحصول."
-  },
+
 // ---------- قائمة شاملة بأمراض النبات في مصر (وزارة الزراعة ومركز البحوث الزراعية) ----------
 {
   id: "d1", name: "البياض الدقيقي", nameEn: "Powdery Mildew", sci: "Erysiphe cichoracearum, Sphaerotheca fuliginea, Leveillula taurica",
-  img: "   ",
+  img: "  https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE6U6yRI7XbwslEgR-qfHB65fw0ra3wFKSBseEhXOoEa808AD8i8tEWK7k&s=10 ",
   type: "فطري", severity: "متوسط", affectedPlants: ["طماطم","خيار","فلفل","كوسة","ورد","ياسمين","مانجو","عنب","فراولة","فول بلدي","موالح"],
   symptoms: ["ظهور طبقة بيضاء بودرية على الأوراق والبراعم","تشوه الأوراق","جفاف الأوراق مع تقدم الإصابة","توقف النمو"],
   causes: ["رطوبة عالية","تهوية ضعيفة","كثافة زراعية عالية","ظل زائد"],
@@ -4586,7 +4542,7 @@ const DiseasesDB = [
 },
 {
   id: "d2", name: "اللفحة المتأخرة", nameEn: "Late Blight", sci: "Phytophthora infestans",
-  img: "   ",
+  img: "  https://modernagritec.com/wp-content/uploads/2023/03/%D8%A7%D9%84%D9%84%D9%81%D8%AD%D8%A9-%D8%A7%D9%84%D9%85%D8%AA%D8%A3%D8%AE%D8%B1%D8%A9-late-blight-%D9%85%D8%A7%D9%87%D9%8A%D8%8C-%D8%A3%D8%B9%D8%B1%D8%A7%D8%B6%D9%87%D8%A7%D8%8C-%D9%88%D9%83%D9%8A%D9%81%D9%8A%D8%A9-%D9%85%D9%83%D8%A7%D9%81%D8%AD%D8%AA%D9%87%D8%A7.webp ",
   type: "فطري (شبيه فطري)", severity: "خطير", affectedPlants: ["طماطم","بطاطس","فلفل","باذنجان"],
   symptoms: ["بقع مائية على الأوراق","تتحول إلى بنية سوداء","نمو أبيض على الجانب السفلي في الرطوبة","تعفن الثمار والدرنات"],
   causes: ["رطوبة عالية","درجات حرارة معتدلة (15-20°م)","الري بالرش","تناوب المحاصيل غير الجيد"],
@@ -4596,7 +4552,7 @@ const DiseasesDB = [
 },
 {
   id: "d3", name: "فيروس تجعد الأوراق الصفراء", nameEn: "Tomato Yellow Leaf Curl Virus", sci: "Begomovirus (TYLCV)",
-  img: "   ",
+  img: "  https://agrio.app/wp-content/uploads/2019/11/image2-71-768x1024.jpg ",
   type: "فيروسي", severity: "خطير", affectedPlants: ["طماطم","فلفل","باذنجان","تبغ","فاصوليا"],
   symptoms: ["تجعد الأوراق إلى أعلى","اصفرار بين العروق","تقزم النبات","تساقط الأزهار","ضعف الإثمار"],
   causes: ["ينقله الذبابة البيضاء (Bemisia tabaci)","زراعة شتلات ملوثة","وجود عوائل برية","ارتفاع درجة الحرارة"],
@@ -4606,7 +4562,7 @@ const DiseasesDB = [
 },
 {
   id: "d4", name: "البياض الزغبي", nameEn: "Downy Mildew", sci: "Pseudoperonospora cubensis (على القرعيات), Peronospora destructor (على البصل)",
-  img: "   ",
+  img: "  https://agrio.app/wp-content/uploads/2019/11/image1-23-768x1024.jpg ",
   type: "فطري (شبيه فطري)", severity: "متوسط إلى خطير", affectedPlants: ["خيار","قرعيات","بطيخ","شمام","عنب","بصل","خس"],
   symptoms: ["بقع صفراء زاوية على الأوراق","نمو رمادي أو بنفسجي على السطح السفلي","جفاف الأوراق وسقوطها"],
   causes: ["رطوبة عالية وندى","درجات حرارة معتدلة (15-22°م)","الري بالرش","تهوية ضعيفة"],
@@ -4616,7 +4572,7 @@ const DiseasesDB = [
 },
 {
   id: "d5", name: "اللفحة المبكرة", nameEn: "Early Blight", sci: "Alternaria solani (على الباذنجانيات), Alternaria dauci (على الجزر)",
-  img: "   ",
+  img: "  https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyuUwt5fZ9R90licLKTpy4qt5bV2lJLevN17OMyurIEu8-tWUcBs3dn14&s=10 ",
   type: "فطري", severity: "متوسط", affectedPlants: ["طماطم","بطاطس","باذنجان","فلفل","جزر","بصل"],
   symptoms: ["بقع بنية داكنة على الأوراق","حلقات متحدة المركز","اصفرار حول البقع","جفاف الأوراق وسقوطها"],
   causes: ["رطوبة عالية","درجات حرارة دافئة (25-30°م)","الري المتكرر","نقص التسميد","تلوث التربة بالبقايا النباتية"],
@@ -4626,7 +4582,7 @@ const DiseasesDB = [
 },
 {
   id: "d6", name: "صدأ القمح الأصفر (المخطط)", nameEn: "Stripe Rust of Wheat", sci: "Puccinia striiformis f. sp. tritici",
-  img: "  ",
+  img: "  https://misrelzraea.com/wp-content/uploads/2023/01/%D8%A7%D9%84%D8%B5%D8%AF%D8%A3-%D8%A7%D9%84%D8%A3%D8%B5%D9%81%D8%B1-%D9%81%D9%8A-%D8%A7%D9%84%D9%82%D9%85%D8%AD.jpg",
   type: "فطري", severity: "خطير", affectedPlants: ["قمح","شعير"],
   symptoms: ["بثرات صفراء مرتبة في صفوف طولية على الأوراق","جفاف الأوراق","ضعف النمو","انخفاض الإنتاجية"],
   causes: ["درجات حرارة باردة (8-15°م)","رطوبة عالية","رياح","زراعة أصناف حساسة"],
@@ -4636,7 +4592,7 @@ const DiseasesDB = [
 },
 {
   id: "d7", name: "صدأ الأوراق في القمح (البرتقالي)", nameEn: "Leaf Rust of Wheat", sci: "Puccinia triticina",
-  img: "   ",
+  img: "   https://learn.agrogatemasr.com/wp-content/uploads/sites/2/2021/09/%D8%B1%D8%B1.png",
   type: "فطري", severity: "خطير", affectedPlants: ["قمح"],
   symptoms: ["بثرات برتقالية محمرة صغيرة مبعثرة على الأوراق","انخفاض كفاءة التمثيل الضوئي","ضعف النمو","انخفاض المحصول"],
   causes: ["درجات حرارة معتدلة (15-25°م)","رطوبة عالية","رياح","زراعة أصناف حساسة"],
@@ -4646,7 +4602,7 @@ const DiseasesDB = [
 },
 {
   id: "d8", name: "تقرح الموالح البكتيري", nameEn: "Citrus Canker", sci: "Xanthomonas citri subsp. citri",
-  img: "   ",
+  img: "  https://media.elaard.com/img/18/03/24/15218961203836027.jpg ",
   type: "بكتيري", severity: "خطير", affectedPlants: ["موالح (برتقال، يوسفي، ليمون)"],
   symptoms: ["بقع مرتفعة فلينية على الأوراق والثمار والأغصان","هالة صفراء حول البقع","تشوه الثمار","تساقط الأوراق والثمار"],
   causes: ["رطوبة عالية","رياح","أمطار","جروح على النباتات","انتقال عبر الأدوات الملوثة"],
@@ -4656,7 +4612,7 @@ const DiseasesDB = [
 },
 {
   id: "d9", name: "تصمغ الموالح", nameEn: "Gummosis", sci: "Phytophthora spp. (citrophthora, parasitica)",
-  img: "  ",
+  img: "  https://media.elaard.com/img/23/08/30/112350.jpeg",
   type: "فطري (شبيه فطري)", severity: "خطير", affectedPlants: ["موالح (برتقال، يوسفي، ليمون)"],
   symptoms: ["إفراز صمغ بني أو ذهبي من جذع الشجرة","تشقق اللحاء","موت الأغصان","اصفرار الأوراق","ذبول الشجرة"],
   causes: ["رطوبة التربة العالية","صرف ضعيف","جروح في الجذع","زراعة عميقة","ري غزير قرب الجذع"],
@@ -4666,7 +4622,7 @@ const DiseasesDB = [
 },
 {
   id: "d10", name: "الأنثراكنوز", nameEn: "Anthracnose", sci: "Colletotrichum spp. (C. gloeosporioides, C. musae, C. graminicola)",
-  img: "   ",
+  img: " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE6TNkDyZxfjslIprI3A5Zh4-JU3WJ9BM0-puGmgiOW3P_-Bhr4nGH_CSP&s=10  ",
   type: "فطري", severity: "متوسط إلى خطير", affectedPlants: ["مانجو","موز","فراولة","بصل","فلفل","طماطم","ذرة","بقوليات"],
   symptoms: ["بقع غائرة داكنة على الثمار","تقرحات على الأوراق والسيقان","تساقط الأزهار والثمار الصغيرة","عفن الثمار قبل وبعد الحصاد"],
   causes: ["رطوبة عالية","درجات حرارة دافئة (25-30°م)","الري بالرش","كثافة زراعية عالية","تلوث البذور"],
@@ -4676,7 +4632,7 @@ const DiseasesDB = [
 },
 {
   id: "d11", name: "ذبول الفيوزاريوم", nameEn: "Fusarium Wilt", sci: "Fusarium oxysporum f. sp.",
-  img: "  ",
+  img: "  https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPFmiRe29LI_8Q-6sl676B3DiIVx3trsQY1YrN2DofWiAOGAviN3fXFsQ&s=10",
   type: "فطري", severity: "خطير", affectedPlants: ["طماطم","فلفل","باذنجان","بصل","ثوم","موز","قطن","نخيل"],
   symptoms: ["ذبول مفاجئ للأوراق السفلية","اصفرار الأوراق","احمرار الأوعية الخشبية عند قطع الساق","موت النبات"],
   causes: ["تربة ملوثة","درجات حرارة دافئة (25-30°م)","زراعة متكررة لنفس المحصول","رياح","انتقال عبر الأدوات الملوثة"],
@@ -4686,7 +4642,7 @@ const DiseasesDB = [
 },
 {
   id: "d12", name: "تبقع الأوراق الألترناري", nameEn: "Alternaria Leaf Spot", sci: "Alternaria spp. (A. citri, A. dauci, A. solani)",
-  img: "  ",
+  img: "  https://upload.wikimedia.org/wikipedia/commons/9/9c/Septoria-tritici.jpg",
   type: "فطري", severity: "متوسط", affectedPlants: ["موالح","جزر","بصل","طماطم","بطاطس","قرعيات","فول بلدي"],
   symptoms: ["بقع بنية داكنة ذات حلقات متحدة المركز","اصفرار حول البقع","جفاف الأوراق وسقوطها","تشوه الثمار"],
   causes: ["رطوبة عالية","درجات حرارة دافئة (20-30°م)","رياح","زراعة متكررة","ضعف النبات"],
@@ -4696,7 +4652,7 @@ const DiseasesDB = [
 },
 {
   id: "d13", name: "لفحة الأوراق الشمالية في الذرة", nameEn: "Northern Corn Leaf Blight", sci: "Exserohilum turcicum",
-  img: "  ",
+  img: " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoR9aYkFC7vV_ppbn6-zfreQyFXZVEEagg9WWL2QakDiS2wgkq8X3Axc_c&s=10 ",
   type: "فطري", severity: "خطير", affectedPlants: ["ذرة (شامية)"],
   symptoms: ["بقع رمادية خضراء مستطيلة على الأوراق","تتحول إلى بنية داكنة","تلتحم البقع لتغطي الورقة بالكامل","جفاف الأوراق","انخفاض المحصول"],
   causes: ["رطوبة عالية","درجات حرارة معتدلة (20-25°م)","زراعة متأخرة","زراعة أصناف حساسة","تلوث البذور"],
@@ -4706,7 +4662,7 @@ const DiseasesDB = [
 },
 {
   id: "d14", name: "ذبول الذرة المتأخر", nameEn: "Late Wilt of Corn", sci: "Harpophora maydis",
-  img: "  ",
+  img: "  https://misrelzraea.com/wp-content/uploads/2022/06/%D8%A7%D9%84%D8%B0%D8%A8%D9%88%D9%84-%D8%A7%D9%84%D9%85%D8%AA%D8%A3%D8%AE%D8%B1-%D9%81%D9%8A-%D8%A7%D9%84%D8%B0%D8%B1%D8%A9.jpg",
   type: "فطري", severity: "خطير", affectedPlants: ["ذرة (شامية)"],
   symptoms: ["ذبول مفاجئ للنباتات قرب مرحلة الطرد","جفاف السيقان من الداخل","احمرار أو اسمرار الأوعية","موت النبات"],
   causes: ["فطر يعيش في التربة","درجات حرارة عالية (30-35°م)","إجهاد النبات","زراعة متكررة"],
@@ -4716,7 +4672,7 @@ const DiseasesDB = [
 },
 {
   id: "d15", name: "العفن الرمادي (البوتريتس)", nameEn: "Gray Mold", sci: "Botrytis cinerea",
-  img: "  ",
+  img: "  https://modernagritec.com/wp-content/uploads/2023/03/%D8%A3%D8%B9%D8%B1%D8%A7%D8%B6-%D8%A7%D9%84%D8%B9%D9%81%D9%86-%D8%A7%D9%84%D8%B1%D9%85%D8%A7%D8%AF%D9%8A-%D8%B9%D9%84%D9%89-%D8%A7%D9%84%D8%AB%D9%85%D8%A7%D8%B1.webp",
   type: "فطري", severity: "خطير", affectedPlants: ["فراولة","عنب","طماطم","فلفل","خيار","خس","ورد","نباتات زينة"],
   symptoms: ["نمو رمادي زغبي على الأزهار والثمار","تعفن طري للثمار","ذبول الأزهار","انتشار سريع في الرطوبة العالية"],
   causes: ["رطوبة عالية (90%+)","درجات حرارة معتدلة (18-25°م)","تهوية ضعيفة","ري بالرش","جروح على الثمار"],
@@ -4726,7 +4682,7 @@ const DiseasesDB = [
 },
 {
   id: "d16", name: "فيروس تورد قمة الموز", nameEn: "Banana Bunchy Top Virus", sci: "BBTV (Nanovirus)",
-  img: "  ",
+  img: "  https://content.peat-cloud.com/w400/bunchy-top-virus-banana-1576510807.jpg",
   type: "فيروسي", severity: "خطير", affectedPlants: ["موز"],
   symptoms: ["توقف النمو","تكتل الأوراق عند القمة","أوراق ضيقة متجهة لأعلى","خطوط خضراء داكنة على الأوراق","الموت التدريجي"],
   causes: ["ينقله من الموز","استخدام خلفات ملوثة","انتشار سريع في المزرعة"],
@@ -4736,7 +4692,7 @@ const DiseasesDB = [
 },
 {
   id: "d17", name: "العفن الأبيض في البصل والثوم", nameEn: "White Rot of Onion and Garlic", sci: "Sclerotium cepivorum",
-  img: "  ",
+  img: " https://worldofplants.ai/wp-content/uploads/2024/03/white-rot-of-onion-and-garlic-1.jpg ",
   type: "فطري", severity: "خطير", affectedPlants: ["بصل","ثوم","كراث"],
   symptoms: ["اصفرار وذبول الأوراق","نمو أبيض قطني على القواعد","تكوين أجسام حجرية سوداء صغيرة (سكليروشيا)","تعفن البصلة"],
   causes: ["فطر يعيش في التربة لسنوات","درجات حرارة معتدلة (15-20°م)","رطوبة عالية","زراعة متكررة","استخدام بذور ملوثة"],
@@ -4746,7 +4702,7 @@ const DiseasesDB = [
 },
 {
   id: "d18", name: "مرض بيلات (النخيل)", nameEn: "Bayoud Disease of Date Palm", sci: "Fusarium oxysporum f. sp. albedinis",
-  img: "  ",
+  img: "  https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrWbazYRuxg7CqwoA3t-6FeJiRa4gDZQQRKEDNV4Lc6uRj89pyoFCUzy4&s=10",
   type: "فطري", severity: "خطير (حجر زراعي)", affectedPlants: ["نخيل البلح"],
   symptoms: ["جفاف الأوراق من القمة","موت السعف تدريجيًا","احمرار الأوعية","موت النخلة بالكامل"],
   causes: ["فطر يعيش في التربة","ينتقل عن طريق الرياح والأدوات الملوثة","زراعة فسائل ملوثة"],
@@ -4756,7 +4712,7 @@ const DiseasesDB = [
 },
 {
   id: "d19", name: "التبقع البكتيري على الفراولة", nameEn: "Angular Leaf Spot of Strawberry", sci: "Xanthomonas fragariae",
-  img: "  ",
+  img: " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfb41M7JKZzQof2S49DYRWhKAk7b93FTI_5zYIShAbd57s2zmozIH4S88&s=10 ",
   type: "بكتيري", severity: "متوسط", affectedPlants: ["فراولة"],
   symptoms: ["بقع مائية صغيرة على الأوراق","بقع زاوية تحدها العروق","تتحول البقع إلى اللون البني","تساقط الأوراق","ضعف النمو"],
   causes: ["بكتيريا تنتقل عن طريق المطر والرياح","رطوبة عالية","درجات حرارة معتدلة (18-25°م)","الري بالرش","جروح على الأوراق"],
@@ -4766,7 +4722,7 @@ const DiseasesDB = [
 },
 {
   id: "d20", name: "اللفحة البكتيرية على الخيار", nameEn: "Bacterial Blight of Cucumber", sci: "Pseudomonas syringae pv. lachrymans",
-  img: "  ",
+  img: "  https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzoI5fY9USoR_KbPZUk_OKnEy2UwGY7MklgFKAx_XZRtpuohhL_xSJdPE&s=10",
   type: "بكتيري", severity: "متوسط", affectedPlants: ["خيار","قرعيات"],
   symptoms: ["بقع صغيرة مائية على الأوراق","تتحول إلى بنية وتجف","تساقط الأوراق","تشوه الثمار"],
   causes: ["بكتيريا تنتقل عن طريق البذور","رطوبة عالية","درجات حرارة معتدلة","الري بالرش","رياح"],
