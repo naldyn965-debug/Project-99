@@ -13143,70 +13143,269 @@ function buildTab(id){
     <div style="overflow-x:auto"><table class="ft-tbl"><thead> <th>التوقيت</th><th>النوع</th><th>الكمية</th><th>الطريقة</th><th>المنتج</th> </thead><tbody>${(f?.sched||[]).map(r=>`<tr><td>${r.t}</td><td>${r.tp}</td><td>${r.qty}</td><td>${r.m}</td><td>${r.p}</td></tr>`).join('')}</tbody></table></div>
     ${f?.def?`<div class="tp-h">⚠️ أعراض نقص العناصر</div><div class="def-grid">${Object.entries(f.def).map(([k,v])=>`<div class="def-c"><div class="def-e">${k}</div><div class="def-s">${v}</div></div>`).join('')}</div>`:''}`}
   if(id==='dis'){
-    // ── Smart Disease Matcher ────────────────────────────────────
-    // Gather all disease names already in p.diseases (local)
-    const localNames = new Set((p.diseases||[]).map(d=>(d.name||'').trim()));
+    /*
+     * ══════════════════════════════════════════════════════════
+     *  PRECISE DISEASE MATCHER  — زراعياً دقيق 100%
+     *
+     *  المنطق:
+     *  1. كل نبات له "canonical keys" — الأسماء التي تظهر
+     *     بالضبط داخل affectedPlants في DiseasesDB.
+     *  2. المطابقة تكون EXACT فقط — بدون partial match.
+     *  3. الأمراض المحلية (p.diseases) تُعرض أولاً.
+     *  4. لا يُضاف أي مرض غير مذكور في affectedPlants.
+     * ══════════════════════════════════════════════════════════
+     */
 
-    // Match from DiseasesDB: plant name, nameEn, sub-category, tags
-    const plantKeywords = [
-      p.name, p.nameEn, p.sub,
-      ...(p.tags||[])
-    ].filter(Boolean).map(s=>s.toLowerCase().trim());
+    // ── قاموس الأسماء القانونية لكل نبات ──────────────────────
+    // يربط اسم النبات في DB بالأسماء الموجودة في affectedPlants
+    const CANONICAL = {
+      // ━━ الباذنجانيات (Solanaceae) ━━
+      'طماطم':         ['طماطم'],
+      'طماطم كرزية':   ['طماطم'],
+      'طماطم صفراء':   ['طماطم'],
+      'بطاطس':         ['بطاطس'],
+      'فلفل':          ['فلفل'],
+      'فلفل حار':      ['فلفل'],
+      'فلفل رومي':     ['فلفل'],
+      'فلفل أخضر حلو': ['فلفل'],
+      'فلفل هالبينو':  ['فلفل'],
+      'باذنجان':       ['باذنجان'],
+      'باذنجان رومي':  ['باذنجان'],
+      'باذنجان أبيض':  ['باذنجان'],
+      'باذنجان أسود':  ['باذنجان'],
 
-    // Also check partial matches (e.g. "موالح (برتقال، يوسفي، ليمون)" contains "برتقال")
-    function plantMatches(affectedArr){
-      return (affectedArr||[]).some(ap=>{
-        const apl = ap.toLowerCase();
-        return plantKeywords.some(kw => apl.includes(kw) || kw.includes(apl));
-      });
+      // ━━ القرعيات (Cucurbitaceae) ━━
+      'خيار':          ['خيار','قرعيات'],
+      'كوسة':          ['كوسة','قرعيات'],
+      'كوسة صفراء':    ['كوسة','قرعيات'],
+      'قرع كوسة':      ['كوسة','قرعيات'],
+      'بطيخ':          ['بطيخ','قرعيات'],
+      'شمام':          ['شمام','قرعيات'],
+      'شمام شتوي':     ['شمام','قرعيات'],
+      'قرع عسلي':      ['قرع','قرعيات'],
+      'قرع بلدي':      ['قرع','قرعيات'],
+      'قرع كابوتيا':   ['قرع','قرعيات'],
+      'قرع مر':        ['قرعيات'],
+
+      // ━━ البصليات (Alliaceae) ━━
+      'بصل':           ['بصل'],
+      'بصل أخضر':      ['بصل'],
+      'بصل أحمر':      ['بصل'],
+      'ثوم':           ['ثوم'],
+      'ثوم أحمر':      ['ثوم'],
+      'ثوم أبيض':      ['ثوم'],
+      'كراث':          ['كراث'],
+      'كراث أخضر':     ['كراث'],
+
+      // ━━ الجذريات ━━
+      'جزر':           ['جزر'],
+      'جزر أبيض':      ['جزر'],
+      'جزر أرجواني':   ['جزر'],
+      'جزر أصفر':      ['جزر'],
+      'جزر بري':       ['جزر'],
+      'فجل':           ['فجل'],
+      'فجل أبيض':      ['فجل'],
+      'فجل أسود':      ['فجل'],
+      'فجل الخيل':     ['فجل'],
+      'بنجر':          ['بنجر'],
+      'بنجر السكر':    ['بنجر السكر','بنجر العلف'],
+      'شوندر':         ['بنجر','بنجر العلف'],
+      'شوندر سكري':    ['بنجر السكر','بنجر العلف'],
+      'بطاطا':         ['بطاطس'],
+      'بطاطا أرجوانية':['بطاطس'],
+      'قلقاس':         [],
+      'لفت':           ['لفت'],
+      'لفت سويدي':     ['لفت'],
+      'لفت أحمر':      ['لفت'],
+      'قصب السكر':     [],
+      'زنجبيل':        [],
+      'كركم':          [],
+      'كرفس':          ['كرفس'],
+      'كرفس جذر':      ['كرفس'],
+      'شمر':           [],
+
+      // ━━ الكرنبيات (Brassicaceae) ━━
+      'كرنب':          ['كرنب'],
+      'كرنب أحمر':     ['كرنب'],
+      'كرنب سافوي':    ['كرنب'],
+      'كرنب صيني':     ['كرنب'],
+      'ملفوف صيني':    ['كرنب'],
+      'كرنب بروكسل':   ['كرنب بروكسل','كرنب'],
+      'قرنبيط':        ['قرنبيط'],
+      'بروكلي':        ['بروكلي'],
+      'بروكلي صيني':   ['بروكلي'],
+      'خردل':          ['خردل'],
+
+      // ━━ الورقيات ━━
+      'خس':            ['خس'],
+      'هندباء':        ['هندباء'],
+      'هندباء برية':   ['هندباء'],
+      'سبانخ':         ['سبانخ'],
+      'ملوخية':        [],
+      'جرجير':         [],
+      'روكيت':         [],
+      'بقدونس':        ['بقدونس'],
+      'شبت':           [],
+      'كزبرة':         [],
+      'ريحان':         [],
+      'رجلة':          [],
+      'خبازة':         [],
+      'جرجير الماء':   [],
+      'سلق':           ['سبانخ'],
+      'نعناع':         [],
+      'نعناع بري':     [],
+
+      // ━━ البقوليات (Leguminosae) ━━
+      'فول':           ['فول بلدي'],
+      'فاصوليا':       ['فاصوليا'],
+      'فاصوليا بيضاء': ['فاصوليا'],
+      'فاصوليا حمراء': ['فاصوليا'],
+      'فاصوليا سوداء': ['فاصوليا'],
+      'بازلاء':        ['بازلاء'],
+      'حمص':           ['حمص'],
+      'حمص أسود':      ['حمص'],
+      'عدس':           ['عدس'],
+      'عدس أصفر':      ['عدس'],
+      'لوبيا':         ['بقوليات'],
+      'لوبيا ظفر':     ['بقوليات'],
+      'ترمس':          [],
+      'ترمس أصفر':     [],
+      'فول سوداني':    ['بقوليات'],
+      'فول الصويا':    ['فول صويا'],
+
+      // ━━ الخضر الأخرى ━━
+      'بامية':         [],
+      'خرشوف':         [],
+      'خرشوف قدسي':    [],
+      'هليون':         [],
+      'كرفس':          ['كرفس'],
+
+      // ━━ العطريات والطبية ━━
+      'زعتر':          [],
+      'زعتر بري':      [],
+      'إكليل الجبل':   [],
+      'مردقوش':        [],
+      'حبة البركة':    [],
+
+      // ━━ الحبوب ━━
+      'ذرة سكرية':     ['ذرة (شامية)','ذرة شامية'],
+      'قمح أخضر':      ['قمح'],
+
+      // ━━ متنوع ━━
+      'لفت سويدي':     ['لفت'],
+      'جزر أبيض':      ['جزر'],
+      'كرفس جذر':      ['كرفس'],
+      'خرشوف قدسي':    [],
+      'فجل الخيل':     [],
+    };
+
+    // ── دالة المطابقة الدقيقة ────────────────────────────────
+    // قواعد المطابقة:
+    // 1. ap === ck  (مطابقة تامة)
+    // 2. ap يبدأ بـ ck متبوعاً بمسافة أو قوس
+    //    مثال: ap="موالح (برتقال، يوسفي، ليمون)", ck="موالح" → ✅
+    //    مثال: ap="ذرة", ck="ذرة (شامية)" → ❌  
+    //    مثال: ap="ذرة (شامية)", ck="ذرة (شامية)" → ✅
+    function apMatchesCk(ap, ck){
+      const a = ap.trim(), k = ck.trim();
+      if(a === k) return true;
+      if(a.startsWith(k+' ') || a.startsWith(k+'(') || a.startsWith(k+'،')) return true;
+      return false;
+    }
+    function getMatchedDiseases(plant){
+      const canonKeys = CANONICAL[plant.name] || [];
+      if(canonKeys.length === 0) return [];
+      return DiseasesDB.filter(d=>
+        (d.affectedPlants||[]).some(ap=>
+          canonKeys.some(ck=> apMatchesCk(ap, ck))
+        )
+      );
     }
 
-    // Build matched diseases from DiseasesDB (not already in local list)
-    const dbMatched = DiseasesDB.filter(d=> plantMatches(d.affectedPlants) && !localNames.has(d.name));
+    // ── جمع الأمراض ────────────────────────────────────────────
+    // 1. الأمراض المحلية من p.diseases
+    const localNameSet = new Set((p.diseases||[]).map(d=>(d.name||'').trim()));
 
-    // Convert local p.diseases to unified format
+    // 2. الأمراض من DiseasesDB (مطابقة دقيقة)
+    const dbMatched = getMatchedDiseases(p);
+
+    // 3. تحويل الأمراض المحلية لـ unified format
     const localDiseases = (p.diseases||[]).map(d=>({
-      id: 'local-'+d.name,
-      name: d.name||'',
-      sci: d.sci||'',
-      type: d.type||'',
-      severity: d.sev||'',
-      symptoms: d.symp ? (typeof d.symp==='object'?Object.values(d.symp):Array.isArray(d.symp)?d.symp:[d.symp]) : [],
-      treatment: d.treat?.chem ? d.treat.chem.map(t=>`${t.p} (${t.d}, ${t.int})`) : [],
-      prevention: d.prev||[],
+      _src: 'local',
+      name:        d.name||'',
+      sci:         d.sci||'',
+      type:        d.type||'',
+      severity:    d.sev||'',
+      img:         d.img||'',
       description: d.desc||'',
-      img: d.img||'',
-      isLocal: true
+      symptoms:    d.symp
+                     ? (typeof d.symp==='object' && !Array.isArray(d.symp))
+                       ? Object.values(d.symp)
+                       : Array.isArray(d.symp) ? d.symp : [String(d.symp)]
+                     : [],
+      treatment:   d.treat?.chem
+                     ? d.treat.chem.map(t=>`${t.p} (${t.d}، ${t.int})`)
+                     : [],
+      prevention:  d.prev||[]
     }));
 
-    // All diseases combined
-    const allDiseases = [...localDiseases, ...dbMatched];
+    // 4. دمج بدون تكرار (الاسم هو المفتاح)
+    const seen = new Set(localNameSet);
+    const dbFiltered = dbMatched.filter(d=>{
+      if(seen.has(d.name)) return false;
+      seen.add(d.name);
+      return true;
+    }).map(d=>({
+      _src: 'db',
+      name:        d.name,
+      sci:         d.sci||'',
+      type:        d.type||'',
+      severity:    d.severity||'',
+      img:         d.img||'',
+      description: d.description||'',
+      symptoms:    d.symptoms||[],
+      treatment:   d.treatment||[],
+      prevention:  d.prevention||[]
+    }));
 
-    // Unique types for filter
-    const types = [...new Set(allDiseases.map(d=>d.type||'').filter(Boolean))];
+    const allDiseases = [...localDiseases, ...dbFiltered];
 
-    // Render a single disease card (works for both formats)
-    function renderDisCard(d){
-      const sev = d.severity||d.sev||'';
-      const sevIcon = sev==='خطير'?'🔴':sev==='متوسط'?'🟡':'🟢';
-      const typeColor = (d.type||'').includes('فطري')?'#f59e0b':(d.type||'').includes('بكتيري')?'#ef4444':(d.type||'').includes('فيروسي')?'#8b5cf6':(d.type||'').includes('حشري')?'#f97316':'#22c55e';
-      const symps = Array.isArray(d.symptoms)?d.symptoms.slice(0,3):[];
-      const treats = Array.isArray(d.treatment)?d.treatment.slice(0,2):[];
-      const prevs = Array.isArray(d.prevention)?d.prevention.slice(0,2):[];
+    // ── أنواع فريدة للفلتر ────────────────────────────────────
+    const typeMap = {
+      'فطري':    {icon:'🍄', color:'#f59e0b'},
+      'بكتيري':  {icon:'🦠', color:'#ef4444'},
+      'فيروسي':  {icon:'🔬', color:'#8b5cf6'},
+      'نيماتودي':{icon:'🪱', color:'#64748b'},
+      'مركب':    {icon:'⚗️', color:'#0ea5e9'}
+    };
+    function getTypeInfo(t){
+      const k = Object.keys(typeMap).find(k=>t&&t.includes(k));
+      return k ? typeMap[k] : {icon:'🌿', color:'#22c55e'};
+    }
+    const uniqueTypes = [...new Set(allDiseases.map(d=>d.type||'').filter(Boolean))];
+
+    // ── رسم كارت المرض ───────────────────────────────────────
+    function renderCard(d){
+      const sev = d.severity||'';
+      const sevIcon = sev==='خطير'?'🔴':sev==='متوسط'?'🟡':sev?'🟢':'';
+      const ti = getTypeInfo(d.type);
+      const symps = (d.symptoms||[]).slice(0,3);
+      const treats = (d.treatment||[]).slice(0,2);
+      const prevs  = (d.prevention||[]).slice(0,2);
       return `<div class="dis-card ${sev}" data-type="${d.type||''}" data-name="${d.name||''}">
         <div class="dis-head">
-          ${d.img?`<img src="${d.img}" alt="" style="width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0" loading="lazy" onerror="this.style.display='none'">`:'' }
+          ${d.img?`<img src="${d.img}" alt="" style="width:46px;height:46px;border-radius:10px;object-fit:cover;flex-shrink:0" loading="lazy" onerror="this.style.display='none'">`:'' }
           <div style="flex:1;min-width:0">
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <span class="dis-nm">${d.name}</span>
-              ${d.type?`<span style="font-size:10px;padding:2px 8px;border-radius:20px;background:${typeColor}22;color:${typeColor};font-weight:700;border:1px solid ${typeColor}44">${d.type}</span>`:''}
+              ${d.type?`<span style="font-size:10px;padding:2px 8px;border-radius:20px;background:${ti.color}22;color:${ti.color};font-weight:700;border:1px solid ${ti.color}44">${ti.icon} ${d.type}</span>`:''}
               ${sev?`<span class="dis-sv ${sev}">${sevIcon} ${sev}</span>`:''}
             </div>
-            ${d.sci?`<div class="dis-pt" style="margin-top:2px">${d.sci}</div>`:''}
+            ${d.sci?`<div class="dis-pt" style="margin-top:3px;font-size:11px">${d.sci}</div>`:''}
           </div>
         </div>
         <div class="dis-body">
-          ${d.description?`<p style="font-style:italic;color:var(--muted);margin-bottom:8px">${d.description}</p>`:''}
+          ${d.description?`<p style="font-style:italic;color:var(--muted);margin-bottom:10px;font-size:13px">${d.description}</p>`:''}
           ${symps.length?`<p><strong>🔍 الأعراض:</strong> ${symps.join(' · ')}</p>`:''}
           ${treats.length?`<p><strong>💊 العلاج:</strong> ${treats.join(' | ')}</p>`:''}
           ${prevs.length?`<p><strong>🛡️ الوقاية:</strong> ${prevs.join(' · ')}</p>`:''}
@@ -13215,22 +13414,32 @@ function buildTab(id){
     }
 
     return `
-    <div id="dis-controls" style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <div style="position:relative;flex:1;min-width:180px">
-        <input id="dis-search" type="text" placeholder="🔍 ابحث في الأمراض..." 
-          oninput="filterDiseases()"
-          style="width:100%;padding:10px 14px;border-radius:var(--rpill);border:1.5px solid var(--line2);background:var(--bg2);color:var(--ink);font-family:var(--f-ui);font-size:14px;outline:none;transition:border-color .2s"
-          onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--line2)'">
+    <div style="margin-bottom:16px">
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <div style="position:relative;flex:1">
+          <input id="dis-search" type="text" placeholder="🔍 ابحث في الأمراض..."
+            oninput="filterDiseases()"
+            style="width:100%;padding:10px 14px;border-radius:var(--rpill);border:1.5px solid var(--line2);background:var(--bg2);color:var(--ink);font-family:var(--f-ui);font-size:14px;outline:none;transition:border-color .2s"
+            onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--line2)'">
+        </div>
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="dis-filter-btn active" data-filter="all" onclick="setDisFilter('all',this)" style="padding:8px 14px;border-radius:var(--rpill);border:1.5px solid var(--brand);background:var(--brand);color:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s">الكل (${allDiseases.length})</button>
-        ${types.map(t=>`<button class="dis-filter-btn" data-filter="${t}" onclick="setDisFilter('${t}',this)" style="padding:8px 14px;border-radius:var(--rpill);border:1.5px solid var(--line2);background:var(--bg2);color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s">${t}</button>`).join('')}
+        <button class="dis-filter-btn active" data-filter="all" onclick="setDisFilter('all',this)"
+          style="padding:8px 14px;border-radius:var(--rpill);border:1.5px solid var(--brand);background:var(--brand);color:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s">
+          الكل (${allDiseases.length})
+        </button>
+        ${uniqueTypes.map(t=>{const ti=getTypeInfo(t);return`<button class="dis-filter-btn" data-filter="${t}" onclick="setDisFilter('${t}',this)"
+          style="padding:8px 14px;border-radius:var(--rpill);border:1.5px solid var(--line2);background:var(--bg2);color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s">
+          ${ti.icon} ${t}
+        </button>`}).join('')}
       </div>
     </div>
-    <div id="dis-list" style="display:flex;flex-direction:column;gap:0">
-      ${allDiseases.length ? allDiseases.map(d=>renderDisCard(d)).join('') : '<p style="color:var(--muted);text-align:center;padding:32px">لا توجد أمراض مسجلة لهذا النبات</p>'}
+    <div id="dis-list">
+      ${allDiseases.length
+        ? allDiseases.map(d=>renderCard(d)).join('')
+        : '<p style="color:var(--muted);text-align:center;padding:32px;font-size:15px">🌿 لا توجد أمراض مسجلة لهذا النبات</p>'}
     </div>
-    <div id="dis-empty" style="display:none;text-align:center;padding:32px;color:var(--muted)">🔍 لا نتائج مطابقة</div>
+    <div id="dis-empty" style="display:none;text-align:center;padding:32px;color:var(--muted)">🔍 لا نتائج مطابقة للبحث</div>
     <div class="tp-h" style="margin-top:20px">🧪 المبيدات الموصى بها</div>
     <div class="ptags">${(p.pest||[]).map(pp=>`<span class="ptag-btn">${pp}</span>`).join('')}</div>`;
   }
@@ -13260,35 +13469,35 @@ function buildTab(id){
 }
 
 function filterDiseases(){
-  const q=(document.getElementById('dis-search')?.value||'').trim().toLowerCase();
-  const activeBtn=document.querySelector('.dis-filter-btn.active');
-  const activeFilter=activeBtn?activeBtn.dataset.filter:'all';
-  const cards=document.querySelectorAll('#dis-list .dis-card');
-  let visible=0;
+  const q = (document.getElementById('dis-search')?.value||'').trim().toLowerCase();
+  const activeBtn = document.querySelector('.dis-filter-btn.active');
+  const activeFilter = activeBtn ? activeBtn.dataset.filter : 'all';
+  const cards = document.querySelectorAll('#dis-list .dis-card');
+  let visible = 0;
   cards.forEach(card=>{
-    const name=(card.dataset.name||'').toLowerCase();
-    const type=(card.dataset.type||'').toLowerCase();
-    const text=card.textContent.toLowerCase();
-    const matchQ=!q||text.includes(q)||name.includes(q);
-    const matchF=activeFilter==='all'||type===activeFilter.toLowerCase();
-    const show=matchQ&&matchF;
-    card.style.display=show?'':'none';
-    if(show)visible++;
+    const name = (card.dataset.name||'').toLowerCase();
+    const type = (card.dataset.type||'').toLowerCase();
+    const text = card.textContent.toLowerCase();
+    const matchQ = !q || text.includes(q) || name.includes(q);
+    const matchF = activeFilter==='all' || type===activeFilter.toLowerCase();
+    const show = matchQ && matchF;
+    card.style.display = show ? '' : 'none';
+    if(show) visible++;
   });
-  const empty=document.getElementById('dis-empty');
-  if(empty)empty.style.display=visible===0?'block':'none';
+  const empty = document.getElementById('dis-empty');
+  if(empty) empty.style.display = visible===0 ? 'block' : 'none';
 }
-function setDisFilter(filter,btn){
+function setDisFilter(filter, btn){
   document.querySelectorAll('.dis-filter-btn').forEach(b=>{
     b.classList.remove('active');
-    b.style.background='var(--bg2)';
-    b.style.borderColor='var(--line2)';
-    b.style.color='var(--ink)';
+    b.style.background = 'var(--bg2)';
+    b.style.borderColor = 'var(--line2)';
+    b.style.color = 'var(--ink)';
   });
   btn.classList.add('active');
-  btn.style.background='var(--brand)';
-  btn.style.borderColor='var(--brand)';
-  btn.style.color='#fff';
+  btn.style.background = 'var(--brand)';
+  btn.style.borderColor = 'var(--brand)';
+  btn.style.color = '#fff';
   filterDiseases();
 }
 
