@@ -13142,16 +13142,98 @@ function buildTab(id){
     <div class="tp-h">📅 برنامج التسميد</div>
     <div style="overflow-x:auto"><table class="ft-tbl"><thead> <th>التوقيت</th><th>النوع</th><th>الكمية</th><th>الطريقة</th><th>المنتج</th> </thead><tbody>${(f?.sched||[]).map(r=>`<tr><td>${r.t}</td><td>${r.tp}</td><td>${r.qty}</td><td>${r.m}</td><td>${r.p}</td></tr>`).join('')}</tbody></table></div>
     ${f?.def?`<div class="tp-h">⚠️ أعراض نقص العناصر</div><div class="def-grid">${Object.entries(f.def).map(([k,v])=>`<div class="def-c"><div class="def-e">${k}</div><div class="def-s">${v}</div></div>`).join('')}</div>`:''}`}
-  if(id==='dis')return `
-    ${(p.diseases||[]).map(d=>`<div class="dis-card ${d.sev||''}">
-      <div class="dis-head"><span class="dis-nm">${d.name}</span><span class="dis-pt">${d.sci||''}</span>${d.sev?`<span class="dis-sv ${d.sev}">${d.sev==='خطير'?'🔴':d.sev==='متوسط'?'🟡':'🟢'} ${d.sev}</span>`:''}</div>
-      <div class="dis-body">
-        ${d.symp?`<p><strong>الأعراض:</strong> ${typeof d.symp==='object'?Object.values(d.symp).join(' · '):d.symp}</p>`:''}
-        ${d.treat?.chem?`<p><strong>العلاج:</strong> ${d.treat.chem.map(t=>`${t.p} — ${t.d} — ${t.int}`).join(' | ')}</p>`:''}
-        ${d.prev?.length?`<p><strong>الوقاية:</strong> ${d.prev.join(' · ')}</p>`:''}</div>
-    </div>`).join('')}
-    <div class="tp-h">🧪 المبيدات الموصى بها</div>
+  if(id==='dis'){
+    // ── Smart Disease Matcher ────────────────────────────────────
+    // Gather all disease names already in p.diseases (local)
+    const localNames = new Set((p.diseases||[]).map(d=>(d.name||'').trim()));
+
+    // Match from DiseasesDB: plant name, nameEn, sub-category, tags
+    const plantKeywords = [
+      p.name, p.nameEn, p.sub,
+      ...(p.tags||[])
+    ].filter(Boolean).map(s=>s.toLowerCase().trim());
+
+    // Also check partial matches (e.g. "موالح (برتقال، يوسفي، ليمون)" contains "برتقال")
+    function plantMatches(affectedArr){
+      return (affectedArr||[]).some(ap=>{
+        const apl = ap.toLowerCase();
+        return plantKeywords.some(kw => apl.includes(kw) || kw.includes(apl));
+      });
+    }
+
+    // Build matched diseases from DiseasesDB (not already in local list)
+    const dbMatched = DiseasesDB.filter(d=> plantMatches(d.affectedPlants) && !localNames.has(d.name));
+
+    // Convert local p.diseases to unified format
+    const localDiseases = (p.diseases||[]).map(d=>({
+      id: 'local-'+d.name,
+      name: d.name||'',
+      sci: d.sci||'',
+      type: d.type||'',
+      severity: d.sev||'',
+      symptoms: d.symp ? (typeof d.symp==='object'?Object.values(d.symp):Array.isArray(d.symp)?d.symp:[d.symp]) : [],
+      treatment: d.treat?.chem ? d.treat.chem.map(t=>`${t.p} (${t.d}, ${t.int})`) : [],
+      prevention: d.prev||[],
+      description: d.desc||'',
+      img: d.img||'',
+      isLocal: true
+    }));
+
+    // All diseases combined
+    const allDiseases = [...localDiseases, ...dbMatched];
+
+    // Unique types for filter
+    const types = [...new Set(allDiseases.map(d=>d.type||'').filter(Boolean))];
+
+    // Render a single disease card (works for both formats)
+    function renderDisCard(d){
+      const sev = d.severity||d.sev||'';
+      const sevIcon = sev==='خطير'?'🔴':sev==='متوسط'?'🟡':'🟢';
+      const typeColor = (d.type||'').includes('فطري')?'#f59e0b':(d.type||'').includes('بكتيري')?'#ef4444':(d.type||'').includes('فيروسي')?'#8b5cf6':(d.type||'').includes('حشري')?'#f97316':'#22c55e';
+      const symps = Array.isArray(d.symptoms)?d.symptoms.slice(0,3):[];
+      const treats = Array.isArray(d.treatment)?d.treatment.slice(0,2):[];
+      const prevs = Array.isArray(d.prevention)?d.prevention.slice(0,2):[];
+      return `<div class="dis-card ${sev}" data-type="${d.type||''}" data-name="${d.name||''}">
+        <div class="dis-head">
+          ${d.img?`<img src="${d.img}" alt="" style="width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0" loading="lazy" onerror="this.style.display='none'">`:'' }
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span class="dis-nm">${d.name}</span>
+              ${d.type?`<span style="font-size:10px;padding:2px 8px;border-radius:20px;background:${typeColor}22;color:${typeColor};font-weight:700;border:1px solid ${typeColor}44">${d.type}</span>`:''}
+              ${sev?`<span class="dis-sv ${sev}">${sevIcon} ${sev}</span>`:''}
+            </div>
+            ${d.sci?`<div class="dis-pt" style="margin-top:2px">${d.sci}</div>`:''}
+          </div>
+        </div>
+        <div class="dis-body">
+          ${d.description?`<p style="font-style:italic;color:var(--muted);margin-bottom:8px">${d.description}</p>`:''}
+          ${symps.length?`<p><strong>🔍 الأعراض:</strong> ${symps.join(' · ')}</p>`:''}
+          ${treats.length?`<p><strong>💊 العلاج:</strong> ${treats.join(' | ')}</p>`:''}
+          ${prevs.length?`<p><strong>🛡️ الوقاية:</strong> ${prevs.join(' · ')}</p>`:''}
+        </div>
+      </div>`;
+    }
+
+    return `
+    <div id="dis-controls" style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <div style="position:relative;flex:1;min-width:180px">
+        <input id="dis-search" type="text" placeholder="🔍 ابحث في الأمراض..." 
+          oninput="filterDiseases()"
+          style="width:100%;padding:10px 14px;border-radius:var(--rpill);border:1.5px solid var(--line2);background:var(--bg2);color:var(--ink);font-family:var(--f-ui);font-size:14px;outline:none;transition:border-color .2s"
+          onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--line2)'">
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="dis-filter-btn active" data-filter="all" onclick="setDisFilter('all',this)" style="padding:8px 14px;border-radius:var(--rpill);border:1.5px solid var(--brand);background:var(--brand);color:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s">الكل (${allDiseases.length})</button>
+        ${types.map(t=>`<button class="dis-filter-btn" data-filter="${t}" onclick="setDisFilter('${t}',this)" style="padding:8px 14px;border-radius:var(--rpill);border:1.5px solid var(--line2);background:var(--bg2);color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s">${t}</button>`).join('')}
+      </div>
+    </div>
+    <div id="dis-list" style="display:flex;flex-direction:column;gap:0">
+      ${allDiseases.length ? allDiseases.map(d=>renderDisCard(d)).join('') : '<p style="color:var(--muted);text-align:center;padding:32px">لا توجد أمراض مسجلة لهذا النبات</p>'}
+    </div>
+    <div id="dis-empty" style="display:none;text-align:center;padding:32px;color:var(--muted)">🔍 لا نتائج مطابقة</div>
+    <div class="tp-h" style="margin-top:20px">🧪 المبيدات الموصى بها</div>
     <div class="ptags">${(p.pest||[]).map(pp=>`<span class="ptag-btn">${pp}</span>`).join('')}</div>`;
+  }
   if(id==='harv')return `
     <div class="tp-h">🌾 علامات النضج</div>
     <div class="tip-list">${(p.harvest?.signs||[]).map(s=>`<div class="tip-row"><span class="tip-n">✓</span><span class="tip-t">${s}</span></div>`).join('')}</div>
@@ -13175,6 +13257,39 @@ function buildTab(id){
     <div class="tip-list">${(p.tips||[]).map((t,i)=>`<div class="tip-row"><span class="tip-n">${i+1}</span><span class="tip-t">${t}</span></div>`).join('')}</div>
     ${p.vars?.length?`<div class="tp-h">🔬 الأصناف المتاحة</div><div class="var-grid">${p.vars.map(v=>`<div class="var-c"><div class="var-nm">${v.name}</div><div class="var-m">${v.co}</div><div class="var-m">${v.for||''}</div>${v.y?`<div class="var-y">🌾 ${v.y}</div>`:''}</div>`).join('')}</div>`:''}`;
   return '';
+}
+
+function filterDiseases(){
+  const q=(document.getElementById('dis-search')?.value||'').trim().toLowerCase();
+  const activeBtn=document.querySelector('.dis-filter-btn.active');
+  const activeFilter=activeBtn?activeBtn.dataset.filter:'all';
+  const cards=document.querySelectorAll('#dis-list .dis-card');
+  let visible=0;
+  cards.forEach(card=>{
+    const name=(card.dataset.name||'').toLowerCase();
+    const type=(card.dataset.type||'').toLowerCase();
+    const text=card.textContent.toLowerCase();
+    const matchQ=!q||text.includes(q)||name.includes(q);
+    const matchF=activeFilter==='all'||type===activeFilter.toLowerCase();
+    const show=matchQ&&matchF;
+    card.style.display=show?'':'none';
+    if(show)visible++;
+  });
+  const empty=document.getElementById('dis-empty');
+  if(empty)empty.style.display=visible===0?'block':'none';
+}
+function setDisFilter(filter,btn){
+  document.querySelectorAll('.dis-filter-btn').forEach(b=>{
+    b.classList.remove('active');
+    b.style.background='var(--bg2)';
+    b.style.borderColor='var(--line2)';
+    b.style.color='var(--ink)';
+  });
+  btn.classList.add('active');
+  btn.style.background='var(--brand)';
+  btn.style.borderColor='var(--brand)';
+  btn.style.color='#fff';
+  filterDiseases();
 }
 
 function shareP(){if(navigator.share&&CP)navigator.share({title:CP.name,text:CP.ov,url:location.href});else{navigator.clipboard?.writeText(location.href);showToast('✅ تم نسخ الرابط','ok')}}
@@ -13366,12 +13481,11 @@ async function hReg(event) {
       nitrogen: {
         label: 'نيتروجين N', icon: '🌿', unit: 'N', color: '#22c55e',
         fertilizers: [
-          { id: 'amm-sulfate',   name: 'كبريتات الأمونيوم',  percentage: 20 },
-          { id: 'amm-sulfate2',  name: 'سلفات الأمونيوم',    percentage: 20 },
-          { id: 'amm-nitrate',   name: 'نترات الأمونيوم',    percentage: 33 },
-          { id: 'urea',          name: 'اليوريا',             percentage: 46 },
-          { id: 'cal-nitrate',   name: 'نترات الكالسيوم',    percentage: 17 },
-          { id: 'nitric-acid',   name: 'حامض النيتريك',      percentage: 14 },
+          { id: 'amm-sulfate',  name: 'كبريتات الأمونيوم',  percentage: 20.6 },
+          { id: 'amm-nitrate',  name: 'نترات الأمونيوم',    percentage: 33.5 },
+          { id: 'urea',         name: 'اليوريا',             percentage: 46   },
+          { id: 'cal-nitrate',  name: 'نترات الكالسيوم',    percentage: 17   },
+          { id: 'nitric-acid',  name: 'حامض النيتريك',      percentage: 14   },
         ]
       },
       phosphorus: {
@@ -13379,15 +13493,15 @@ async function hReg(event) {
         fertilizers: [
           { id: 'super-phos',   name: 'سوبر فوسفات الكالسيوم', percentage: 16 },
           { id: 'phos-acid',    name: 'حامض الفوسفوريك',        percentage: 85 },
-          { id: 'map',          name: 'MAP',                      percentage: 62 },
+          { id: 'map',          name: 'MAP',                      percentage: 12 },
         ]
       },
       potassium: {
         label: 'بوتاسيوم K', icon: '🍊', unit: 'K₂O', color: '#8b5cf6',
         fertilizers: [
-          { id: 'k-sulfate',    name: 'كبريتات البوتاسيوم',  percentage: 48 },
-          { id: 'k-carbonate',  name: 'كربونات البوتاسيوم',  percentage: 60 },
-          { id: 'k-nitrate',    name: 'نترات البوتاسيوم',    percentage: 50 },
+          { id: 'k-sulfate',  name: 'كبريتات البوتاسيوم', percentage: 48 },
+          { id: 'k-chloride', name: 'كلوريد البوتاسيوم',  percentage: 60 },
+          { id: 'k-nitrate',  name: 'نترات البوتاسيوم',   percentage: 50 },
         ]
       },
       calcium: {
