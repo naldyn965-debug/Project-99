@@ -100,7 +100,7 @@ img{display:block;max-width:100%}
 @media(max-width:600px){.W{padding:0 16px}}
 
 /* ═══════════════════════════════════════════
-   NAV (مع رابط الأمراض) — تم إزالة: بحث، محاصيل حقلية، موالح
+   NAV (تم إزالة خضروات، فاكهة، زينة، طبية، أمراض وأضيف "أهداف المنصة")
 ═══════════════════════════════════════════ */
 .nav{position:sticky;top:0;z-index:500;padding-top:env(safe-area-inset-top,0);transition:backdrop-filter 0.3s ease, background 0.3s ease;}
 .nav-bg{position:absolute;inset:0;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--line);transition:backdrop-filter 0.3s, box-shadow 0.3s;}
@@ -181,7 +181,7 @@ img{display:block;max-width:100%}
 .hero{position:relative;min-height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .hero-bg-img{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1800&q=85');background-size:cover;background-position:center 40%;transform:scale(1.08);animation:hKen 22s ease-in-out infinite alternate;filter:brightness(.28) saturate(.7)}
 @keyframes hKen{from{transform:scale(1.08) translateX(1%)}to{transform:scale(1) translateX(-1%)}}
-.hero-noise{position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml,<svg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(#n)'/></svg>");background-size:200px}
+.hero-noise{position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
 .hero-canvas{position:absolute;inset:0;z-index:1}
 .hero-orb1{position:absolute;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(27,107,58,.32) 0%,transparent 70%);top:-200px;right:-150px;animation:orbFloat1 12s ease-in-out infinite;pointer-events:none;z-index:1}
 .hero-orb2{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(184,134,11,.18) 0%,transparent 70%);bottom:-100px;left:-100px;animation:orbFloat2 15s ease-in-out infinite;pointer-events:none;z-index:1}
@@ -282,9 +282,8 @@ mark.hl{background:rgba(212,160,23,.28);border-radius:2px;padding:0 2px;color:in
 .sc-stat{text-align:center}
 .sc-stat-n{font-family:var(--f-display);font-size:1.8rem;color:#fff;line-height:1}
 .sc-stat-l{font-size:11px;color:rgba(255,255,255,0.7);margin-top:3px;letter-spacing:.04em}
-
 /* ═══════════════════════════════════════════
-   HOME — CATEGORIES STRIP (7 أقسام)
+   HOME — CATEGORIES STRIP (7 أقسام) — تم الاحتفاظ بها كما هي
 ═══════════════════════════════════════════ */
 .cats-section{padding:80px 0}
 .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:44px}
@@ -318,7 +317,7 @@ mark.hl{background:rgba(212,160,23,.28);border-radius:2px;padding:0 2px;color:in
 }
 
 /* ═══════════════════════════════════════════
-   HOME — FEATURED & STATS
+   HOME — FEATURED & STATS (تم تغيير "الأكثر طلباً" إلى "الأكثر تميزا")
 ═══════════════════════════════════════════ */
 .featured-section{padding:80px 0;background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .stats-section{background:var(--brand-d);padding:72px 0;position:relative;overflow:hidden}
@@ -438,8 +437,37 @@ mark.hl{background:rgba(212,160,23,.28);border-radius:2px;padding:0 2px;color:in
 .sp-ri-score{flex-shrink:0;font-size:11px;font-weight:700;color:var(--muted);background:var(--bg2);padding:4px 10px;border-radius:var(--rpill)}
 
 /* ═══════════════════════════════════════════
-   MODAL (للمحاصيل)
+   GOALS PAGE (أهداف المنصة والمطورين) - تم تعديل الألقاب والنصوص
 ═══════════════════════════════════════════ */
+.goals-hero{background:linear-gradient(135deg,var(--brand-d) 0%,var(--brand) 100%);padding:80px 0;text-align:center;color:white;position:relative;overflow:hidden}
+.goals-hero h1{font-family:var(--f-display);font-size:3.5rem;margin-bottom:16px}
+.goals-hero p{font-size:1.2rem;opacity:0.9;max-width:700px;margin:0 auto}
+.goals-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin:60px 0}
+.goal-card{background:var(--card);border-radius:28px;padding:32px 24px;text-align:center;box-shadow:var(--s3);transition:all 0.3s var(--ease-spring);border:1px solid var(--line);cursor:default}
+.goal-card:hover{transform:translateY(-8px);box-shadow:var(--s5);border-color:var(--brand-l)}
+.goal-icon{font-size:64px;margin-bottom:20px;display:inline-block}
+.goal-card h3{font-family:var(--f-display);font-size:1.8rem;color:var(--ink);margin-bottom:12px}
+.goal-card p{color:var(--slate);line-height:1.7}
+.team-section{margin:80px 0;background:var(--bg2);border-radius:48px;padding:60px 40px}
+.team-section h2{font-family:var(--f-display);font-size:2.5rem;text-align:center;margin-bottom:48px;color:var(--ink)}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:32px}
+.team-card{background:var(--card);border-radius:32px;overflow:hidden;box-shadow:var(--s3);transition:transform 0.3s;text-align:center}
+.team-card:hover{transform:translateY(-6px)}
+.team-img{height:180px;background:var(--brand-mist);display:flex;align-items:center;justify-content:center;font-size:72px}
+.team-info{padding:24px}
+.team-info h3{font-size:1.5rem;color:var(--ink);margin-bottom:6px}
+.team-info .role{color:var(--brand);font-weight:600;margin-bottom:12px;font-size:0.9rem}
+.team-info .desc{color:var(--slate);font-size:0.85rem;line-height:1.6}
+.dev-highlight{background:var(--gold-pale);border-radius:32px;padding:40px;margin:40px 0;border:1px solid var(--gold-l);text-align:center}
+.dev-highlight h3{font-family:var(--f-display);font-size:2rem;color:var(--gold);margin-bottom:16px}
+.dev-highlight p{font-size:1.05rem;color:var(--ink2);max-width:800px;margin:0 auto}
+.dev-highlight .badge{display:inline-block;background:var(--gold);color:white;padding:6px 20px;border-radius:40px;margin-top:20px;font-weight:700}
+.cta-buttons{display:flex;gap:20px;justify-content:center;margin:50px 0 30px}
+.btn-goal{background:var(--brand);color:white;padding:14px 34px;border-radius:50px;font-weight:700;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px}
+.btn-goal-outline{background:transparent;border:2px solid var(--brand);color:var(--brand);padding:12px 30px;border-radius:50px;font-weight:700;transition:all 0.2s}
+.btn-goal:hover,.btn-goal-outline:hover{transform:translateY(-3px);box-shadow:var(--s3)}
+
+/* MODAL (للمحاصيل) */
 body.modal-open { overflow: hidden; }
 .modal-bg{position:fixed;inset:0;z-index:700;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-bg.on{display:flex;animation:bgIn .28s ease forwards}
@@ -899,6 +927,699 @@ body.modal-open { overflow: hidden; }
   font-weight: bold;
   color: var(--ink);
 }
+
+/* ═══ FERTILIZER CALCULATOR CSS ═══ */
+/* ═══════════════════════════════════════════════════════
+   fertilizer-calculator.css — Nabtix Fertilizer Calculator
+   حاسبة التسميد — أشجار الموالح
+   Premium agricultural calculator section
+═══════════════════════════════════════════════════════ */
+
+/* ── Section Shell ──────────────────────────────────── */
+#fertilizer-calc-section {
+  position: relative;
+  padding: 100px 0 120px;
+  background: var(--bg);
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+}
+
+/* Decorative background mesh */
+#fertilizer-calc-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 20%, rgba(27,107,58,.055) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 60% at 85% 80%, rgba(184,134,11,.04) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 60% 10%, rgba(27,107,58,.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#fertilizer-calc-section > * { position: relative; z-index: 1; }
+
+/* ── Section Header ─────────────────────────────────── */
+.fc-section-head {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.fc-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px;
+  border-radius: 9999px;
+  background: rgba(27,107,58,.09);
+  border: 1px solid rgba(27,107,58,.18);
+  color: var(--brand);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.fc-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand);
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+.fc-section-title {
+  font-family: var(--f-display);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: 16px;
+  letter-spacing: -.02em;
+}
+
+.fc-section-sub {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.75;
+}
+
+/* ── Main Grid ──────────────────────────────────────── */
+.fc-layout {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .fc-layout { grid-template-columns: 1fr; }
+}
+
+/* ── Form Panel ─────────────────────────────────────── */
+.fc-form-panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 36px 32px;
+  box-shadow: var(--s3);
+  position: sticky;
+  top: 90px;
+}
+
+.fc-panel-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.fc-panel-title-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-l) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ── Field Groups ───────────────────────────────────── */
+.fc-fields-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.fc-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.fc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.fc-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--slate);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+  user-select: none;
+}
+
+.fc-label-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.fc-help {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid var(--muted);
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+  margin-right: auto;
+  transition: border-color .2s, color .2s;
+  flex-shrink: 0;
+}
+
+.fc-help:hover { border-color: var(--brand); color: var(--brand); }
+
+.fc-select,
+.fc-input {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line2);
+  background: var(--bg2);
+  color: var(--ink);
+  font-family: var(--f-ui);
+  font-size: 14px;
+  font-weight: 500;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+  appearance: none;
+  -webkit-appearance: none;
+  direction: rtl;
+}
+
+.fc-select-wrap {
+  position: relative;
+}
+
+.fc-select-wrap::after {
+  content: '▾';
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.fc-select:focus,
+.fc-input:focus {
+  border-color: var(--brand);
+  background: var(--bg);
+  box-shadow: 0 0 0 3px rgba(27,107,58,.1);
+  outline: none;
+}
+
+.fc-field.is-focused .fc-label { color: var(--brand); }
+
+.fc-input::placeholder { color: var(--muted); font-weight: 400; }
+
+.fc-input[type="number"] { -moz-appearance: textfield; }
+.fc-input[type="number"]::-webkit-inner-spin-button,
+.fc-input[type="number"]::-webkit-outer-spin-button { appearance: none; }
+
+/* Fertilizer search */
+.fc-fert-search-wrap {
+  position: relative;
+  margin-bottom: -4px;
+}
+
+.fc-fert-search-wrap::before {
+  content: '🔍';
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#fc-fert-search {
+  padding-right: 38px;
+}
+
+/* Percentage readonly badge */
+.fc-pct-wrap { position: relative; }
+
+.fc-pct-wrap .fc-input {
+  background: var(--brand-mist);
+  border-color: rgba(27,107,58,.2);
+  color: var(--brand);
+  font-weight: 700;
+  cursor: default;
+}
+
+.fc-pct-badge {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand);
+  pointer-events: none;
+}
+
+/* Spacing inputs group */
+.fc-spacing-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 8px;
+  align-items: end;
+}
+
+.fc-spacing-sep {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+  padding-bottom: 12px;
+  line-height: 46px;
+}
+
+/* Active element badge */
+.fc-element-preview {
+  margin-top: 20px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.fc-element-preview-label {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+#fc-active-element {
+  font-weight: 700;
+  color: var(--el-color, var(--brand));
+  font-size: 14px;
+  transition: color .3s;
+}
+
+/* ── Results Panel ──────────────────────────────────── */
+.fc-results-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Empty state */
+#fc-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 40px;
+  border: 2px dashed var(--line2);
+  border-radius: 24px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.fc-empty-icon {
+  font-size: 52px;
+  line-height: 1;
+  opacity: .6;
+}
+
+.fc-empty-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink2);
+}
+
+.fc-empty-sub {
+  font-size: 13.5px;
+  color: var(--muted);
+  max-width: 320px;
+  line-height: 1.7;
+}
+
+/* Results wrap */
+#fc-results-wrap { display: none; }
+
+/* Equation summary strip */
+.fc-equation-strip {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.fc-eq-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: var(--card);
+  border: 1px solid var(--line2);
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.fc-eq-result {
+  background: rgba(27,107,58,.08);
+  border-color: rgba(27,107,58,.2);
+  color: var(--brand);
+}
+
+.fc-eq-op {
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.fc-eq-sep {
+  color: var(--line2);
+  font-size: 18px;
+  margin: 0 4px;
+}
+
+/* Result groups */
+.fc-result-group {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--s2);
+}
+
+.fc-group-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--line);
+}
+
+.fc-group-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.fc-group-icon--tree   { background: rgba(34,197,94,.12);  }
+.fc-group-icon--feddan { background: rgba(139,92,246,.12); }
+.fc-group-icon--farm   { background: rgba(245,158,11,.12); }
+
+.fc-group-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.fc-group-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.fc-cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0;
+}
+
+.fc-result-card {
+  --card-accent: var(--brand);
+  padding: 20px;
+  border-left: 1px solid var(--line);
+  position: relative;
+  transition: background .2s;
+}
+
+.fc-result-card:first-child { border-left: none; }
+
+.fc-result-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: var(--card-accent);
+  opacity: 0;
+  transition: opacity .3s;
+  border-radius: 0;
+}
+
+.fc-result-card:hover { background: var(--bg2); }
+.fc-result-card:hover::before { opacity: .6; }
+
+.fc-card-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 10px;
+  letter-spacing: .03em;
+  line-height: 1.4;
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.fc-card-value {
+  font-size: clamp(18px, 2.2vw, 24px);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.fc-num {
+  color: var(--card-accent);
+  transition: color .3s;
+}
+
+.fc-unit {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.fc-card-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 5px;
+  line-height: 1.4;
+  min-height: 14px;
+}
+
+/* 3-card row for feddan group */
+.fc-cards-row--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 600px) {
+  .fc-cards-row--3 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ── Tooltip ────────────────────────────────────────── */
+.fc-tooltip {
+  position: absolute;
+  z-index: 9000;
+  background: var(--ink);
+  color: #fff;
+  font-size: 12px;
+  font-family: var(--f-ui);
+  line-height: 1.55;
+  padding: 8px 13px;
+  border-radius: 8px;
+  max-width: 240px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .18s, transform .18s;
+  box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  direction: rtl;
+}
+
+.fc-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom: none;
+  border-top-color: var(--ink);
+}
+
+.fc-tooltip--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Dark Mode ──────────────────────────────────────── */
+[data-dark] .fc-select,
+[data-dark] .fc-input {
+  background: var(--bg3);
+  border-color: var(--line2);
+  color: var(--ink);
+}
+
+[data-dark] .fc-select:focus,
+[data-dark] .fc-input:focus {
+  background: var(--bg2);
+}
+
+[data-dark] .fc-pct-wrap .fc-input {
+  background: rgba(27,107,58,.12);
+}
+
+[data-dark] .fc-form-panel {
+  background: var(--card);
+  border-color: var(--line);
+}
+
+[data-dark] #fc-empty-state {
+  border-color: var(--line);
+}
+
+[data-dark] .fc-result-group {
+  background: var(--card);
+}
+
+[data-dark] .fc-group-header {
+  background: var(--bg3);
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  #fertilizer-calc-section {
+    padding: 70px 0 90px;
+  }
+
+  .fc-form-panel {
+    border-radius: 20px;
+    padding: 24px 20px;
+    position: static;
+  }
+
+  .fc-field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .fc-spacing-row {
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  .fc-section-head {
+    margin-bottom: 40px;
+  }
+
+  .fc-cards-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .fc-result-card {
+    padding: 16px 14px;
+  }
+
+  .fc-card-value {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fc-spacing-row {
+    grid-template-columns: 1fr 24px 1fr;
+  }
+
+  .fc-spacing-sep {
+    font-size: 16px;
+    padding-bottom: 14px;
+  }
+
+  .fc-cards-row--3 {
+    grid-template-columns: 1fr;
+  }
+
+  .fc-cards-row {
+    grid-template-columns: 1fr;
+  }
+
+  .fc-result-card {
+    border-left: none;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .fc-result-card:last-child {
+    border-bottom: none;
+  }
+}
+
+/* ── Reveal Animation ───────────────────────────────── */
+.fc-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1);
+}
+
+.fc-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger delays */
+.fc-reveal:nth-child(1) { transition-delay: 0ms; }
+.fc-reveal:nth-child(2) { transition-delay: 80ms; }
+.fc-reveal:nth-child(3) { transition-delay: 160ms; }
+.fc-reveal:nth-child(4) { transition-delay: 240ms; }
+
+/* Divider between form and results on mobile */
+@media (max-width: 1080px) {
+  .fc-layout {
+    gap: 40px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -927,11 +1648,8 @@ body.modal-open { overflow: hidden; }
     </a>
     <div class="nav-links">
       <a href="#" class="nl active" id="nl-home" onclick="showPage('home');return false">الرئيسية</a>
-      <a href="#" class="nl" id="nl-veg" onclick="showCatPage('vegetables');return false">خضروات</a>
-      <a href="#" class="nl" id="nl-fr" onclick="showCatPage('fruits');return false">فاكهة</a>
-      <a href="#" class="nl" id="nl-or" onclick="showCatPage('ornamental');return false">زينة</a>
-      <a href="#" class="nl" id="nl-med" onclick="showCatPage('medicinal');return false">طبية وعطرية</a>
-      <a href="#" class="nl" id="nl-diseases" onclick="showDiseasesPage();return false">أمراض النبات</a>
+      <!-- تم إزالة خضروات، فاكهة، زينة، طبية، أمراض، وأضيف أهداف المنصة -->
+      <a href="#" class="nl" id="nl-goals" onclick="showPage('goals');return false">🎯 أهداف المنصة</a>
     </div>
     <div class="nav-actions" id="nav-actions">
       <button class="nav-icon-btn" id="thm-btn" title="تبديل المظهر">🌙</button>
@@ -955,17 +1673,12 @@ body.modal-open { overflow: hidden; }
   </div>
   <div class="mob-menu" id="mob-menu">
     <a href="#" class="nl" onclick="showPage('home');closeMob()">الرئيسية</a>
-    <a href="#" class="nl" onclick="showCatPage('vegetables');closeMob()">خضروات</a>
-    <a href="#" class="nl" onclick="showCatPage('fruits');closeMob()">فاكهة</a>
-    <a href="#" class="nl" onclick="showCatPage('ornamental');closeMob()">زينة</a>
-    <a href="#" class="nl" onclick="showCatPage('medicinal');closeMob()">طبية وعطرية</a>
-    <a href="#" class="nl" onclick="showDiseasesPage();closeMob()">أمراض النبات</a>
+    <a href="#" class="nl" onclick="showPage('goals');closeMob()">🎯 أهداف المنصة</a>
     <a href="#" class="nl" id="mobLogin" onclick="openAuth('login');closeMob()">تسجيل الدخول</a>
     <a href="#" class="nl" id="mobRegister" onclick="openAuth('reg');closeMob()">إنشاء حساب</a>
     <a href="#" class="nl" id="mobLogout" style="display:none;" onclick="logoutUser();closeMob()">تسجيل الخروج</a>
   </div>
 </nav>
-
 <!-- ══════════ PAGE: HOME ══════════ -->
 <div class="page active" id="pg-home">
   <section class="hero" id="hero-sec">
@@ -989,13 +1702,14 @@ body.modal-open { overflow: hidden; }
         <span class="line"><span class="word">علم الزراعة</span></span>
         <span class="line"><span class="word">في يد <span class="ita">كل مزارع</span></span></span>
       </h1>
-      <p class="hero-sub">موسوعة متكاملة لأكثر من 150 نبات — تسميد، ري، أمراض، حصاد، واقتصاديات.<br>بيانات مستندة إلى FAO ووزارة الزراعة المصرية.</p>
+      <!-- تم تعديل النص: إزالة "أكثر من 150 نبات" واستبدالها -->
+      <p class="hero-sub">موسوعة متكاملة تحتوي على مجموعة متنوعة من النباتات الاقتصادية — تسميد، ري، أمراض، حصاد، واقتصاديات.<br>بيانات مستندة إلى FAO ووزارة الزراعة المصرية.</p>
       <div class="hero-ctas">
         <button class="btn-hero-p" onclick="showPage('search')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           ابحث الآن
         </button>
-        <button class="btn-hero-s" onclick="showCatPage('vegetables')">🥦 تصفح الخضروات</button>
+        <button class="btn-hero-s" onclick="showPage('goals')">🎯 أهداف المنصة</button>
         <button class="btn-hero-diseases" onclick="showDiseasesPage()">🦠 تصفح أمراض النبات</button>
       </div>
       <div class="hero-pills">
@@ -1033,6 +1747,225 @@ body.modal-open { overflow: hidden; }
       </svg>
     </div>
   </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       FERTILIZER CALCULATOR SECTION
+       حاسبة التسميد — أشجار الموالح
+  ═════════════════════════════════════════════════════ -->
+  <section id="fertilizer-calc-section">
+    <div class="W">
+
+      <div class="fc-section-head fc-reveal">
+        <div class="fc-eyebrow">
+          <span class="fc-eyebrow-dot"></span>
+          حاسبة التسميد الذكية
+        </div>
+        <h2 class="fc-section-title">
+          احتياجات التسميد لأشجار
+          <em style="font-style:italic;color:var(--brand)">الموالح</em>
+        </h2>
+        <p class="fc-section-sub">
+          احسب الاحتياجات السمادية الصافية والفعلية للبرتقال واليوسفي
+          في الأراضي الرملية والطينية — نتائج فورية دقيقة.
+        </p>
+      </div>
+
+      <div class="fc-layout">
+
+        <div class="fc-form-panel fc-reveal">
+          <div class="fc-panel-title">
+            <div class="fc-panel-title-icon">🌳</div>
+            <div>
+              <div>بيانات الحساب</div>
+              <div style="font-size:11px;font-weight:400;color:var(--muted);margin-top:1px">أدخل بيانات المزرعة</div>
+            </div>
+          </div>
+
+          <div class="fc-fields-grid">
+            <div class="fc-field-row">
+              <div class="fc-field">
+                <label class="fc-label" for="fc-crop">
+                  <span class="fc-label-icon">🍊</span>
+                  نوع المحصول
+                  <span class="fc-help" data-tip="البرتقال ومعاملاته أعلى من اليوسفي بسبب احتياجاته الغذائية الأكبر">?</span>
+                </label>
+                <div class="fc-select-wrap"><select class="fc-select" id="fc-crop"></select></div>
+              </div>
+              <div class="fc-field">
+                <label class="fc-label" for="fc-soil">
+                  <span class="fc-label-icon">🌍</span>
+                  نوع التربة
+                  <span class="fc-help" data-tip="الأرض الرملية تحتاج كميات أسمدة أعلى بسبب ضعف الاحتجاز">?</span>
+                </label>
+                <div class="fc-select-wrap"><select class="fc-select" id="fc-soil"></select></div>
+              </div>
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label" for="fc-element">
+                <span class="fc-label-icon">⚗️</span>
+                العنصر الغذائي
+                <span class="fc-help" data-tip="اختر العنصر المطلوب حساب احتياجاته — تتغير قائمة الأسمدة تلقائياً">?</span>
+              </label>
+              <div class="fc-select-wrap"><select class="fc-select" id="fc-element"></select></div>
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label" for="fc-fert-search">
+                <span class="fc-label-icon">🔍</span>
+                بحث السماد
+              </label>
+              <div class="fc-fert-search-wrap">
+                <input class="fc-input" id="fc-fert-search" type="text" placeholder="ابحث عن سماد...">
+              </div>
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label" for="fc-fertilizer">
+                <span class="fc-label-icon">🧪</span>
+                السماد المستخدم
+                <span class="fc-help" data-tip="تختلف كفاءة الأسمدة حسب نسبة العنصر الفعّال بها">?</span>
+              </label>
+              <div class="fc-select-wrap"><select class="fc-select" id="fc-fertilizer"></select></div>
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label" for="fc-fert-pct">
+                <span class="fc-label-icon">📊</span>
+                نسبة العنصر %
+                <span class="fc-help" data-tip="تُحسب تلقائياً من السماد المختار، يمكن تعديلها يدوياً">?</span>
+              </label>
+              <div class="fc-pct-wrap">
+                <input class="fc-input" id="fc-fert-pct" type="number" min="0.1" max="100" step="0.1" placeholder="%">
+                <span class="fc-pct-badge">%</span>
+              </div>
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label" for="fc-age">
+                <span class="fc-label-icon">🗓️</span>
+                عمر الشجرة
+                <span class="fc-help" data-tip="عمر الشجرة بالسنوات — الاحتياج يزيد خطياً مع العمر">?</span>
+              </label>
+              <input class="fc-input" id="fc-age" type="number" min="1" max="50" step="1" placeholder="سنة">
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label">
+                <span class="fc-label-icon">📐</span>
+                مسافات الزراعة (م)
+                <span class="fc-help" data-tip="مثال: 5×5 يعني 5م بين الخطوط و5م بين الأشجار">?</span>
+              </label>
+              <div class="fc-spacing-row">
+                <input class="fc-input" id="fc-row-spacing" type="number" min="0.5" max="20" step="0.5" placeholder="بين الخطوط">
+                <div class="fc-spacing-sep">×</div>
+                <input class="fc-input" id="fc-tree-spacing" type="number" min="0.5" max="20" step="0.5" placeholder="بين الأشجار">
+              </div>
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label" for="fc-feddans">
+                <span class="fc-label-icon">🌾</span>
+                عدد الأفدنة
+                <span class="fc-help" data-tip="مساحة الفدان = 4200 م² وفق المعيار المصري">?</span>
+              </label>
+              <input class="fc-input" id="fc-feddans" type="number" min="0.1" max="10000" step="0.5" placeholder="فدان">
+            </div>
+          </div>
+
+          <div class="fc-element-preview">
+            <span class="fc-element-preview-label">العنصر النشط:</span>
+            <span id="fc-active-element">—</span>
+          </div>
+        </div>
+
+        <div class="fc-results-panel fc-reveal">
+          <div id="fc-empty-state">
+            <div class="fc-empty-icon">🌱</div>
+            <div class="fc-empty-text">أدخل بيانات المزرعة للحصول على النتائج</div>
+            <div class="fc-empty-sub">أكمل حقول العمر والمسافات وعدد الأفدنة وستظهر النتائج تلقائياً</div>
+          </div>
+
+          <div id="fc-results-wrap">
+            <div class="fc-equation-strip" id="fc-equation-summary"></div>
+
+            <div class="fc-result-group">
+              <div class="fc-group-header">
+                <div class="fc-group-icon fc-group-icon--tree">🌳</div>
+                <div>
+                  <div class="fc-group-title">على مستوى الشجرة</div>
+                  <div class="fc-group-sub">الاحتياج لكل شجرة منفردة</div>
+                </div>
+              </div>
+              <div class="fc-cards-row">
+                <div class="fc-result-card" id="fc-res-net-tree" data-tip="الاحتياج الصافي = عمر الشجرة × المعامل">
+                  <div class="fc-card-label"><span>🌿</span> الاحتياج الصافي / شجرة</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+                <div class="fc-result-card" id="fc-res-actual-tree" data-tip="الاحتياج الفعلي = (الصافي × 100) ÷ نسبة العنصر في السماد">
+                  <div class="fc-card-label"><span>🧪</span> الاحتياج الفعلي / شجرة</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="fc-result-group">
+              <div class="fc-group-header">
+                <div class="fc-group-icon fc-group-icon--feddan">📏</div>
+                <div>
+                  <div class="fc-group-title">على مستوى الفدان</div>
+                  <div class="fc-group-sub">4200 م² · أشجار وكميات</div>
+                </div>
+              </div>
+              <div class="fc-cards-row fc-cards-row--3">
+                <div class="fc-result-card" id="fc-res-trees-feddan" data-tip="عدد الأشجار = 4200 ÷ (مسافة الخطوط × مسافة الأشجار)">
+                  <div class="fc-card-label"><span>🌳</span> عدد الأشجار / فدان</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+                <div class="fc-result-card" id="fc-res-net-feddan" data-tip="الاحتياج الصافي للفدان = الاحتياج الصافي للشجرة × عدد الأشجار">
+                  <div class="fc-card-label"><span>🌿</span> الاحتياج الصافي / فدان</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+                <div class="fc-result-card" id="fc-res-actual-feddan" data-tip="الاحتياج الفعلي للفدان = الاحتياج الفعلي للشجرة × عدد الأشجار">
+                  <div class="fc-card-label"><span>🧪</span> الاحتياج الفعلي / فدان</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="fc-result-group">
+              <div class="fc-group-header">
+                <div class="fc-group-icon fc-group-icon--farm">🌾</div>
+                <div>
+                  <div class="fc-group-title">على مستوى المزرعة</div>
+                  <div class="fc-group-sub">إجمالي الاحتياجات للمزرعة كاملة</div>
+                </div>
+              </div>
+              <div class="fc-cards-row">
+                <div class="fc-result-card" id="fc-res-net-total" data-tip="الاحتياج الصافي للمزرعة = الاحتياج الصافي للفدان × عدد الأفدنة">
+                  <div class="fc-card-label"><span>🌿</span> الاحتياج الصافي — إجمالي</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+                <div class="fc-result-card" id="fc-res-actual-total" data-tip="الاحتياج الفعلي للمزرعة = الاحتياج الفعلي للفدان × عدد الأفدنة">
+                  <div class="fc-card-label"><span>🧪</span> الاحتياج الفعلي — إجمالي</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ═══ END FERTILIZER CALCULATOR ═══ -->
+
 
   <section class="cats-section">
     <div class="W">
@@ -1080,7 +2013,8 @@ body.modal-open { overflow: hidden; }
           </div>
         </div>
         <div class="cat-card" onclick="showCatPage('medicinal')">
-          <div class="cat-card-bg" style="background-image:url('https://gate.ahram.org.eg/Media/News/2021/3/1/19_2021-637502127478826696-882.jpg'  )"></div>
+          <!-- تم تغيير رابط الصورة لقسم النباتات الطبية والعطرية -->
+          <div class="cat-card-bg" style="background-image:url('https://images.alborsaanews.com/2013/01/1461454279_296444_886_246274_.gif')"></div>
           <div class="cat-card-veil"></div>
           <div class="cat-card-body">
             <span class="cat-card-icon">🌿</span>
@@ -1092,7 +2026,8 @@ body.modal-open { overflow: hidden; }
           </div>
         </div>
         <div class="cat-card" onclick="showCatPage('fieldcrops')">
-          <div class="cat-card-bg" style="background-image:url('https://gate.ahram.org.eg/Media/News/2023/2/11/19_2023-638117191791157589-115.jpg"></div>
+          <!-- تم تغيير رابط الصورة لقسم المحاصيل الحقلية -->
+          <div class="cat-card-bg" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ53IQSD2Z-euhxHZoNgOs0x6bcC1-CYrDfzy6MtBV9xA&s=10')"></div>
           <div class="cat-card-veil"></div>
           <div class="cat-card-body">
             <span class="cat-card-icon">🌾</span>
@@ -1116,7 +2051,8 @@ body.modal-open { overflow: hidden; }
           </div>
         </div>
         <div class="cat-card" onclick="showDiseasesPage()">
-          <div class="cat-card-bg" style="background-image:url('https://images.unsplash.com/photo-1585067189945-e9b2f9bbac30?w=900&q=80')"></div>
+          <!-- تم تغيير رابط الصورة لقسم أمراض النبات -->
+          <div class="cat-card-bg" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdnXOSqt-FpzKstDgpq_Evo3ql2uMcAasiwzFyUDW3ia49KA82Qlm9kMT&s=10')"></div>
           <div class="cat-card-veil"></div>
           <div class="cat-card-body">
             <span class="cat-card-icon">🦠</span>
@@ -1135,7 +2071,8 @@ body.modal-open { overflow: hidden; }
     <div class="W">
       <div class="sec-head reveal">
         <div class="sh-titles">
-          <div class="sh-kicker">الأكثر طلباً</div>
+          <!-- تم تغيير النص من "الأكثر طلباً" إلى "الأكثر تميزا" -->
+          <div class="sh-kicker">الأكثر تميزا</div>
           <h2 class="sh-title">نباتات مميزة</h2>
         </div>
         <button class="sec-link" onclick="showPage('search')">عرض الكل ←</button>
@@ -1185,8 +2122,8 @@ body.modal-open { overflow: hidden; }
         </div>
       </div>
       <div class="footer-bot">
-        <span>© 2024 Nabtex — نبتيكس. جميع الحقوق محفوظة.</span>
-        <span>صُنع بـ ❤️ للمزارع المصري</span>
+        <span>© 2026 Nabtex — نبتيكس. جميع الحقوق محفوظة.</span>
+        <span>صُنع بـحب للمزارع المصري</span>
       </div>
     </div>
   </footer>
@@ -1231,7 +2168,8 @@ body.modal-open { overflow: hidden; }
     <div class="W">
       <div class="sp-bar-wrap">
         <h1 class="sp-title">البحث الذكي</h1>
-        <p class="sp-sub">ابحث في أكثر من 150 نبات — تسميد، ري، أمراض، حصاد، اقتصاديات</p>
+        <!-- تم تعديل النص: إزالة "أكثر من 150 نبات" -->
+        <p class="sp-sub">ابحث في مجموعة متنوعة من النباتات الاقتصادية — تسميد، ري، أمراض، حصاد، اقتصاديات</p>
         <div class="sp-bar">
           <i id="sp-ico">🔍</i>
           <input class="sp-bar-inp" id="sp-inp" type="text" placeholder="ابحث عن أي شيء... تسميد البطاطس، أمراض الطماطم، نبات للصحراء..." autocomplete="off">
@@ -1307,7 +2245,7 @@ body.modal-open { overflow: hidden; }
 <!-- ══════════ PAGE: DISEASES ══════════ -->
 <div class="page" id="pg-diseases">
   <div class="cat-page-hero" style="height: 320px; overflow: hidden; display: flex; align-items: flex-end;">
-    <div class="cph-img" style="background-image: url('https://images.unsplash.com/photo-1585067189945-e9b2f9bbac30?w=1400&q=80'); background-size: cover; background-position: center; filter: brightness(.45) saturate(.8);"></div>
+    <div class="cph-img" style="background-image: url('https://hiragate.com/wp-content/uploads/2023/01/art-152.webp'); background-size: cover; background-position: center; filter: brightness(.45) saturate(.8);"></div>
     <div class="cph-veil"></div>
     <div class="cph-body W">
       <button class="cph-back" onclick="showPage('home')">← العودة للرئيسية</button>
@@ -1321,6 +2259,76 @@ body.modal-open { overflow: hidden; }
       <div class="diseases-grid" id="diseases-grid"></div>
     </div>
   </section>
+</div>
+
+<!-- ══════════ PAGE: GOALS (أهداف المنصة والمطورين) - تم تعديل الألقاب والنصوص ══════════ -->
+<div class="page" id="pg-goals">
+  <div class="goals-hero">
+    <div class="W">
+      <h1>🎯 أهداف منصة نبتيكس</h1>
+      <p>نحو زراعة أكثر إنتاجية واستدامة للمزارع المصري والعربي</p>
+    </div>
+  </div>
+  <div class="W">
+    <div class="goals-grid">
+      <div class="goal-card">
+        <div class="goal-icon">📘</div>
+        <h3>موسوعة زراعية شاملة</h3>
+        <p>توفير قاعدة بيانات ضخمة تضم مجموعة متنوعة من النباتات الاقتصادية، تشمل طرق التسميد، الري، مكافحة الأمراض، والحصاد، مع تحديثات مستمرة.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">📊</div>
+        <h3>دعم اتخاذ القرار</h3>
+        <p>تقديم بيانات اقتصادية وتحليلات للربحية، لمساعدة المزارعين والشركات على اختيار المحصول الأنسب وتحقيق أعلى عائد.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🧠</div>
+        <h3>تمكين المزارع المصري</h3>
+        <p>نشر المعرفة الحديثة باللغة العربية بأسلوب مبسط، مع نصائح الخبراء والمصادر الموثوقة (FAO، وزارة الزراعة).</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🤝</div>
+        <h3>مجتمع زراعي تفاعلي</h3>
+        <p>ربط المزارعين والمهندسين الزراعيين والباحثين لتبادل الخبرات، والوصول إلى أحدث الأبحاث والتقنيات.</p>
+      </div>
+    </div>
+
+    <div class="team-section">
+      <h2>👥 مؤسسو المنصة</h2>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-img">👨‍💻</div>
+          <div class="team-info">
+            <h3>البشمهندس نور الهادي</h3>
+            <!-- تم التعديل: مهندس زراعي ومبرمج -->
+            <div class="role">مهندس زراعي ومبرمج</div>
+            <div class="desc">مهندس زراعي ومطور ويب محترف، يجمع بين المعرفة الزراعية والتقنية لتطوير منصة متكاملة تخدم القطاع الزراعي. صمم وأشرف على البنية التقنية للمنصة لضمان تجربة مستخدم فائقة.</div>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-img">👩‍🌾</div>
+          <div class="team-info">
+            <h3>البشمهندسة ماهيتاب احمد</h3>
+            <!-- تم التعديل: مهندسة زراعية -->
+            <div class="role">مهندسة زراعية</div>
+            <div class="desc">مهندسة زراعية متخصصة في الإنتاج النباتي، عملت على جمع وتوثيق البيانات الزراعية من أحدث المراجع لتكون المنصة مرجعاً موثوقاً للمزارعين.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dev-highlight">
+      <h3>🚀 لمحة عن المطور التقني</h3>
+      <!-- تم تعديل النص: فرونت ايند وتحسين للوضع الليلي -->
+      <p>تم بناء هذه المنصة المتكاملة بواسطة <strong>البشمهندس نور الهادي</strong>، مطور <strong>فرونت ايند</strong> محترف (Frontend Developer) بخبرة تزيد عن <strong>أربع سنوات</strong> في تطوير وإنشاء مواقع الويب التفاعلية عالية الأداء. استخدم أحدث تقنيات الويب (HTML5، CSS3، JavaScript، Firebase) لتحقيق تجربة سلسة وسريعة وجذابة. تم تصميم الواجهات بعناية فائقة لتناسب جميع الأجهزة وأحجام الشاشات، كما تم الاهتمام بتحسين الأداء وسرعة التحميل. يتميز بقدرته على تحويل الأفكار إلى تطبيقات ويب متكاملة تركز على المستخدم وسهولة الاستخدام، مع مراعاة تجربة المستخدم حتى في الوضع الليلي لضمان راحة العين.</p>
+      <span class="badge">✨ خبرة 4+ سنوات في تطوير الواجهات الأمامية (Frontend)</span>
+    </div>
+
+    <div class="cta-buttons">
+      <button class="btn-goal" onclick="showPage('search')">🔍 استكشف الموسوعة الآن</button>
+      <button class="btn-goal-outline" onclick="showPage('home')">🏠 العودة للرئيسية</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════ PLANT MODAL ══════════ -->
@@ -1411,10 +2419,9 @@ let userJoinDate = null;
 let userProvider = 'email';
 let profileEditMode = false;
 let tempAvatarFile = null;
-
 // ======================== DATABASE ========================
-  // ========== الخضروات ==========
 const DB = [
+  // ========== الخضروات ==========
   // ─── VEGETABLES v1 to v45 (as previously, but will list all for completeness) ───
   // v1 طماطم
   {id:"v1",name:"طماطم",nameEn:"Tomato",nameSci:"Solanum lycopersicum",cat:"vegetables",sub:"ثمرية",
@@ -3920,8 +4927,8 @@ const DB = [
    econ:{costs:"6000–8000 جنيه/فدان",rev:"12,000–40,000 جنيه",profit:"6,000–32,000 جنيه",best:"ديسمبر–فبراير",markets:["أوروبا","الخليج"]},
    vars:[{name:"قوس قزح",co:"هولندي",y:"10–12 طن",for:"تصدير"}],
    tips:["الحصاد المستمر يطيل الإنتاج","التسميد بالنيتروجين بعد كل حشة","تجنب الزراعة في الأراضي القلوية"]},
-  // ========== الفاكهة ==========
-  
+   
+   // ========== الفاكهة ==========
   {id:"f1",name:"مانجو",nameEn:"Mango",nameSci:"Mangifera indica",cat:"fruits",sub:"استوائية",
    img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRfYqmGylNHvM7VJaIa5hjMTXG3mx2MUM-RgKHJpKmzQ&s=10",
    tags:["صيفي","تصدير","ملكي"],diff:3,pop:96,featured:true,export:true,
@@ -6121,9 +7128,8 @@ const DB = [
    econ:{costs:"15000–20000 جنيه/فدان",rev:"30,000–150,000 جنيه",profit:"15,000–130,000 جنيه",best:"سبتمبر–نوفمبر",markets:["الخليج","أوروبا"]},
    vars:[{name:"لولو",co:"مصري",y:"5–7 طن",for:"طازج"}],
    tips:["التلقيح الصناعي ضروري","التقليم السنوي"]},
-
-  // ========== الزينة ==========
-   
+     
+     // ========== الزينة ==========
   {id:"o1",name:"ورد",nameEn:"Rose",nameSci:"Rosa damascena",cat:"ornamental",sub:"زهرية",
    img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoi8uH2XUqQB196dt9H0BI-YRnptJPzIVvvDJCdHYsHA&s=10",
    tags:["شتوي","تصدير","عطري"],diff:3,pop:95,featured:true,export:true,
@@ -7987,10 +8993,12 @@ const DB = [
    nutri:{p100:{"الاستخدام":"ديكوري"},ben:["أوراق فريدة","ندرة"]},econ:{costs:"150–500 جنيه/نبات",rev:"200–800 جنيه/نبات",profit:"جيد",best:"طوال العام",markets:[]},
    vars:[{name:"وايت فريون",co:"هجين",y:"أوراق بيضاء",for:"داخلي"}],
    tips:["رطوبة عالية ضرورية","لا تعرضها للشمس المباشرة","استخدم ماء نقي"]},
-
    
    // ========== النباتات الطبية والعطرية ==========
-  {id:"m1",name:"نعناع",nameEn:"Mint",nameSci:"Mentha piperita",cat:"medicinal",sub:"أوراق عطرية",
+
+
+
+     {id:"m1",name:"نعناع",nameEn:"Mint",nameSci:"Mentha piperita",cat:"medicinal",sub:"أوراق عطرية",
    img: "   https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDfH1Z11acjrt4qNQX4SDJaw2uZvQH-VC1StNJTI5ZTHnTG4yytLqCo8Q&s=10 ",
    tags:["عطري","طبي","سهل"],diff:1,pop:94,featured:true,export:true,
    ov:"النعناع من أشهر النباتات الطبية والعطرية. يستخدم في المشروبات والعلاج. يُزرع بسهولة في المنازل والحقول، ويتميز بنموه السريع وانتشاره.",
@@ -9182,9 +10190,13 @@ const DB = [
   tips: ["يحتاج ظلاً ورطوبة عالية", "يزرع في البيوت المحمية", "يُحصد عند تحول الثمار إلى اللون الأحمر"]
 },
 // ---------- نهاية إضافة النباتات الطبية والعطرية الإضافية ----------
-// ---------- نهاية إضافة النباتات الطبية والعطرية ----------
-  // ========== المحاصيل الحقلية (صور محسنة) ==========
-   {id:"c2",name:"ذرة",nameEn:"Corn",nameSci:"Zea mays",cat:"fieldcrops",sub:"حبوب",
+// ---------- نهاية إضافة النباتات الطبية والعطرية -----
+    
+   // ========== المحاصيل الحقلية ==========
+
+
+
+       {id:"c2",name:"ذرة",nameEn:"Corn",nameSci:"Zea mays",cat:"fieldcrops",sub:"حبوب",
    img:"https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=600&q=80",
    tags:["صيفي","علف","غذاء"],diff:2,pop:95,featured:true,export:false,
    ov:"الذرة الشامية محصول صيفي مهم، يستخدم للحبوب والعلف الأخضر. مصر من أكبر منتجي الذرة في المنطقة، وتستخدم في صناعة الأعلاف والزيوت.",
@@ -10158,9 +11170,12 @@ const DB = [
   tips: ["يُزرع من عقل ساقية", "يحتاج معالجة حرارية لإزالة السيانيد", "يصلح للأراضي الرملية الفقيرة"]
 },
    // ---------- نهاية إضافة المحاصيل الناقصة ----------
-// ---------- نهاية إضافة المحاصيل الحقلية ----------
+// ---------- نهاية إضافة المحاصيل الحقلية ---------
+
+                                                                                                                               
    // ========== الموالح ==========
-  {id:"t1",name:"يوسفي",nameEn:"Mandarin",nameSci:"Citrus reticulata",cat:"citrus",sub:"حمضيات",
+  
+    {id:"t1",name:"يوسفي",nameEn:"Mandarin",nameSci:"Citrus reticulata",cat:"citrus",sub:"حمضيات",
    img:"https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?w=600&q=80",
    tags:["شتوي","تصدير","فيتامين C"],diff:3,pop:89,featured:true,export:true,
    ov:"اليوسفي من أفضل أنواع الموالح المصرية. يتميز بقشرة سهلة التقشير وطعم حلو، ويُصدَّر للأسواق الأوروبية والعربية.",
@@ -10839,11 +11854,9 @@ id: "cit28", name: "يوسفي أورلاندو", nameEn: "Orlando Mandarin", na
   tips: ["منتج نادر مرتفع السعر", "يحتاج تسويق خاص", "لون جذاب للمستهلك"]
 },
 // ---------- نهاية إضافة الأصناف ----------
-   
-];
+   ];
 
 // ======================== DISEASES DATA ========================
-
 const DiseasesDB = [
   {id:"d1",name:"البياض الدقيقي",nameEn:"Powdery Mildew",sci:"Erysiphe cichoracearum, Sphaerotheca fuliginea, Leveillula taurica",img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE6U6yRI7XbwslEgR-qfHB65fw0ra3wFKSBseEhXOoEa808AD8i8tEWK7k&s=10",type:"فطري",severity:"متوسط",affectedPlants:["طماطم","خيار","فلفل","كوسة","ورد","ياسمين","مانجو","عنب","فراولة","فول بلدي","موالح"],symptoms:["ظهور طبقة بيضاء بودرية على الأوراق والبراعم","تشوه الأوراق","جفاف الأوراق مع تقدم الإصابة","توقف النمو"],causes:["رطوبة عالية","تهوية ضعيفة","كثافة زراعية عالية","ظل زائد"],treatment:["رش الكبريت الميكروني 2 جم/لتر","رش توبسين إم 70% 1 جم/لتر","الرش المتكرر كل 7-10 أيام","استخدام مبيدات جهازية مثل تيلت 25%"],prevention:["تهوية جيدة","تجنب الري على الأوراق","زراعة أصناف مقاومة","إزالة الأجزاء المصابة"],description:"مرض فطري شائع يصيب العديد من المحاصيل والخضر والفاكهة. يظهر على شكل طبقة بيضاء تشبه الدقيق على الأوراق والبراعم."},
   {id:"d2",name:"اللفحة المتأخرة",nameEn:"Late Blight",sci:"Phytophthora infestans",img:"https://modernagritec.com/wp-content/uploads/2023/03/%D8%A7%D9%84%D9%84%D9%81%D8%AD%D8%A9-%D8%A7%D9%84%D9%85%D8%AA%D8%A3%D8%AE%D8%B1%D8%A9-late-blight-%D9%85%D8%A7%D9%87%D9%8A%D8%8C-%D8%A3%D8%B9%D8%B1%D8%A7%D8%B6%D9%87%D8%A7%D8%8C-%D9%88%D9%83%D9%8A%D9%81%D9%8A%D8%A9-%D9%85%D9%83%D8%A7%D9%81%D8%AD%D8%AA%D9%87%D8%A7.webp",type:"فطري (شبيه فطري)",severity:"خطير",affectedPlants:["طماطم","بطاطس","فلفل","باذنجان"],symptoms:["بقع مائية على الأوراق","تتحول إلى بنية سوداء","نمو أبيض على الجانب السفلي في الرطوبة","تعفن الثمار والدرنات"],causes:["رطوبة عالية","درجات حرارة معتدلة (15-20°م)","الري بالرش","تناوب المحاصيل غير الجيد"],treatment:["ريدوميل جولد 2.5 جم/لتر","مانكوزيب 2.5 جم/لتر","أكروبات 2 جم/لتر","يجب التناوب بين المبيدات"],prevention:["زراعة أصناف مقاومة","تجنب الري بالرش","التهوية الجيدة","إزالة النباتات المصابة فوراً","دورة زراعية 3-4 سنوات"],description:"أخطر أمراض الطماطم والبطاطس. يسبب خسائر كبيرة في الحقل والمخزن. ينتشر بسرعة في الطقس البارد الرطب."},
@@ -10931,6 +11944,7 @@ const DiseasesDB = [
   {id:"d84",name:"فيروس موزاييك الخيار في القرعيات (CMV)",nameEn:"Cucumber Mosaic Virus (CMV) on Cucurbits",sci:"CMV (Cucumovirus)",img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8r178231RJly3e3eBln4BAtcjeT6-PrP0jcA80D_cmH89gmlVmwN3rI&s=10",type:"فيروسي",severity:"متوسط",affectedPlants:["خيار","كوسة","بطيخ","شمام","قرع","فلفل","طماطم"],symptoms:["تفسيف الأوراق (موزاييك)","تشوه الأوراق (شبيه السرخس)","تقزم النبات","قلة الثمار وتشوهها"],causes:["ينقله المن بطرق غير مستديمة","عوائل برية كثيرة (حشائش)","أدوات ملوثة","شتلات ملوثة"],treatment:["لا يوجد علاج للفيروس","مكافحة ناقل المرض (المن)","إزالة النباتات المصابة","استخدام شتلات سليمة"],prevention:["مكافحة المن بانتظام","استخدام مصائد صفراء لاصقة","زراعة أصناف مقاومة","عزل المحاصيل عن الحشائش","تطهير الأدوات"],description:"فيروس واسع العوائل يصيب الخيار والعديد من القرعيات."},
   {id:"d85",name:"التبقع البكتيري على أوراق البنجر",nameEn:"Bacterial Leaf Spot of Sugar Beet",sci:"Pseudomonas syringae pv. aptata",img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUrhv2EnvFmAkYz5sKYOimoP2YBMAC-zzQV4DDGUIyst0-WxrRnBdKBEpO&s=10",type:"بكتيري",severity:"متوسط",affectedPlants:["بنجر السكر","بنجر العلف","سبانخ"],symptoms:["بقع مائية صغيرة على الأوراق","تتحول إلى بنية داكنة ذات هالة صفراء","تساقط الأوراق","انخفاض وزن الجذور ونسبة السكر"],causes:["بذور ملوثة","رطوبة عالية","ري بالرش","درجات حرارة معتدلة (18-25°م)","جروح"],treatment:["أوكسي كلور النحاس 2.5 جم/لتر","هيدروكسيد النحاس 2 جم/لتر","تجنب الري بالرش","معاملة البذور","إزالة الأوراق المصابة"],prevention:["استخدام بذور معتمدة خالية من المرض","تجنب الري بالرش","تهوية جيدة","دورة زراعية 3 سنوات","إزالة بقايا المحاصيل"],description:"مرض بكتيري يصيب أوراق بنجر السكر."}
 ];
+
 // ======================== SEARCH ENGINE ========================
 const SE = {
   W:{name:10,nameEn:9,tags:8,diseases:7,ov:6,tips:5,fert:5,irr:5,pests:4,soil:4,climate:4,regions:3,pest:3,harvest:3,nutri:2,vars:2,econ:2},
@@ -10959,7 +11973,7 @@ const SE = {
   FN:{name:"📛 الاسم",nameEn:"📛 الاسم",tags:"🏷️ الوسوم",diseases:"🦠 الأمراض",pests:"🐛 الآفات",ov:"📋 نظرة عامة",tips:"💡 النصائح",fert:"💊 التسميد",irr:"💧 الري",soil:"🌱 التربة",climate:"🌡️ المناخ",regions:"📍 المناطق",pest:"🧪 المبيدات",harvest:"🌾 الحصاد",nutri:"🥗 التغذية",vars:"🔬 الأصناف",econ:"💰 الاقتصاد"},
   FT:{fert:"fert",irr:"irr",diseases:"dis",pests:"dis",pest:"dis",tips:"tips",harvest:"harv",vars:"tips",econ:"harv",soil:"cult",climate:"cult",regions:"cult"},
   tok(q){return q.trim().replace(/[،,]/g,' ').split(/\s+/).filter(w=>w.length>1).map(w=>w.replace(/^ال/,''))},
-  txt(p,f){const v=p[f];if(!v)return '';if(typeof v==='string')return v;if(Array.isArray(v))return v.map(i=>typeof i==='object'?JSON.stringify(i):String(i)).join(' ');if(typeof v==='object')return JSON.stringify(v);return String(v)},
+  txt(p,f){const v=p[f];if(!v)return'';if(typeof v==='string')return v;if(Array.isArray(v))return v.map(i=>typeof i==='object'?JSON.stringify(i):String(i)).join(' ');if(typeof v==='object')return JSON.stringify(v);return String(v)},
   snip(t,k){const i=t.toLowerCase().indexOf(k.toLowerCase());if(i<0)return t.slice(0,90);return (i>30?'…':'')+t.slice(Math.max(0,i-25),i+75)+(i+75<t.length?'…':'')},
   hl(t,q){if(!t||!q)return t||'';const toks=this.tok(q);toks.forEach(k=>{[k,...(this.SYN[k]||[]),...(this.SYN[k.replace(/^ال/,'')]||[])].slice(0,4).forEach(tm=>{const re=new RegExp('('+tm.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');t=t.replace(re,'<mark class="hl">$1</mark>')})});return t},
   lev(a,b){const m=Array.from({length:b.length+1},(_,i)=>[i]);m[0]=Array.from({length:a.length+1},(_,i)=>i);for(let i=1;i<=b.length;i++)for(let j=1;j<=a.length;j++)m[i][j]=b[i-1]===a[j-1]?m[i-1][j-1]:Math.min(m[i-1][j-1]+1,m[i][j-1]+1,m[i-1][j]+1);return m[b.length][a.length]},
@@ -11249,8 +12263,8 @@ const App = {
       vegetables:{name:'الخضروات',icon:'🥦',desc:'خضروات متنوعة مع تفاصيل التسميد والري والأمراض والحصاد',img:'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1400&q=80'},
       fruits:{name:'الفاكهة',icon:'🍎',desc:'أشهر فواكه مصر من المانجو والفراولة والحمضيات والرمان',img:'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=1400&q=80'},
       ornamental:{name:'نباتات الزينة',icon:'🌸',desc:'ورد وياسمين وصبار ونباتات داخلية للتجميل والتصدير',img:'https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=1400&q=80'},
-      medicinal:{name:'النباتات الطبية والعطرية',icon:'🌿',desc:'نعناع، زعتر، وزيوت عطرية للعلاج والتصدير',img:'https://gate.ahram.org.eg/Media/News/2021/3/1/19_2021-637502127478826696-882.jpg'},
-      fieldcrops:{name:'المحاصيل الحقلية',icon:'🌾',desc:'قمح، ذرة، وأهم المحاصيل الاستراتيجية',img:  'https://gate.ahram.org.eg/Media/News/2023/2/11/19_2023-638117191791157589-115.jpg'},
+      medicinal:{name:'النباتات الطبية والعطرية',icon:'🌿',desc:'نعناع، زعتر، وزيوت عطرية للعلاج والتصدير',img:'https://images.alborsaanews.com/2013/01/1461454279_296444_886_246274_.gif'},
+      fieldcrops:{name:'المحاصيل الحقلية',icon:'🌾',desc:'قمح، ذرة، وأهم المحاصيل الاستراتيجية',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ53IQSD2Z-euhxHZoNgOs0x6bcC1-CYrDfzy6MtBV9xA&s=10'},
       citrus:{name:'الموالح',icon:'🍊',desc:'يوسفي، ليمون، برتقال — أهم محاصيل التصدير',img:'https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?w=1400&q=80'}
     }[catId];
     ['cph-icon','cph-name','cph-desc','cph-back'].forEach(id=>{
@@ -11641,9 +12655,7 @@ async function signUpWithEmail(name, email, password, role, confirmPassword) {
     }, { merge: true });
     showToast('✅ تم إنشاء الحساب بنجاح', 'ok');
     closeAuth();
-    // تأكيد الانتقال إلى الملف الشخصي بعد إنشاء الحساب
     showPage('profile');
-    // تحديث الملف الشخصي فوراً
     setTimeout(() => loadUserProfile(), 500);
   } catch (error) {
     let msg = 'فشل التسجيل: ';
@@ -11893,7 +12905,6 @@ let currentPage='home';
 let _pgTimer=null;
 
 function showPage(pg,opts={}){
-  // إغلاق القائمة المنسدلة للمستخدم عند تغيير الصفحة
   const dropdown = document.getElementById('userDropdown');
   if (dropdown) dropdown.style.display = 'none';
   
@@ -11906,6 +12917,7 @@ function showPage(pg,opts={}){
   if(pg==='home')document.getElementById('nl-home')?.classList.add('active');
   if(pg==='search')document.getElementById('nl-srch')?.classList.add('active');
   if(pg==='diseases')document.getElementById('nl-diseases')?.classList.add('active');
+  if(pg==='goals')document.getElementById('nl-goals')?.classList.add('active');
   window.scrollTo(0,0);
   document.documentElement.scrollTop=0;
   if(prev&&prev!==next){
@@ -12191,7 +13203,6 @@ function setupMobileMenuOutsideClick() {
 }
 setupMobileMenuOutsideClick();
 
-// قائمة المستخدم المنبثقة
 document.getElementById('userAvatarBtn').addEventListener('click', function(e) {
   e.stopPropagation();
   const dropdown = document.getElementById('userDropdown');
@@ -12300,14 +13311,12 @@ App.buildCatPage=function(catId){
   setTimeout(_observeReveals,120);
 };
 
-// ======================== PREVENT DOUBLE-SCROLL on iOS ========================
 document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.modal-scroll,.sc-dd,.mtabs,.disease-modal-scroll').forEach(el=>{
     el.addEventListener('touchmove',e=>e.stopPropagation(),{passive:true});
   });
 });
 
-// ======================== دوال تسجيل الدخول المفقودة ========================
 async function hLogin(event) {
   event.preventDefault();
   const form = event.target;
@@ -12346,5 +13355,391 @@ async function hReg(event) {
   }
 }
 </script>
+
+  <!-- ═══ FERTILIZER CALCULATOR SCRIPTS ═══ -->
+  <script>
+  (function() {
+    'use strict';
+
+    // ── fertilizers.js ──────────────────────────────────────
+    const FERTILIZER_DB = {
+      nitrogen: {
+        label: 'نيتروجين N', icon: '🌿', unit: 'N', color: '#22c55e',
+        fertilizers: [
+          { id: 'amm-sulfate',   name: 'كبريتات الأمونيوم',  percentage: 20 },
+          { id: 'amm-sulfate2',  name: 'سلفات الأمونيوم',    percentage: 20 },
+          { id: 'amm-nitrate',   name: 'نترات الأمونيوم',    percentage: 33 },
+          { id: 'urea',          name: 'اليوريا',             percentage: 46 },
+          { id: 'cal-nitrate',   name: 'نترات الكالسيوم',    percentage: 17 },
+          { id: 'nitric-acid',   name: 'حامض النيتريك',      percentage: 14 },
+        ]
+      },
+      phosphorus: {
+        label: 'فوسفور P', icon: '🌱', unit: 'P₂O₅', color: '#f59e0b',
+        fertilizers: [
+          { id: 'super-phos',   name: 'سوبر فوسفات الكالسيوم', percentage: 16 },
+          { id: 'phos-acid',    name: 'حامض الفوسفوريك',        percentage: 85 },
+          { id: 'map',          name: 'MAP',                      percentage: 62 },
+        ]
+      },
+      potassium: {
+        label: 'بوتاسيوم K', icon: '🍊', unit: 'K₂O', color: '#8b5cf6',
+        fertilizers: [
+          { id: 'k-sulfate',    name: 'كبريتات البوتاسيوم',  percentage: 48 },
+          { id: 'k-carbonate',  name: 'كربونات البوتاسيوم',  percentage: 60 },
+          { id: 'k-nitrate',    name: 'نترات البوتاسيوم',    percentage: 50 },
+        ]
+      },
+      calcium: {
+        label: 'كالسيوم Ca', icon: '🦴', unit: 'CaO', color: '#06b6d4',
+        fertilizers: [
+          { id: 'cal-nitrate2', name: 'نترات الكالسيوم', percentage: 17 },
+        ]
+      },
+    };
+
+    const CROP_COEFFICIENTS = {
+      orange:   { label: 'برتقال', sandy: 75, clay: 50 },
+      mandarin: { label: 'يوسفي',  sandy: 50, clay: 35 },
+    };
+
+    const SOIL_TYPES = {
+      sandy: { label: 'أرض رملية', icon: '🏜️' },
+      clay:  { label: 'أرض طينية', icon: '🏔️' },
+    };
+
+    const FEDDAN_AREA_M2 = 4200;
+
+    // ── calculations.js ─────────────────────────────────────
+    function calcNetPerTree(crop, soil, age) {
+      const c = CROP_COEFFICIENTS[crop];
+      if (!c) return 0;
+      return age * (c[soil] || 0);
+    }
+
+    function calcActualPerTree(netPerTree, fertPct) {
+      if (!fertPct || fertPct <= 0) return 0;
+      return (netPerTree * 100) / fertPct;
+    }
+
+    function calcTreesPerFeddan(rowSpacing, treeSpacing) {
+      const p = rowSpacing * treeSpacing;
+      if (!p || p <= 0) return 0;
+      return FEDDAN_AREA_M2 / p;
+    }
+
+    function calculateAll(inputs) {
+      const { crop, soil, age, fertPercentage, rowSpacing, treeSpacing, feddanCount } = inputs;
+      const netPerTree      = calcNetPerTree(crop, soil, age);
+      const actualPerTree   = calcActualPerTree(netPerTree, fertPercentage);
+      const treesPerFeddan  = calcTreesPerFeddan(rowSpacing, treeSpacing);
+      const netPerFeddan    = netPerTree * treesPerFeddan;
+      const actualPerFeddan = actualPerTree * treesPerFeddan;
+      const netTotal        = netPerFeddan * feddanCount;
+      const actualTotal     = actualPerFeddan * feddanCount;
+      return {
+        netPerTree, actualPerTree, treesPerFeddan,
+        netPerFeddan, actualPerFeddan, netTotal, actualTotal,
+        isValid: netPerTree > 0 && actualPerTree > 0 && treesPerFeddan > 0,
+      };
+    }
+
+    function smartUnit(grams) {
+      if (!isFinite(grams) || grams <= 0) return { value: '0', unit: 'جم', full: '0 جم' };
+      if (grams >= 1000000) {
+        const t = grams / 1000000;
+        return { value: fmtNum(t), unit: 'طن', full: fmtNum(t) + ' طن' };
+      }
+      if (grams >= 1000) {
+        const k = grams / 1000;
+        return { value: fmtNum(k), unit: 'كجم', full: fmtNum(k) + ' كجم' };
+      }
+      return { value: fmtNum(grams), unit: 'جم', full: fmtNum(grams) + ' جم' };
+    }
+
+    function fmtNum(n) {
+      if (n % 1 === 0) return n.toLocaleString('ar-EG');
+      return n.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    }
+
+    // ── ui.js helpers ────────────────────────────────────────
+    function debounce(fn, delay) {
+      let timer;
+      return function() {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, arguments), delay || 150);
+      };
+    }
+
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+    function countUp(el, targetStr, unit, duration) {
+      const target = parseFloat(String(targetStr).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
+      if (!isFinite(target) || target <= 0) {
+        el.innerHTML = '<span class="fc-num">—</span>';
+        return;
+      }
+      duration = duration || 600;
+      let start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        const progress = Math.min((ts - start) / duration, 1);
+        const eased    = easeOutCubic(progress);
+        const current  = target * eased;
+        el.innerHTML   = '<span class="fc-num">' +
+          current.toLocaleString('ar-EG', { maximumFractionDigits: 2 }) +
+          '</span><span class="fc-unit"> ' + unit + '</span>';
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function revealCards(cards) {
+      cards.forEach(function(card, i) {
+        card.style.opacity   = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(function() {
+          card.style.transition = 'opacity .4s cubic-bezier(.16,1,.3,1), transform .4s cubic-bezier(.16,1,.3,1)';
+          card.style.opacity   = '1';
+          card.style.transform = 'translateY(0)';
+        }, i * 70);
+      });
+    }
+
+    var activeTip = null;
+
+    function initTooltips(container) {
+      container.querySelectorAll('[data-tip]').forEach(function(el) {
+        el.addEventListener('mouseenter', showTip);
+        el.addEventListener('focus',      showTip);
+        el.addEventListener('mouseleave', hideTip);
+        el.addEventListener('blur',       hideTip);
+      });
+    }
+
+    function showTip(e) {
+      hideTip();
+      var msg = e.currentTarget.dataset.tip;
+      if (!msg) return;
+      var tip = document.createElement('div');
+      tip.className = 'fc-tooltip';
+      tip.textContent = msg;
+      document.body.appendChild(tip);
+      activeTip = tip;
+      var rect = e.currentTarget.getBoundingClientRect();
+      tip.style.top  = (rect.top + window.scrollY - tip.offsetHeight - 10) + 'px';
+      tip.style.left = (rect.left + rect.width / 2 - tip.offsetWidth / 2) + 'px';
+      requestAnimationFrame(function() { tip.classList.add('fc-tooltip--visible'); });
+    }
+
+    function hideTip() {
+      if (activeTip) { activeTip.remove(); activeTip = null; }
+    }
+
+    // ── Controller ───────────────────────────────────────────
+    var elCrop, elSoil, elElement, elFertilizer, elFertPct,
+        elAge, elRowSpacing, elTreeSpacing, elFeddanCount, elFertSearch,
+        elResultsWrap, elEmptyState, elActiveElement;
+
+    function initFertilizerCalculator() {
+      elCrop         = document.getElementById('fc-crop');
+      elSoil         = document.getElementById('fc-soil');
+      elElement      = document.getElementById('fc-element');
+      elFertilizer   = document.getElementById('fc-fertilizer');
+      elFertPct      = document.getElementById('fc-fert-pct');
+      elAge          = document.getElementById('fc-age');
+      elRowSpacing   = document.getElementById('fc-row-spacing');
+      elTreeSpacing  = document.getElementById('fc-tree-spacing');
+      elFeddanCount  = document.getElementById('fc-feddans');
+      elFertSearch   = document.getElementById('fc-fert-search');
+      elResultsWrap  = document.getElementById('fc-results-wrap');
+      elEmptyState   = document.getElementById('fc-empty-state');
+      elActiveElement= document.getElementById('fc-active-element');
+
+      if (!elCrop) return; // section not present
+
+      populateCrops();
+      populateSoils();
+      populateElements();
+      onElementChange();
+      bindEvents();
+      initTooltips(document.getElementById('fertilizer-calc-section'));
+      initRevealObserver();
+    }
+
+    function populateCrops() {
+      elCrop.innerHTML = '';
+      Object.keys(CROP_COEFFICIENTS).forEach(function(key) {
+        var opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = CROP_COEFFICIENTS[key].label;
+        elCrop.appendChild(opt);
+      });
+    }
+
+    function populateSoils() {
+      elSoil.innerHTML = '';
+      Object.keys(SOIL_TYPES).forEach(function(key) {
+        var opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = SOIL_TYPES[key].icon + ' ' + SOIL_TYPES[key].label;
+        elSoil.appendChild(opt);
+      });
+    }
+
+    function populateElements() {
+      elElement.innerHTML = '';
+      Object.keys(FERTILIZER_DB).forEach(function(key) {
+        var opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = FERTILIZER_DB[key].icon + ' ' + FERTILIZER_DB[key].label;
+        elElement.appendChild(opt);
+      });
+    }
+
+    function populateFertilizers(elementKey, searchTerm) {
+      var db = FERTILIZER_DB[elementKey];
+      if (!db) return;
+      var term = (searchTerm || '').trim().toLowerCase();
+      var filtered = term
+        ? db.fertilizers.filter(function(f) { return f.name.includes(term); })
+        : db.fertilizers;
+
+      elFertilizer.innerHTML = '';
+      filtered.forEach(function(f) {
+        var opt = document.createElement('option');
+        opt.value = f.id;
+        opt.textContent = f.name + ' (' + f.percentage + '%)';
+        opt.dataset.pct = f.percentage;
+        elFertilizer.appendChild(opt);
+      });
+      updateFertPercentage();
+      if (elActiveElement) {
+        elActiveElement.textContent = db.icon + ' ' + db.label;
+        elActiveElement.style.setProperty('--el-color', db.color);
+      }
+    }
+
+    function updateFertPercentage() {
+      var sel = elFertilizer.options[elFertilizer.selectedIndex];
+      if (sel) { elFertPct.value = sel.dataset.pct || ''; }
+    }
+
+    function bindEvents() {
+      var debouncedCalc = debounce(runCalculation, 150);
+      [elCrop, elSoil, elFertPct, elAge, elRowSpacing, elTreeSpacing, elFeddanCount]
+        .forEach(function(el) { if (el) el.addEventListener('input', debouncedCalc); });
+      elElement.addEventListener('change', onElementChange);
+      elFertilizer.addEventListener('change', function() {
+        updateFertPercentage();
+        debouncedCalc();
+      });
+      if (elFertSearch) {
+        elFertSearch.addEventListener('input', function() {
+          populateFertilizers(elElement.value, elFertSearch.value);
+          debouncedCalc();
+        });
+      }
+    }
+
+    function onElementChange() {
+      populateFertilizers(elElement.value, elFertSearch ? elFertSearch.value : '');
+      runCalculation();
+    }
+
+    function runCalculation() {
+      var inputs = {
+        crop:           elCrop.value,
+        soil:           elSoil.value,
+        age:            parseFloat(elAge.value) || 0,
+        fertPercentage: parseFloat(elFertPct.value) || 0,
+        rowSpacing:     parseFloat(elRowSpacing.value) || 0,
+        treeSpacing:    parseFloat(elTreeSpacing.value) || 0,
+        feddanCount:    parseFloat(elFeddanCount.value) || 0,
+        elementKey:     elElement.value,
+      };
+      var allFilled = inputs.age > 0 && inputs.fertPercentage > 0
+        && inputs.rowSpacing > 0 && inputs.treeSpacing > 0 && inputs.feddanCount > 0;
+      if (!allFilled) { showEmpty(); return; }
+      var r = calculateAll(inputs);
+      if (!r.isValid) { showEmpty(); return; }
+      renderResults(r, inputs);
+    }
+
+    function showEmpty() {
+      elResultsWrap.style.display = 'none';
+      elEmptyState.style.display  = 'flex';
+    }
+
+    function renderResults(r, inputs) {
+      elEmptyState.style.display  = 'none';
+      elResultsWrap.style.display = 'block';
+
+      var db    = FERTILIZER_DB[inputs.elementKey];
+      var color = db ? db.color : 'var(--brand)';
+
+      var eqEl = document.getElementById('fc-equation-summary');
+      if (eqEl) {
+        var cropLabel = CROP_COEFFICIENTS[inputs.crop] ? CROP_COEFFICIENTS[inputs.crop].label : '';
+        var soilLabel = SOIL_TYPES[inputs.soil] ? SOIL_TYPES[inputs.soil].label : '';
+        var coeff     = CROP_COEFFICIENTS[inputs.crop] ? (CROP_COEFFICIENTS[inputs.crop][inputs.soil] || 0) : 0;
+        eqEl.innerHTML =
+          '<span class="fc-eq-chip">' + cropLabel + '</span>' +
+          '<span class="fc-eq-op">×</span>' +
+          '<span class="fc-eq-chip">' + inputs.age + ' سنة</span>' +
+          '<span class="fc-eq-op">×</span>' +
+          '<span class="fc-eq-chip">معامل ' + coeff + '</span>' +
+          '<span class="fc-eq-op">=</span>' +
+          '<span class="fc-eq-chip fc-eq-result">' + smartUnit(r.netPerTree).full + (db ? ' ' + db.unit : '') + ' / شجرة</span>' +
+          '<span class="fc-eq-sep">|</span>' +
+          '<span class="fc-eq-chip">' + soilLabel + '</span>';
+      }
+
+      setCard('fc-res-net-tree',      r.netPerTree,      color, smartUnit(r.netPerTree));
+      setCard('fc-res-actual-tree',   r.actualPerTree,   color, smartUnit(r.actualPerTree));
+      setCard('fc-res-trees-feddan',  r.treesPerFeddan,  color, { value: fmtNum(r.treesPerFeddan), unit: 'شجرة', full: fmtNum(r.treesPerFeddan) + ' شجرة' });
+      setCard('fc-res-net-feddan',    r.netPerFeddan,    color, smartUnit(r.netPerFeddan));
+      setCard('fc-res-actual-feddan', r.actualPerFeddan, color, smartUnit(r.actualPerFeddan));
+      setCard('fc-res-net-total',     r.netTotal,        color, smartUnit(r.netTotal));
+      setCard('fc-res-actual-total',  r.actualTotal,     color, smartUnit(r.actualTotal));
+
+      revealCards([].slice.call(elResultsWrap.querySelectorAll('.fc-result-card')));
+    }
+
+    function setCard(id, rawGrams, color, smart) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.style.setProperty('--card-accent', color);
+      var valEl = el.querySelector('.fc-card-value');
+      if (valEl) countUp(valEl, smart.value, smart.unit, 550);
+      var subEl = el.querySelector('.fc-card-sub');
+      if (subEl) subEl.textContent = rawGrams >= 1000 ? fmtNum(rawGrams) + ' جم' : '';
+    }
+
+    function initRevealObserver() {
+      var els = document.querySelectorAll('#fertilizer-calc-section .fc-reveal');
+      if (!els.length || !window.IntersectionObserver) {
+        els.forEach(function(el) { el.classList.add('is-visible'); });
+        return;
+      }
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+      els.forEach(function(el) { obs.observe(el); });
+    }
+
+    // ── Boot ─────────────────────────────────────────────────
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFertilizerCalculator);
+    } else {
+      initFertilizerCalculator();
+    }
+
+  })();
+  </script>
+  <!-- ═══ END FERTILIZER CALCULATOR SCRIPTS ═══ -->
+
 </body>
 </html>
