@@ -1236,6 +1236,49 @@ body.modal-open { overflow: hidden; }
   }
 }
 
+/* ── Mobile fixes for pg-citrus page ── */
+@media (max-width: 600px) {
+  #pg-citrus .citrus-page-header {
+    align-items: flex-start;
+    text-align: right;
+    padding: 0;
+  }
+  #pg-citrus .citrus-page-eyebrow {
+    display: inline-flex;
+    font-size: 11px;
+    align-self: flex-start;
+  }
+  #pg-citrus .citrus-page-back {
+    margin-bottom: 16px;
+    align-self: flex-start;
+  }
+  #pg-citrus .citrus-page-sub {
+    font-size: 13.5px;
+    line-height: 1.7;
+    text-align: right;
+    margin: 0;
+  }
+  #pg-citrus #fertilizer-calc-section {
+    padding: 0 0 40px;
+  }
+  /* ── الحل الجذري: إضافة مسافة جانبية للعناصر على الموبايل ── */
+  #pg-citrus .fc-form-panel {
+    padding: 20px 16px;
+    border-radius: 18px;
+    margin: 0 4px;
+  }
+  #pg-citrus .fc-results-panel {
+    padding: 0 4px;
+  }
+  #pg-citrus .fc-result-group {
+    margin: 0 0 4px;
+  }
+  #pg-citrus .fc-panel-title {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+  }
+}
+
 /* ── Dark mode premium adjustments ── */
 [data-dark] #pg-citrus .fc-form-panel {
   background: var(--card);
@@ -1341,9 +1384,10 @@ body.modal-open { overflow: hidden; }
 /* ── Main Grid ──────────────────────────────────────── */
 .fc-layout {
   display: grid;
-  grid-template-columns: 420px 1fr;
+  grid-template-columns: minmax(0, 420px) 1fr;
   gap: 32px;
   align-items: start;
+  min-width: 0;
 }
 
 @media (max-width: 1080px) {
@@ -1359,6 +1403,9 @@ body.modal-open { overflow: hidden; }
   box-shadow: var(--s3);
   position: sticky;
   top: 90px;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .fc-panel-title {
@@ -1371,6 +1418,7 @@ body.modal-open { overflow: hidden; }
   margin-bottom: 28px;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--line);
+  min-width: 0;
 }
 
 .fc-panel-title-icon {
@@ -1442,6 +1490,8 @@ body.modal-open { overflow: hidden; }
 .fc-select,
 .fc-input {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   height: 46px;
   padding: 0 14px;
   border-radius: 12px;
@@ -1578,6 +1628,7 @@ body.modal-open { overflow: hidden; }
   display: flex;
   flex-direction: column;
   gap: 24px;
+  min-width: 0;
 }
 
 /* Empty state */
@@ -1667,6 +1718,8 @@ body.modal-open { overflow: hidden; }
   border-radius: 20px;
   overflow: hidden;
   box-shadow: var(--s2);
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .fc-group-header {
@@ -1865,6 +1918,10 @@ body.modal-open { overflow: hidden; }
 @media (max-width: 768px) {
   #fertilizer-calc-section {
     padding: 70px 0 90px;
+  }
+
+  .fc-layout {
+    padding: 0 2px;
   }
 
   .fc-form-panel {
@@ -2234,7 +2291,7 @@ body.modal-open { overflow: hidden; }
    بطاقة حاسبة الموالح
 ═══════════════════════════════════════════════════ */
 .citrus-entry-section {
-  padding: 0 0 48px;
+  padding: 0 0 40px;
   background: var(--bg);
 }
 
@@ -2295,7 +2352,7 @@ body.modal-open { overflow: hidden; }
 .cec-inner {
   position: relative;
   z-index: 2;
-  padding: 32px 36px 32px 32px;
+  padding: 28px 32px 28px 28px;
 }
 
 /* Header row */
@@ -2303,7 +2360,7 @@ body.modal-open { overflow: hidden; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .cec-pill {
@@ -2341,9 +2398,9 @@ body.modal-open { overflow: hidden; }
 /* Main grid */
 .cec-grid {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 40px;
-  align-items: center;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+  align-items: stretch;
 }
 
 /* Icon box */
@@ -2354,7 +2411,7 @@ body.modal-open { overflow: hidden; }
   border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
   font-size: 26px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
   line-height: 1;
 }
@@ -2363,26 +2420,26 @@ body.modal-open { overflow: hidden; }
 
 .cec-title {
   font-family: var(--f-display);
-  font-size: clamp(1.55rem, 2.5vw, 2.1rem);
+  font-size: clamp(1.45rem, 2.2vw, 1.95rem);
   color: var(--ink);
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   letter-spacing: -.03em;
-  line-height: 1.12;
+  line-height: 1.18;
 }
 
 .cec-sub {
   color: var(--muted);
-  font-size: 14px;
-  line-height: 1.65;
-  margin: 0 0 22px;
-  max-width: 380px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  margin: 0 0 18px;
+  max-width: 400px;
 }
 
 .cec-features {
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  margin-bottom: 26px;
+  gap: 8px;
+  margin-bottom: 22px;
 }
 
 .cec-feat-item {
@@ -2404,11 +2461,18 @@ body.modal-open { overflow: hidden; }
 .cec-fd-yellow { background: #fbbf24; }
 .cec-fd-green  { background: #22c55e; }
 
+/* Left column — flex column so CTA anchors to bottom */
+.cec-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .cec-cta {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 13px 26px;
+  padding: 12px 24px;
   background: linear-gradient(135deg, #f97316, #d97706);
   color: #fff;
   border: none;
@@ -2419,6 +2483,7 @@ body.modal-open { overflow: hidden; }
   cursor: pointer;
   box-shadow: 0 4px 18px rgba(249,115,22,0.4), inset 0 1px 0 rgba(255,255,255,0.18);
   transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  align-self: flex-start;
 }
 
 .cec-cta:hover {
@@ -2431,18 +2496,23 @@ body.modal-open { overflow: hidden; }
 .cec-cta:hover svg { transform: translateX(3px); }
 
 /* RIGHT side — citrus visual metrics */
+.cec-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .cec-metrics {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-bottom: 14px;
 }
 
 .cec-metric {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 11px 13px;
+  padding: 10px 12px;
   background: var(--bg2);
   border: 1px solid var(--line);
   border-radius: 11px;
@@ -2479,7 +2549,8 @@ body.modal-open { overflow: hidden; }
   background: var(--bg2);
   border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 14px 16px;
+  padding: 13px 15px;
+  flex: 1;
 }
 
 .cec-chart-label {
@@ -2496,7 +2567,7 @@ body.modal-open { overflow: hidden; }
   display: flex;
   align-items: flex-end;
   gap: 4px;
-  height: 44px;
+  height: 48px;
 }
 
 .cec-season-wrap {
@@ -2518,22 +2589,52 @@ body.modal-open { overflow: hidden; }
 .citrus-entry-card:hover .cec-season-bar { background: rgba(217,119,6,0.2); }
 .citrus-entry-card:hover .cec-season-bar-active { background: #f97316 !important; }
 
+@media (max-width: 1024px) {
+  .cec-grid { grid-template-columns: 1fr 280px; gap: 24px; }
+}
+
 @media (max-width: 860px) {
-  .cec-grid { grid-template-columns: 1fr; gap: 20px; }
-  .cec-inner { padding: 24px 20px; }
+  .cec-grid { grid-template-columns: 1fr; gap: 18px; }
+  .cec-inner { padding: 22px 20px; }
   .cec-right { display: none; }
+  .cec-sub { max-width: 100%; font-size: 13px; }
+  .cec-left { gap: 0; }
+}
+
+@media (max-width: 480px) {
+  .cec-inner { padding: 18px 16px; }
+  .cec-header-row { margin-bottom: 16px; }
+  .cec-icon-box { width: 44px; height: 44px; font-size: 22px; margin-bottom: 12px; }
+  .cec-features { gap: 7px; margin-bottom: 18px; }
+  .cec-cta { padding: 11px 20px; font-size: 13.5px; }
 }
 
 /* ═══ CITRUS CALCULATOR PAGE CSS ═══ */
 #pg-citrus { min-height: 100vh; }
 
 .citrus-page-wrap {
-  padding: 48px 0 80px;
+  padding-top: 48px;
+  padding-bottom: 80px;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .citrus-page-wrap {
+    padding-top: 36px;
+    padding-bottom: 60px;
+  }
 }
 
 .citrus-page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
   margin-bottom: 40px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  padding: 0;
 }
 
 .citrus-page-back {
@@ -2548,7 +2649,8 @@ body.modal-open { overflow: hidden; }
   font-weight: 600;
   color: var(--slate);
   cursor: pointer;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
+  align-self: flex-start;
   transition: all .2s;
 }
 .citrus-page-back:hover { color: #f97316; border-color: rgba(249,115,22,0.3); background: rgba(249,115,22,0.04); }
@@ -2571,10 +2673,14 @@ body.modal-open { overflow: hidden; }
 
 .citrus-page-title {
   font-family: var(--f-display);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.35rem, 4.5vw, 3rem);
   color: var(--ink);
   margin: 0 0 12px;
-  letter-spacing: -.04em;
+  letter-spacing: -.03em;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.2;
+  width: 100%;
 }
 
 .citrus-page-sub {
@@ -2582,7 +2688,10 @@ body.modal-open { overflow: hidden; }
   font-size: 15px;
   line-height: 1.65;
   max-width: 520px;
+  width: 100%;
   margin: 0 auto;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .citrus-coming-soon {
@@ -2646,6 +2755,22 @@ body.modal-open { overflow: hidden; }
 
 @media (max-width: 600px) {
   .citrus-coming-soon { padding: 32px 20px; }
+
+  /* Fix citrus page header on small screens */
+  .citrus-page-wrap {
+    padding-top: 28px;
+    padding-bottom: 60px;
+  }
+  .citrus-page-header {
+    align-items: flex-start;
+    text-align: right;
+    margin-bottom: 28px;
+    padding: 0;
+  }
+  .citrus-page-eyebrow { font-size: 11px; align-self: flex-start; }
+  .citrus-page-title { font-size: clamp(1.3rem, 6.5vw, 1.85rem); letter-spacing: -.02em; text-align: right; }
+  .citrus-page-sub { font-size: 13px; text-align: right; margin: 0; max-width: 100%; }
+  .citrus-page-back { margin-bottom: 16px; align-self: flex-start; }
 }
 </style>
 </head>
