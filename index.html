@@ -955,6 +955,317 @@ body.modal-open { overflow: hidden; }
    Premium agricultural calculator section
 ═══════════════════════════════════════════════════════ */
 
+/* ══════════════════════════════════════════════════════
+   CITRUS PAGE PREMIUM OVERRIDES
+   تحسينات بصرية احترافية لصفحة حاسبة الموالح فقط
+   يعمل فقط عند وجود #pg-citrus.active كـ ancestor
+══════════════════════════════════════════════════════ */
+
+/* ── Citrus page wrapper glow background ── */
+#pg-citrus #fertilizer-calc-section {
+  padding: 0 0 60px;
+  background: transparent;
+  border-top: none;
+  overflow: visible;
+}
+
+#pg-citrus #fertilizer-calc-section::before {
+  background:
+    radial-gradient(ellipse 60% 50% at 10% 30%, rgba(249,115,22,.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 90% 70%, rgba(251,191,36,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 55% 5%,  rgba(249,115,22,.05) 0%, transparent 55%);
+}
+
+/* ── Premium Form Panel ── */
+#pg-citrus .fc-form-panel {
+  background: var(--card);
+  border: 1px solid rgba(217,119,6,.18);
+  border-radius: 28px;
+  padding: 36px 32px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.06) inset,
+    0 4px 6px rgba(0,0,0,.04),
+    0 16px 48px rgba(217,119,6,.10),
+    0 0 0 1px rgba(249,115,22,.04);
+  position: sticky;
+  top: 90px;
+  transition: box-shadow .4s ease, border-color .4s ease;
+}
+
+#pg-citrus .fc-form-panel:hover {
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.08) inset,
+    0 4px 6px rgba(0,0,0,.05),
+    0 20px 60px rgba(217,119,6,.16),
+    0 0 0 1px rgba(249,115,22,.08);
+  border-color: rgba(217,119,6,.28);
+}
+
+/* ── Panel title icon — orange ── */
+#pg-citrus .fc-panel-title-icon {
+  background: linear-gradient(135deg, #f97316 0%, #d97706 100%);
+  box-shadow: 0 4px 14px rgba(249,115,22,.4);
+}
+
+/* ── Inputs & Selects — citrus focus ring ── */
+#pg-citrus .fc-select,
+#pg-citrus .fc-input {
+  border-radius: 14px;
+  border: 1.5px solid rgba(217,119,6,.18);
+  background: var(--bg2);
+  transition:
+    border-color .25s cubic-bezier(.16,1,.3,1),
+    box-shadow   .25s cubic-bezier(.16,1,.3,1),
+    background   .25s ease,
+    transform    .15s cubic-bezier(.34,1.56,.64,1);
+}
+
+#pg-citrus .fc-select:hover,
+#pg-citrus .fc-input:hover {
+  border-color: rgba(249,115,22,.45);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249,115,22,.12);
+}
+
+#pg-citrus .fc-select:focus,
+#pg-citrus .fc-input:focus {
+  border-color: #f97316;
+  background: var(--bg);
+  box-shadow:
+    0 0 0 3px rgba(249,115,22,.15),
+    0 4px 16px rgba(249,115,22,.14);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+#pg-citrus .fc-field.is-focused .fc-label {
+  color: #f97316;
+}
+
+/* ── Select arrow — orange ── */
+#pg-citrus .fc-select-wrap::after {
+  color: #f97316;
+  opacity: .8;
+}
+
+/* ── Help tooltip trigger — orange ── */
+#pg-citrus .fc-help:hover {
+  border-color: #f97316;
+  color: #f97316;
+}
+
+/* ── Percentage badge — orange ── */
+#pg-citrus .fc-pct-wrap .fc-input {
+  background: rgba(249,115,22,.07);
+  border-color: rgba(249,115,22,.22);
+  color: #ea580c;
+  font-weight: 700;
+}
+[data-theme="dark"] #pg-citrus .fc-pct-wrap .fc-input,
+[data-dark] #pg-citrus .fc-pct-wrap .fc-input {
+  background: rgba(249,115,22,.12);
+  color: #fb923c;
+}
+
+#pg-citrus .fc-pct-badge { color: #f97316; }
+
+/* ── Active element preview ── */
+#pg-citrus .fc-element-preview {
+  border-radius: 14px;
+  background: rgba(249,115,22,.05);
+  border: 1px solid rgba(249,115,22,.14);
+  transition: background .3s, border-color .3s;
+}
+#pg-citrus .fc-element-preview:hover {
+  background: rgba(249,115,22,.09);
+  border-color: rgba(249,115,22,.24);
+}
+
+/* ── Results Panel ── */
+#pg-citrus .fc-results-panel { gap: 20px; }
+
+/* ── Empty state ── */
+#pg-citrus #fc-empty-state {
+  border: 2px dashed rgba(249,115,22,.25);
+  border-radius: 28px;
+  background: rgba(249,115,22,.02);
+  transition: border-color .4s, background .4s;
+}
+#pg-citrus #fc-empty-state:hover {
+  border-color: rgba(249,115,22,.4);
+  background: rgba(249,115,22,.04);
+}
+
+/* ── Equation strip ── */
+#pg-citrus .fc-equation-strip {
+  border-radius: 18px;
+  border: 1px solid rgba(249,115,22,.14);
+  background: rgba(249,115,22,.04);
+}
+
+#pg-citrus .fc-eq-result {
+  background: rgba(249,115,22,.1);
+  border-color: rgba(249,115,22,.25);
+  color: #ea580c;
+}
+[data-dark] #pg-citrus .fc-eq-result { color: #fb923c; }
+
+/* ── Result Groups — premium cards ── */
+#pg-citrus .fc-result-group {
+  border-radius: 24px;
+  border: 1px solid rgba(217,119,6,.14);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.04) inset,
+    0 4px 6px rgba(0,0,0,.03),
+    0 12px 32px rgba(217,119,6,.08);
+  overflow: hidden;
+  transition: box-shadow .35s ease, transform .35s cubic-bezier(.16,1,.3,1), border-color .35s;
+}
+
+#pg-citrus .fc-result-group:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.06) inset,
+    0 6px 12px rgba(0,0,0,.05),
+    0 20px 48px rgba(217,119,6,.14);
+  border-color: rgba(217,119,6,.24);
+}
+
+/* ── Group Headers ── */
+#pg-citrus .fc-group-header {
+  background: linear-gradient(135deg, rgba(249,115,22,.06) 0%, rgba(251,191,36,.04) 100%);
+  border-bottom: 1px solid rgba(249,115,22,.1);
+}
+
+#pg-citrus .fc-group-icon--tree   { background: rgba(249,115,22,.14); }
+#pg-citrus .fc-group-icon--feddan { background: rgba(251,191,36,.14); }
+#pg-citrus .fc-group-icon--farm   { background: rgba(34,197,94,.14);  }
+
+/* ── Result Cards — premium touch ── */
+#pg-citrus .fc-result-card {
+  border-left: 1px solid rgba(249,115,22,.1);
+  transition:
+    background .25s ease,
+    transform .25s cubic-bezier(.34,1.56,.64,1);
+  cursor: default;
+}
+#pg-citrus .fc-result-card:first-child { border-left: none; }
+
+#pg-citrus .fc-result-card::before {
+  background: linear-gradient(90deg, #f97316, #fbbf24);
+  height: 3px;
+  border-radius: 0;
+}
+
+#pg-citrus .fc-result-card:hover {
+  background: rgba(249,115,22,.04);
+  transform: translateY(-2px);
+}
+
+#pg-citrus .fc-result-card:hover::before { opacity: 1; }
+
+/* Numbers — orange accent ── */
+#pg-citrus .fc-num { color: #f97316; }
+[data-dark] #pg-citrus .fc-num { color: #fb923c; }
+
+/* ── Glowing orbs inside section (decorative) ── */
+#pg-citrus #fertilizer-calc-section::after {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(249,115,22,.05) 0%, transparent 65%);
+  top: -100px; left: -150px;
+  pointer-events: none;
+  z-index: 0;
+  animation: citrusOrbFloat 8s ease-in-out infinite;
+}
+
+@keyframes citrusOrbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(30px, -20px) scale(1.05); }
+  66%       { transform: translate(-20px, 15px) scale(.97); }
+}
+
+/* ── Ripple effect on card touch ── */
+#pg-citrus .fc-result-card {
+  position: relative;
+  overflow: hidden;
+}
+
+#pg-citrus .fc-result-card .fc-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(249,115,22,.18);
+  transform: scale(0);
+  animation: fcRipple .5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes fcRipple {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* ── Input shine shimmer on focus ── */
+#pg-citrus .fc-select:focus,
+#pg-citrus .fc-input:focus {
+  background-image: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(249,115,22,.04) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: inputShine .6s ease forwards;
+}
+
+@keyframes inputShine {
+  from { background-position: 200% center; }
+  to   { background-position: -200% center; }
+}
+
+/* ── Responsive overrides ── */
+@media (max-width: 768px) {
+  #pg-citrus .fc-form-panel {
+    border-radius: 22px;
+    padding: 24px 18px;
+    position: static;
+  }
+  #pg-citrus .fc-result-group {
+    border-radius: 18px;
+  }
+}
+
+/* ── Dark mode premium adjustments ── */
+[data-dark] #pg-citrus .fc-form-panel {
+  background: var(--card);
+  border-color: rgba(249,115,22,.16);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.04) inset,
+    0 16px 48px rgba(0,0,0,.3),
+    0 0 0 1px rgba(249,115,22,.05);
+}
+[data-dark] #pg-citrus .fc-select,
+[data-dark] #pg-citrus .fc-input {
+  background: var(--bg3);
+  border-color: rgba(249,115,22,.14);
+}
+[data-dark] #pg-citrus .fc-select:focus,
+[data-dark] #pg-citrus .fc-input:focus {
+  background: var(--bg2);
+  box-shadow: 0 0 0 3px rgba(249,115,22,.18), 0 4px 16px rgba(249,115,22,.1);
+}
+[data-dark] #pg-citrus .fc-result-group {
+  border-color: rgba(249,115,22,.12);
+  box-shadow: 0 12px 32px rgba(0,0,0,.25), 0 0 0 1px rgba(249,115,22,.05);
+}
+[data-dark] #pg-citrus #fc-empty-state {
+  border-color: rgba(249,115,22,.2);
+  background: rgba(249,115,22,.03);
+}
+
+
+
 /* ── Section Shell ──────────────────────────────────── */
 #fertilizer-calc-section {
   position: relative;
@@ -1917,6 +2228,425 @@ body.modal-open { overflow: hidden; }
 }
 
 #pg-farm { min-height: 100vh; }
+
+/* ═══════════════════════════════════════════════════
+   CITRUS CALCULATOR ENTRY CARD CSS
+   بطاقة حاسبة الموالح
+═══════════════════════════════════════════════════ */
+.citrus-entry-section {
+  padding: 0 0 48px;
+  background: var(--bg);
+}
+
+.citrus-entry-card {
+  position: relative;
+  background: var(--card);
+  border-radius: 20px;
+  border: 1px solid rgba(217,119,6,0.16);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 12px 40px rgba(217,119,6,0.10);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1), border-color 0.35s ease;
+}
+
+.citrus-entry-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06), 0 24px 64px rgba(217,119,6,0.18);
+  border-color: rgba(217,119,6,0.34);
+}
+
+.citrus-entry-card:active { transform: translateY(-2px) scale(0.995); }
+
+/* Citrus grain texture */
+.cec-grain {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* Right orange accent strip */
+.cec-accent-strip {
+  position: absolute;
+  top: 0; bottom: 0; right: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #f97316 0%, rgba(217,119,6,0.2) 100%);
+  z-index: 1;
+}
+
+/* Decorative citrus background blobs */
+.cec-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+.cec-bg-orb-1 {
+  width: 220px; height: 220px;
+  top: -60px; left: -60px;
+  background: radial-gradient(circle, rgba(251,191,36,0.07) 0%, transparent 70%);
+}
+.cec-bg-orb-2 {
+  width: 160px; height: 160px;
+  bottom: -40px; left: 40%;
+  background: radial-gradient(circle, rgba(249,115,22,0.06) 0%, transparent 70%);
+}
+
+.cec-inner {
+  position: relative;
+  z-index: 2;
+  padding: 32px 36px 32px 32px;
+}
+
+/* Header row */
+.cec-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.cec-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 13px;
+  background: rgba(217,119,6,0.09);
+  border: 1px solid rgba(217,119,6,0.22);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #b45309;
+  letter-spacing: .04em;
+}
+
+[data-theme="dark"] .cec-pill { color: #fbbf24; background: rgba(217,119,6,0.14); }
+
+.cec-pill-dot {
+  width: 6px; height: 6px;
+  background: #f97316;
+  border-radius: 50%;
+  animation: fecPulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.cec-version {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+/* Main grid */
+.cec-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 40px;
+  align-items: center;
+}
+
+/* Icon box */
+.cec-icon-box {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, rgba(249,115,22,0.12), rgba(251,191,36,0.08));
+  border: 1px solid rgba(217,119,6,0.2);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  margin-bottom: 18px;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  line-height: 1;
+}
+
+.citrus-entry-card:hover .cec-icon-box { transform: rotate(8deg) scale(1.1); }
+
+.cec-title {
+  font-family: var(--f-display);
+  font-size: clamp(1.55rem, 2.5vw, 2.1rem);
+  color: var(--ink);
+  margin: 0 0 10px;
+  letter-spacing: -.03em;
+  line-height: 1.12;
+}
+
+.cec-sub {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
+  margin: 0 0 22px;
+  max-width: 380px;
+}
+
+.cec-features {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 26px;
+}
+
+.cec-feat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--slate);
+  font-weight: 600;
+}
+
+.cec-feat-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cec-fd-orange { background: #f97316; }
+.cec-fd-yellow { background: #fbbf24; }
+.cec-fd-green  { background: #22c55e; }
+
+.cec-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 26px;
+  background: linear-gradient(135deg, #f97316, #d97706);
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--f-ui);
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(249,115,22,0.4), inset 0 1px 0 rgba(255,255,255,0.18);
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.cec-cta:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 32px rgba(249,115,22,0.5);
+}
+
+.cec-cta:active { transform: scale(0.96); }
+.cec-cta svg { transition: transform .22s; }
+.cec-cta:hover svg { transform: translateX(3px); }
+
+/* RIGHT side — citrus visual metrics */
+.cec-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.cec-metric {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 13px;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  transition: all .2s;
+}
+
+.citrus-entry-card:hover .cec-metric { border-color: rgba(217,119,6,0.14); }
+
+.cec-metric-icon {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.cec-metric-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-bottom: 2px;
+}
+
+.cec-metric-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Citrus visual chart */
+.cec-chart-box {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.cec-chart-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 10px;
+}
+
+/* Citrus "season" visual bars */
+.cec-season-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 44px;
+}
+
+.cec-season-wrap {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.cec-season-bar {
+  width: 100%;
+  background: rgba(217,119,6,0.12);
+  border-radius: 3px 3px 0 0;
+  transition: background .3s;
+  min-height: 4px;
+}
+
+.cec-season-bar-active { background: #f97316 !important; }
+.citrus-entry-card:hover .cec-season-bar { background: rgba(217,119,6,0.2); }
+.citrus-entry-card:hover .cec-season-bar-active { background: #f97316 !important; }
+
+@media (max-width: 860px) {
+  .cec-grid { grid-template-columns: 1fr; gap: 20px; }
+  .cec-inner { padding: 24px 20px; }
+  .cec-right { display: none; }
+}
+
+/* ═══ CITRUS CALCULATOR PAGE CSS ═══ */
+#pg-citrus { min-height: 100vh; }
+
+.citrus-page-wrap {
+  padding: 48px 0 80px;
+}
+
+.citrus-page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.citrus-page-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate);
+  cursor: pointer;
+  margin-bottom: 28px;
+  transition: all .2s;
+}
+.citrus-page-back:hover { color: #f97316; border-color: rgba(249,115,22,0.3); background: rgba(249,115,22,0.04); }
+
+.citrus-page-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 16px;
+  background: rgba(217,119,6,0.09);
+  border: 1px solid rgba(217,119,6,0.2);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #b45309;
+  margin-bottom: 16px;
+  letter-spacing: .05em;
+}
+[data-theme="dark"] .citrus-page-eyebrow { color: #fbbf24; }
+
+.citrus-page-title {
+  font-family: var(--f-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--ink);
+  margin: 0 0 12px;
+  letter-spacing: -.04em;
+}
+
+.citrus-page-sub {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.65;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.citrus-coming-soon {
+  max-width: 560px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid rgba(217,119,6,0.18);
+  border-radius: 20px;
+  padding: 48px 40px;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(217,119,6,0.10);
+}
+
+.citrus-cs-icon {
+  font-size: 72px;
+  display: block;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 4px 12px rgba(249,115,22,0.3));
+}
+
+.citrus-cs-title {
+  font-family: var(--f-display);
+  font-size: 1.65rem;
+  color: var(--ink);
+  margin-bottom: 12px;
+  letter-spacing: -.02em;
+}
+
+.citrus-cs-text {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.citrus-cs-features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 32px;
+  text-align: right;
+}
+
+.citrus-cs-feat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 13.5px;
+  color: var(--slate);
+  font-weight: 600;
+}
+
+.citrus-cs-feat-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .citrus-coming-soon { padding: 32px 20px; }
+}
 </style>
 </head>
 <body>
@@ -2048,223 +2778,7 @@ body.modal-open { overflow: hidden; }
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════
-       FERTILIZER CALCULATOR SECTION
-       حاسبة التسميد — أشجار الموالح
-  ═════════════════════════════════════════════════════ -->
-  <section id="fertilizer-calc-section">
-    <div class="W">
-
-      <div class="fc-section-head fc-reveal">
-        <div class="fc-eyebrow">
-          <span class="fc-eyebrow-dot"></span>
-          حاسبة التسميد الذكية
-        </div>
-        <h2 class="fc-section-title">
-          احتياجات التسميد لأشجار
-          <em style="font-style:italic;color:var(--brand)">الموالح</em>
-        </h2>
-        <p class="fc-section-sub">
-          احسب الاحتياجات السمادية الصافية والفعلية للبرتقال واليوسفي
-          في الأراضي الرملية والطينية — نتائج فورية دقيقة.
-        </p>
-      </div>
-
-      <div class="fc-layout">
-
-        <div class="fc-form-panel fc-reveal">
-          <div class="fc-panel-title">
-            <div class="fc-panel-title-icon">🌳</div>
-            <div>
-              <div>بيانات الحساب</div>
-              <div style="font-size:11px;font-weight:400;color:var(--muted);margin-top:1px">أدخل بيانات المزرعة</div>
-            </div>
-          </div>
-
-          <div class="fc-fields-grid">
-            <div class="fc-field-row">
-              <div class="fc-field">
-                <label class="fc-label" for="fc-crop">
-                  <span class="fc-label-icon">🍊</span>
-                  نوع المحصول
-                  <span class="fc-help" data-tip="البرتقال ومعاملاته أعلى من اليوسفي بسبب احتياجاته الغذائية الأكبر">?</span>
-                </label>
-                <div class="fc-select-wrap"><select class="fc-select" id="fc-crop"></select></div>
-              </div>
-              <div class="fc-field">
-                <label class="fc-label" for="fc-soil">
-                  <span class="fc-label-icon">🌍</span>
-                  نوع التربة
-                  <span class="fc-help" data-tip="الأرض الرملية تحتاج كميات أسمدة أعلى بسبب ضعف الاحتجاز">?</span>
-                </label>
-                <div class="fc-select-wrap"><select class="fc-select" id="fc-soil"></select></div>
-              </div>
-            </div>
-
-            <div class="fc-field">
-              <label class="fc-label" for="fc-element">
-                <span class="fc-label-icon">⚗️</span>
-                العنصر الغذائي
-                <span class="fc-help" data-tip="اختر العنصر المطلوب حساب احتياجاته — تتغير قائمة الأسمدة تلقائياً">?</span>
-              </label>
-              <div class="fc-select-wrap"><select class="fc-select" id="fc-element"></select></div>
-            </div>
-
-            <div class="fc-field">
-              <label class="fc-label" for="fc-fert-search">
-                <span class="fc-label-icon">🔍</span>
-                بحث السماد
-              </label>
-              <div class="fc-fert-search-wrap">
-                <input class="fc-input" id="fc-fert-search" type="text" placeholder="ابحث عن سماد...">
-              </div>
-            </div>
-
-            <div class="fc-field">
-              <label class="fc-label" for="fc-fertilizer">
-                <span class="fc-label-icon">🧪</span>
-                السماد المستخدم
-                <span class="fc-help" data-tip="تختلف كفاءة الأسمدة حسب نسبة العنصر الفعّال بها">?</span>
-              </label>
-              <div class="fc-select-wrap"><select class="fc-select" id="fc-fertilizer"></select></div>
-            </div>
-
-            <div class="fc-field">
-              <label class="fc-label" for="fc-fert-pct">
-                <span class="fc-label-icon">📊</span>
-                نسبة العنصر %
-                <span class="fc-help" data-tip="تُحسب تلقائياً من السماد المختار، يمكن تعديلها يدوياً">?</span>
-              </label>
-              <div class="fc-pct-wrap">
-                <input class="fc-input" id="fc-fert-pct" type="number" min="0.1" max="100" step="0.1" placeholder="%">
-                <span class="fc-pct-badge">%</span>
-              </div>
-            </div>
-
-            <div class="fc-field">
-              <label class="fc-label" for="fc-age">
-                <span class="fc-label-icon">🗓️</span>
-                عمر الشجرة
-                <span class="fc-help" data-tip="عمر الشجرة بالسنوات — الاحتياج يزيد خطياً مع العمر">?</span>
-              </label>
-              <input class="fc-input" id="fc-age" type="number" min="1" max="50" step="1" placeholder="سنة">
-            </div>
-
-            <div class="fc-field">
-              <label class="fc-label">
-                <span class="fc-label-icon">📐</span>
-                مسافات الزراعة (م)
-                <span class="fc-help" data-tip="مثال: 5×5 يعني 5م بين الخطوط و5م بين الأشجار">?</span>
-              </label>
-              <div class="fc-spacing-row">
-                <input class="fc-input" id="fc-row-spacing" type="number" min="0.5" max="20" step="0.5" placeholder="بين الخطوط">
-                <div class="fc-spacing-sep">×</div>
-                <input class="fc-input" id="fc-tree-spacing" type="number" min="0.5" max="20" step="0.5" placeholder="بين الأشجار">
-              </div>
-            </div>
-
-            <div class="fc-field">
-              <label class="fc-label" for="fc-feddans">
-                <span class="fc-label-icon">🌾</span>
-                عدد الأفدنة
-                <span class="fc-help" data-tip="مساحة الفدان = 4200 م² وفق المعيار المصري">?</span>
-              </label>
-              <input class="fc-input" id="fc-feddans" type="number" min="0.1" max="10000" step="0.5" placeholder="فدان">
-            </div>
-          </div>
-
-          <div class="fc-element-preview">
-            <span class="fc-element-preview-label">العنصر النشط:</span>
-            <span id="fc-active-element">—</span>
-          </div>
-        </div>
-
-        <div class="fc-results-panel fc-reveal">
-          <div id="fc-empty-state">
-            <div class="fc-empty-icon">🌱</div>
-            <div class="fc-empty-text">أدخل بيانات المزرعة للحصول على النتائج</div>
-            <div class="fc-empty-sub">أكمل حقول العمر والمسافات وعدد الأفدنة وستظهر النتائج تلقائياً</div>
-          </div>
-
-          <div id="fc-results-wrap">
-            <div class="fc-equation-strip" id="fc-equation-summary"></div>
-
-            <div class="fc-result-group">
-              <div class="fc-group-header">
-                <div class="fc-group-icon fc-group-icon--tree">🌳</div>
-                <div>
-                  <div class="fc-group-title">على مستوى الشجرة</div>
-                  <div class="fc-group-sub">الاحتياج لكل شجرة منفردة</div>
-                </div>
-              </div>
-              <div class="fc-cards-row">
-                <div class="fc-result-card" id="fc-res-net-tree" data-tip="الاحتياج الصافي = عمر الشجرة × المعامل">
-                  <div class="fc-card-label"><span>🌿</span> الاحتياج الصافي / شجرة</div>
-                  <div class="fc-card-value">—</div>
-                  <div class="fc-card-sub"></div>
-                </div>
-                <div class="fc-result-card" id="fc-res-actual-tree" data-tip="الاحتياج الفعلي = (الصافي × 100) ÷ نسبة العنصر في السماد">
-                  <div class="fc-card-label"><span>🧪</span> الاحتياج الفعلي / شجرة</div>
-                  <div class="fc-card-value">—</div>
-                  <div class="fc-card-sub"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="fc-result-group">
-              <div class="fc-group-header">
-                <div class="fc-group-icon fc-group-icon--feddan">📏</div>
-                <div>
-                  <div class="fc-group-title">على مستوى الفدان</div>
-                  <div class="fc-group-sub">4200 م² · أشجار وكميات</div>
-                </div>
-              </div>
-              <div class="fc-cards-row fc-cards-row--3">
-                <div class="fc-result-card" id="fc-res-trees-feddan" data-tip="عدد الأشجار = 4200 ÷ (مسافة الخطوط × مسافة الأشجار)">
-                  <div class="fc-card-label"><span>🌳</span> عدد الأشجار / فدان</div>
-                  <div class="fc-card-value">—</div>
-                  <div class="fc-card-sub"></div>
-                </div>
-                <div class="fc-result-card" id="fc-res-net-feddan" data-tip="الاحتياج الصافي للفدان = الاحتياج الصافي للشجرة × عدد الأشجار">
-                  <div class="fc-card-label"><span>🌿</span> الاحتياج الصافي / فدان</div>
-                  <div class="fc-card-value">—</div>
-                  <div class="fc-card-sub"></div>
-                </div>
-                <div class="fc-result-card" id="fc-res-actual-feddan" data-tip="الاحتياج الفعلي للفدان = الاحتياج الفعلي للشجرة × عدد الأشجار">
-                  <div class="fc-card-label"><span>🧪</span> الاحتياج الفعلي / فدان</div>
-                  <div class="fc-card-value">—</div>
-                  <div class="fc-card-sub"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="fc-result-group">
-              <div class="fc-group-header">
-                <div class="fc-group-icon fc-group-icon--farm">🌾</div>
-                <div>
-                  <div class="fc-group-title">على مستوى المزرعة</div>
-                  <div class="fc-group-sub">إجمالي الاحتياجات للمزرعة كاملة</div>
-                </div>
-              </div>
-              <div class="fc-cards-row">
-                <div class="fc-result-card" id="fc-res-net-total" data-tip="الاحتياج الصافي للمزرعة = الاحتياج الصافي للفدان × عدد الأفدنة">
-                  <div class="fc-card-label"><span>🌿</span> الاحتياج الصافي — إجمالي</div>
-                  <div class="fc-card-value">—</div>
-                  <div class="fc-card-sub"></div>
-                </div>
-                <div class="fc-result-card" id="fc-res-actual-total" data-tip="الاحتياج الفعلي للمزرعة = الاحتياج الفعلي للفدان × عدد الأفدنة">
-                  <div class="fc-card-label"><span>🧪</span> الاحتياج الفعلي — إجمالي</div>
-                  <div class="fc-card-value">—</div>
-                  <div class="fc-card-sub"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- ═══ END FERTILIZER CALCULATOR ═══ -->
+  <!-- ═══ FERTILIZER CALCULATOR MOVED TO pg-citrus ═══ -->
 
   <!-- ═══════════════════════════════════════════════════
        FARM SYSTEM ENTRY CARD
@@ -2323,6 +2837,76 @@ body.modal-open { overflow: hidden; }
     </div>
   </section>
   <!-- ═══ END FARM ENTRY CARD ═══ -->
+
+  <!-- ═══════════════════════════════════════════════════
+       CITRUS CALCULATOR ENTRY CARD
+       بطاقة حاسبة الموالح
+  ═════════════════════════════════════════════════════ -->
+  <section class="citrus-entry-section" id="citrus-entry-section">
+    <div class="W">
+      <div class="citrus-entry-card reveal" onclick="showPage('citrus')">
+        <div class="cec-grain"></div>
+        <div class="cec-accent-strip"></div>
+        <div class="cec-bg-orb cec-bg-orb-1"></div>
+        <div class="cec-bg-orb cec-bg-orb-2"></div>
+        <div class="cec-inner">
+          <div class="cec-header-row">
+            <div class="cec-pill"><span class="cec-pill-dot"></span><span>Citrus Calc — حاسبة الموالح</span></div>
+            <div class="cec-version">v 1.0</div>
+          </div>
+          <div class="cec-grid">
+            <div class="cec-left">
+              <div class="cec-icon-box">🍊</div>
+              <h3 class="cec-title">حاسبة تسميد الموالح</h3>
+              <p class="cec-sub">احسب احتياجات التسميد الدقيقة للبرتقال واليوسفي والليمون — نتائج فورية مبنية على نوع التربة وعمر الأشجار</p>
+              <div class="cec-features">
+                <div class="cec-feat-item"><div class="cec-feat-dot cec-fd-orange"></div><span>احتياجات النيتروجين والفوسفور والبوتاسيوم</span></div>
+                <div class="cec-feat-item"><div class="cec-feat-dot cec-fd-yellow"></div><span>حسب نوع التربة: رملية أو طينية</span></div>
+                <div class="cec-feat-item"><div class="cec-feat-dot cec-fd-green"></div><span>جدول تسميد موسمي متكامل للمحصول</span></div>
+              </div>
+              <button class="cec-cta" onclick="showPage('citrus');event.stopPropagation()">
+                <span>احسب الآن</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+            <div class="cec-right">
+              <div class="cec-metrics">
+                <div class="cec-metric">
+                  <div class="cec-metric-icon" style="background:rgba(249,115,22,0.10)">🍊</div>
+                  <div><div class="cec-metric-label">البرتقال</div><div class="cec-metric-val">N·P·K</div></div>
+                </div>
+                <div class="cec-metric">
+                  <div class="cec-metric-icon" style="background:rgba(234,179,8,0.10)">🍋</div>
+                  <div><div class="cec-metric-label">الليمون</div><div class="cec-metric-val">جرعات</div></div>
+                </div>
+                <div class="cec-metric">
+                  <div class="cec-metric-icon" style="background:rgba(34,197,94,0.10)">🌱</div>
+                  <div><div class="cec-metric-label">التربة</div><div class="cec-metric-val">رملي/طيني</div></div>
+                </div>
+                <div class="cec-metric">
+                  <div class="cec-metric-icon" style="background:rgba(59,130,246,0.10)">📅</div>
+                  <div><div class="cec-metric-label">الجدول</div><div class="cec-metric-val">موسمي</div></div>
+                </div>
+              </div>
+              <div class="cec-chart-box">
+                <div class="cec-chart-label">توزيع التسميد الموسمي</div>
+                <div class="cec-season-bars">
+                  <div class="cec-season-wrap"><div class="cec-season-bar" style="height:38%"></div></div>
+                  <div class="cec-season-wrap"><div class="cec-season-bar" style="height:55%"></div></div>
+                  <div class="cec-season-wrap"><div class="cec-season-bar cec-season-bar-active" style="height:90%"></div></div>
+                  <div class="cec-season-wrap"><div class="cec-season-bar cec-season-bar-active" style="height:100%"></div></div>
+                  <div class="cec-season-wrap"><div class="cec-season-bar" style="height:72%"></div></div>
+                  <div class="cec-season-wrap"><div class="cec-season-bar" style="height:48%"></div></div>
+                  <div class="cec-season-wrap"><div class="cec-season-bar" style="height:30%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ═══ END CITRUS ENTRY CARD ═══ -->
 
   <section class="cats-section">
     <div class="W">
@@ -2706,6 +3290,223 @@ body.modal-open { overflow: hidden; }
 <div class="page" id="pg-farm">
   <div id="farm-app-root">
     <!-- Farm app content injected by JS -->
+  </div>
+</div>
+
+<!-- ══════════ PAGE: CITRUS CALCULATOR ══════════ -->
+<div class="page" id="pg-citrus">
+  <div class="W citrus-page-wrap">
+
+    <!-- Header -->
+    <div class="citrus-page-header">
+      <button class="citrus-page-back" onclick="showPage('home')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        العودة للرئيسية
+      </button>
+      <div class="citrus-page-eyebrow">🍊 حاسبة التسميد الزراعي</div>
+      <h1 class="citrus-page-title">احتياجات التسميد لأشجار <em style="font-style:italic;color:#f97316">الموالح</em></h1>
+      <p class="citrus-page-sub">
+        احسب الاحتياجات السمادية الصافية والفعلية للبرتقال واليوسفي
+        في الأراضي الرملية والطينية — نتائج فورية دقيقة.
+      </p>
+    </div>
+
+    <!-- Fertilizer Calculator -->
+    <section id="fertilizer-calc-section">
+      <div class="fc-layout">
+
+        <div class="fc-form-panel fc-reveal">
+          <div class="fc-panel-title">
+            <div class="fc-panel-title-icon">🌳</div>
+            <div>
+              <div>بيانات الحساب</div>
+              <div style="font-size:11px;font-weight:400;color:var(--muted);margin-top:1px">أدخل بيانات المزرعة</div>
+            </div>
+          </div>
+
+          <div class="fc-fields-grid">
+            <div class="fc-field-row">
+              <div class="fc-field">
+                <label class="fc-label" for="fc-crop">
+                  <span class="fc-label-icon">🍊</span>
+                  نوع المحصول
+                  <span class="fc-help" data-tip="البرتقال ومعاملاته أعلى من اليوسفي بسبب احتياجاته الغذائية الأكبر">?</span>
+                </label>
+                <div class="fc-select-wrap"><select class="fc-select" id="fc-crop"></select></div>
+              </div>
+              <div class="fc-field">
+                <label class="fc-label" for="fc-soil">
+                  <span class="fc-label-icon">🌍</span>
+                  نوع التربة
+                  <span class="fc-help" data-tip="الأرض الرملية تحتاج كميات أسمدة أعلى بسبب ضعف الاحتجاز">?</span>
+                </label>
+                <div class="fc-select-wrap"><select class="fc-select" id="fc-soil"></select></div>
+              </div>
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label" for="fc-element">
+                <span class="fc-label-icon">⚗️</span>
+                العنصر الغذائي
+                <span class="fc-help" data-tip="اختر العنصر المطلوب حساب احتياجاته — تتغير قائمة الأسمدة تلقائياً">?</span>
+              </label>
+              <div class="fc-select-wrap"><select class="fc-select" id="fc-element"></select></div>
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label" for="fc-fert-search">
+                <span class="fc-label-icon">🔍</span>
+                بحث السماد
+              </label>
+              <div class="fc-fert-search-wrap">
+                <input class="fc-input" id="fc-fert-search" type="text" placeholder="ابحث عن سماد...">
+              </div>
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label" for="fc-fertilizer">
+                <span class="fc-label-icon">🧪</span>
+                السماد المستخدم
+                <span class="fc-help" data-tip="تختلف كفاءة الأسمدة حسب نسبة العنصر الفعّال بها">?</span>
+              </label>
+              <div class="fc-select-wrap"><select class="fc-select" id="fc-fertilizer"></select></div>
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label" for="fc-fert-pct">
+                <span class="fc-label-icon">📊</span>
+                نسبة العنصر %
+                <span class="fc-help" data-tip="تُحسب تلقائياً من السماد المختار، يمكن تعديلها يدوياً">?</span>
+              </label>
+              <div class="fc-pct-wrap">
+                <input class="fc-input" id="fc-fert-pct" type="number" min="0.1" max="100" step="0.1" placeholder="%">
+                <span class="fc-pct-badge">%</span>
+              </div>
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label" for="fc-age">
+                <span class="fc-label-icon">🗓️</span>
+                عمر الشجرة
+                <span class="fc-help" data-tip="عمر الشجرة بالسنوات — الاحتياج يزيد خطياً مع العمر">?</span>
+              </label>
+              <input class="fc-input" id="fc-age" type="number" min="1" max="50" step="1" placeholder="سنة">
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label">
+                <span class="fc-label-icon">📐</span>
+                مسافات الزراعة (م)
+                <span class="fc-help" data-tip="مثال: 5×5 يعني 5م بين الخطوط و5م بين الأشجار">?</span>
+              </label>
+              <div class="fc-spacing-row">
+                <input class="fc-input" id="fc-row-spacing" type="number" min="0.5" max="20" step="0.5" placeholder="بين الخطوط">
+                <div class="fc-spacing-sep">×</div>
+                <input class="fc-input" id="fc-tree-spacing" type="number" min="0.5" max="20" step="0.5" placeholder="بين الأشجار">
+              </div>
+            </div>
+
+            <div class="fc-field">
+              <label class="fc-label" for="fc-feddans">
+                <span class="fc-label-icon">🌾</span>
+                عدد الأفدنة
+                <span class="fc-help" data-tip="مساحة الفدان = 4200 م² وفق المعيار المصري">?</span>
+              </label>
+              <input class="fc-input" id="fc-feddans" type="number" min="0.1" max="10000" step="0.5" placeholder="فدان">
+            </div>
+          </div>
+
+          <div class="fc-element-preview">
+            <span class="fc-element-preview-label">العنصر النشط:</span>
+            <span id="fc-active-element">—</span>
+          </div>
+        </div>
+
+        <div class="fc-results-panel fc-reveal">
+          <div id="fc-empty-state">
+            <div class="fc-empty-icon">🌱</div>
+            <div class="fc-empty-text">أدخل بيانات المزرعة للحصول على النتائج</div>
+            <div class="fc-empty-sub">أكمل حقول العمر والمسافات وعدد الأفدنة وستظهر النتائج تلقائياً</div>
+          </div>
+
+          <div id="fc-results-wrap">
+            <div class="fc-equation-strip" id="fc-equation-summary"></div>
+
+            <div class="fc-result-group">
+              <div class="fc-group-header">
+                <div class="fc-group-icon fc-group-icon--tree">🌳</div>
+                <div>
+                  <div class="fc-group-title">على مستوى الشجرة</div>
+                  <div class="fc-group-sub">الاحتياج لكل شجرة منفردة</div>
+                </div>
+              </div>
+              <div class="fc-cards-row">
+                <div class="fc-result-card" id="fc-res-net-tree" data-tip="الاحتياج الصافي = عمر الشجرة × المعامل">
+                  <div class="fc-card-label"><span>🌿</span> الاحتياج الصافي / شجرة</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+                <div class="fc-result-card" id="fc-res-actual-tree" data-tip="الاحتياج الفعلي = (الصافي × 100) ÷ نسبة العنصر في السماد">
+                  <div class="fc-card-label"><span>🧪</span> الاحتياج الفعلي / شجرة</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="fc-result-group">
+              <div class="fc-group-header">
+                <div class="fc-group-icon fc-group-icon--feddan">📏</div>
+                <div>
+                  <div class="fc-group-title">على مستوى الفدان</div>
+                  <div class="fc-group-sub">4200 م² · أشجار وكميات</div>
+                </div>
+              </div>
+              <div class="fc-cards-row fc-cards-row--3">
+                <div class="fc-result-card" id="fc-res-trees-feddan" data-tip="عدد الأشجار = 4200 ÷ (مسافة الخطوط × مسافة الأشجار)">
+                  <div class="fc-card-label"><span>🌳</span> عدد الأشجار / فدان</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+                <div class="fc-result-card" id="fc-res-net-feddan" data-tip="الاحتياج الصافي للفدان = الاحتياج الصافي للشجرة × عدد الأشجار">
+                  <div class="fc-card-label"><span>🌿</span> الاحتياج الصافي / فدان</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+                <div class="fc-result-card" id="fc-res-actual-feddan" data-tip="الاحتياج الفعلي للفدان = الاحتياج الفعلي للشجرة × عدد الأشجار">
+                  <div class="fc-card-label"><span>🧪</span> الاحتياج الفعلي / فدان</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="fc-result-group">
+              <div class="fc-group-header">
+                <div class="fc-group-icon fc-group-icon--farm">🌾</div>
+                <div>
+                  <div class="fc-group-title">على مستوى المزرعة</div>
+                  <div class="fc-group-sub">إجمالي الاحتياجات للمزرعة كاملة</div>
+                </div>
+              </div>
+              <div class="fc-cards-row">
+                <div class="fc-result-card" id="fc-res-net-total" data-tip="الاحتياج الصافي للمزرعة = الاحتياج الصافي للفدان × عدد الأفدنة">
+                  <div class="fc-card-label"><span>🌿</span> الاحتياج الصافي — إجمالي</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+                <div class="fc-result-card" id="fc-res-actual-total" data-tip="الاحتياج الفعلي للمزرعة = الاحتياج الفعلي للفدان × عدد الأفدنة">
+                  <div class="fc-card-label"><span>🧪</span> الاحتياج الفعلي — إجمالي</div>
+                  <div class="fc-card-value">—</div>
+                  <div class="fc-card-sub"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </div>
 </div>
 
@@ -13337,6 +14138,14 @@ function showPage(pg,opts={}){
   if(pg==='diseases')document.getElementById('nl-diseases')?.classList.add('active');
   if(pg==='goals')document.getElementById('nl-goals')?.classList.add('active');
   if(pg==='farm')document.getElementById('nl-farm')?.classList.add('active');
+  // Trigger fc-reveal items when citrus calculator page opens
+  if(pg==='citrus'){
+    setTimeout(function(){
+      document.querySelectorAll('#fertilizer-calc-section .fc-reveal').forEach(function(el){
+        el.classList.add('is-visible');
+      });
+    }, 480);
+  }
   window.scrollTo(0,0);
   document.documentElement.scrollTop=0;
   if(prev&&prev!==next){
@@ -14369,7 +15178,7 @@ async function hReg(event) {
       populateElements();
       onElementChange();
       bindEvents();
-      initTooltips(document.getElementById('fertilizer-calc-section'));
+      initTooltips(document.getElementById('fertilizer-calc-section') || document.body);
       initRevealObserver();
     }
 
@@ -14534,6 +15343,11 @@ async function hReg(event) {
         });
       }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
       els.forEach(function(el) { obs.observe(el); });
+      // Also trigger immediately if pg-citrus is already active
+      var pgCitrus = document.getElementById('pg-citrus');
+      if (pgCitrus && pgCitrus.classList.contains('active')) {
+        els.forEach(function(el) { el.classList.add('is-visible'); });
+      }
     }
 
     // ── Boot ─────────────────────────────────────────────────
@@ -14546,6 +15360,49 @@ async function hReg(event) {
   })();
   </script>
   <!-- ═══ END FERTILIZER CALCULATOR SCRIPTS ═══ -->
+
+  <!-- ═══ CITRUS PAGE PREMIUM INTERACTIONS ═══ -->
+  <script>
+  (function() {
+    // Ripple on result cards
+    function addCitrusRipple(e) {
+      var card = e.currentTarget;
+      var ripple = document.createElement('span');
+      ripple.className = 'fc-ripple';
+      var rect = card.getBoundingClientRect();
+      var size = Math.max(rect.width, rect.height);
+      ripple.style.cssText = 'width:'+size+'px;height:'+size+'px;top:'+(e.clientY-rect.top-size/2)+'px;left:'+(e.clientX-rect.left-size/2)+'px;';
+      card.appendChild(ripple);
+      setTimeout(function(){ ripple.remove(); }, 520);
+    }
+
+    function initCitrusPremium() {
+      var pg = document.getElementById('pg-citrus');
+      if (!pg) return;
+      pg.querySelectorAll('.fc-result-card').forEach(function(card) {
+        card.removeEventListener('mousedown', addCitrusRipple);
+        card.addEventListener('mousedown', addCitrusRipple);
+      });
+    }
+
+    // Re-init every time pg-citrus becomes active
+    var _origShowPage = window.showPage;
+    if (typeof _origShowPage === 'function') {
+      window.showPage = function(pg, opts) {
+        _origShowPage.apply(this, arguments);
+        if (pg === 'citrus') { setTimeout(initCitrusPremium, 100); }
+      };
+    }
+
+    // Also init on DOMContentLoaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCitrusPremium);
+    } else {
+      initCitrusPremium();
+    }
+  })();
+  </script>
+  <!-- ═══ END CITRUS PREMIUM INTERACTIONS ═══ -->
 
   <!-- ══════════════════════════════════════════════════
        FARM SYSTEM MODULE — JavaScript
