@@ -1641,7 +1641,7 @@ body.modal-open { overflow: hidden; }
 }
 
 /* ══════════════════════════════════════════════════════
-   FARM ENTRY SECTION CSS
+   FARM ENTRY SECTION — Glassmorphism SaaS Card
    ══════════════════════════════════════════════════════ */
 .farm-entry-section {
   padding: 60px 0 40px;
@@ -1650,203 +1650,295 @@ body.modal-open { overflow: hidden; }
 
 .farm-entry-card {
   position: relative;
-  background: var(--card);
-  border-radius: var(--r4);
-  border: 1.5px solid rgba(27,107,58,0.15);
-  box-shadow: var(--s3);
+  background: linear-gradient(135deg,
+    rgba(27,107,58,0.06) 0%,
+    rgba(var(--bg-rgb, 248,246,240),0.95) 40%,
+    rgba(201,135,26,0.04) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1.5px solid rgba(27,107,58,0.18);
+  box-shadow:
+    0 4px 24px rgba(27,107,58,0.08),
+    0 1px 0 rgba(255,255,255,0.7) inset,
+    0 -1px 0 rgba(27,107,58,0.06) inset;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.2,0,0,1);
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  padding: 36px 40px 40px;
 }
 
 .farm-entry-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 24px 64px rgba(27,107,58,0.18);
-  border-color: rgba(27,107,58,0.35);
+  transform: translateY(-8px);
+  box-shadow:
+    0 32px 80px rgba(27,107,58,0.18),
+    0 8px 32px rgba(27,107,58,0.12),
+    0 1px 0 rgba(255,255,255,0.8) inset;
+  border-color: rgba(27,107,58,0.32);
 }
 
 .farm-entry-card:active {
-  transform: translateY(-2px) scale(0.99);
+  transform: translateY(-3px) scale(0.995);
 }
 
-.farm-entry-bg-deco {
+/* Orbs */
+.fec-orb {
   position: absolute;
-  top: -60px;
-  left: -60px;
-  width: 320px;
-  height: 320px;
-  background: radial-gradient(circle, rgba(27,107,58,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(60px);
+}
+
+.fec-orb1 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(27,107,58,0.12) 0%, transparent 70%);
+  top: -120px; left: -80px;
+}
+
+.fec-orb2 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(201,135,26,0.08) 0%, transparent 70%);
+  bottom: -100px; right: -60px;
+}
+
+/* Subtle grid overlay */
+.fec-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(27,107,58,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27,107,58,0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
   pointer-events: none;
 }
 
-.farm-entry-content {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 32px;
+/* Top badge */
+.fec-badge {
+  position: relative;
+  display: inline-flex;
   align-items: center;
-  padding: 36px 40px;
-}
-
-.farm-entry-icon-wrap {
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(145deg, var(--brand-l), var(--brand-d));
-  border-radius: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 24px rgba(27,107,58,0.35);
-  flex-shrink: 0;
-  transition: transform 0.3s var(--ease-spring);
-}
-
-.farm-entry-card:hover .farm-entry-icon-wrap {
-  transform: scale(1.08) rotate(-3deg);
-}
-
-.farm-entry-icon {
-  font-size: 36px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-}
-
-.farm-entry-eyebrow {
+  gap: 7px;
+  padding: 5px 14px 5px 8px;
+  background: rgba(27,107,58,0.09);
+  border: 1px solid rgba(27,107,58,0.2);
+  border-radius: 100px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: .18em;
-  text-transform: uppercase;
   color: var(--brand);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
 }
 
-.farm-entry-dot {
-  width: 6px;
-  height: 6px;
+.fec-badge-dot {
+  width: 7px; height: 7px;
   background: var(--brand);
   border-radius: 50%;
-  animation: feDotPulse 2s ease-in-out infinite;
-}
-
-@keyframes feDotPulse {
-  0%,100% { opacity:1; transform:scale(1); }
-  50% { opacity:.5; transform:scale(.7); }
-}
-
-.farm-entry-title {
-  font-family: var(--f-display);
-  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
-  color: var(--ink);
-  margin: 0 0 8px;
-  letter-spacing: -.02em;
-  line-height: 1.15;
-}
-
-.farm-entry-desc {
-  color: var(--muted);
-  font-size: 14px;
-  margin: 0 0 20px;
-}
-
-.farm-entry-features {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 24px;
-}
-
-.farm-entry-features li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--slate);
-  font-weight: 600;
-}
-
-.fef-icon {
-  font-size: 15px;
-}
-
-.farm-entry-cta {
+  animation: fecDotPulse 2s ease-in-out infinite;
   flex-shrink: 0;
 }
 
-.farm-entry-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 16px 32px;
-  border-radius: var(--rpill);
+@keyframes fecDotPulse {
+  0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(27,107,58,.4); }
+  50% { opacity:.7; box-shadow: 0 0 0 4px rgba(27,107,58,0); }
+}
+
+.fec-badge-ver {
   background: var(--brand);
   color: #fff;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 100px;
+  letter-spacing: .04em;
+}
+
+/* Main body layout */
+.fec-body {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 40px;
+  align-items: center;
+}
+
+/* Left side */
+.fec-left { }
+
+.fec-icon-wrap {
+  width: 64px; height: 64px;
+  background: linear-gradient(145deg, var(--brand-l), var(--brand-d, var(--brand)));
+  border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  box-shadow: 0 8px 28px rgba(27,107,58,0.38), inset 0 1px 0 rgba(255,255,255,0.25);
+  margin-bottom: 20px;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.farm-entry-card:hover .fec-icon-wrap {
+  transform: rotate(-5deg) scale(1.08);
+}
+
+.fec-title {
+  font-family: var(--f-display);
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  color: var(--ink);
+  margin: 0 0 10px;
+  letter-spacing: -.03em;
+  line-height: 1.12;
+}
+
+.fec-desc {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 22px;
+  max-width: 420px;
+}
+
+.fec-features-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 28px;
+}
+
+.fec-feat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate);
+}
+
+.fec-feat svg { color: var(--brand); flex-shrink: 0; }
+
+.fec-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 100px;
   font-size: 15px;
   font-weight: 700;
   font-family: var(--f-ui);
-  box-shadow: 0 4px 24px rgba(27,107,58,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
-  transition: all 0.25s var(--ease-spring);
-  white-space: nowrap;
   cursor: pointer;
-  border: none;
+  box-shadow: 0 4px 20px rgba(27,107,58,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
 }
 
-.farm-entry-btn:hover {
+.fec-cta:hover {
   background: var(--brand-l);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 36px rgba(27,107,58,0.55);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(27,107,58,0.5);
 }
 
-.farm-entry-btn:active {
-  transform: scale(0.96);
+.fec-cta:active { transform: scale(0.97); }
+.fec-cta svg { transition: transform .25s; }
+.fec-cta:hover svg { transform: translateX(3px); }
+
+/* Right: Stats Panel */
+.fec-right { }
+
+.fec-stats-panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: var(--s2);
+  position: relative;
+  overflow: hidden;
 }
 
-.farm-entry-arr {
-  font-size: 18px;
-  transition: transform 0.25s var(--ease-spring);
-  display: inline-block;
+.fec-stats-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand), var(--gold));
 }
 
-.farm-entry-btn:hover .farm-entry-arr {
-  transform: translateX(-4px);
+.fec-stats-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin-bottom: 16px;
 }
+
+.fec-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.fec-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg2);
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  transition: all .2s;
+}
+
+.farm-entry-card:hover .fec-stat {
+  border-color: rgba(27,107,58,0.15);
+}
+
+.fec-stat-icon {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.fec-si-water { background: rgba(59,130,246,0.12); color: #3b82f6; }
+.fec-si-fert  { background: rgba(27,107,58,0.12);  color: var(--brand); }
+.fec-si-spray { background: rgba(168,85,247,0.12); color: #a855f7; }
+.fec-si-worker{ background: rgba(245,158,11,0.12); color: #f59e0b; }
+
+.fec-stat-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.fec-stat-val   { font-size: 12px; font-weight: 700; color: var(--ink); margin-top: 2px; }
+
+/* Mini chart */
+.fec-mini-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 44px;
+  padding: 0 2px;
+  margin-bottom: 6px;
+}
+
+.fec-mc-bar {
+  flex: 1;
+  background: var(--line);
+  border-radius: 3px 3px 0 0;
+  transition: background .3s;
+}
+
+.fec-mc-active { background: var(--brand) !important; }
+.farm-entry-card:hover .fec-mc-bar { background: rgba(27,107,58,0.2); }
+.farm-entry-card:hover .fec-mc-active { background: var(--brand) !important; }
+
+.fec-mc-label { font-size: 10px; color: var(--muted); text-align: center; font-weight: 600; }
 
 @media (max-width: 900px) {
-  .farm-entry-content {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 28px 24px;
-    text-align: center;
-  }
-  .farm-entry-icon-wrap {
-    margin: 0 auto;
-  }
-  .farm-entry-eyebrow {
-    justify-content: center;
-  }
-  .farm-entry-features {
-    grid-template-columns: 1fr 1fr;
-    text-align: right;
-  }
-  .farm-entry-cta {
-    display: flex;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .farm-entry-features {
-    grid-template-columns: 1fr;
-  }
+  .fec-body { grid-template-columns: 1fr; gap: 24px; }
+  .farm-entry-card { padding: 28px 24px 32px; }
+  .fec-right { display: none; }
 }
 
 /* ══ Farm Page (pg-farm) inside SPA ══ */
-#pg-farm {
-  min-height: 100vh;
-}
-
+#pg-farm { min-height: 100vh; }
 </style>
 </head>
 <body>
@@ -2203,30 +2295,92 @@ body.modal-open { overflow: hidden; }
   <section class="farm-entry-section" id="farm-entry-section">
     <div class="W">
       <div class="farm-entry-card reveal" onclick="showPage('farm')">
-        <div class="farm-entry-bg-deco"></div>
-        <div class="farm-entry-content">
-          <div class="farm-entry-icon-wrap">
-            <span class="farm-entry-icon">🌾</span>
-          </div>
-          <div class="farm-entry-text">
-            <div class="farm-entry-eyebrow">
-              <span class="farm-entry-dot"></span>
-              نظام إدارة المزرعة
+        <!-- Decorative BG layers -->
+        <div class="fec-orb fec-orb1"></div>
+        <div class="fec-orb fec-orb2"></div>
+        <div class="fec-grid-overlay"></div>
+
+        <!-- Top badge -->
+        <div class="fec-badge">
+          <span class="fec-badge-dot"></span>
+          <span>Farm OS — نظام إدارة المزرعة</span>
+          <span class="fec-badge-ver">v2.0</span>
+        </div>
+
+        <!-- Main body -->
+        <div class="fec-body">
+          <!-- Left: Icon + Text -->
+          <div class="fec-left">
+            <div class="fec-icon-wrap">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2C6.48 2 2 6.48 2 12"/><path d="M12 22V12"/><path d="M12 12C8 8 4 9 2 12"/><path d="M12 12c4-4 8-3 10 0"/><circle cx="12" cy="12" r="2"/></svg>
             </div>
-            <h3 class="farm-entry-title">قم بإدارة مزرعتك الآن</h3>
-            <p class="farm-entry-desc">نظام متكامل لتسجيل ومتابعة عمليات مزرعتك بكل احترافية</p>
-            <ul class="farm-entry-features">
-              <li><span class="fef-icon">📋</span> نظام ذكي لتسجيل العمليات اليومية</li>
-              <li><span class="fef-icon">📊</span> تحليل أداء المزرعة</li>
-              <li><span class="fef-icon">📈</span> تقارير أسبوعية وشهرية</li>
-              <li><span class="fef-icon">🗂️</span> أرشيف كامل للمزرعة</li>
-            </ul>
-          </div>
-          <div class="farm-entry-cta">
-            <button class="farm-entry-btn" onclick="showPage('farm');event.stopPropagation()">
+            <h3 class="fec-title">قم بإدارة مزرعتك الآن</h3>
+            <p class="fec-desc">نظام ERP زراعي متكامل لتسجيل وتحليل جميع عمليات مزرعتك بدقة احترافية</p>
+            <div class="fec-features-row">
+              <span class="fec-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>تسجيل يومي دقيق</span>
+              <span class="fec-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>تحليل الأداء</span>
+              <span class="fec-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>أرشيف شهري</span>
+              <span class="fec-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>تقارير متقدمة</span>
+            </div>
+            <button class="fec-cta" onclick="showPage('farm');event.stopPropagation()">
               <span>ابدأ الآن</span>
-              <span class="farm-entry-arr">←</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
+          </div>
+
+          <!-- Right: Mini Stats Panel -->
+          <div class="fec-right">
+            <div class="fec-stats-panel">
+              <div class="fec-stats-header">لوحة التحكم السريع</div>
+              <div class="fec-stats-grid">
+                <div class="fec-stat">
+                  <div class="fec-stat-icon fec-si-water">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                  </div>
+                  <div class="fec-stat-body">
+                    <div class="fec-stat-label">الري</div>
+                    <div class="fec-stat-val">تتبع يومي</div>
+                  </div>
+                </div>
+                <div class="fec-stat">
+                  <div class="fec-stat-icon fec-si-fert">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
+                  </div>
+                  <div class="fec-stat-body">
+                    <div class="fec-stat-label">التسميد</div>
+                    <div class="fec-stat-val">تفصيل كامل</div>
+                  </div>
+                </div>
+                <div class="fec-stat">
+                  <div class="fec-stat-icon fec-si-spray">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  </div>
+                  <div class="fec-stat-body">
+                    <div class="fec-stat-label">الرش</div>
+                    <div class="fec-stat-val">مبيدات + آفات</div>
+                  </div>
+                </div>
+                <div class="fec-stat">
+                  <div class="fec-stat-icon fec-si-worker">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
+                  <div class="fec-stat-body">
+                    <div class="fec-stat-label">العمالة</div>
+                    <div class="fec-stat-val">تسجيل يومي</div>
+                  </div>
+                </div>
+              </div>
+              <div class="fec-mini-chart">
+                <div class="fec-mc-bar" style="height:40%"></div>
+                <div class="fec-mc-bar" style="height:65%"></div>
+                <div class="fec-mc-bar" style="height:50%"></div>
+                <div class="fec-mc-bar" style="height:80%"></div>
+                <div class="fec-mc-bar" style="height:55%"></div>
+                <div class="fec-mc-bar fec-mc-active" style="height:90%"></div>
+                <div class="fec-mc-bar" style="height:70%"></div>
+              </div>
+              <div class="fec-mc-label">آخر 7 أيام من العمليات</div>
+            </div>
           </div>
         </div>
       </div>
@@ -14468,54 +14622,1058 @@ async function hReg(event) {
 
   (function FarmSystem() {
 
-    // ── State ─────────────────────────────────────────
+    // ═══════════════════════════════════════════════════
+    //  STATE
+    // ═══════════════════════════════════════════════════
     var farmState = {
       currentView: 'dashboard',
       currentFarm: null,
-      currentField: null,
       farms: [],
       fields: [],
-      crops: [],
-      operations: [],
       analyticsMode: 'daily',
-      archiveMonth: null,
       loading: false,
     };
 
-    // ── Toast Notification System ─────────────────────
-    function showFarmToast(msg, type) {
-      // type: 'success' | 'error' | 'warning' | 'info'
-      type = type || 'success';
+    // ═══════════════════════════════════════════════════
+    //  TOAST SYSTEM — احترافي
+    // ═══════════════════════════════════════════════════
+    function farmToast(msg, type, duration) {
+      type = type || 'success'; // success | error | warning | info
+      duration = duration || 3500;
+
       var container = document.getElementById('farm-toast-container');
       if (!container) {
         container = document.createElement('div');
         container.id = 'farm-toast-container';
-        container.style.cssText = 'position:fixed;top:84px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
+        container.style.cssText = 'position:fixed;top:80px;left:24px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
         document.body.appendChild(container);
       }
-      var icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
-      var colors = {
-        success: 'linear-gradient(135deg,#1b6b3a,#2d9e5f)',
-        error:   'linear-gradient(135deg,#c0392b,#e74c3c)',
-        warning: 'linear-gradient(135deg,#d4500a,#f39c12)',
-        info:    'linear-gradient(135deg,#1a5e8c,#2980b9)'
+
+      var icons = {
+        success: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>',
+        error:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+        warning: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+        info:    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
       };
+
+      var colors = {
+        success: { bg:'#f0fdf4', border:'#86efac', icon:'#16a34a', text:'#14532d', bar:'#22c55e' },
+        error:   { bg:'#fef2f2', border:'#fca5a5', icon:'#dc2626', text:'#7f1d1d', bar:'#ef4444' },
+        warning: { bg:'#fffbeb', border:'#fcd34d', icon:'#d97706', text:'#78350f', bar:'#f59e0b' },
+        info:    { bg:'#eff6ff', border:'#93c5fd', icon:'#2563eb', text:'#1e3a8a', bar:'#3b82f6' },
+      };
+
+      var c = colors[type];
       var t = document.createElement('div');
-      t.style.cssText = 'background:' + colors[type] + ';color:#fff;padding:14px 22px;border-radius:14px;font-size:14px;font-weight:700;font-family:var(--f-ui);box-shadow:0 8px 32px rgba(0,0,0,.22);display:flex;align-items:center;gap:10px;pointer-events:auto;opacity:0;transform:translateY(-12px) scale(.96);transition:all .3s cubic-bezier(.16,1,.3,1);min-width:260px;max-width:400px;';
-      t.innerHTML = '<span style="font-size:18px;">' + (icons[type]||'✅') + '</span><span>' + msg + '</span>';
+      t.style.cssText = [
+        'display:flex;align-items:center;gap:12px;',
+        'padding:14px 18px;border-radius:12px;',
+        'background:' + c.bg + ';border:1.5px solid ' + c.border + ';',
+        'box-shadow:0 4px 24px rgba(0,0,0,0.12),0 1px 0 rgba(255,255,255,0.8) inset;',
+        'pointer-events:all;min-width:260px;max-width:360px;',
+        'position:relative;overflow:hidden;',
+        'transform:translateX(-110%);opacity:0;',
+        'transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s ease;',
+        'cursor:pointer;',
+      ].join('');
+
+      t.innerHTML =
+        '<div style="width:36px;height:36px;border-radius:9px;background:' + c.icon + '20;color:' + c.icon + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + icons[type] + '</div>' +
+        '<div style="flex:1;font-size:13px;font-weight:600;color:' + c.text + ';line-height:1.4;font-family:var(--f-ui);">' + msg + '</div>' +
+        '<div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:' + c.bar + ';transform-origin:left;animation:farmToastBar ' + duration + 'ms linear forwards;"></div>';
+
+      // Inject keyframe once
+      if (!document.getElementById('farm-toast-kf')) {
+        var s = document.createElement('style');
+        s.id = 'farm-toast-kf';
+        s.textContent = '@keyframes farmToastBar{from{transform:scaleX(1)}to{transform:scaleX(0)}}';
+        document.head.appendChild(s);
+      }
+
+      t.onclick = function() { removeToast(t); };
       container.appendChild(t);
+
+      // Animate in
       requestAnimationFrame(function() {
         requestAnimationFrame(function() {
+          t.style.transform = 'translateX(0)';
           t.style.opacity = '1';
-          t.style.transform = 'translateY(0) scale(1)';
         });
       });
-      setTimeout(function() {
-        t.style.opacity = '0';
-        t.style.transform = 'translateY(-8px) scale(.96)';
-        setTimeout(function() { t.remove(); }, 400);
-      }, 3200);
+
+      var timer = setTimeout(function() { removeToast(t); }, duration);
+
+      function removeToast(el) {
+        clearTimeout(timer);
+        el.style.transform = 'translateX(-110%)';
+        el.style.opacity = '0';
+        setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 400);
+      }
     }
+
+    // Keep backward compat with showToast used elsewhere
+    function showToast(msg) {
+      var type = 'success';
+      if (msg.indexOf('⚠️') !== -1 || msg.indexOf('برجاء') !== -1) type = 'warning';
+      if (msg.indexOf('❌') !== -1 || msg.indexOf('خطأ') !== -1) type = 'error';
+      farmToast(msg.replace(/^[✅❌⚠️ℹ️]+\s*/,''), type);
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  RENDER ENTRY
+    // ═══════════════════════════════════════════════════
+    function renderFarmApp() {
+      var root = document.getElementById('farm-app-root');
+      if (!root) return;
+      if (!currentUser) { root.innerHTML = farmAuthWall(); return; }
+      root.innerHTML = farmShell();
+      loadUserFarms().then(function() { renderFarmView(farmState.currentView); });
+    }
+
+    function farmAuthWall() {
+      return '<div class="farm-auth-wall"><div class="farm-auth-inner">' +
+        '<div class="farm-auth-icon-wrap"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2C6.48 2 2 6.48 2 12"/><path d="M12 22V12"/><path d="M12 12C8 8 4 9 2 12"/><path d="M12 12c4-4 8-3 10 0"/><circle cx="12" cy="12" r="2"/></svg></div>' +
+        '<h2 class="farm-auth-title">سجّل دخولك أولاً</h2>' +
+        '<p class="farm-auth-sub">نظام إدارة المزرعة متاح للأعضاء المسجلين فقط</p>' +
+        '<button class="farm-btn-primary" onclick="openAuth()">تسجيل الدخول / إنشاء حساب</button>' +
+        '<button class="farm-back-btn" style="margin-top:12px;display:block;width:100%;" onclick="showPage(\'home\')">← العودة للرئيسية</button>' +
+        '</div></div>';
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  SHELL
+    // ═══════════════════════════════════════════════════
+    function farmShell() {
+      var navItems = [
+        { view:'dashboard', svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>', label:'لوحة التحكم' },
+        { view:'setup',     svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>', label:'إعداد المزرعة' },
+        { view:'log',       svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>', label:'تسجيل يومي' },
+        { view:'analytics', svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>', label:'التحليلات' },
+        { view:'archive',   svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>', label:'الأرشيف' },
+      ];
+
+      var navHtml = navItems.map(function(n) {
+        var active = farmState.currentView === n.view ? ' farm-nav-active' : '';
+        return '<button class="farm-nav-item' + active + '" onclick="FarmNav(\'' + n.view + '\')">' +
+          '<span class="farm-nav-icon">' + n.svg + '</span>' +
+          '<span class="farm-nav-label">' + n.label + '</span>' +
+        '</button>';
+      }).join('');
+
+      var userAvatar = currentUser && currentUser.photoURL
+        ? '<img src="' + currentUser.photoURL + '" class="farm-user-avatar">'
+        : '<div class="farm-user-avatar-placeholder"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>';
+
+      var farmName = farmState.currentFarm ? farmState.currentFarm.name : 'مزرعتي';
+
+      return '<div class="farm-shell">' +
+        '<div class="farm-topbar">' +
+          '<button class="farm-back-btn" onclick="showPage(\'home\')">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>' +
+            ' نبتيكس' +
+          '</button>' +
+          '<div class="farm-topbar-center">' +
+            '<div class="farm-topbar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2C6.48 2 2 6.48 2 12"/><path d="M12 22V12"/><path d="M12 12C8 8 4 9 2 12"/><path d="M12 12c4-4 8-3 10 0"/><circle cx="12" cy="12" r="2"/></svg></div>' +
+            '<div class="farm-topbar-title">' + farmName + '</div>' +
+          '</div>' +
+          '<div class="farm-topbar-user">' + userAvatar + '</div>' +
+        '</div>' +
+        '<div class="farm-sidebar">' +
+          '<div class="farm-sidebar-logo">Farm OS</div>' +
+          '<nav class="farm-nav">' + navHtml + '</nav>' +
+          '<div class="farm-sidebar-footer">' +
+            '<div class="farm-sf-dot"></div>' +
+            '<span>متصل بـ Firebase</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="farm-main" id="farm-main-content">' +
+          '<div class="farm-loader" id="farm-loader"><div class="farm-spinner"></div></div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  NAVIGATION
+    // ═══════════════════════════════════════════════════
+    window.FarmNav = function(view) {
+      farmState.currentView = view;
+      document.querySelectorAll('.farm-nav-item').forEach(function(b) { b.classList.remove('farm-nav-active'); });
+      var views = ['dashboard','setup','log','analytics','archive'];
+      var btns  = document.querySelectorAll('.farm-nav-item');
+      var idx   = views.indexOf(view);
+      if (btns[idx]) btns[idx].classList.add('farm-nav-active');
+      renderFarmView(view);
+    };
+
+    function renderFarmView(view) {
+      var mc = document.getElementById('farm-main-content');
+      if (!mc) return;
+      showFarmLoader(true);
+      setTimeout(function() {
+        showFarmLoader(false);
+        var html = '';
+        if      (view === 'dashboard') html = renderDashboard();
+        else if (view === 'setup')     html = renderSetup();
+        else if (view === 'log')       html = renderLogForm();
+        else if (view === 'analytics') html = renderAnalytics();
+        else if (view === 'archive')   html = renderArchive();
+        mc.innerHTML = html;
+        attachViewEvents(view);
+      }, 180);
+    }
+
+    function showFarmLoader(show) {
+      var ldr = document.getElementById('farm-loader');
+      if (ldr) ldr.style.display = show ? 'flex' : 'none';
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  FIREBASE HELPERS
+    // ═══════════════════════════════════════════════════
+    function uid() { return currentUser ? currentUser.uid : null; }
+
+    function loadUserFarms() {
+      if (!uid()) return Promise.resolve();
+      return db.collection('farms').where('userId','==',uid()).get().then(function(snap) {
+        farmState.farms = [];
+        snap.forEach(function(doc) { farmState.farms.push(Object.assign({ id: doc.id }, doc.data())); });
+        if (farmState.farms.length > 0 && !farmState.currentFarm) farmState.currentFarm = farmState.farms[0];
+        return loadUserFields();
+      }).catch(function(e) { console.warn('Farm load error', e); });
+    }
+
+    function loadUserFields() {
+      if (!uid()) return Promise.resolve();
+      return db.collection('fields').where('userId','==',uid()).get().then(function(snap) {
+        farmState.fields = [];
+        snap.forEach(function(doc) { farmState.fields.push(Object.assign({ id: doc.id }, doc.data())); });
+      }).catch(function(e) { console.warn('Fields load error', e); });
+    }
+
+    function loadOperations(startDate, endDate) {
+      if (!uid()) return Promise.resolve([]);
+      var q = db.collection('operations').where('userId','==',uid());
+      if (startDate) q = q.where('date','>=',startDate);
+      if (endDate)   q = q.where('date','<=',endDate);
+      return q.orderBy('date','desc').limit(200).get().then(function(snap) {
+        var ops = [];
+        snap.forEach(function(doc) { ops.push(Object.assign({ id: doc.id }, doc.data())); });
+        return ops;
+      }).catch(function(e) { console.warn('Operations load error', e); return []; });
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  DASHBOARD
+    // ═══════════════════════════════════════════════════
+    function renderDashboard() {
+      var hasFarm    = farmState.farms.length > 0;
+      var f          = hasFarm ? farmState.farms[0] : {};
+      var fieldsCount = farmState.fields.length;
+
+      if (!hasFarm) {
+        return viewWrap('dashboard', 'لوحة التحكم', 'مرحباً بك في Farm OS 🌿',
+          '<div class="farm-empty-state">' +
+          '<div class="farm-empty-lottie"><svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="1" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2C6.48 2 2 6.48 2 12"/><path d="M12 22V12"/><path d="M12 12C8 8 4 9 2 12"/><path d="M12 12c4-4 8-3 10 0"/><circle cx="12" cy="12" r="2"/></svg></div>' +
+          '<h3>أهلاً! لنبدأ بإعداد مزرعتك</h3>' +
+          '<p>أضف بيانات مزرعتك لتفعيل كافة ميزات النظام</p>' +
+          '<button class="farm-btn-primary" onclick="FarmNav(\'setup\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg> إعداد المزرعة الآن</button>' +
+          '</div>'
+        );
+      }
+
+      var statsHtml =
+        '<div class="farm-stats-grid">' +
+          dStatCard('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>', 'اسم المزرعة', f.name || '—', '#16a34a') +
+          dStatCard('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>', 'المساحة الكلية', (f.area || '—') + ' فدان', '#d97706') +
+          dStatCard('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2C6.48 2 2 6.48 2 12"/><path d="M12 22V12"/><path d="M12 12C8 8 4 9 2 12"/><path d="M12 12c4-4 8-3 10 0"/><circle cx="12" cy="12" r="2"/></svg>', 'عدد الحقول', fieldsCount + ' حقل', '#2563eb') +
+          dStatCard('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>', 'اليوم', todayStr(), '#7c3aed') +
+        '</div>';
+
+      var quickHtml =
+        '<div class="dash-quick-section">' +
+          '<div class="farm-section-title">إجراءات سريعة</div>' +
+          '<div class="farm-quick-btns">' +
+            quickBtn('log',       '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>', 'تسجيل عملية اليوم', '#16a34a') +
+            quickBtn('analytics', '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>', 'عرض التحليلات', '#2563eb') +
+            quickBtn('archive',   '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>', 'الأرشيف الشهري', '#d97706') +
+          '</div>' +
+        '</div>';
+
+      return viewWrap('dashboard', 'لوحة التحكم', 'مرحباً بك في Farm OS 🌿', statsHtml + quickHtml);
+    }
+
+    function dStatCard(svg, label, value, color) {
+      return '<div class="farm-stat-card">' +
+        '<div class="fsc-icon-wrap" style="background:' + color + '18;color:' + color + '">' + svg + '</div>' +
+        '<div class="fsc-body">' +
+          '<div class="fsc-label">' + label + '</div>' +
+          '<div class="fsc-value">' + value + '</div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    function quickBtn(view, svg, label, color) {
+      return '<button class="farm-quick-btn" onclick="FarmNav(\'' + view + '\')" style="--qb-color:' + color + '">' +
+        '<div class="fqb-icon-wrap" style="background:' + color + '18;color:' + color + '">' + svg + '</div>' +
+        '<span class="fqb-label">' + label + '</span>' +
+        '<svg class="fqb-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
+      '</button>';
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  FARM SETUP — Enhanced
+    // ═══════════════════════════════════════════════════
+    function renderSetup() {
+      var f      = farmState.currentFarm || {};
+      var fields = farmState.fields;
+
+      var farmInfoCard =
+        '<div class="farm-form-card">' +
+          formCardHeader('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>', 'معلومات المزرعة الأساسية') +
+          '<div class="farm-form-grid">' +
+            fField('farm-name',     'اسم المزرعة',        'text',   f.name||'',     'مثال: مزرعة النيل') +
+            fField('farm-area',     'المساحة الكلية (فدان)', 'number', f.area||'',   'مثال: 50') +
+            fField('farm-location', 'الموقع / المحافظة',  'text',   f.location||'', 'مثال: الفيوم') +
+            fField('farm-phone',    'رقم التواصل',        'text',   f.phone||'',    'اختياري') +
+          '</div>' +
+          '<div class="farm-form-grid">' +
+            fSelect('farm-water-source', 'مصدر المياه', f.waterSource||'', [
+              'نهر النيل','ترعة رئيسية','ترعة فرعية','بئر جوفية','محطة رفع','مياه مطرية','خزان مياه'
+            ]) +
+            fSelect('farm-irr-system', 'نظام الري الرئيسي', f.irrSystem||'', [
+              'تنقيط','رش','غمر','فرداني','خرطوم','سطحي مطور'
+            ]) +
+          '</div>' +
+          '<button class="farm-btn-primary" onclick="saveFarmSetup()">' +
+            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>' +
+            ' حفظ معلومات المزرعة' +
+          '</button>' +
+        '</div>';
+
+      var fieldsCard =
+        '<div class="farm-form-card">' +
+          formCardHeader('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2C6.48 2 2 6.48 2 12"/><path d="M12 22V12"/><path d="M12 12C8 8 4 9 2 12"/><path d="M12 12c4-4 8-3 10 0"/><circle cx="12" cy="12" r="2"/></svg>', 'إدارة الحقول') +
+          '<div id="fields-list">' + renderFieldsList(fields) + '</div>' +
+          '<div class="farm-form-section-label">إضافة حقل جديد</div>' +
+          '<div class="farm-form-grid">' +
+            fField('field-name', 'اسم الحقل', 'text', '', 'مثال: الحقل الشمالي') +
+            fField('field-area', 'مساحة الحقل (فدان)', 'number', '', 'مثال: 10') +
+            fSelect('field-soil', 'نوع التربة', '', ['طمي','رملي','طيني','طمي رملي','طيني ثقيل','صفراء','سوداء']) +
+          '</div>' +
+          '<button class="farm-btn-secondary" onclick="addField()">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+            ' إضافة حقل' +
+          '</button>' +
+        '</div>';
+
+      var cropCard =
+        '<div class="farm-form-card">' +
+          formCardHeader('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22V12"/><path d="M20 7c0 5-4 9-8 10C8 16 4 12 4 7a8 8 0 0 1 16 0z"/></svg>', 'بيانات المحصول') +
+          '<div class="farm-form-grid">' +
+            fField('crop-name',    'اسم المحصول',       'text',   '', 'مثال: برتقال بلدي') +
+            fField('crop-variety', 'الصنف المزروع',     'text',   '', 'مثال: فالنسيا') +
+            fSelect('crop-season', 'الموسم', '', ['صيف','شتاء','ربيع','خريف','موسمان']) +
+            fSelect('crop-stage',  'مرحلة الزراعة الحالية', '', [
+              'إنبات','نمو خضري','تزهير','عقد ثمار','نضج','حصاد','راحة'
+            ]) +
+          '</div>' +
+          '<div class="farm-form-grid">' +
+            fField('crop-plant-date', 'تاريخ الزراعة', 'date', '', '') +
+            fField('crop-temp',       'درجة الحرارة اليومية (°م)', 'number', '', 'مثال: 28') +
+          '</div>' +
+
+          '<div class="farm-form-section-label">نوع الإكثار</div>' +
+          '<div class="farm-radio-group" id="prop-type-group">' +
+            fRadio('prop-type','seeds','تقاوي (بذور)','🌱',true) +
+            fRadio('prop-type','seedlings','شتلات','🌿',false) +
+          '</div>' +
+
+          '<div class="farm-form-grid" style="margin-top:16px">' +
+            fField('crop-seed-company',  'شركة التقاوي / الشتلات', 'text', '', 'مثال: سينجنتا') +
+            fField('crop-seed-supplier', 'الجهة الموردة',           'text', '', 'مثال: محل أبو الهنا') +
+            fField('crop-seed-origin',   'بلد المنشأ (اختياري)',    'text', '', 'مثال: هولندا') +
+          '</div>' +
+
+          '<div class="farm-form-section-label">نظام الزراعة</div>' +
+          '<div class="farm-radio-group" id="plant-sys-group">' +
+            fRadio('plant-sys','rows','خطوط','🌾',true) +
+            fRadio('plant-sys','beds','مصاطب','🌿',false) +
+            fRadio('plant-sys','broadcast','نثر','🌱',false) +
+          '</div>' +
+
+          '<div id="plant-spacing-rows" style="margin-top:16px">' +
+            '<div class="farm-form-grid">' +
+              fField('spacing-row-dist',   'المسافة بين الخطوط (سم)',  'number', '', '0') +
+              fField('spacing-plant-dist', 'المسافة بين النباتات (سم)','number', '', '0') +
+            '</div>' +
+          '</div>' +
+          '<div id="plant-spacing-beds" style="display:none;margin-top:16px">' +
+            '<div class="farm-form-grid">' +
+              fField('spacing-bed-width',  'عرض المصطبة (سم)',         'number', '', '0') +
+              fField('spacing-bed-dist',   'المسافة بين المصاطب (سم)', 'number', '', '0') +
+              fField('spacing-bed-plant',  'المسافة بين النباتات (سم)','number', '', '0') +
+            '</div>' +
+          '</div>' +
+          '<div id="plant-spacing-broadcast" style="display:none;margin-top:16px">' +
+            '<div class="farm-form-grid">' +
+              fField('spacing-seed-density', 'كثافة البذور (كجم/فدان)', 'number', '', '0') +
+            '</div>' +
+          '</div>' +
+
+          '<button class="farm-btn-primary" onclick="saveCropData()" style="margin-top:20px">' +
+            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>' +
+            ' حفظ بيانات المحصول' +
+          '</button>' +
+        '</div>';
+
+      return viewWrap('setup', 'الإعداد', 'إعداد المزرعة', farmInfoCard + fieldsCard + cropCard);
+    }
+
+    function renderFieldsList(fields) {
+      if (!fields.length) return '<p class="farm-empty-msg">لا توجد حقول مضافة بعد</p>';
+      return '<div class="fields-list">' + fields.map(function(f) {
+        return '<div class="field-item">' +
+          '<div class="field-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2C6.48 2 2 6.48 2 12"/><path d="M12 22V12"/><path d="M12 12C8 8 4 9 2 12"/><path d="M12 12c4-4 8-3 10 0"/></svg></div>' +
+          '<div class="field-item-info">' +
+            '<strong>' + (f.name||'حقل') + '</strong>' +
+            '<small>' + (f.area||'—') + ' فدان' + (f.soil ? ' — تربة ' + f.soil : '') + '</small>' +
+          '</div>' +
+          '<button class="field-del-btn" onclick="deleteField(\'' + f.id + '\')" title="حذف الحقل">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>' +
+          '</button>' +
+        '</div>';
+      }).join('') + '</div>';
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  DAILY LOG FORM — Enhanced
+    // ═══════════════════════════════════════════════════
+    function renderLogForm() {
+      var today        = todayStr();
+      var fieldsOpts   = farmState.fields.map(function(f) {
+        return '<option value="' + f.id + '">' + (f.name||'حقل') + '</option>';
+      }).join('');
+
+      var headerCard =
+        '<div class="farm-form-card log-header-card">' +
+          '<div class="farm-form-grid">' +
+            '<div class="farm-fg">' +
+              '<label class="farm-label"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> التاريخ</label>' +
+              '<input class="farm-input" id="op-date" type="date" value="' + today + '">' +
+            '</div>' +
+            '<div class="farm-fg">' +
+              '<label class="farm-label"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2C6.48 2 2 6.48 2 12"/><path d="M12 22V12"/></svg> الحقل</label>' +
+              '<select class="farm-input" id="op-field">' +
+                (fieldsOpts || '<option value="">— لا توجد حقول، أضف من الإعداد —</option>') +
+              '</select>' +
+            '</div>' +
+            fSelect('op-crop-stage', 'مرحلة النمو الحالية', '', [
+              'إنبات','نمو خضري','تزهير','عقد ثمار','نضج','حصاد'
+            ]) +
+          '</div>' +
+        '</div>';
+
+      // ── الري
+      var irrCard =
+        '<div class="farm-form-card">' +
+          logSectionHeader(
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
+            'الري', '#3b82f6') +
+          '<div class="farm-form-grid">' +
+            fField('op-irr-times',  'عدد مرات الري',        'number', '0', '0') +
+            fField('op-irr-amount', 'كمية المياه (م³)',     'number', '0', '0') +
+            fField('op-irr-hours',  'مدة الري (ساعة)',      'number', '0', '0') +
+            fSelect('op-irr-method','طريقة الري','',['تنقيط','رش','غمر','فرداني','خرطوم']) +
+          '</div>' +
+        '</div>';
+
+      // ── التسميد
+      var fertCard =
+        '<div class="farm-form-card">' +
+          logSectionHeader(
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>',
+            'التسميد', '#16a34a') +
+          '<div class="farm-form-grid">' +
+            fField('op-fert-name',    'اسم السماد',           'text', '', 'مثال: نترات كالسيوم') +
+            fField('op-fert-company', 'الشركة المصنّعة',      'text', '', 'مثال: هيتا') +
+            fSelect('op-fert-type',   'شكل السماد', '', ['سائل','بودر','حبيبات','عضوي صلب','عضوي سائل']) +
+            fSelect('op-fert-method', 'طريقة الإضافة', '', ['مع مياه الري','رش ورقي','تنقيط','يدوي','آلة تسميد']) +
+          '</div>' +
+          '<div class="farm-form-grid">' +
+            fField('op-fert-n',       'نيتروجين N (كجم)',    'number', '0', '0') +
+            fField('op-fert-p',       'فوسفور P (كجم)',       'number', '0', '0') +
+            fField('op-fert-k',       'بوتاسيوم K (كجم)',    'number', '0', '0') +
+            fField('op-fert-organic', 'عضوي (كجم)',           'number', '0', '0') +
+            fField('op-fert-micro',   'عناصر صغرى (جم)',     'number', '0', '0') +
+            fField('op-fert-amount',  'الكمية الإجمالية (كجم)','number', '0', '0') +
+          '</div>' +
+        '</div>';
+
+      // ── الرش
+      var sprayCard =
+        '<div class="farm-form-card">' +
+          logSectionHeader(
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 19H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5"/><path d="M8 19c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2"/><path d="M14 14l4 4m0 0l4-4m-4 4V11"/></svg>',
+            'الرش', '#a855f7') +
+          '<div class="farm-form-grid">' +
+            fField('op-spray-name',    'اسم المبيد / المادة',   'text', '', 'مثال: نحاس أكسيكلور') +
+            fField('op-spray-company', 'الشركة',                'text', '', 'مثال: Syngenta') +
+            fSelect('op-spray-type',   'نوع المبيد', '', [
+              'مبيد حشري','مبيد فطري','مبيد أكاروسي','مبيد ديدان','سماد ورقي','هرمون','مثبط نمو'
+            ]) +
+            fField('op-spray-pest',    'نوع الآفة / المشكلة',  'text', '', 'مثال: عفن رمادي') +
+          '</div>' +
+          '<div class="farm-form-grid">' +
+            fField('op-spray-conc',   'التركيز (سم³/100لتر)', 'number', '0', '0') +
+            fField('op-spray-water',  'كمية الماء (لتر)',      'number', '0', '0') +
+            fField('op-spray-area',   'المساحة المرشوشة (فدان)','number', '0', '0') +
+            fField('op-spray-times',  'عدد مرات الرش',         'number', '0', '0') +
+          '</div>' +
+        '</div>';
+
+      // ── العمليات الزراعية
+      var agriCard =
+        '<div class="farm-form-card">' +
+          logSectionHeader(
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>',
+            'العمليات الزراعية', '#f59e0b') +
+          '<div class="farm-form-grid">' +
+            fSelect('op-agri-type', 'نوع العملية الزراعية', '', [
+              '— اختر العملية —','حرث','عزيق','تقليم','إزالة حشائش','تسوية أرض',
+              'تدعيم نباتات','تخفيف نباتات','خدمة أرض','زراعة','تطعيم','أخرى'
+            ]) +
+            fField('op-labor',     'عدد العمال',  'number', '0', '0') +
+            fField('op-machines',  'عدد الآلات',  'number', '0', '0') +
+          '</div>' +
+        '</div>';
+
+      // ── البيئة
+      var envCard =
+        '<div class="farm-form-card">' +
+          logSectionHeader(
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>',
+            'البيئة والمناخ', '#06b6d4') +
+          '<div class="farm-form-grid">' +
+            fField('op-temp',     'درجة الحرارة (°م)',  'number', '', '28') +
+            fField('op-humidity', 'الرطوبة (%)',         'number', '', '60') +
+            fField('op-rain',     'هطول الأمطار (مم)',  'number', '0', '0') +
+          '</div>' +
+        '</div>';
+
+      // ── الحصاد (conditional)
+      var harvestCard =
+        '<div class="farm-form-card" id="harvest-section">' +
+          logSectionHeader(
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 22c1.25-.987 2.27-1.975 3.9-2.975C7.82 17.99 10.07 17 12 17c1.93 0 4.18.99 6.1 2.025C19.73 20.025 20.75 21.013 22 22"/><path d="M12 17V3"/><path d="M5 10c3-3 8.45-3 14 0"/><path d="M5 6c3-3 8.45-3 14 0"/></svg>',
+            'بيانات الحصاد (عند الحصاد فقط)', '#16a34a') +
+          '<div class="farm-form-checkbox-row">' +
+            '<input type="checkbox" id="is-harvest-day" onchange="toggleHarvestFields(this.checked)">' +
+            '<label for="is-harvest-day" style="font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;"> هذا يوم حصاد</label>' +
+          '</div>' +
+          '<div id="harvest-fields" style="display:none;margin-top:16px">' +
+            '<div class="farm-form-grid">' +
+              fField('op-harvest-qty',   'كمية الإنتاج (طن)',  'number', '0', '0') +
+              fSelect('op-harvest-qual', 'الجودة', '', ['ممتازة','جيدة جداً','جيدة','مقبولة','منخفضة']) +
+              fField('op-harvest-waste', 'الفاقد (%)',         'number', '0', '0') +
+            '</div>' +
+          '</div>' +
+        '</div>';
+
+      // ── ملاحظات
+      var notesCard =
+        '<div class="farm-form-card">' +
+          '<div class="farm-fg">' +
+            '<label class="farm-label"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> ملاحظات إضافية</label>' +
+            '<textarea class="farm-input farm-textarea" id="op-notes" placeholder="أي ملاحظات على حالة المحصول أو المزرعة..."></textarea>' +
+          '</div>' +
+          '<div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">' +
+            '<button class="farm-btn-primary" onclick="saveOperation()">' +
+              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>' +
+              ' حفظ العملية' +
+            '</button>' +
+            '<button class="farm-btn-secondary" onclick="FarmNav(\'dashboard\')">' +
+              'إلغاء' +
+            '</button>' +
+          '</div>' +
+        '</div>';
+
+      return viewWrap('log', 'التسجيل اليومي', 'تسجيل عملية جديدة',
+        headerCard + irrCard + fertCard + sprayCard + agriCard + envCard + harvestCard + notesCard
+      );
+    }
+
+    window.toggleHarvestFields = function(checked) {
+      var hf = document.getElementById('harvest-fields');
+      if (hf) hf.style.display = checked ? 'block' : 'none';
+    };
+
+    // ── Planting system toggle
+    function attachSetupEvents() {
+      var radios = document.querySelectorAll('input[name="plant-sys"]');
+      radios.forEach(function(r) {
+        r.addEventListener('change', function() {
+          var v = this.value;
+          document.getElementById('plant-spacing-rows').style.display      = v === 'rows'      ? 'block' : 'none';
+          document.getElementById('plant-spacing-beds').style.display      = v === 'beds'      ? 'block' : 'none';
+          document.getElementById('plant-spacing-broadcast').style.display = v === 'broadcast' ? 'block' : 'none';
+        });
+      });
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  ANALYTICS
+    // ═══════════════════════════════════════════════════
+    function renderAnalytics() {
+      var tabs =
+        '<div class="analytics-tabs">' +
+          analyticsTab('daily',   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> يومي') +
+          analyticsTab('weekly',  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 10V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="17" y2="10"/><path d="M18 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="m22 22-1.5-1.5"/></svg> أسبوعي') +
+          analyticsTab('monthly', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></svg> شهري') +
+        '</div>';
+
+      return viewWrap('analytics', 'التحليلات', 'تحليل أداء المزرعة',
+        tabs + '<div id="analytics-content" class="analytics-content"><div class="farm-loader" style="display:flex"><div class="farm-spinner"></div></div></div>'
+      );
+    }
+
+    function analyticsTab(mode, label) {
+      var active = farmState.analyticsMode === mode ? ' an-tab-active' : '';
+      return '<button class="an-tab' + active + '" onclick="FarmAnalyticsMode(\'' + mode + '\')">' + label + '</button>';
+    }
+
+    window.FarmAnalyticsMode = function(mode) {
+      farmState.analyticsMode = mode;
+      document.querySelectorAll('.an-tab').forEach(function(t,i) {
+        t.classList.toggle('an-tab-active', ['daily','weekly','monthly'][i] === mode);
+      });
+      loadAndRenderAnalytics(mode);
+    };
+
+    function loadAndRenderAnalytics(mode) {
+      var ac = document.getElementById('analytics-content');
+      if (!ac) return;
+      ac.innerHTML = '<div class="farm-loader" style="display:flex"><div class="farm-spinner"></div></div>';
+      var today = new Date(), end = dateStr(today), start;
+      if (mode === 'daily')        start = end;
+      else if (mode === 'weekly')  { var w = new Date(today); w.setDate(w.getDate()-6); start = dateStr(w); }
+      else                         { var m = new Date(today); m.setDate(m.getDate()-29); start = dateStr(m); }
+      loadOperations(start, end).then(function(ops) {
+        ac.innerHTML = renderAnalyticsReport(ops, mode, start, end);
+      });
+    }
+
+    function renderAnalyticsReport(ops, mode, startDate, endDate) {
+      var labels = { daily:'اليومي', weekly:'الأسبوعي (7 أيام)', monthly:'الشهري (30 يوم)' };
+      var modeLabel = labels[mode] || mode;
+
+      if (!ops.length) {
+        return '<div class="farm-empty-state">' +
+          '<div class="farm-empty-lottie"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="1" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>' +
+          '<h3>لا توجد بيانات للتقرير ' + modeLabel + '</h3>' +
+          '<p>قم بتسجيل العمليات اليومية أولاً لتظهر التحليلات</p>' +
+          '<button class="farm-btn-primary" onclick="FarmNav(\'log\')">تسجيل عملية الآن</button>' +
+        '</div>';
+      }
+
+      var T = { irr_times:0,irr_amount:0,irr_hours:0,fert_n:0,fert_p:0,fert_k:0,fert_organic:0,fert_micro:0,fert_amount:0,spray_times:0,spray_water:0,spray_area:0,labor:0,machines:0,rain:0,harvest_qty:0,harvest_waste:0 };
+      ops.forEach(function(op) {
+        var d = op.data || {};
+        Object.keys(T).forEach(function(k) { T[k] += num(d[k]); });
+      });
+      var totalFert = T.fert_n + T.fert_p + T.fert_k + T.fert_organic;
+
+      return '<div class="analytics-report">' +
+        '<div class="ar-header">' +
+          '<div class="ar-header-left">' +
+            '<div class="ar-period">تقرير ' + modeLabel + '</div>' +
+            '<div class="ar-range">' + startDate + ' — ' + endDate + '</div>' +
+          '</div>' +
+          '<div class="ar-ops-badge">' + ops.length + ' عملية</div>' +
+        '</div>' +
+
+        arSection('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>', 'ملخص الري', '#3b82f6') +
+        '<div class="ar-grid">' +
+          arCard('مرات الري',  T.irr_times,  'مرة',   '#3b82f6') +
+          arCard('كمية المياه', T.irr_amount, 'م³',    '#3b82f6') +
+          arCard('ساعات الري',  T.irr_hours,  'ساعة',  '#3b82f6') +
+        '</div>' +
+
+        arSection('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18"/></svg>', 'ملخص التسميد', '#16a34a') +
+        '<div class="ar-grid">' +
+          arCard('نيتروجين N',   T.fert_n,      'كجم', '#16a34a') +
+          arCard('فوسفور P',     T.fert_p,      'كجم', '#16a34a') +
+          arCard('بوتاسيوم K',   T.fert_k,      'كجم', '#16a34a') +
+          arCard('عضوي',         T.fert_organic, 'كجم', '#16a34a') +
+          arCard('إجمالي التسميد', totalFert,    'كجم', '#16a34a') +
+        '</div>' +
+
+        arSection('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 19H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h14"/></svg>', 'ملخص الرش', '#a855f7') +
+        '<div class="ar-grid">' +
+          arCard('مرات الرش',   T.spray_times, 'مرة',   '#a855f7') +
+          arCard('كمية المياه', T.spray_water, 'لتر',   '#a855f7') +
+          arCard('المساحة',     T.spray_area,  'فدان',  '#a855f7') +
+        '</div>' +
+
+        arSection('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>', 'العمالة والآلات', '#f59e0b') +
+        '<div class="ar-grid">' +
+          arCard('إجمالي العمال', T.labor,    'عامل/يوم', '#f59e0b') +
+          arCard('استخدام الآلات', T.machines, 'آلة/يوم',  '#f59e0b') +
+          arCard('هطول الأمطار',  T.rain,     'مم',        '#06b6d4') +
+        '</div>' +
+
+        (T.harvest_qty > 0 ?
+          arSection('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 17V3"/><path d="M5 10c3-3 8.45-3 14 0"/></svg>', 'بيانات الحصاد', '#16a34a') +
+          '<div class="ar-grid">' +
+            arCard('كمية الإنتاج', T.harvest_qty,   'طن', '#16a34a') +
+            arCard('الفاقد',       T.harvest_waste,  '%',  '#ef4444') +
+          '</div>' : '') +
+
+        '<div class="ar-ops-log">' +
+          '<div class="ar-ops-log-header">' +
+            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+            ' سجل العمليات (' + ops.length + ')' +
+          '</div>' +
+          ops.map(function(op) {
+            var d = op.data || {};
+            return '<div class="ar-op-row">' +
+              '<span class="ar-op-date">' + (op.date||'—') + '</span>' +
+              '<span class="ar-op-field">' + (d.fieldName||'—') + '</span>' +
+              '<span class="ar-op-notes">' + (d.notes||'—') + '</span>' +
+            '</div>';
+          }).join('') +
+        '</div>' +
+      '</div>';
+    }
+
+    function arSection(svg, label, color) {
+      return '<div class="ar-section-header">' +
+        '<span class="ar-section-icon" style="color:' + color + '">' + svg + '</span>' +
+        '<span class="ar-section-label">' + label + '</span>' +
+      '</div>';
+    }
+
+    function arCard(label, value, unit, color) {
+      return '<div class="ar-card">' +
+        '<div class="ar-card-label">' + label + '</div>' +
+        '<div class="ar-card-value" style="color:' + color + '">' + (value||0) + '</div>' +
+        '<div class="ar-card-unit">' + unit + '</div>' +
+      '</div>';
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  ARCHIVE
+    // ═══════════════════════════════════════════════════
+    function renderArchive() {
+      return viewWrap('archive', 'الأرشيف', 'الأرشيف الشهري',
+        '<div id="archive-months-grid" class="archive-months-grid">' +
+          '<div class="farm-loader" style="display:flex"><div class="farm-spinner"></div></div>' +
+        '</div>'
+      );
+    }
+
+    function loadArchiveMonths() {
+      var grid = document.getElementById('archive-months-grid');
+      if (!grid || !uid()) return;
+      db.collection('operations').where('userId','==',uid()).orderBy('date','desc').limit(300).get()
+        .then(function(snap) {
+          var map = {};
+          snap.forEach(function(doc) {
+            var d = doc.data().date || '';
+            if (d.length >= 7) {
+              var ym = d.substring(0,7);
+              if (!map[ym]) map[ym] = { count:0, month:ym };
+              map[ym].count++;
+            }
+          });
+          var months = Object.values(map).sort(function(a,b) { return b.month.localeCompare(a.month); });
+          if (!months.length) {
+            grid.innerHTML = '<div class="farm-empty-state"><div class="farm-empty-lottie"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="1" stroke-linecap="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg></div><h3>لا يوجد أرشيف بعد</h3><p>قم بتسجيل العمليات اليومية وستظهر هنا شهرياً</p></div>';
+            return;
+          }
+          var mN = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+          grid.innerHTML = months.map(function(m) {
+            var p = m.month.split('-');
+            var name = (mN[parseInt(p[1]||1)-1]||m.month) + ' ' + (p[0]||'');
+            return '<div class="archive-month-card" onclick="openArchiveMonth(\'' + m.month + '\')">' +
+              '<div class="amc-top">' +
+                '<div class="amc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg></div>' +
+                '<div class="amc-month">' + name + '</div>' +
+              '</div>' +
+              '<div class="amc-count"><span class="amc-count-num">' + m.count + '</span> عملية مسجلة</div>' +
+              '<div class="amc-cta">عرض التقرير <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>' +
+            '</div>';
+          }).join('');
+        })
+        .catch(function(e) { console.warn(e); grid.innerHTML = '<p class="farm-empty-msg">تعذر تحميل الأرشيف</p>'; });
+    }
+
+    window.openArchiveMonth = function(ym) {
+      var mc = document.getElementById('farm-main-content');
+      if (!mc) return;
+      mc.innerHTML = '<div class="farm-loader" style="display:flex"><div class="farm-spinner"></div></div>';
+      var startDate = ym + '-01';
+      var end = new Date(ym + '-01'); end.setMonth(end.getMonth()+1); end.setDate(0);
+      var endDate = dateStr(end);
+      loadOperations(startDate, endDate).then(function(ops) {
+        var p = ym.split('-');
+        var mN = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+        var mLabel = (mN[parseInt(p[1]||1)-1]||ym) + ' ' + (p[0]||'');
+        mc.innerHTML = '<div class="farm-view fade-in">' +
+          '<div class="farm-view-header">' +
+            '<button class="farm-back-btn-sm" onclick="FarmNav(\'archive\')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> الأرشيف</button>' +
+            '<div class="farm-view-eyebrow">أرشيف شهري</div>' +
+            '<h2 class="farm-view-title">' + mLabel + '</h2>' +
+          '</div>' +
+          renderAnalyticsReport(ops, 'monthly', startDate, endDate) +
+        '</div>';
+      });
+    };
+
+    // ═══════════════════════════════════════════════════
+    //  SAVE OPERATIONS
+    // ═══════════════════════════════════════════════════
+    window.saveFarmSetup = function() {
+      if (!uid()) { farmToast('سجّل دخولك أولاً', 'warning'); return; }
+      var name = val('farm-name');
+      if (!name) { farmToast('برجاء إدخال اسم المزرعة', 'warning'); return; }
+      var data = {
+        userId: uid(), name: name, area: numVal('farm-area'),
+        location: val('farm-location'), phone: val('farm-phone'),
+        waterSource: selVal('farm-water-source'), irrSystem: selVal('farm-irr-system'),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      var prom = farmState.currentFarm && farmState.currentFarm.id
+        ? db.collection('farms').doc(farmState.currentFarm.id).set(data, {merge:true})
+        : db.collection('farms').add(Object.assign(data, { createdAt: firebase.firestore.FieldValue.serverTimestamp() }));
+      prom.then(function(ref) {
+        if (ref) { data.id = ref.id; farmState.currentFarm = data; }
+        farmToast('تم حفظ معلومات المزرعة بنجاح 🌾', 'success');
+        loadUserFarms().then(function() { renderFarmView('setup'); });
+      }).catch(function(e) { farmToast('خطأ في الحفظ: ' + e.message, 'error'); });
+    };
+
+    window.saveCropData = function() {
+      if (!uid()) { farmToast('سجّل دخولك أولاً', 'warning'); return; }
+      var cropName = val('crop-name');
+      if (!cropName) { farmToast('برجاء إدخال اسم المحصول', 'warning'); return; }
+      var propType = document.querySelector('input[name="prop-type"]:checked');
+      var plantSys = document.querySelector('input[name="plant-sys"]:checked');
+      var data = {
+        userId: uid(), farmId: farmState.currentFarm ? farmState.currentFarm.id : '',
+        cropName: cropName, cropVariety: val('crop-variety'),
+        season: selVal('crop-season'), stage: selVal('crop-stage'),
+        plantDate: val('crop-plant-date'), dailyTemp: numVal('crop-temp'),
+        propType: propType ? propType.value : 'seeds',
+        seedCompany: val('crop-seed-company'), seedSupplier: val('crop-seed-supplier'),
+        seedOrigin: val('crop-seed-origin'),
+        plantingSystem: plantSys ? plantSys.value : 'rows',
+        spacingRowDist:    numVal('spacing-row-dist'),
+        spacingPlantDist:  numVal('spacing-plant-dist'),
+        spacingBedWidth:   numVal('spacing-bed-width'),
+        spacingBedDist:    numVal('spacing-bed-dist'),
+        spacingBedPlant:   numVal('spacing-bed-plant'),
+        spacingSeedDensity:numVal('spacing-seed-density'),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      db.collection('crops').add(Object.assign(data, { createdAt: firebase.firestore.FieldValue.serverTimestamp() }))
+        .then(function() { farmToast('تم حفظ بيانات المحصول بنجاح 🌱', 'success'); })
+        .catch(function(e) { farmToast('خطأ: ' + e.message, 'error'); });
+    };
+
+    window.addField = function() {
+      if (!uid()) { farmToast('سجّل دخولك أولاً', 'warning'); return; }
+      var name = val('field-name');
+      if (!name) { farmToast('برجاء إدخال اسم الحقل', 'warning'); return; }
+      db.collection('fields').add({
+        userId: uid(), farmId: farmState.currentFarm ? farmState.currentFarm.id : '',
+        name: name, area: numVal('field-area'), soil: selVal('field-soil'),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function() {
+        farmToast('تم إضافة الحقل بنجاح ✅', 'success');
+        loadUserFarms().then(function() { renderFarmView('setup'); });
+      }).catch(function(e) { farmToast('خطأ: ' + e.message, 'error'); });
+    };
+
+    window.deleteField = function(id) {
+      if (!uid() || !id) return;
+      if (!confirm('هل تريد حذف هذا الحقل نهائياً؟')) return;
+      db.collection('fields').doc(id).delete()
+        .then(function() {
+          farmToast('تم حذف الحقل', 'info');
+          loadUserFarms().then(function() { renderFarmView('setup'); });
+        })
+        .catch(function(e) { farmToast('خطأ: ' + e.message, 'error'); });
+    };
+
+    window.saveOperation = function() {
+      if (!uid()) { farmToast('سجّل دخولك أولاً', 'warning'); return; }
+      var date    = val('op-date') || todayStr();
+      var fieldEl = document.getElementById('op-field');
+      var fieldId   = fieldEl ? fieldEl.value : '';
+      var fieldName = fieldEl ? (fieldEl.options[fieldEl.selectedIndex]||{}).text || '' : '';
+      var isHarvest = (document.getElementById('is-harvest-day')||{}).checked;
+
+      var opData = {
+        userId: uid(),
+        farmId:  farmState.currentFarm ? farmState.currentFarm.id : '',
+        fieldId: fieldId,
+        date:    date,
+        data: {
+          fieldName:    fieldName,
+          cropStage:    selVal('op-crop-stage'),
+          // ري
+          irr_times:    numVal('op-irr-times'),
+          irr_amount:   numVal('op-irr-amount'),
+          irr_hours:    numVal('op-irr-hours'),
+          irr_method:   selVal('op-irr-method'),
+          // تسميد
+          fert_name:    val('op-fert-name'),
+          fert_company: val('op-fert-company'),
+          fert_type:    selVal('op-fert-type'),
+          fert_method:  selVal('op-fert-method'),
+          fert_n:       numVal('op-fert-n'),
+          fert_p:       numVal('op-fert-p'),
+          fert_k:       numVal('op-fert-k'),
+          fert_organic: numVal('op-fert-organic'),
+          fert_micro:   numVal('op-fert-micro'),
+          fert_amount:  numVal('op-fert-amount'),
+          // رش
+          spray_name:    val('op-spray-name'),
+          spray_company: val('op-spray-company'),
+          spray_type:    selVal('op-spray-type'),
+          spray_pest:    val('op-spray-pest'),
+          spray_conc:    numVal('op-spray-conc'),
+          spray_water:   numVal('op-spray-water'),
+          spray_area:    numVal('op-spray-area'),
+          spray_times:   numVal('op-spray-times'),
+          // عمليات زراعية
+          agri_type:  selVal('op-agri-type'),
+          labor:      numVal('op-labor'),
+          machines:   numVal('op-machines'),
+          // بيئة
+          temp:       numVal('op-temp'),
+          humidity:   numVal('op-humidity'),
+          rain:       numVal('op-rain'),
+          // حصاد
+          is_harvest:     isHarvest,
+          harvest_qty:    isHarvest ? numVal('op-harvest-qty')   : 0,
+          harvest_qual:   isHarvest ? selVal('op-harvest-qual')  : '',
+          harvest_waste:  isHarvest ? numVal('op-harvest-waste') : 0,
+          // ملاحظات
+          notes: val('op-notes'),
+        },
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      db.collection('operations').add(opData)
+        .then(function() {
+          var msg = isHarvest
+            ? 'تم تسجيل بيانات الحصاد بنجاح 🌾'
+            : 'تم تسجيل العملية بنجاح ✅';
+          farmToast(msg, 'success', 4000);
+          renderFarmView('log');
+        })
+        .catch(function(e) { farmToast('خطأ في الحفظ: ' + e.message, 'error'); });
+    };
+
+    // ═══════════════════════════════════════════════════
+    //  ATTACH VIEW EVENTS
+    // ═══════════════════════════════════════════════════
+    function attachViewEvents(view) {
+      if (view === 'analytics') loadAndRenderAnalytics(farmState.analyticsMode);
+      if (view === 'archive')   loadArchiveMonths();
+      if (view === 'setup')     setTimeout(attachSetupEvents, 50);
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  HELPERS — UI builders
+    // ═══════════════════════════════════════════════════
+    function viewWrap(viewId, eyebrow, title, body) {
+      return '<div class="farm-view fade-in" id="fv-' + viewId + '">' +
+        '<div class="farm-view-header">' +
+          '<div class="farm-view-eyebrow">' + eyebrow + '</div>' +
+          '<h2 class="farm-view-title">' + title + '</h2>' +
+        '</div>' +
+        body +
+      '</div>';
+    }
+
+    function formCardHeader(svg, title) {
+      return '<div class="farm-form-card-header">' +
+        '<div class="fch-icon">' + svg + '</div>' +
+        '<h3 class="farm-form-title">' + title + '</h3>' +
+      '</div>';
+    }
+
+    function logSectionHeader(svg, title, color) {
+      return '<div class="log-section-title" style="--lsh-color:' + color + '">' +
+        '<span class="lsh-icon" style="color:' + color + '">' + svg + '</span>' +
+        '<span>' + title + '</span>' +
+      '</div>';
+    }
+
+    function fField(id, label, type, val_, ph) {
+      return '<div class="farm-fg">' +
+        '<label class="farm-label" for="' + id + '">' + label + '</label>' +
+        '<input class="farm-input" id="' + id + '" type="' + type + '" value="' + (val_||'') + '" placeholder="' + (ph||'') + '">' +
+      '</div>';
+    }
+
+    function fSelect(id, label, val_, opts) {
+      var optHtml = opts.map(function(o) {
+        return '<option value="' + o + '"' + (o === val_ ? ' selected' : '') + '>' + o + '</option>';
+      }).join('');
+      return '<div class="farm-fg">' +
+        '<label class="farm-label" for="' + id + '">' + label + '</label>' +
+        '<select class="farm-input" id="' + id + '">' + optHtml + '</select>' +
+      '</div>';
+    }
+
+    function fRadio(name, value, label, icon, checked) {
+      var id = name + '-' + value;
+      return '<label class="farm-radio-item" for="' + id + '">' +
+        '<input type="radio" id="' + id + '" name="' + name + '" value="' + value + '"' + (checked?' checked':'') + '>' +
+        '<span class="fri-icon">' + icon + '</span>' +
+        '<span class="fri-label">' + label + '</span>' +
+        '<span class="fri-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>' +
+      '</label>';
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  HELPERS — Data
+    // ═══════════════════════════════════════════════════
+    function todayStr()  { return dateStr(new Date()); }
+    function dateStr(d)  {
+      return d.getFullYear() + '-' +
+        String(d.getMonth()+1).padStart(2,'0') + '-' +
+        String(d.getDate()).padStart(2,'0');
+    }
+    function num(v)      { return parseFloat(v)||0; }
+    function numVal(id)  { return num((document.getElementById(id)||{}).value); }
+    function val(id)     { return ((document.getElementById(id)||{}).value||'').trim(); }
+    function selVal(id)  {
+      var el = document.getElementById(id);
+      return el ? (el.options[el.selectedIndex]||{}).value || '' : '';
+    }
+
+    // ── Hook into showPage ────────────────────────────
+    var _origShowPage = window.showPage;
+    window.showPage = function(pg, opts) {
+      _origShowPage(pg, opts);
+      if (pg === 'farm') setTimeout(renderFarmApp, 300);
+    };
+
+    // ── Auth listener ──────────────────────────────────
+    setTimeout(function() {
+      if (typeof auth !== 'undefined') {
+        auth.onAuthStateChanged(function() {
+          var root = document.getElementById('farm-app-root');
+          if (root && root.closest('.page.active')) renderFarmApp();
+        });
+      }
+    }, 1000);
+
+  })(); // end FarmSystem
 
     // ── Render entry point ────────────────────────────
     function renderFarmApp() {
@@ -14539,27 +15697,21 @@ async function hReg(event) {
 
     // ── Shell ─────────────────────────────────────────
     function farmShell() {
-      var navItems = [
-        { view:'dashboard', svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>', label:'لوحة التحكم' },
-        { view:'setup',     svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 5.34L3.93 6.75M19.07 19.07l-1.41-1.41M5.34 18.66l-1.41 1.41M22 12h-2M4 12H2M12 22v-2M12 4V2"/><path d="M20 12a8 8 0 1 1-16 0 8 8 0 0 1 16 0z"/></svg>', label:'إعداد المزرعة' },
-        { view:'log',       svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>', label:'تسجيل يومي' },
-        { view:'analytics', svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>', label:'التحليلات' },
-        { view:'archive',   svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>', label:'الأرشيف' },
-      ];
       return '<div class="farm-shell">' +
         '<div class="farm-topbar">' +
           '<button class="farm-back-btn" onclick="showPage(\'home\')">← نبتيكس</button>' +
-          '<div class="farm-topbar-title">' +
-            '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--brand);flex-shrink:0"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>' +
-            'نظام إدارة المزرعة' +
-          '</div>' +
+          '<div class="farm-topbar-title">🌾 نظام إدارة المزرعة</div>' +
           '<div class="farm-topbar-user">' +
             (currentUser && currentUser.photoURL ? '<img src="' + currentUser.photoURL + '" class="farm-user-avatar">' : '<span class="farm-user-avatar-placeholder">👤</span>') +
           '</div>' +
         '</div>' +
         '<div class="farm-sidebar">' +
           '<nav class="farm-nav">' +
-            navItems.map(function(n){ return farmNavItem(n.view, n.svg, n.label); }).join('') +
+            farmNavItem('dashboard', '🏠', 'لوحة التحكم') +
+            farmNavItem('setup', '⚙️', 'إعداد المزرعة') +
+            farmNavItem('log', '📋', 'تسجيل يومي') +
+            farmNavItem('analytics', '📊', 'التحليلات') +
+            farmNavItem('archive', '🗂️', 'الأرشيف') +
           '</nav>' +
         '</div>' +
         '<div class="farm-main" id="farm-main-content">' +
@@ -14568,10 +15720,10 @@ async function hReg(event) {
       '</div>';
     }
 
-    function farmNavItem(view, svgIcon, label) {
+    function farmNavItem(view, icon, label) {
       var active = farmState.currentView === view ? ' farm-nav-active' : '';
       return '<button class="farm-nav-item' + active + '" onclick="FarmNav(\'' + view + '\')">' +
-        '<span class="farm-nav-icon">' + svgIcon + '</span>' +
+        '<span class="farm-nav-icon">' + icon + '</span>' +
         '<span class="farm-nav-label">' + label + '</span>' +
       '</button>';
     }
@@ -14579,11 +15731,12 @@ async function hReg(event) {
     // ── Navigation ────────────────────────────────────
     window.FarmNav = function(view) {
       farmState.currentView = view;
+      // Update nav active state
       document.querySelectorAll('.farm-nav-item').forEach(function(btn) {
         btn.classList.remove('farm-nav-active');
       });
-      var views = ['dashboard','setup','log','analytics','archive'];
       var btns = document.querySelectorAll('.farm-nav-item');
+      var views = ['dashboard','setup','log','analytics','archive'];
       var idx = views.indexOf(view);
       if (btns[idx]) btns[idx].classList.add('farm-nav-active');
       renderFarmView(view);
@@ -14623,8 +15776,6 @@ async function hReg(event) {
           farmState.currentFarm = farmState.farms[0];
         }
         return loadUserFields();
-      }).then(function() {
-        return loadUserCrops();
       }).catch(function(e) { console.warn('Farm load error', e); });
     }
 
@@ -14636,16 +15787,6 @@ async function hReg(event) {
           farmState.fields.push(Object.assign({ id: doc.id }, doc.data()));
         });
       }).catch(function(e) { console.warn('Fields load error', e); });
-    }
-
-    function loadUserCrops() {
-      if (!uid()) return Promise.resolve();
-      return db.collection('crops').where('userId','==',uid()).get().then(function(snap) {
-        farmState.crops = [];
-        snap.forEach(function(doc) {
-          farmState.crops.push(Object.assign({ id: doc.id }, doc.data()));
-        });
-      }).catch(function(e) { console.warn('Crops load error', e); });
     }
 
     function loadOperations(startDate, endDate) {
@@ -14666,8 +15807,6 @@ async function hReg(event) {
       var farmName = hasFarm ? farmState.farms[0].name : '—';
       var farmArea = hasFarm ? farmState.farms[0].area + ' فدان' : '—';
       var fieldsCount = farmState.fields.length;
-      var cropsCount = farmState.crops.length;
-      var waterSrc = hasFarm ? (farmState.farms[0].waterSource || '—') : '—';
 
       return '<div class="farm-view fade-in">' +
         '<div class="farm-view-header">' +
@@ -14681,261 +15820,83 @@ async function hReg(event) {
           '<button class="farm-btn-primary" onclick="FarmNav(\'setup\')">⚙️ إعداد المزرعة الآن</button>' +
         '</div>' :
         '<div class="farm-stats-grid">' +
-          farmStatCard(
-            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
-            'اسم المزرعة', farmName, '#1b6b3a', '#e8f5ee'
-          ) +
-          farmStatCard(
-            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>',
-            'المساحة الكلية', farmArea, '#c47d0e', '#fdf3e3'
-          ) +
-          farmStatCard(
-            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 0v10m0 0l3.5-3.5M12 12l-3.5-3.5"/></svg>',
-            'عدد الحقول', fieldsCount + ' حقل', '#1a5e8c', '#e3f0fb'
-          ) +
-          farmStatCard(
-            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
-            'المحاصيل', cropsCount + ' محصول', '#6b3a8a', '#f3e8fb'
-          ) +
+          farmStatCard('🏡', 'اسم المزرعة', farmName, 'var(--brand)') +
+          farmStatCard('📐', 'المساحة الكلية', farmArea, 'var(--gold)') +
+          farmStatCard('🌱', 'عدد الحقول', fieldsCount + ' حقل', 'var(--brand-l)') +
+          farmStatCard('📅', 'اليوم', todayStr(), 'var(--slate)') +
         '</div>') +
         '<div class="farm-quick-actions">' +
           '<h3 class="farm-section-title">⚡ إجراءات سريعة</h3>' +
           '<div class="farm-quick-btns">' +
-            farmQuickBtn(
-              '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
-              'تسجيل عملية اليوم', 'FarmNav(\'log\')', '#1b6b3a'
-            ) +
-            farmQuickBtn(
-              '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
-              'عرض التحليلات', 'FarmNav(\'analytics\')', '#1a5e8c'
-            ) +
-            farmQuickBtn(
-              '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>',
-              'الأرشيف الشهري', 'FarmNav(\'archive\')', '#6b3a8a'
-            ) +
+            '<button class="farm-quick-btn" onclick="FarmNav(\'log\')">' +
+              '<span class="fqb-icon">📋</span>' +
+              '<span class="fqb-label">تسجيل عملية اليوم</span>' +
+            '</button>' +
+            '<button class="farm-quick-btn" onclick="FarmNav(\'analytics\')">' +
+              '<span class="fqb-icon">📊</span>' +
+              '<span class="fqb-label">عرض التحليلات</span>' +
+            '</button>' +
+            '<button class="farm-quick-btn" onclick="FarmNav(\'archive\')">' +
+              '<span class="fqb-icon">🗂️</span>' +
+              '<span class="fqb-label">الأرشيف الشهري</span>' +
+            '</button>' +
           '</div>' +
         '</div>' +
       '</div>';
     }
 
-    function farmStatCard(svgIcon, label, value, color, bg) {
-      return '<div class="farm-stat-card" style="--fsc-color:' + color + ';--fsc-bg:' + bg + '">' +
-        '<div class="fsc-icon-wrap"><span class="fsc-icon" style="color:' + color + '">' + svgIcon + '</span></div>' +
-        '<div class="fsc-body">' +
-          '<div class="fsc-label">' + label + '</div>' +
-          '<div class="fsc-value">' + value + '</div>' +
-        '</div>' +
+    function farmStatCard(icon, label, value, color) {
+      return '<div class="farm-stat-card">' +
+        '<div class="fsc-icon" style="color:' + color + '">' + icon + '</div>' +
+        '<div class="fsc-label">' + label + '</div>' +
+        '<div class="fsc-value">' + value + '</div>' +
       '</div>';
-    }
-
-    function farmQuickBtn(svgIcon, label, onclick, color) {
-      return '<button class="farm-quick-btn" onclick="' + onclick + '" style="--fqb-color:' + color + '">' +
-        '<span class="fqb-icon" style="color:' + color + '">' + svgIcon + '</span>' +
-        '<span class="fqb-label">' + label + '</span>' +
-        '<span class="fqb-arrow" style="color:' + color + '">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>' +
-        '</span>' +
-      '</button>';
     }
 
     // ── Farm Setup ────────────────────────────────────
     function renderSetup() {
       var f = farmState.currentFarm || {};
       var fields = farmState.fields;
-      var crops = farmState.crops;
-
-      var waterSourceOptions = ['نهر نيل','مياه جوفية','قناة ري','مياه أمطار','محطة معالجة','أخرى'].map(function(o) {
-        return '<option value="' + o + '"' + (f.waterSource === o ? ' selected' : '') + '>' + o + '</option>';
-      }).join('');
-
-      var irrigationSystemOptions = ['تنقيط','رش','غمر','محاور','أخرى'].map(function(o) {
-        return '<option value="' + o + '"' + (f.irrigationSystem === o ? ' selected' : '') + '>' + o + '</option>';
-      }).join('');
-
       return '<div class="farm-view fade-in">' +
         '<div class="farm-view-header">' +
           '<div class="farm-view-eyebrow">الإعداد</div>' +
           '<h2 class="farm-view-title">⚙️ إعداد المزرعة</h2>' +
         '</div>' +
 
-        // ── Farm Info Card
         '<div class="farm-form-card">' +
-          '<h3 class="farm-form-title">' +
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>' +
-            ' معلومات المزرعة' +
-          '</h3>' +
+          '<h3 class="farm-form-title">🏡 معلومات المزرعة</h3>' +
           '<div class="farm-form-grid">' +
             farmField('farm-name', 'اسم المزرعة', 'text', f.name || '', 'مثال: مزرعة النيل') +
             farmField('farm-area', 'المساحة الكلية (فدان)', 'number', f.area || '', 'مثال: 50') +
             farmField('farm-location', 'الموقع / المحافظة', 'text', f.location || '', 'مثال: الفيوم') +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">مصدر المياه</label>' +
-              '<select class="farm-input" id="farm-water-source">' +
-                '<option value="">— اختر —</option>' + waterSourceOptions +
-              '</select>' +
-            '</div>' +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">نظام الري</label>' +
-              '<select class="farm-input" id="farm-irrigation-system">' +
-                '<option value="">— اختر —</option>' + irrigationSystemOptions +
-              '</select>' +
-            '</div>' +
             farmField('farm-crops', 'المحاصيل الرئيسية', 'text', f.crops || '', 'مثال: برتقال، قمح') +
           '</div>' +
-          '<button class="farm-btn-primary" onclick="saveFarmSetup()">' +
-            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>' +
-            ' حفظ معلومات المزرعة' +
-          '</button>' +
+          '<button class="farm-btn-primary" onclick="saveFarmSetup()">💾 حفظ معلومات المزرعة</button>' +
         '</div>' +
 
-        // ── Fields Card
         '<div class="farm-form-card">' +
-          '<h3 class="farm-form-title">' +
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>' +
-            ' إدارة الحقول' +
-          '</h3>' +
+          '<h3 class="farm-form-title">🌱 إدارة الحقول</h3>' +
           '<div id="fields-list">' + renderFieldsList(fields) + '</div>' +
-          '<div class="farm-form-divider">إضافة حقل جديد</div>' +
-          '<div class="farm-form-grid farm-form-grid-3">' +
+          '<div class="farm-form-grid">' +
             farmField('field-name', 'اسم الحقل', 'text', '', 'مثال: الحقل الشرقي') +
             farmField('field-area', 'مساحة الحقل (فدان)', 'number', '', 'مثال: 10') +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">نوع التربة</label>' +
-              '<select class="farm-input" id="field-soil">' +
-                '<option value="">— اختر —</option>' +
-                ['طينية','رملية','طينية رملية','طفلية','جيرية'].map(function(s){return '<option>'+s+'</option>';}).join('') +
-              '</select>' +
-            '</div>' +
             farmField('field-crop', 'المحصول', 'text', '', 'مثال: موالح') +
           '</div>' +
-          '<button class="farm-btn-secondary" onclick="addField()">' +
-            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
-            ' إضافة حقل' +
-          '</button>' +
-        '</div>' +
-
-        // ── Crops Card
-        '<div class="farm-form-card">' +
-          '<h3 class="farm-form-title">' +
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12c0-2.76 1.12-5.26 2.93-7.07"/><path d="M12 6v6l4 2"/></svg>' +
-            ' إدارة المحاصيل' +
-          '</h3>' +
-          '<div id="crops-list">' + renderCropsList(crops) + '</div>' +
-          '<div class="farm-form-divider">إضافة محصول جديد</div>' +
-          '<div class="farm-form-grid">' +
-            farmField('crop-name', 'اسم المحصول', 'text', '', 'مثال: برتقال نافل') +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">نوع الصنف</label>' +
-              '<input class="farm-input" id="crop-variety" type="text" placeholder="مثال: فالنسيا، مانجو كنت">' +
-            '</div>' +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">مرحلة الزراعة</label>' +
-              '<select class="farm-input" id="crop-stage">' +
-                '<option value="">— اختر —</option>' +
-                ['إنبات','نمو خضري','تزهير','عقد ثمار','نضج','حصاد'].map(function(s){return '<option>'+s+'</option>';}).join('') +
-              '</select>' +
-            '</div>' +
-            farmField('crop-plant-date', 'تاريخ الزراعة', 'date', '', '') +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">الموسم</label>' +
-              '<select class="farm-input" id="crop-season">' +
-                '<option value="">— اختر —</option>' +
-                ['صيف','شتاء','ربيع','خريف'].map(function(s){return '<option>'+s+'</option>';}).join('') +
-              '</select>' +
-            '</div>' +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">نوع الإكثار</label>' +
-              '<select class="farm-input" id="crop-propagation">' +
-                '<option value="">— اختر —</option>' +
-                '<option value="تقاوي">🌱 تقاوي (Seeds)</option>' +
-                '<option value="شتلات">🌿 شتلات (Seedlings)</option>' +
-              '</select>' +
-            '</div>' +
-            farmField('crop-seed-company', 'شركة التقاوي / الشتلات', 'text', '', 'اسم الشركة') +
-            farmField('crop-seed-origin', 'بلد المنشأ', 'text', '', 'اختياري') +
-          '</div>' +
-          '<div class="farm-form-subcard">' +
-            '<div class="farm-form-subtitle">' +
-              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="13" y2="21"/></svg>' +
-              ' نظام الزراعة' +
-            '</div>' +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">طريقة الزراعة</label>' +
-              '<select class="farm-input" id="crop-planting-system" onchange="togglePlantingFields()">' +
-                '<option value="">— اختر —</option>' +
-                '<option value="خطوط">🌾 خطوط (Rows)</option>' +
-                '<option value="مصاطب">🌿 مصاطب (Beds)</option>' +
-                '<option value="نثر">🌱 نثر (Broadcast)</option>' +
-              '</select>' +
-            '</div>' +
-            '<div id="planting-fields-rows" style="display:none">' +
-              '<div class="farm-form-grid farm-form-grid-3" style="margin-top:14px">' +
-                farmField('crop-row-spacing', 'المسافة بين الخطوط (م)', 'number', '', '0') +
-                farmField('crop-plant-spacing', 'المسافة بين النباتات (م)', 'number', '', '0') +
-              '</div>' +
-            '</div>' +
-            '<div id="planting-fields-beds" style="display:none">' +
-              '<div class="farm-form-grid farm-form-grid-3" style="margin-top:14px">' +
-                farmField('crop-bed-width', 'عرض المصطبة (م)', 'number', '', '0') +
-                farmField('crop-bed-spacing', 'المسافة بين المصاطب (م)', 'number', '', '0') +
-                farmField('crop-plant-spacing-b', 'المسافة بين النباتات (م)', 'number', '', '0') +
-              '</div>' +
-            '</div>' +
-            '<div id="planting-fields-broadcast" style="display:none">' +
-              '<div class="farm-form-grid" style="margin-top:14px">' +
-                farmField('crop-seed-density', 'كثافة البذور (كجم/فدان)', 'number', '', '0') +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-          '<button class="farm-btn-secondary" onclick="addCrop()">' +
-            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
-            ' إضافة محصول' +
-          '</button>' +
+          '<button class="farm-btn-secondary" onclick="addField()">➕ إضافة حقل</button>' +
         '</div>' +
       '</div>';
     }
-
-    window.togglePlantingFields = function() {
-      var system = (document.getElementById('crop-planting-system')||{}).value || '';
-      document.getElementById('planting-fields-rows') && (document.getElementById('planting-fields-rows').style.display = system === 'خطوط' ? 'block' : 'none');
-      document.getElementById('planting-fields-beds') && (document.getElementById('planting-fields-beds').style.display = system === 'مصاطب' ? 'block' : 'none');
-      document.getElementById('planting-fields-broadcast') && (document.getElementById('planting-fields-broadcast').style.display = system === 'نثر' ? 'block' : 'none');
-    };
 
     function renderFieldsList(fields) {
       if (!fields.length) return '<p class="farm-empty-msg">لا توجد حقول مضافة بعد</p>';
       return '<div class="fields-list">' + fields.map(function(f) {
         return '<div class="field-item">' +
-          '<div class="field-item-icon-wrap">' +
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--brand)"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>' +
-          '</div>' +
+          '<span class="field-item-icon">🌿</span>' +
           '<div class="field-item-info">' +
             '<strong>' + (f.name || 'حقل') + '</strong>' +
-            '<small>' + (f.area || '—') + ' فدان' + (f.soilType ? ' · ' + f.soilType : '') + (f.crop ? ' · ' + f.crop : '') + '</small>' +
+            '<small>' + (f.area || '—') + ' فدان — ' + (f.crop || '—') + '</small>' +
           '</div>' +
-          '<button class="field-del-btn" onclick="deleteField(\'' + f.id + '\')" title="حذف">' +
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>' +
-          '</button>' +
-        '</div>';
-      }).join('') + '</div>';
-    }
-
-    function renderCropsList(crops) {
-      if (!crops.length) return '<p class="farm-empty-msg">لا توجد محاصيل مضافة بعد</p>';
-      var stageColors = {'إنبات':'#2980b9','نمو خضري':'#1b6b3a','تزهير':'#e74c3c','عقد ثمار':'#d4500a','نضج':'#c47d0e','حصاد':'#6b3a8a'};
-      return '<div class="fields-list">' + crops.map(function(c) {
-        var stageColor = stageColors[c.stage] || 'var(--brand)';
-        return '<div class="field-item">' +
-          '<div class="field-item-icon-wrap">' +
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:' + stageColor + '"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' +
-          '</div>' +
-          '<div class="field-item-info">' +
-            '<strong>' + (c.name || 'محصول') + (c.variety ? ' · ' + c.variety : '') + '</strong>' +
-            '<small>' + (c.plantDate ? '📅 ' + c.plantDate + ' · ' : '') + (c.season ? c.season + ' · ' : '') + (c.stage ? '<span style="color:'+stageColor+';font-weight:700">' + c.stage + '</span>' : '') + '</small>' +
-          '</div>' +
-          '<button class="field-del-btn" onclick="deleteCrop(\'' + c.id + '\')" title="حذف">' +
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>' +
-          '</button>' +
+          '<button class="field-del-btn" onclick="deleteField(\'' + f.id + '\')">🗑️</button>' +
         '</div>';
       }).join('') + '</div>';
     }
@@ -14963,176 +15924,60 @@ async function hReg(event) {
         '<div class="farm-form-card">' +
           '<div class="farm-form-grid">' +
             '<div class="farm-fg">' +
-              '<label class="farm-label">' +
-                '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
-                'التاريخ' +
-              '</label>' +
+              '<label class="farm-label">التاريخ</label>' +
               '<input class="farm-input" id="op-date" type="date" value="' + today + '">' +
             '</div>' +
             '<div class="farm-fg">' +
-              '<label class="farm-label">' +
-                '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>' +
-                'الحقل' +
-              '</label>' +
+              '<label class="farm-label">الحقل</label>' +
               '<select class="farm-input" id="op-field">' +
                 (fieldsOptions || '<option value="">— لا توجد حقول —</option>') +
               '</select>' +
             '</div>' +
           '</div>' +
 
-          // ── Irrigation
-          '<div class="log-section-header">' +
-            '<div class="log-section-icon" style="background:#e3f2fd;color:#1a5e8c">' +
-              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>' +
-            '</div>' +
-            '<span class="log-section-title">الري</span>' +
-          '</div>' +
-          '<div class="farm-form-grid farm-form-grid-3">' +
+          '<div class="log-section-title">💧 الري</div>' +
+          '<div class="farm-form-grid">' +
             farmField('op-irr-times', 'عدد مرات الري', 'number', '0', '0') +
             farmField('op-irr-area', 'المساحة المروية (فدان)', 'number', '0', '0') +
             farmField('op-irr-hours', 'ساعات الري', 'number', '0', '0') +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">طريقة الري</label>' +
-              '<select class="farm-input" id="op-irr-method">' +
-                '<option value="">— اختر —</option>' +
-                ['تنقيط','رش','غمر','محاور'].map(function(o){return '<option>'+o+'</option>';}).join('') +
-              '</select>' +
-            '</div>' +
           '</div>' +
 
-          // ── Fertilization
-          '<div class="log-section-header">' +
-            '<div class="log-section-icon" style="background:#e8f5ee;color:#1b6b3a">' +
-              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>' +
-            '</div>' +
-            '<span class="log-section-title">التسميد</span>' +
-          '</div>' +
-          '<div class="farm-form-grid farm-form-grid-3">' +
-            farmField('op-fert-name', 'اسم السماد', 'text', '', 'مثال: يوريا') +
-            farmField('op-fert-company', 'الشركة', 'text', '', 'مثال: موبكو') +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">نوع السماد</label>' +
-              '<select class="farm-input" id="op-fert-type">' +
-                '<option value="">— اختر —</option>' +
-                ['سائل','بودر','حبيبات','معلق'].map(function(o){return '<option>'+o+'</option>';}).join('') +
-              '</select>' +
-            '</div>' +
+          '<div class="log-section-title">🧪 التسميد</div>' +
+          '<div class="farm-form-grid">' +
             farmField('op-fert-n', 'نيتروجين (كجم)', 'number', '0', '0') +
             farmField('op-fert-p', 'فوسفور (كجم)', 'number', '0', '0') +
             farmField('op-fert-k', 'بوتاسيوم (كجم)', 'number', '0', '0') +
             farmField('op-fert-organic', 'عضوي (كجم)', 'number', '0', '0') +
             farmField('op-fert-other', 'أسمدة أخرى (كجم)', 'number', '0', '0') +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">طريقة الإضافة</label>' +
-              '<select class="farm-input" id="op-fert-method">' +
-                '<option value="">— اختر —</option>' +
-                ['رش ورقي','سطحي','تسميد تحت السطح','مع مياه الري (فرتيجيشن)'].map(function(o){return '<option>'+o+'</option>';}).join('') +
-              '</select>' +
-            '</div>' +
           '</div>' +
 
-          // ── Spraying
-          '<div class="log-section-header">' +
-            '<div class="log-section-icon" style="background:#fdf3e3;color:#d4500a">' +
-              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' +
-            '</div>' +
-            '<span class="log-section-title">الرش</span>' +
-          '</div>' +
-          '<div class="farm-form-grid farm-form-grid-3">' +
-            farmField('op-spray-name', 'اسم المبيد / المادة', 'text', '', 'مثال: ديازينون') +
-            farmField('op-spray-company', 'الشركة', 'text', '', 'اسم الشركة') +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">نوع المبيد</label>' +
-              '<select class="farm-input" id="op-spray-type">' +
-                '<option value="">— اختر —</option>' +
-                ['حشري','فطري','عشبي','نيماتودا','تغذية ورقية','أخرى'].map(function(o){return '<option>'+o+'</option>';}).join('') +
-              '</select>' +
-            '</div>' +
-            farmField('op-spray-pest', 'نوع الآفة المستهدفة', 'text', '', 'مثال: حشرة قشرية') +
-            farmField('op-spray-conc', 'التركيز (سم3/لتر)', 'number', '0', '0') +
-            farmField('op-spray-water', 'كمية المياه (لتر)', 'number', '0', '0') +
-            farmField('op-spray-area', 'المساحة المرشوشة (فدان)', 'number', '0', '0') +
+          '<div class="log-section-title">🌿 الرش</div>' +
+          '<div class="farm-form-grid">' +
             farmField('op-spray-times', 'عدد مرات الرش', 'number', '0', '0') +
+            farmField('op-spray-type', 'نوع المبيد / المادة', 'text', '', 'مثال: مبيد حشري، نحاس') +
+            farmField('op-spray-amount', 'الكمية (لتر)', 'number', '0', '0') +
           '</div>' +
 
-          // ── Agricultural Operations
-          '<div class="log-section-header">' +
-            '<div class="log-section-icon" style="background:#f3e8fb;color:#6b3a8a">' +
-              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-8 4 4 4-6 4 10"/></svg>' +
-            '</div>' +
-            '<span class="log-section-title">العمليات الزراعية</span>' +
-          '</div>' +
+          '<div class="log-section-title">🚜 العمليات الزراعية</div>' +
           '<div class="farm-form-grid">' +
             '<div class="farm-fg">' +
               '<label class="farm-label">نوع العملية</label>' +
               '<select class="farm-input" id="op-agri-type">' +
                 '<option value="">— اختر العملية —</option>' +
-                ['حرث','عزق','تقليم','إزالة حشائش','تسوية أرض','تدعيم نباتات','تخفيف نباتات','خدمة أرض','حصاد','زراعة','تطعيم','أخرى'].map(function(o){return '<option>'+o+'</option>';}).join('') +
+                '<option>حرث</option><option>خدمة أرض</option><option>تقليم</option>' +
+                '<option>حصاد</option><option>زراعة</option><option>عزيق</option>' +
+                '<option>تطعيم</option><option>أخرى</option>' +
               '</select>' +
             '</div>' +
             farmField('op-labor', 'عدد العمال', 'number', '0', '0') +
           '</div>' +
 
-          // ── Environment
-          '<div class="log-section-header">' +
-            '<div class="log-section-icon" style="background:#e3f0fb;color:#1a5e8c">' +
-              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>' +
-            '</div>' +
-            '<span class="log-section-title">البيئة</span>' +
-          '</div>' +
-          '<div class="farm-form-grid farm-form-grid-3">' +
-            farmField('op-temp', 'درجة الحرارة (°م)', 'number', '', 'مثال: 28') +
-            farmField('op-humidity', 'الرطوبة (%)', 'number', '', 'مثال: 65') +
-            farmField('op-rain', 'الأمطار (مم)', 'number', '0', '0') +
-          '</div>' +
-
-          // ── Growth Stage
-          '<div class="log-section-header">' +
-            '<div class="log-section-icon" style="background:#e8f5ee;color:#1b6b3a">' +
-              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12m0 0C12 7 7 4 2 4c0 5 3 8 10 8zm0 0c0-5 5-8 10-8 0 5-3 8-10 8z"/></svg>' +
-            '</div>' +
-            '<span class="log-section-title">مرحلة النمو</span>' +
-          '</div>' +
-          '<div class="farm-form-grid">' +
-            '<div class="farm-fg">' +
-              '<label class="farm-label">المرحلة الحالية</label>' +
-              '<select class="farm-input" id="op-growth-stage">' +
-                '<option value="">— اختر —</option>' +
-                ['إنبات','نمو خضري','تزهير','عقد ثمار','نضج','حصاد'].map(function(o){return '<option>'+o+'</option>';}).join('') +
-              '</select>' +
-            '</div>' +
-          '</div>' +
-
-          // ── Harvest (shown conditionally in notes for now)
-          '<div id="harvest-section" style="display:none">' +
-            '<div class="log-section-header">' +
-              '<div class="log-section-icon" style="background:#fdf3e3;color:#c47d0e">' +
-                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>' +
-              '</div>' +
-              '<span class="log-section-title">الحصاد</span>' +
-            '</div>' +
-            '<div class="farm-form-grid farm-form-grid-3">' +
-              farmField('op-harvest-qty', 'كمية الإنتاج (طن)', 'number', '0', '0') +
-              '<div class="farm-fg">' +
-                '<label class="farm-label">الجودة</label>' +
-                '<select class="farm-input" id="op-harvest-quality">' +
-                  '<option value="">— اختر —</option>' +
-                  ['ممتازة','جيدة جداً','جيدة','متوسطة','ضعيفة'].map(function(o){return '<option>'+o+'</option>';}).join('') +
-                '</select>' +
-              '</div>' +
-              farmField('op-harvest-waste', 'الفاقد (طن)', 'number', '0', '0') +
-            '</div>' +
-          '</div>' +
-
-          '<div class="farm-fg" style="margin-top:8px">' +
+          '<div class="farm-fg">' +
             '<label class="farm-label">📝 ملاحظات إضافية</label>' +
             '<textarea class="farm-input farm-textarea" id="op-notes" placeholder="أي ملاحظات على العمليات أو حالة المحصول..."></textarea>' +
           '</div>' +
 
-          '<button class="farm-btn-primary" onclick="saveOperation()">' +
-            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>' +
-            ' حفظ العملية' +
-          '</button>' +
+          '<button class="farm-btn-primary" onclick="saveOperation()">💾 حفظ العملية</button>' +
         '</div>' +
       '</div>';
     }
@@ -15145,9 +15990,9 @@ async function hReg(event) {
           '<h2 class="farm-view-title">📊 تحليل أداء المزرعة</h2>' +
         '</div>' +
         '<div class="analytics-tabs">' +
-          analyticsTab('daily', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> يومي') +
-          analyticsTab('weekly', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> أسبوعي') +
-          analyticsTab('monthly', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> شهري') +
+          analyticsTab('daily', '📅 يومي') +
+          analyticsTab('weekly', '📆 أسبوعي') +
+          analyticsTab('monthly', '🗓️ شهري') +
         '</div>' +
         '<div id="analytics-content" class="analytics-content">' +
           '<div class="farm-loader" style="display:flex"><div class="farm-spinner"></div></div>' +
@@ -15174,9 +16019,11 @@ async function hReg(event) {
       var ac = document.getElementById('analytics-content');
       if (!ac) return;
       ac.innerHTML = '<div class="farm-loader" style="display:flex"><div class="farm-spinner"></div></div>';
+
       var today = new Date();
       var startDate, endDate;
       endDate = dateStr(today);
+
       if (mode === 'daily') {
         startDate = endDate;
       } else if (mode === 'weekly') {
@@ -15186,6 +16033,7 @@ async function hReg(event) {
         var m = new Date(today); m.setDate(m.getDate() - 29);
         startDate = dateStr(m);
       }
+
       loadOperations(startDate, endDate).then(function(ops) {
         ac.innerHTML = renderAnalyticsReport(ops, mode, startDate, endDate);
       });
@@ -15193,6 +16041,7 @@ async function hReg(event) {
 
     function renderAnalyticsReport(ops, mode, startDate, endDate) {
       var modeLabel = mode === 'daily' ? 'اليومي' : mode === 'weekly' ? 'الأسبوعي (7 أيام الماضية)' : 'الشهري (30 يوم الماضية)';
+
       if (!ops.length) {
         return '<div class="farm-empty-state">' +
           '<div class="farm-empty-icon">📊</div>' +
@@ -15200,7 +16049,9 @@ async function hReg(event) {
           '<p>قم بتسجيل العمليات اليومية أولاً لتظهر التحليلات</p>' +
         '</div>';
       }
-      var totals = { irr_times:0, irr_area:0, irr_hours:0, fert_n:0, fert_p:0, fert_k:0, fert_organic:0, fert_other:0, spray_times:0, spray_area:0, labor:0, harvest_qty:0, harvest_waste:0 };
+
+      // Aggregate
+      var totals = { irr_times:0, irr_area:0, irr_hours:0, fert_n:0, fert_p:0, fert_k:0, fert_organic:0, fert_other:0, spray_times:0, spray_amount:0, labor:0 };
       ops.forEach(function(op) {
         var d = op.data || {};
         totals.irr_times += num(d.irr_times);
@@ -15212,11 +16063,10 @@ async function hReg(event) {
         totals.fert_organic += num(d.fert_organic);
         totals.fert_other += num(d.fert_other);
         totals.spray_times += num(d.spray_times);
-        totals.spray_area += num(d.spray_area);
+        totals.spray_amount += num(d.spray_amount);
         totals.labor += num(d.labor);
-        totals.harvest_qty += num(d.harvest_qty);
-        totals.harvest_waste += num(d.harvest_waste);
       });
+
       var totalFert = totals.fert_n + totals.fert_p + totals.fert_k + totals.fert_organic + totals.fert_other;
 
       return '<div class="analytics-report">' +
@@ -15225,63 +16075,40 @@ async function hReg(event) {
           '<span class="ar-range">' + startDate + ' ← ' + endDate + '</span>' +
         '</div>' +
 
-        '<h3 class="ar-section">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#1a5e8c"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>' +
-          ' ملخص الري' +
-        '</h3>' +
+        '<h3 class="ar-section">💧 ملخص الري</h3>' +
         '<div class="ar-grid">' +
-          arCard('مرات الري', totals.irr_times, 'مرة', '#1a5e8c') +
-          arCard('المساحة المروية', totals.irr_area, 'فدان', '#1a5e8c') +
-          arCard('إجمالي ساعات الري', totals.irr_hours, 'ساعة', '#1a5e8c') +
+          arCard('مرات الري', totals.irr_times, 'مرة') +
+          arCard('المساحة المروية', totals.irr_area, 'فدان') +
+          arCard('إجمالي ساعات الري', totals.irr_hours, 'ساعة') +
         '</div>' +
 
-        '<h3 class="ar-section">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#1b6b3a"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>' +
-          ' ملخص التسميد' +
-        '</h3>' +
+        '<h3 class="ar-section">🧪 ملخص التسميد</h3>' +
         '<div class="ar-grid">' +
-          arCard('نيتروجين', totals.fert_n, 'كجم', '#1b6b3a') +
-          arCard('فوسفور', totals.fert_p, 'كجم', '#1b6b3a') +
-          arCard('بوتاسيوم', totals.fert_k, 'كجم', '#1b6b3a') +
-          arCard('عضوي', totals.fert_organic, 'كجم', '#1b6b3a') +
-          arCard('إجمالي التسميد', totalFert, 'كجم', '#1b6b3a') +
+          arCard('نيتروجين', totals.fert_n, 'كجم') +
+          arCard('فوسفور', totals.fert_p, 'كجم') +
+          arCard('بوتاسيوم', totals.fert_k, 'كجم') +
+          arCard('عضوي', totals.fert_organic, 'كجم') +
+          arCard('إجمالي التسميد', totalFert, 'كجم') +
         '</div>' +
 
-        '<h3 class="ar-section">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#d4500a"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' +
-          ' ملخص الرش' +
-        '</h3>' +
+        '<h3 class="ar-section">🌿 ملخص الرش</h3>' +
         '<div class="ar-grid">' +
-          arCard('مرات الرش', totals.spray_times, 'مرة', '#d4500a') +
-          arCard('المساحة المرشوشة', totals.spray_area, 'فدان', '#d4500a') +
+          arCard('مرات الرش', totals.spray_times, 'مرة') +
+          arCard('إجمالي المواد', totals.spray_amount, 'لتر') +
         '</div>' +
 
-        '<h3 class="ar-section">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#6b3a8a"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>' +
-          ' العمالة' +
-        '</h3>' +
+        '<h3 class="ar-section">👷 العمالة</h3>' +
         '<div class="ar-grid">' +
-          arCard('إجمالي العمال', totals.labor, 'عامل/يوم', '#6b3a8a') +
+          arCard('إجمالي العمال', totals.labor, 'عامل/يوم') +
         '</div>' +
-
-        (totals.harvest_qty > 0 ? '<h3 class="ar-section">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#c47d0e"><circle cx="12" cy="12" r="10"/></svg>' +
-          ' ملخص الحصاد' +
-        '</h3>' +
-        '<div class="ar-grid">' +
-          arCard('الإنتاج', totals.harvest_qty, 'طن', '#c47d0e') +
-          arCard('الفاقد', totals.harvest_waste, 'طن', '#e74c3c') +
-        '</div>' : '') +
 
         '<div class="ar-ops-log">' +
           '<h3 class="ar-section">📋 سجل العمليات (' + ops.length + ')</h3>' +
           ops.map(function(op) {
             var d = op.data || {};
-            var stage = d.growthStage ? '<span class="ar-op-badge">' + d.growthStage + '</span>' : '';
             return '<div class="ar-op-row">' +
               '<span class="ar-op-date">📅 ' + (op.date||'—') + '</span>' +
               '<span class="ar-op-field">🌱 ' + (d.fieldName||'—') + '</span>' +
-              stage +
               '<span class="ar-op-notes">' + (d.notes||'—') + '</span>' +
             '</div>';
           }).join('') +
@@ -15289,10 +16116,10 @@ async function hReg(event) {
       '</div>';
     }
 
-    function arCard(label, value, unit, color) {
-      return '<div class="ar-card" style="--ar-color:' + color + '">' +
+    function arCard(label, value, unit) {
+      return '<div class="ar-card">' +
         '<div class="ar-card-label">' + label + '</div>' +
-        '<div class="ar-card-value" style="color:' + color + '">' + (value||0) + '</div>' +
+        '<div class="ar-card-value">' + (value||0) + '</div>' +
         '<div class="ar-card-unit">' + unit + '</div>' +
       '</div>';
     }
@@ -15314,6 +16141,7 @@ async function hReg(event) {
       if (!uid()) return;
       var grid = document.getElementById('archive-months-grid');
       if (!grid) return;
+
       db.collection('operations').where('userId','==',uid()).orderBy('date','desc').limit(300).get().then(function(snap) {
         var monthsMap = {};
         snap.forEach(function(doc) {
@@ -15325,24 +16153,21 @@ async function hReg(event) {
             monthsMap[ym].count++;
           }
         });
+
         var months = Object.values(monthsMap).sort(function(a,b) { return b.month.localeCompare(a.month); });
         if (!months.length) {
           grid.innerHTML = '<div class="farm-empty-state"><div class="farm-empty-icon">🗂️</div><h3>لا يوجد أرشيف بعد</h3><p>قم بتسجيل العمليات اليومية وستظهر هنا أرشيفاً شهرياً</p></div>';
           return;
         }
+
         grid.innerHTML = months.map(function(m) {
           var parts = m.month.split('-');
           var monthNames = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
           var mName = monthNames[parseInt(parts[1]||1) - 1] || m.month;
           return '<div class="archive-month-card" onclick="openArchiveMonth(\'' + m.month + '\')">' +
-            '<div class="amc-icon">' +
-              '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
-            '</div>' +
             '<div class="amc-month">' + mName + ' ' + (parts[0]||'') + '</div>' +
             '<div class="amc-count">' + m.count + ' عملية</div>' +
-            '<div class="amc-arrow">' +
-              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>' +
-            '</div>' +
+            '<div class="amc-arrow">←</div>' +
           '</div>';
         }).join('');
       }).catch(function(e) {
@@ -15355,9 +16180,11 @@ async function hReg(event) {
       var mc = document.getElementById('farm-main-content');
       if (!mc) return;
       mc.innerHTML = '<div class="farm-loader" style="display:flex"><div class="farm-spinner"></div></div>';
+
       var startDate = ym + '-01';
       var end = new Date(ym + '-01'); end.setMonth(end.getMonth()+1); end.setDate(end.getDate()-1);
       var endDate = dateStr(end);
+
       loadOperations(startDate, endDate).then(function(ops) {
         var parts = ym.split('-');
         var monthNames = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
@@ -15375,26 +16202,15 @@ async function hReg(event) {
 
     // ── Save operations ───────────────────────────────
     window.saveFarmSetup = function() {
-      if (!uid()) { showFarmToast('سجّل دخولك أولاً', 'warning'); return; }
+      if (!uid()) { showToast('⚠️ سجّل دخولك أولاً'); return; }
       var name = (document.getElementById('farm-name')||{}).value || '';
       var area = (document.getElementById('farm-area')||{}).value || 0;
       var location = (document.getElementById('farm-location')||{}).value || '';
       var crops = (document.getElementById('farm-crops')||{}).value || '';
-      var waterSource = (document.getElementById('farm-water-source')||{}).value || '';
-      var irrigationSystem = (document.getElementById('farm-irrigation-system')||{}).value || '';
 
-      if (!name.trim()) { showFarmToast('برجاء إدخال اسم المزرعة', 'error'); return; }
+      if (!name.trim()) { showToast('⚠️ أدخل اسم المزرعة'); return; }
 
-      var farmData = {
-        userId: uid(),
-        name: name.trim(),
-        area: parseFloat(area)||0,
-        location: location.trim(),
-        crops: crops.trim(),
-        waterSource: waterSource,
-        irrigationSystem: irrigationSystem,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      };
+      var farmData = { userId: uid(), name: name.trim(), area: parseFloat(area)||0, location: location.trim(), crops: crops.trim(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
 
       var promise = farmState.currentFarm && farmState.currentFarm.id
         ? db.collection('farms').doc(farmState.currentFarm.id).set(farmData, {merge:true})
@@ -15402,90 +16218,43 @@ async function hReg(event) {
 
       promise.then(function(ref) {
         if (ref) farmData.id = ref.id;
-        showFarmToast('تم حفظ بيانات المزرعة بنجاح 🌾', 'success');
+        showToast('✅ تم حفظ المزرعة بنجاح');
         loadUserFarms().then(function() { renderFarmView('setup'); });
-      }).catch(function(e) { showFarmToast('خطأ في الحفظ: ' + e.message, 'error'); });
+      }).catch(function(e) { showToast('❌ خطأ: ' + e.message); });
     };
 
     window.addField = function() {
-      if (!uid()) { showFarmToast('سجّل دخولك أولاً', 'warning'); return; }
+      if (!uid()) { showToast('⚠️ سجّل دخولك أولاً'); return; }
       var name = (document.getElementById('field-name')||{}).value || '';
       var area = (document.getElementById('field-area')||{}).value || 0;
       var crop = (document.getElementById('field-crop')||{}).value || '';
-      var soil = (document.getElementById('field-soil')||{}).value || '';
-      if (!name.trim()) { showFarmToast('برجاء إدخال اسم الحقل', 'error'); return; }
+      if (!name.trim()) { showToast('⚠️ أدخل اسم الحقل'); return; }
+
       var farmId = farmState.currentFarm ? farmState.currentFarm.id : '';
       db.collection('fields').add({
-        userId: uid(), farmId: farmId, name: name.trim(), area: parseFloat(area)||0, crop: crop.trim(), soilType: soil,
+        userId: uid(), farmId: farmId, name: name.trim(), area: parseFloat(area)||0, crop: crop.trim(),
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       }).then(function() {
-        showFarmToast('تم إضافة الحقل بنجاح', 'success');
+        showToast('✅ تم إضافة الحقل');
         loadUserFarms().then(function() { renderFarmView('setup'); });
-      }).catch(function(e) { showFarmToast('خطأ: ' + e.message, 'error'); });
+      }).catch(function(e) { showToast('❌ خطأ: ' + e.message); });
     };
 
     window.deleteField = function(fieldId) {
       if (!uid() || !fieldId) return;
       if (!confirm('هل تريد حذف هذا الحقل؟')) return;
       db.collection('fields').doc(fieldId).delete().then(function() {
-        showFarmToast('تم حذف الحقل', 'info');
+        showToast('✅ تم حذف الحقل');
         loadUserFarms().then(function() { renderFarmView('setup'); });
-      }).catch(function(e) { showFarmToast('خطأ: ' + e.message, 'error'); });
-    };
-
-    window.addCrop = function() {
-      if (!uid()) { showFarmToast('سجّل دخولك أولاً', 'warning'); return; }
-      var name = (document.getElementById('crop-name')||{}).value || '';
-      if (!name.trim()) { showFarmToast('برجاء إدخال اسم المحصول', 'error'); return; }
-      var plantingSystem = (document.getElementById('crop-planting-system')||{}).value || '';
-      var spacingData = {};
-      if (plantingSystem === 'خطوط') {
-        spacingData.rowSpacing = numVal('crop-row-spacing');
-        spacingData.plantSpacing = numVal('crop-plant-spacing');
-      } else if (plantingSystem === 'مصاطب') {
-        spacingData.bedWidth = numVal('crop-bed-width');
-        spacingData.bedSpacing = numVal('crop-bed-spacing');
-        spacingData.plantSpacingB = numVal('crop-plant-spacing-b');
-      } else if (plantingSystem === 'نثر') {
-        spacingData.seedDensity = numVal('crop-seed-density');
-      }
-      db.collection('crops').add({
-        userId: uid(),
-        farmId: farmState.currentFarm ? farmState.currentFarm.id : '',
-        name: name.trim(),
-        variety: (document.getElementById('crop-variety')||{}).value || '',
-        stage: (document.getElementById('crop-stage')||{}).value || '',
-        plantDate: (document.getElementById('crop-plant-date')||{}).value || '',
-        season: (document.getElementById('crop-season')||{}).value || '',
-        propagationType: (document.getElementById('crop-propagation')||{}).value || '',
-        seedCompany: (document.getElementById('crop-seed-company')||{}).value || '',
-        seedOrigin: (document.getElementById('crop-seed-origin')||{}).value || '',
-        plantingSystem: plantingSystem,
-        spacing: spacingData,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).then(function() {
-        showFarmToast('تم إضافة المحصول بنجاح 🌱', 'success');
-        loadUserFarms().then(function() { renderFarmView('setup'); });
-      }).catch(function(e) { showFarmToast('خطأ: ' + e.message, 'error'); });
-    };
-
-    window.deleteCrop = function(cropId) {
-      if (!uid() || !cropId) return;
-      if (!confirm('هل تريد حذف هذا المحصول؟')) return;
-      db.collection('crops').doc(cropId).delete().then(function() {
-        showFarmToast('تم حذف المحصول', 'info');
-        loadUserFarms().then(function() { renderFarmView('setup'); });
-      }).catch(function(e) { showFarmToast('خطأ: ' + e.message, 'error'); });
+      }).catch(function(e) { showToast('❌ ' + e.message); });
     };
 
     window.saveOperation = function() {
-      if (!uid()) { showFarmToast('سجّل دخولك أولاً', 'warning'); return; }
+      if (!uid()) { showToast('⚠️ سجّل دخولك أولاً'); return; }
       var date = (document.getElementById('op-date')||{}).value || todayStr();
       var fieldEl = document.getElementById('op-field');
       var fieldId = fieldEl ? fieldEl.value : '';
       var fieldName = fieldEl ? (fieldEl.options[fieldEl.selectedIndex]||{}).text || '' : '';
-
-      if (!date) { showFarmToast('برجاء اختيار التاريخ', 'error'); return; }
 
       var opData = {
         userId: uid(),
@@ -15497,42 +16266,25 @@ async function hReg(event) {
           irr_times: numVal('op-irr-times'),
           irr_area: numVal('op-irr-area'),
           irr_hours: numVal('op-irr-hours'),
-          irr_method: (document.getElementById('op-irr-method')||{}).value || '',
-          fert_name: (document.getElementById('op-fert-name')||{}).value || '',
-          fert_company: (document.getElementById('op-fert-company')||{}).value || '',
-          fert_type: (document.getElementById('op-fert-type')||{}).value || '',
           fert_n: numVal('op-fert-n'),
           fert_p: numVal('op-fert-p'),
           fert_k: numVal('op-fert-k'),
           fert_organic: numVal('op-fert-organic'),
           fert_other: numVal('op-fert-other'),
-          fert_method: (document.getElementById('op-fert-method')||{}).value || '',
-          spray_name: (document.getElementById('op-spray-name')||{}).value || '',
-          spray_company: (document.getElementById('op-spray-company')||{}).value || '',
-          spray_type: (document.getElementById('op-spray-type')||{}).value || '',
-          spray_pest: (document.getElementById('op-spray-pest')||{}).value || '',
-          spray_conc: numVal('op-spray-conc'),
-          spray_water: numVal('op-spray-water'),
-          spray_area: numVal('op-spray-area'),
           spray_times: numVal('op-spray-times'),
+          spray_type: (document.getElementById('op-spray-type')||{}).value || '',
+          spray_amount: numVal('op-spray-amount'),
           agri_type: (document.getElementById('op-agri-type')||{}).value || '',
           labor: numVal('op-labor'),
-          temp: numVal('op-temp'),
-          humidity: numVal('op-humidity'),
-          rain: numVal('op-rain'),
-          growthStage: (document.getElementById('op-growth-stage')||{}).value || '',
-          harvest_qty: numVal('op-harvest-qty'),
-          harvest_quality: (document.getElementById('op-harvest-quality')||{}).value || '',
-          harvest_waste: numVal('op-harvest-waste'),
           notes: (document.getElementById('op-notes')||{}).value || '',
         },
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
       db.collection('operations').add(opData).then(function() {
-        showFarmToast('تم تسجيل العملية بنجاح 🌾', 'success');
+        showToast('✅ تم تسجيل العملية بنجاح');
         renderFarmView('log');
-      }).catch(function(e) { showFarmToast('خطأ في الحفظ: ' + e.message, 'error'); });
+      }).catch(function(e) { showToast('❌ خطأ: ' + e.message); });
     };
 
     // ── Attach events ─────────────────────────────────
@@ -15557,12 +16309,13 @@ async function hReg(event) {
     function numVal(id) { return num((document.getElementById(id)||{}).value); }
 
     function showToast(msg) {
-      // Backward-compat: map old showToast to new system
-      var type = 'success';
-      if (msg && msg.indexOf('⚠️') > -1) type = 'warning';
-      else if (msg && msg.indexOf('❌') > -1) type = 'error';
-      var clean = msg.replace(/✅|❌|⚠️/g,'').trim();
-      showFarmToast(clean, type);
+      var tw = document.getElementById('tw');
+      if (!tw) return;
+      var t = document.createElement('div');
+      t.className = 'toast show';
+      t.textContent = msg;
+      tw.appendChild(t);
+      setTimeout(function() { t.remove(); }, 3000);
     }
 
     // ── Hook into showPage ────────────────────────────
@@ -15575,6 +16328,7 @@ async function hReg(event) {
     };
 
     // ── Init ──────────────────────────────────────────
+    // Listen to auth changes to re-render if user logs in
     setTimeout(function() {
       if (typeof auth !== 'undefined') {
         auth.onAuthStateChanged(function() {
@@ -15589,15 +16343,17 @@ async function hReg(event) {
   })(); // end FarmSystem
   </script>
 
-  <!-- ══ FARM SYSTEM CSS (injected in body for specificity) ══ -->
+  <!-- ══ FARM SYSTEM CSS ══ -->
   <style>
-  /* ────────────────────────────────────────────────────
+  /* ════════════════════════════════════════════════════
      FARM SYSTEM — Enhanced Component Styles
-  ──────────────────────────────────────────────────── */
+  ════════════════════════════════════════════════════ */
+
+  /* ── Shell Layout ─────────────────────────────────── */
   .farm-shell {
     display: grid;
     grid-template-columns: 230px 1fr;
-    grid-template-rows: 60px 1fr;
+    grid-template-rows: 58px 1fr;
     min-height: 100vh;
     background: var(--bg);
   }
@@ -15609,61 +16365,70 @@ async function hReg(event) {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 24px;
+    padding: 0 20px 0 24px;
     background: var(--card);
     border-bottom: 1px solid var(--line);
     position: sticky;
     top: 64px;
     z-index: 100;
-    box-shadow: 0 2px 12px rgba(0,0,0,.06);
-    gap: 12px;
+    box-shadow: 0 1px 12px rgba(0,0,0,0.06);
   }
 
-  .farm-topbar-title {
-    font-family: var(--f-display);
-    font-size: 1.05rem;
-    color: var(--ink);
-    font-weight: 700;
+  .farm-topbar-center {
     display: flex;
     align-items: center;
     gap: 8px;
   }
 
-  .farm-user-avatar {
-    width: 34px; height: 34px; border-radius: 50%; object-fit: cover;
-    border: 2px solid var(--line);
+  .farm-topbar-icon {
+    width: 28px; height: 28px;
+    background: var(--brand);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
   }
 
-  .farm-user-avatar-placeholder { font-size: 22px; }
+  .farm-topbar-title {
+    font-family: var(--f-display);
+    font-size: 1rem;
+    color: var(--ink);
+    font-weight: 700;
+  }
 
+  .farm-user-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+  .farm-user-avatar-placeholder {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--brand-mist); color: var(--brand);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── Back button ──────────────────────────────────── */
   .farm-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     background: none;
     border: 1.5px solid var(--line2);
     color: var(--brand);
     font-size: 13px;
     font-weight: 700;
-    padding: 7px 16px;
+    padding: 7px 14px;
     border-radius: var(--rpill);
     cursor: pointer;
     transition: all .2s var(--ease-spring);
     font-family: var(--f-ui);
-    white-space: nowrap;
   }
-
-  .farm-back-btn:hover {
-    background: var(--brand);
-    color: #fff;
-    border-color: var(--brand);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(27,107,58,.3);
-  }
+  .farm-back-btn:hover { background: var(--brand); color: #fff; border-color: var(--brand); transform: translateY(-1px); }
 
   .farm-back-btn-sm {
-    background: none; border: none; color: var(--brand); font-size: 13px;
-    font-weight: 700; padding: 4px 0; cursor: pointer; font-family: var(--f-ui);
-    margin-bottom: 8px; display: block; transition: opacity .2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none; border: none;
+    color: var(--brand); font-size: 13px; font-weight: 700;
+    padding: 4px 0; cursor: pointer;
+    font-family: var(--f-ui); margin-bottom: 10px;
   }
-  .farm-back-btn-sm:hover { opacity: .7; }
 
   /* ── Sidebar ──────────────────────────────────────── */
   .farm-sidebar {
@@ -15671,36 +16436,46 @@ async function hReg(event) {
     grid-row: 2;
     background: var(--card);
     border-left: 1px solid var(--line);
-    padding: 20px 10px;
-    min-height: calc(100vh - 124px);
+    padding: 20px 12px 20px;
     position: sticky;
-    top: 124px;
-    height: fit-content;
-  }
-
-  .farm-nav {
+    top: 122px;
+    height: calc(100vh - 122px);
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
+    overflow-y: auto;
   }
+
+  .farm-sidebar-logo {
+    font-family: var(--f-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 6px 12px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 8px;
+  }
+
+  .farm-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
 
   .farm-nav-item {
     display: flex;
     align-items: center;
     gap: 11px;
-    padding: 11px 14px;
+    padding: 10px 12px;
     border-radius: 10px;
     color: var(--slate);
     font-size: 13.5px;
     font-weight: 600;
     font-family: var(--f-ui);
     cursor: pointer;
-    transition: all .2s var(--ease-spring);
+    transition: all .18s var(--ease-spring);
     border: none;
     background: none;
     text-align: right;
     width: 100%;
-    position: relative;
   }
 
   .farm-nav-item:hover {
@@ -15713,31 +16488,708 @@ async function hReg(event) {
     background: var(--brand-mist) !important;
     color: var(--brand) !important;
     font-weight: 700;
-  }
-
-  .farm-nav-active::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 22px;
-    background: var(--brand);
-    border-radius: 4px 0 0 4px;
+    border-right: 3px solid var(--brand);
   }
 
   .farm-nav-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
+    background: transparent;
+    transition: background .18s;
   }
+
+  .farm-nav-item:hover .farm-nav-icon,
+  .farm-nav-active .farm-nav-icon { background: rgba(27,107,58,0.12); }
 
   .farm-nav-label { flex: 1; }
 
-  /* ── Main content ─────────────────────────────────── */
+  .farm-sidebar-footer {
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-right: 6px;
+  }
+
+  .farm-sf-dot {
+    width: 6px; height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(34,197,94,.25);
+    animation: fecDotPulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  /* ── Main content ────────────────────────────────── */
+  .farm-main {
+    grid-column: 2;
+    grid-row: 2;
+    padding: 32px 36px;
+    overflow-y: auto;
+    min-height: calc(100vh - 122px);
+  }
+
+  /* ── View wrapper ────────────────────────────────── */
+  .farm-view { max-width: 900px; }
+
+  .farm-view.fade-in {
+    animation: farmFadeIn .3s cubic-bezier(.16,1,.3,1) forwards;
+  }
+
+  @keyframes farmFadeIn {
+    from { opacity:0; transform:translateY(14px); }
+    to   { opacity:1; transform:none; }
+  }
+
+  .farm-view-header { margin-bottom: 28px; }
+
+  .farm-view-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--brand);
+    display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+  }
+  .farm-view-eyebrow::before { content:''; width:20px; height:1px; background:var(--brand); }
+
+  .farm-view-title {
+    font-family: var(--f-display);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    color: var(--ink); margin:0; letter-spacing:-.025em; line-height:1.1;
+  }
+
+  /* ── Dashboard stat cards ─────────────────────────── */
+  .farm-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .farm-stat-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all .22s var(--ease-spring);
+    box-shadow: var(--s1);
+  }
+
+  .farm-stat-card:hover { transform: translateY(-3px); box-shadow: var(--s3); }
+
+  .fsc-icon-wrap {
+    width: 42px; height: 42px;
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .fsc-label { font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
+  .fsc-value { font-family: var(--f-display); font-size: 1.15rem; color: var(--ink); font-weight: 700; line-height: 1.2; }
+
+  /* ── Quick action buttons ─────────────────────────── */
+  .dash-quick-section { margin-top: 4px; }
+  .farm-section-title { font-family: var(--f-display); font-size: 1.05rem; color: var(--ink); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+
+  .farm-quick-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+  .farm-quick-btn {
+    background: var(--card);
+    border: 1.5px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all .22s var(--ease-spring);
+    font-family: var(--f-ui);
+    text-align: right;
+  }
+
+  .farm-quick-btn:hover {
+    border-color: var(--qb-color, var(--brand));
+    background: color-mix(in srgb, var(--qb-color, var(--brand)) 8%, transparent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  }
+
+  .farm-quick-btn:active { transform: scale(0.97); }
+
+  .fqb-icon-wrap { width: 44px; height: 44px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .fqb-label { flex: 1; font-size: 13px; font-weight: 700; color: var(--ink); }
+  .fqb-arrow { flex-shrink: 0; opacity: 0; transition: opacity .2s, transform .2s; }
+  .farm-quick-btn:hover .fqb-arrow { opacity: 1; transform: translateX(3px); }
+
+  /* ── Form Cards ───────────────────────────────────── */
+  .farm-form-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px 26px;
+    margin-bottom: 20px;
+    box-shadow: var(--s1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .farm-form-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--brand), transparent);
+    opacity: 0;
+    transition: opacity .3s;
+  }
+
+  .farm-form-card:focus-within::before { opacity: 1; }
+
+  .farm-form-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .fch-icon {
+    width: 34px; height: 34px;
+    background: var(--brand-mist);
+    color: var(--brand);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .farm-form-title {
+    font-family: var(--f-display);
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .farm-form-section-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin: 20px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .farm-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .farm-fg { display: flex; flex-direction: column; gap: 5px; }
+
+  .farm-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--slate);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .farm-input {
+    padding: 10px 13px;
+    border-radius: 9px;
+    border: 1.5px solid var(--line);
+    background: var(--bg2);
+    color: var(--ink);
+    font-size: 14px;
+    font-family: var(--f-ui);
+    transition: all .18s;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .farm-input:focus {
+    border-color: var(--brand);
+    background: var(--card);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(27,107,58,.1);
+  }
+
+  .farm-textarea { min-height: 88px; resize: vertical; }
+
+  /* Radio group */
+  .farm-radio-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .farm-radio-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .18s;
+    position: relative;
+    background: var(--bg2);
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .farm-radio-item input[type="radio"] { display: none; }
+
+  .farm-radio-item:has(input:checked) {
+    border-color: var(--brand);
+    background: var(--brand-mist);
+  }
+
+  .fri-icon { font-size: 18px; }
+  .fri-label { flex: 1; font-size: 13px; font-weight: 600; color: var(--ink); }
+  .fri-check {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--line);
+    display: flex; align-items: center; justify-content: center;
+    color: transparent;
+    transition: all .18s;
+    flex-shrink: 0;
+  }
+
+  .farm-radio-item:has(input:checked) .fri-check {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  /* Checkbox row */
+  .farm-form-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+  }
+
+  .farm-form-checkbox-row input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--brand);
+    cursor: pointer;
+  }
+
+  /* Buttons */
+  .farm-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: var(--rpill);
+    background: var(--brand);
+    color: #fff;
+    font-size: 13.5px;
+    font-weight: 700;
+    font-family: var(--f-ui);
+    cursor: pointer;
+    border: none;
+    transition: all .22s var(--ease-spring);
+    box-shadow: 0 4px 16px rgba(27,107,58,.35), inset 0 1px 0 rgba(255,255,255,.2);
+  }
+
+  .farm-btn-primary:hover { background: var(--brand-l); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(27,107,58,.45); }
+  .farm-btn-primary:active { transform: scale(0.97); }
+
+  .farm-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: var(--rpill);
+    background: transparent;
+    color: var(--brand);
+    border: 1.5px solid var(--brand);
+    font-size: 13.5px;
+    font-weight: 700;
+    font-family: var(--f-ui);
+    cursor: pointer;
+    transition: all .2s var(--ease-spring);
+  }
+
+  .farm-btn-secondary:hover { background: var(--brand); color: #fff; transform: translateY(-1px); }
+
+  /* Fields list */
+  .fields-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+
+  .field-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    background: var(--bg2);
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    transition: all .18s;
+  }
+
+  .field-item:hover { border-color: var(--brand-xl); background: var(--brand-mist); }
+
+  .field-item-icon { color: var(--brand); flex-shrink: 0; }
+  .field-item-info { flex: 1; }
+  .field-item-info strong { display: block; font-size: 13.5px; color: var(--ink); }
+  .field-item-info small  { font-size: 11.5px; color: var(--muted); }
+
+  .field-del-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); padding: 6px; border-radius: 7px;
+    transition: all .18s;
+  }
+
+  .field-del-btn:hover { background: rgba(239,68,68,.1); color: #ef4444; }
+
+  /* Log section title */
+  .log-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--lsh-color, var(--brand));
+    margin: 20px 0 14px;
+    padding: 10px 14px;
+    background: color-mix(in srgb, var(--lsh-color, var(--brand)) 8%, transparent);
+    border-radius: 9px;
+    border-right: 3px solid var(--lsh-color, var(--brand));
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lsh-icon { flex-shrink: 0; }
+
+  .log-header-card {
+    background: linear-gradient(135deg, var(--brand-mist), var(--card));
+    border-color: rgba(27,107,58,.15);
+  }
+
+  /* Analytics */
+  .analytics-tabs { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; }
+
+  .an-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    border-radius: var(--rpill);
+    border: 1.5px solid var(--line2);
+    color: var(--slate);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s var(--ease-spring);
+    background: var(--card);
+    font-family: var(--f-ui);
+  }
+
+  .an-tab:hover { border-color: var(--brand); color: var(--brand); }
+
+  .an-tab-active {
+    background: var(--brand) !important;
+    color: #fff !important;
+    border-color: var(--brand) !important;
+    box-shadow: 0 4px 16px rgba(27,107,58,.35);
+  }
+
+  .analytics-content { }
+
+  .analytics-report { }
+
+  .ar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, var(--brand-mist), var(--card));
+    border-radius: 12px;
+    border: 1px solid rgba(27,107,58,.15);
+  }
+
+  .ar-period { font-weight: 700; color: var(--brand); font-size: 15px; }
+  .ar-range  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .ar-ops-badge {
+    background: var(--brand);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 100px;
+  }
+
+  .ar-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--f-display);
+    font-size: 1rem;
+    color: var(--ink);
+    margin: 22px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .ar-section-icon { display: flex; align-items: center; }
+
+  .ar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 6px; }
+
+  .ar-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    padding: 14px;
+    text-align: center;
+    box-shadow: var(--s1);
+    transition: transform .2s;
+  }
+
+  .ar-card:hover { transform: translateY(-2px); box-shadow: var(--s2); }
+  .ar-card-label { font-size: 10.5px; color: var(--muted); font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .06em; }
+  .ar-card-value { font-family: var(--f-display); font-size: 1.65rem; font-weight: 700; line-height: 1; }
+  .ar-card-unit  { font-size: 10.5px; color: var(--slate); margin-top: 3px; }
+
+  .ar-ops-log { margin-top: 22px; }
+
+  .ar-ops-log-header {
+    font-family: var(--f-display);
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ar-op-row {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 9px;
+    background: var(--bg2);
+    margin-bottom: 5px;
+    font-size: 13px;
+    flex-wrap: wrap;
+    transition: background .15s;
+  }
+
+  .ar-op-row:hover { background: var(--brand-mist); }
+  .ar-op-date  { color: var(--brand); font-weight: 700; flex-shrink: 0; font-size: 12px; }
+  .ar-op-field { color: var(--slate); flex-shrink: 0; font-weight: 600; font-size: 12px; }
+  .ar-op-notes { color: var(--muted); flex: 1; font-size: 12px; }
+
+  /* Archive */
+  .archive-months-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+
+  .archive-month-card {
+    background: var(--card);
+    border: 1.5px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all .25s var(--ease-spring);
+    box-shadow: var(--s1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .archive-month-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--brand), var(--gold));
+    transform: scaleX(0);
+    transition: transform .3s var(--ease-spring);
+  }
+
+  .archive-month-card:hover { transform: translateY(-5px); box-shadow: var(--s4); border-color: rgba(27,107,58,.25); }
+  .archive-month-card:hover::before { transform: scaleX(1); }
+  .archive-month-card:active { transform: scale(0.98); }
+
+  .amc-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .amc-icon { color: var(--brand); }
+  .amc-month { font-family: var(--f-display); font-size: 1.1rem; color: var(--ink); font-weight: 700; }
+  .amc-count { font-size: 12.5px; color: var(--muted); font-weight: 600; margin-bottom: 14px; }
+  .amc-count-num { font-size: 1.5rem; font-family: var(--f-display); color: var(--brand); font-weight: 700; display: block; }
+  .amc-cta { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--brand); }
+
+  /* Loader */
+  .farm-loader { display: none; align-items: center; justify-content: center; min-height: 200px; width: 100%; }
+  .farm-spinner { width: 34px; height: 34px; border: 3px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: farmSpin .65s linear infinite; }
+  @keyframes farmSpin { to { transform: rotate(360deg); } }
+
+  /* Empty states */
+  .farm-empty-state { text-align: center; padding: 56px 24px; }
+  .farm-empty-lottie { display: flex; justify-content: center; margin-bottom: 20px; opacity: .6; }
+  .farm-empty-state h3 { font-family: var(--f-display); font-size: 1.4rem; color: var(--ink); margin-bottom: 8px; }
+  .farm-empty-state p  { color: var(--muted); margin-bottom: 22px; }
+  .farm-empty-msg      { color: var(--muted); font-size: 13px; padding: 8px 0; }
+
+  /* Auth wall */
+  .farm-auth-wall { display: flex; align-items: center; justify-content: center; min-height: 60vh; padding: 40px 24px; }
+  .farm-auth-inner { text-align: center; max-width: 420px; }
+  .farm-auth-icon-wrap { display: flex; justify-content: center; margin-bottom: 20px; width: 80px; height: 80px; background: var(--brand-mist); border-radius: 20px; align-items: center; margin: 0 auto 20px; color: var(--brand); }
+  .farm-auth-title { font-family: var(--f-display); font-size: 2rem; color: var(--ink); margin-bottom: 8px; }
+  .farm-auth-sub   { color: var(--muted); margin-bottom: 28px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .farm-shell { grid-template-columns: 1fr; grid-template-rows: 58px auto 1fr; }
+    .farm-sidebar { grid-column: 1; grid-row: 2; height: auto; position: static; padding: 10px; border-left: none; border-bottom: 1px solid var(--line); }
+    .farm-nav { flex-direction: row; overflow-x: auto; gap: 4px; }
+    .farm-nav-item { flex-direction: column; gap: 3px; padding: 8px 10px; font-size: 10.5px; min-width: 64px; flex-shrink: 0; }
+    .farm-nav-icon { width: 28px; height: 28px; }
+    .farm-nav-active { border-right: none; border-bottom: 3px solid var(--brand); }
+    .farm-main { grid-column: 1; grid-row: 3; padding: 18px 14px; min-height: auto; }
+    .farm-sidebar-logo, .farm-sidebar-footer { display: none; }
+    .farm-stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .farm-quick-btns { grid-template-columns: 1fr; }
+    .farm-form-grid  { grid-template-columns: 1fr; }
+    .fec-right { display: none; }
+  }
+  </style>
+</body>
+</html>
+  .farm-shell {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: 60px 1fr;
+    min-height: 100vh;
+    background: var(--bg);
+  }
+
+  .farm-topbar {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 64px;
+    z-index: 100;
+    box-shadow: var(--s1);
+  }
+
+  .farm-topbar-title {
+    font-family: var(--f-display);
+    font-size: 1.2rem;
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .farm-user-avatar {
+    width: 32px; height: 32px; border-radius: 50%; object-fit: cover;
+  }
+
+  .farm-user-avatar-placeholder {
+    font-size: 22px;
+  }
+
+  .farm-back-btn {
+    background: none;
+    border: 1.5px solid var(--line2);
+    color: var(--brand);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 7px 16px;
+    border-radius: var(--rpill);
+    cursor: pointer;
+    transition: all .2s var(--ease-spring);
+    font-family: var(--f-ui);
+  }
+
+  .farm-back-btn:hover {
+    background: var(--brand);
+    color: #fff;
+    border-color: var(--brand);
+    transform: translateY(-1px);
+  }
+
+  .farm-back-btn-sm {
+    background: none;
+    border: none;
+    color: var(--brand);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 0;
+    cursor: pointer;
+    font-family: var(--f-ui);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .farm-sidebar {
+    grid-column: 1;
+    grid-row: 2;
+    background: var(--card);
+    border-left: 1px solid var(--line);
+    padding: 20px 12px;
+    min-height: calc(100vh - 60px);
+    position: sticky;
+    top: 124px;
+    height: fit-content;
+  }
+
+  .farm-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .farm-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: var(--r2);
+    color: var(--slate);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--f-ui);
+    cursor: pointer;
+    transition: all .2s var(--ease-spring);
+    border: none;
+    background: none;
+    text-align: right;
+    width: 100%;
+  }
+
+  .farm-nav-item:hover {
+    background: var(--brand-mist);
+    color: var(--brand);
+    transform: translateX(-2px);
+  }
+
+  .farm-nav-active {
+    background: var(--brand-mist) !important;
+    color: var(--brand) !important;
+    font-weight: 700;
+    border-right: 3px solid var(--brand);
+  }
+
+  .farm-nav-icon { font-size: 18px; }
+  .farm-nav-label { flex: 1; }
+
   .farm-main {
     grid-column: 2;
     grid-row: 2;
@@ -15745,18 +17197,22 @@ async function hReg(event) {
     overflow-y: auto;
   }
 
-  .farm-view { max-width: 900px; }
+  .farm-view {
+    max-width: 860px;
+  }
 
   .farm-view.fade-in {
     animation: farmFadeIn .35s cubic-bezier(.16,1,.3,1) forwards;
   }
 
   @keyframes farmFadeIn {
-    from { opacity:0; transform:translateY(14px); }
+    from { opacity:0; transform:translateY(16px); }
     to { opacity:1; transform:none; }
   }
 
-  .farm-view-header { margin-bottom: 28px; }
+  .farm-view-header {
+    margin-bottom: 28px;
+  }
 
   .farm-view-eyebrow {
     font-size: 11px;
@@ -15772,21 +17228,20 @@ async function hReg(event) {
 
   .farm-view-eyebrow::before {
     content: '';
-    width: 20px; height: 2px;
+    width: 20px;
+    height: 1px;
     background: var(--brand);
-    border-radius: 2px;
   }
 
   .farm-view-title {
     font-family: var(--f-display);
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
     color: var(--ink);
     margin: 0;
     letter-spacing: -.025em;
-    line-height: 1.15;
+    line-height: 1.1;
   }
 
-  /* ── Stats Grid (Dashboard) ───────────────────────── */
   .farm-stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -15797,63 +17252,25 @@ async function hReg(event) {
   .farm-stat-card {
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 20px 18px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    transition: all .28s var(--ease-spring);
-    box-shadow: 0 2px 10px rgba(0,0,0,.05);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .farm-stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; right: 0;
-    width: 60px; height: 60px;
-    border-radius: 0 0 0 60px;
-    background: var(--fsc-bg, #e8f5ee);
-    opacity: .5;
-    transition: opacity .3s;
+    border-radius: var(--r3);
+    padding: 20px;
+    text-align: center;
+    transition: all .25s var(--ease-spring);
+    box-shadow: var(--s1);
   }
 
   .farm-stat-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 28px rgba(0,0,0,.1);
-    border-color: var(--fsc-color, var(--brand));
+    box-shadow: var(--s3);
+    border-color: var(--brand-xl);
   }
 
-  .farm-stat-card:hover::before { opacity: 1; }
+  .fsc-icon { font-size: 28px; margin-bottom: 8px; }
+  .fsc-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+  .fsc-value { font-family: var(--f-display); font-size: 1.3rem; color: var(--ink); font-weight: 700; }
 
-  .fsc-icon-wrap {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    background: var(--fsc-bg, #e8f5ee);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .fsc-icon { display: flex; }
-
-  .fsc-body { flex: 1; min-width: 0; }
-
-  .fsc-label {
-    font-size: 11px; color: var(--muted); margin-bottom: 3px;
-    font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-
-  .fsc-value {
-    font-family: var(--f-display); font-size: 1.15rem;
-    color: var(--ink); font-weight: 700;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-
-  /* ── Quick Actions ────────────────────────────────── */
   .farm-quick-actions { margin-top: 8px; }
-  .farm-section-title { font-family: var(--f-display); font-size: 1.05rem; color: var(--ink); margin-bottom: 16px; font-weight: 700; }
+  .farm-section-title { font-family: var(--f-display); font-size: 1.1rem; color: var(--ink); margin-bottom: 16px; }
 
   .farm-quick-btns {
     display: grid;
@@ -15864,103 +17281,46 @@ async function hReg(event) {
   .farm-quick-btn {
     background: var(--card);
     border: 1.5px solid var(--line);
-    border-radius: 14px;
-    padding: 20px 18px;
+    border-radius: var(--r3);
+    padding: 20px 16px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
     cursor: pointer;
     transition: all .25s var(--ease-spring);
     font-family: var(--f-ui);
-    text-align: right;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .farm-quick-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--fqb-color, var(--brand));
-    opacity: 0;
-    transition: opacity .25s;
   }
 
   .farm-quick-btn:hover {
-    border-color: var(--fqb-color, var(--brand));
+    border-color: var(--brand);
+    background: var(--brand-mist);
     transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0,0,0,.1);
+    box-shadow: var(--s2);
   }
 
-  .farm-quick-btn:hover::before { opacity: .06; }
   .farm-quick-btn:active { transform: scale(0.97); }
 
-  .fqb-icon { display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; }
-  .fqb-label { flex: 1; font-size: 14px; font-weight: 700; color: var(--ink); position: relative; }
-  .fqb-arrow { display: flex; align-items: center; opacity: .4; transition: opacity .2s, transform .2s; position: relative; }
-  .farm-quick-btn:hover .fqb-arrow { opacity: 1; transform: translateX(-3px); }
+  .fqb-icon { font-size: 28px; }
+  .fqb-label { font-size: 13px; font-weight: 700; color: var(--ink); text-align: center; }
 
-  /* ── Form Cards ───────────────────────────────────── */
+  /* Form Card */
   .farm-form-card {
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 16px;
+    border-radius: var(--r3);
     padding: 28px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 12px rgba(0,0,0,.05);
-    transition: box-shadow .2s;
+    margin-bottom: 24px;
+    box-shadow: var(--s1);
   }
-
-  .farm-form-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.08); }
 
   .farm-form-title {
     font-family: var(--f-display);
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     color: var(--ink);
     margin: 0 0 20px;
-    padding-bottom: 14px;
+    padding-bottom: 12px;
     border-bottom: 1px solid var(--line);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-  }
-
-  .farm-form-subcard {
-    background: var(--bg2);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 18px;
-    margin: 16px 0;
-  }
-
-  .farm-form-subtitle {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--brand);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-
-  .farm-form-divider {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    margin: 20px 0 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .farm-form-divider::before, .farm-form-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--line);
   }
 
   .farm-form-grid {
@@ -15970,52 +17330,42 @@ async function hReg(event) {
     margin-bottom: 20px;
   }
 
-  .farm-form-grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
   .farm-fg { display: flex; flex-direction: column; gap: 6px; }
-
-  .farm-label {
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--ink);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+  .farm-label { font-size: 13px; font-weight: 700; color: var(--ink); }
 
   .farm-input {
     padding: 11px 14px;
-    border-radius: 10px;
+    border-radius: var(--r2);
     border: 1.5px solid var(--line);
     background: var(--bg2);
     color: var(--ink);
     font-size: 14px;
     font-family: var(--f-ui);
-    transition: border-color .2s, box-shadow .2s, background .2s;
+    transition: border-color .2s;
     width: 100%;
     box-sizing: border-box;
   }
 
-  .farm-input:focus {
-    border-color: var(--brand);
-    background: var(--card);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(27,107,58,.1);
+  .farm-input:focus { border-color: var(--brand); background: var(--card); outline: none; }
+
+  .farm-textarea {
+    min-height: 90px;
+    resize: vertical;
   }
 
-  .farm-textarea { min-height: 90px; resize: vertical; }
-
-  /* ── Buttons ──────────────────────────────────────── */
   .farm-btn-primary {
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     padding: 13px 28px;
     border-radius: var(--rpill);
     background: var(--brand);
     color: #fff;
-    font-size: 14px; font-weight: 700; font-family: var(--f-ui);
-    cursor: pointer; border: none;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--f-ui);
+    cursor: pointer;
+    border: none;
     transition: all .25s var(--ease-spring);
     box-shadow: 0 4px 16px rgba(27,107,58,.35);
   }
@@ -16024,206 +17374,102 @@ async function hReg(event) {
   .farm-btn-primary:active { transform: scale(0.97); }
 
   .farm-btn-secondary {
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     padding: 11px 24px;
     border-radius: var(--rpill);
-    background: transparent; color: var(--brand);
+    background: transparent;
+    color: var(--brand);
     border: 1.5px solid var(--brand);
-    font-size: 14px; font-weight: 700; font-family: var(--f-ui);
-    cursor: pointer; transition: all .2s var(--ease-spring);
-  }
-
-  .farm-btn-secondary:hover { background: var(--brand); color: #fff; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(27,107,58,.3); }
-
-  /* ── Fields / Crops List ──────────────────────────── */
-  .fields-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-
-  .field-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px;
-    background: var(--bg2);
-    border-radius: 10px;
-    border: 1px solid var(--line);
-    transition: border-color .2s, box-shadow .2s;
-  }
-
-  .field-item:hover { border-color: var(--brand); box-shadow: 0 2px 8px rgba(27,107,58,.1); }
-
-  .field-item-icon-wrap {
-    width: 36px; height: 36px; border-radius: 8px;
-    background: var(--brand-mist);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .field-item-info { flex: 1; }
-  .field-item-info strong { display: block; font-size: 14px; color: var(--ink); font-weight: 700; }
-  .field-item-info small { font-size: 12px; color: var(--muted); }
-
-  .field-del-btn {
-    background: none; border: none; cursor: pointer; padding: 7px;
-    border-radius: 8px; transition: background .2s, color .2s;
-    display: flex; align-items: center; color: var(--muted);
-  }
-
-  .field-del-btn:hover { background: rgba(192,57,43,.12); color: #c0392b; }
-
-  /* ── Log Section Headers ──────────────────────────── */
-  .log-section-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 22px 0 14px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .log-section-icon {
-    width: 32px; height: 32px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .log-section-title {
-    font-size: 14px; font-weight: 700; color: var(--ink);
+    font-size: 14px;
+    font-weight: 700;
     font-family: var(--f-ui);
+    cursor: pointer;
+    transition: all .2s var(--ease-spring);
   }
 
-  /* ── Analytics ────────────────────────────────────── */
+  .farm-btn-secondary:hover { background: var(--brand); color: #fff; transform: translateY(-1px); }
+
+  /* Fields list */
+  .fields-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .field-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--bg2); border-radius: var(--r2); border: 1px solid var(--line); }
+  .field-item-icon { font-size: 20px; }
+  .field-item-info { flex: 1; }
+  .field-item-info strong { display: block; font-size: 14px; color: var(--ink); }
+  .field-item-info small { font-size: 12px; color: var(--muted); }
+  .field-del-btn { background: none; border: none; cursor: pointer; font-size: 18px; padding: 4px; border-radius: 6px; transition: background .2s; }
+  .field-del-btn:hover { background: rgba(192,57,43,.1); }
+
+  /* Log section title */
+  .log-section-title { font-size: 14px; font-weight: 700; color: var(--brand); margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+
+  /* Analytics */
   .analytics-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-
-  .an-tab {
-    padding: 9px 20px;
-    border-radius: var(--rpill);
-    border: 1.5px solid var(--line2);
-    color: var(--slate); font-size: 13px; font-weight: 700;
-    cursor: pointer; transition: all .2s var(--ease-spring);
-    background: var(--card); font-family: var(--f-ui);
-    display: flex; align-items: center; gap: 7px;
-  }
-
+  .an-tab { padding: 9px 22px; border-radius: var(--rpill); border: 1.5px solid var(--line2); color: var(--slate); font-size: 13px; font-weight: 700; cursor: pointer; transition: all .2s var(--ease-spring); background: var(--card); font-family: var(--f-ui); }
   .an-tab:hover { border-color: var(--brand); color: var(--brand); }
   .an-tab-active { background: var(--brand); color: #fff !important; border-color: var(--brand) !important; box-shadow: 0 4px 16px rgba(27,107,58,.35); }
 
-  .analytics-report {}
-
-  .ar-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 24px; padding: 14px 18px;
-    background: var(--brand-mist); border-radius: 12px;
-    border: 1px solid rgba(27,107,58,.15);
-  }
-
+  .analytics-report { }
+  .ar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding: 14px 18px; background: var(--brand-mist); border-radius: var(--r2); border: 1px solid rgba(27,107,58,.15); }
   .ar-period { font-weight: 700; color: var(--brand); font-size: 15px; }
   .ar-range { font-size: 12px; color: var(--muted); }
-
-  .ar-section {
-    font-family: var(--f-display); font-size: 1rem; color: var(--ink);
-    margin: 24px 0 12px; display: flex; align-items: center; gap: 8px;
-    font-weight: 700;
-  }
-
-  .ar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-bottom: 8px; }
-
-  .ar-card {
-    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-    padding: 16px 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.04);
-    transition: transform .2s, box-shadow .2s;
-  }
-
-  .ar-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
-  .ar-card-label { font-size: 11px; color: var(--muted); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .06em; }
-  .ar-card-value { font-family: var(--f-display); font-size: 1.7rem; font-weight: 700; line-height: 1; }
+  .ar-section { font-family: var(--f-display); font-size: 1.05rem; color: var(--ink); margin: 24px 0 12px; }
+  .ar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 8px; }
+  .ar-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r2); padding: 16px; text-align: center; box-shadow: var(--s1); transition: transform .2s; }
+  .ar-card:hover { transform: translateY(-2px); }
+  .ar-card-label { font-size: 11px; color: var(--muted); font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .06em; }
+  .ar-card-value { font-family: var(--f-display); font-size: 1.6rem; color: var(--brand); font-weight: 700; line-height: 1; }
   .ar-card-unit { font-size: 11px; color: var(--slate); margin-top: 4px; }
 
   .ar-ops-log { margin-top: 24px; }
-
-  .ar-op-row {
-    display: flex; gap: 12px; align-items: center;
-    padding: 10px 14px; border-radius: 10px;
-    background: var(--bg2); margin-bottom: 6px;
-    font-size: 13px; flex-wrap: wrap;
-    transition: background .2s;
-  }
-
-  .ar-op-row:hover { background: var(--brand-mist); }
+  .ar-op-row { display: flex; gap: 16px; align-items: center; padding: 10px 14px; border-radius: var(--r2); background: var(--bg2); margin-bottom: 6px; font-size: 13px; flex-wrap: wrap; }
   .ar-op-date { color: var(--brand); font-weight: 700; flex-shrink: 0; }
   .ar-op-field { color: var(--slate); flex-shrink: 0; }
   .ar-op-notes { color: var(--muted); flex: 1; }
-  .ar-op-badge { background: var(--brand-mist); color: var(--brand); font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; flex-shrink: 0; }
 
-  /* ── Archive ──────────────────────────────────────── */
+  /* Archive */
   .archive-months-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-
-  .archive-month-card {
-    background: var(--card); border: 1.5px solid var(--line);
-    border-radius: 14px; padding: 22px 20px;
-    cursor: pointer; transition: all .25s var(--ease-spring);
-    box-shadow: 0 2px 10px rgba(0,0,0,.05);
-    position: relative; overflow: hidden;
-  }
-
-  .archive-month-card::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:3px;
-    background: linear-gradient(90deg, var(--brand), var(--brand-xl));
-    transform: scaleX(0); transition: transform .3s var(--ease-spring);
-    transform-origin: right;
-  }
-
-  .archive-month-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.1); border-color: var(--brand-xl); }
+  .archive-month-card { background: var(--card); border: 1.5px solid var(--line); border-radius: var(--r3); padding: 24px 20px; cursor: pointer; transition: all .25s var(--ease-spring); box-shadow: var(--s1); position: relative; overflow: hidden; }
+  .archive-month-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: linear-gradient(90deg, var(--brand), var(--brand-xl)); transform: scaleX(0); transition: transform .3s var(--ease-spring); }
+  .archive-month-card:hover { transform: translateY(-4px); box-shadow: var(--s4); border-color: var(--brand-xl); }
   .archive-month-card:hover::before { transform: scaleX(1); }
   .archive-month-card:active { transform: scale(0.98); }
-
-  .amc-icon { color: var(--brand); margin-bottom: 10px; display: flex; }
-  .amc-month { font-family: var(--f-display); font-size: 1.15rem; color: var(--ink); margin-bottom: 6px; font-weight: 700; }
+  .amc-month { font-family: var(--f-display); font-size: 1.2rem; color: var(--ink); margin-bottom: 6px; }
   .amc-count { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .amc-arrow { position: absolute; bottom: 16px; left: 16px; color: var(--brand); font-size: 18px; transition: transform .2s; }
+  .archive-month-card:hover .amc-arrow { transform: translateX(-4px); }
 
-  .amc-arrow {
-    position: absolute; bottom: 16px; left: 16px;
-    color: var(--brand); display: flex;
-    transition: transform .2s;
-    opacity: .5;
-  }
-
-  .archive-month-card:hover .amc-arrow { transform: translateX(-4px); opacity: 1; }
-
-  /* ── Loader ───────────────────────────────────────── */
+  /* Loader */
   .farm-loader { display: none; align-items: center; justify-content: center; min-height: 200px; width: 100%; }
   .farm-spinner { width: 36px; height: 36px; border: 3px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: farmSpin .7s linear infinite; }
   @keyframes farmSpin { to { transform: rotate(360deg); } }
 
-  /* ── Empty States ─────────────────────────────────── */
+  /* Empty states */
   .farm-empty-state { text-align: center; padding: 60px 24px; }
   .farm-empty-icon { font-size: 56px; margin-bottom: 16px; }
   .farm-empty-state h3 { font-family: var(--f-display); font-size: 1.5rem; color: var(--ink); margin-bottom: 8px; }
   .farm-empty-state p { color: var(--muted); margin-bottom: 24px; }
   .farm-empty-msg { color: var(--muted); font-size: 13px; padding: 8px 0; }
 
-  /* ── Auth Wall ────────────────────────────────────── */
+  /* Auth wall */
   .farm-auth-wall { display: flex; align-items: center; justify-content: center; min-height: 60vh; padding: 40px 24px; }
   .farm-auth-inner { text-align: center; max-width: 440px; }
   .farm-auth-icon { font-size: 64px; margin-bottom: 16px; }
   .farm-auth-title { font-family: var(--f-display); font-size: 2rem; color: var(--ink); margin-bottom: 8px; }
   .farm-auth-sub { color: var(--muted); margin-bottom: 28px; }
 
-  /* ── Responsive ───────────────────────────────────── */
+  /* Responsive */
   @media (max-width: 768px) {
     .farm-shell { grid-template-columns: 1fr; grid-template-rows: 60px auto 1fr; }
-    .farm-sidebar { grid-column: 1; grid-row: 2; min-height: auto; position: static; padding: 10px; border-left: none; border-bottom: 1px solid var(--line); }
-    .farm-nav { flex-direction: row; overflow-x: auto; gap: 3px; padding-bottom: 2px; }
-    .farm-nav-item { flex-direction: column; gap: 4px; padding: 8px 10px; font-size: 10px; min-width: 65px; flex-shrink: 0; }
-    .farm-nav-active::after { right: 50%; transform: translateX(50%); top: auto; bottom: 0; width: 22px; height: 3px; border-radius: 3px 3px 0 0; }
+    .farm-sidebar { grid-column: 1; grid-row: 2; min-height: auto; position: static; padding: 12px; border-left: none; border-bottom: 1px solid var(--line); }
+    .farm-nav { flex-direction: row; overflow-x: auto; gap: 4px; }
+    .farm-nav-item { flex-direction: column; gap: 4px; padding: 8px 12px; font-size: 11px; min-width: 70px; flex-shrink: 0; }
+    .farm-nav-active { border-right: none; border-bottom: 3px solid var(--brand); }
     .farm-main { grid-column: 1; grid-row: 3; padding: 20px 16px; }
     .farm-stats-grid { grid-template-columns: repeat(2, 1fr); }
     .farm-quick-btns { grid-template-columns: 1fr; }
     .farm-form-grid { grid-template-columns: 1fr; }
-    .farm-form-grid-3 { grid-template-columns: 1fr 1fr; }
-    .farm-stat-card { padding: 14px; }
-  }
-
-  @media (max-width: 480px) {
-    .farm-form-grid-3 { grid-template-columns: 1fr; }
-    .ar-grid { grid-template-columns: repeat(2, 1fr); }
   }
   </style>
 
