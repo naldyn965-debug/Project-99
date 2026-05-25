@@ -4854,13 +4854,17 @@ body.modal-open { overflow: hidden; }
 ════════════════════════════════════════════════════════ */
 .mkt-toast-container {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  top: 80px;
+  right: 16px;
   z-index: 1200;
   display: flex;
   flex-direction: column;
   gap: 10px;
   pointer-events: none;
+}
+@media(max-width:600px) {
+  .mkt-toast-container { top: 70px; left: 12px; right: 12px; }
+  .mkt-toast { max-width: 100%; }
 }
 .mkt-toast {
   background: var(--card);
@@ -4990,8 +4994,6 @@ body.modal-open { overflow: hidden; }
   .mkt-order-card { flex-wrap: wrap; }
   .mkt-form-card { padding: 20px 16px; }
   .mkt-notif-panel { width: calc(100vw - 24px); left: 12px; }
-  .mkt-toast-container { left: 12px; right: 12px; }
-  .mkt-toast { max-width: 100%; }
 }
   </style>
 
@@ -5117,7 +5119,7 @@ body.modal-open { overflow: hidden; }
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           ابحث الآن
         </button>
-        <button class="btn-hero-s" onclick="showPage('goals')">🎯 أهداف المنصة</button>
+        <button class="btn-hero-s" onclick="showPage('market')" style="background:linear-gradient(135deg,#c9871a,#b8860b);border-color:#c9871a;color:#fff;">🛒 السوق الزراعي</button>
         <button class="btn-hero-diseases" onclick="showDiseasesPage()">🦠 تصفح أمراض النبات</button>
       </div>
       <div class="hero-pills">
@@ -18020,26 +18022,31 @@ async function _loadProducts(reset) {
       </div>`).join('');
   }
   try {
-    let q = db.collection('marketplace_products');
-    // Category filter
-    if (mktState.activeCat) q = q.where('category','==',mktState.activeCat);
-    // Status filter
-    if (mktState.filterStatus) {
-      q = q.where('status','==',mktState.filterStatus);
-    } else {
-      q = q.where('status','in',['active','sold']);
-    }
-    // Location filter
-    if (mktState.filterGov) q = q.where('governorate','==',mktState.filterGov);
-    // Sorting
-    const [sortField, sortDir] = mktState.sortBy.split('-');
-    q = q.orderBy(sortField, sortDir).limit(PAGE_SIZE);
+    // ── Simple query: only orderBy createdAt, no compound index needed ──
+    let q = db.collection('marketplace_products')
+              .orderBy('createdAt','desc')
+              .limit(PAGE_SIZE * 3); // fetch more, filter client-side
     if (mktState.lastDoc) q = q.startAfter(mktState.lastDoc);
     const snap = await q.get();
     let docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     mktState.lastDoc = snap.docs[snap.docs.length-1] || null;
-    mktState.hasMore = snap.docs.length === PAGE_SIZE;
-    // Client-side search (partial match)
+
+    // ── All filtering is client-side (no extra indexes needed) ──
+    // Status filter
+    if (mktState.filterStatus) {
+      docs = docs.filter(p => p.status === mktState.filterStatus);
+    } else {
+      docs = docs.filter(p => p.status === 'active' || p.status === 'sold');
+    }
+    // Category filter
+    if (mktState.activeCat) {
+      docs = docs.filter(p => p.category === mktState.activeCat);
+    }
+    // Location filter
+    if (mktState.filterGov) {
+      docs = docs.filter(p => p.governorate === mktState.filterGov);
+    }
+    // Search
     if (mktState.searchQ) {
       const q2 = mktState.searchQ.toLowerCase();
       docs = docs.filter(p =>
@@ -18049,14 +18056,25 @@ async function _loadProducts(reset) {
         (p.governorate||'').toLowerCase().includes(q2)
       );
     }
-    // Price filter (client-side)
+    // Price filter
     if (mktState.filterPrice) {
-      const [minP, maxP] = mktState.filterPrice.split('-').map(x => x==='+'?Infinity:parseFloat(x));
-      docs = docs.filter(p => {
-        const pr = parseFloat(p.price)||0;
-        return pr >= (minP||0) && pr <= (maxP||Infinity);
-      });
+      const parts = mktState.filterPrice.split('-');
+      const minP = parseFloat(parts[0]) || 0;
+      const maxP = parts[1] === '+' || !parts[1] ? Infinity : parseFloat(parts[1]);
+      docs = docs.filter(p => { const pr = parseFloat(p.price)||0; return pr >= minP && pr <= maxP; });
     }
+    // Sort client-side
+    const [sortField, sortDir] = mktState.sortBy.split('-');
+    docs.sort((a,b) => {
+      let va = a[sortField], vb = b[sortField];
+      if (va && va.toDate) va = va.toDate().getTime();
+      if (vb && vb.toDate) vb = vb.toDate().getTime();
+      return sortDir==='asc' ? (va||0)-(vb||0) : (vb||0)-(va||0);
+    });
+    // Trim to page size
+    mktState.hasMore = docs.length > PAGE_SIZE;
+    docs = docs.slice(0, PAGE_SIZE);
+
     if (reset) mktState.products = docs;
     else mktState.products = [...mktState.products, ...docs];
     _renderGrid();
@@ -18278,11 +18296,11 @@ window.MKT._submitProduct = async function() {
   const phone    = document.getElementById('mkt-new-phone')?.value?.trim();
   const whatsapp = document.getElementById('mkt-new-whatsapp')?.value?.trim();
   const status   = document.getElementById('mkt-new-status')?.value || 'active';
-  if (!title) { _toast('أدخل عنوان المنتج', 'error'); return; }
-  if (!cat)   { _toast('اختر فئة المنتج', 'error'); return; }
-  if (!gov)   { _toast('اختر المحافظة', 'error'); return; }
-  if (!phone) { _toast('أدخل رقم التواصل', 'error'); return; }
-  if (price <= 0) { _toast('أدخل سعراً صحيحاً', 'error'); return; }
+  if (!title) { _toast('❌ أدخل عنوان المنتج', 'error'); document.getElementById('mkt-new-title')?.scrollIntoView({behavior:'smooth',block:'center'}); document.getElementById('mkt-new-title')?.focus(); return; }
+  if (!cat)   { _toast('❌ اختر فئة المنتج', 'error');   document.getElementById('mkt-new-cat')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  if (!gov)   { _toast('❌ اختر المحافظة', 'error');     document.getElementById('mkt-new-gov')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  if (!phone) { _toast('❌ أدخل رقم التواصل', 'error');  document.getElementById('mkt-new-phone')?.scrollIntoView({behavior:'smooth',block:'center'}); document.getElementById('mkt-new-phone')?.focus(); return; }
+  if (price <= 0) { _toast('❌ أدخل سعراً صحيحاً', 'error'); document.getElementById('mkt-new-price')?.scrollIntoView({behavior:'smooth',block:'center'}); document.getElementById('mkt-new-price')?.focus(); return; }
   const btn = document.getElementById('mkt-add-submit-btn');
   btn.disabled = true;
   btn.textContent = '⏳ جاري رفع الصور...';
@@ -18294,26 +18312,22 @@ window.MKT._submitProduct = async function() {
     if (progressWrap) progressWrap.style.display = 'block';
     try {
       for (let i=0; i<mktState.uploadedImageFiles.length; i++) {
-        const file = mktState.uploadedImageFiles[i];
-        const ref = storage.ref(`marketplace/${user.uid}/${Date.now()}_${file.name}`);
-        const task = ref.put(file);
-        await new Promise((res, rej) => {
-          task.on('state_changed', snap => {
-            if (progressBar) progressBar.style.width = `${(snap.bytesTransferred/snap.totalBytes*100)}%`;
-          }, rej, async () => {
-            const url = await task.snapshot.ref.getDownloadURL();
-            imageUrls.push(url);
-            res();
-          });
-        });
+        const file    = mktState.uploadedImageFiles[i];
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const path    = `marketplace/${user.uid}/${Date.now()}_${safeName}`;
+        const ref     = storage.ref().child(path);
+        const snapshot = await ref.put(file, { contentType: file.type });
+        const url      = await snapshot.ref.getDownloadURL();
+        imageUrls.push(url);
         if (progressBar) progressBar.style.width = `${((i+1)/mktState.uploadedImageFiles.length)*100}%`;
       }
+      if (progressWrap) setTimeout(()=>{ progressWrap.style.display='none'; }, 600);
     } catch(e) {
       console.error('[MKT] Upload error:', e);
-      _toast('حدث خطأ في رفع الصور', 'error');
-      btn.disabled = false;
-      btn.textContent = '🚀 نشر المنتج الآن';
-      return;
+      // Publish without images if storage fails (e.g. rules not deployed yet)
+      _toast(`⚠️ تعذّر رفع الصور — سيتم النشر بدون صور`, 'info');
+      imageUrls = [];
+      if (progressWrap) progressWrap.style.display = 'none';
     }
   }
   btn.textContent = '⏳ جاري حفظ المنتج...';
@@ -18489,13 +18503,17 @@ async function _renderSellerPanel() {
   container.innerHTML = `<div style="padding:40px;text-align:center;color:var(--slate);">⏳ جاري التحميل...</div>`;
   try {
     const user = auth.currentUser;
-    const snap = await db.collection('marketplace_products').where('ownerId','==',user.uid).orderBy('createdAt','desc').get();
-    const products = snap.docs.map(d=>({id:d.id,...d.data()}));
+    const snap = await db.collection('marketplace_products').where('ownerId','==',user.uid).get();
+    const products = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>{
+      const ta = a.createdAt?.toDate?.()?.getTime()||0;
+      const tb = b.createdAt?.toDate?.()?.getTime()||0;
+      return tb - ta;
+    });
     const activeCount  = products.filter(p=>p.status==='active').length;
     const soldCount    = products.filter(p=>p.status==='sold').length;
     const totalViews   = products.reduce((a,b)=>a+(b.views||0),0);
-    const ordersSnap   = await db.collection('marketplace_orders').where('sellerId','==',user.uid).where('status','==','pending').get();
-    const pendingOrders= ordersSnap.size;
+    const ordersSnap   = await db.collection('marketplace_orders').where('sellerId','==',user.uid).get();
+    const pendingOrders= ordersSnap.docs.filter(d=>d.data().status==='pending').length;
     container.innerHTML = `
       <div class="mkt-seller-products-header">
         <div class="mkt-seller-products-title">📦 منتجاتي في السوق</div>
@@ -18570,11 +18588,15 @@ async function _renderOrdersPanel() {
     let snap;
     try {
       if (tab==='received') {
-        snap = await db.collection('marketplace_orders').where('sellerId','==',user.uid).orderBy('createdAt','desc').limit(50).get();
+        snap = await db.collection('marketplace_orders').where('sellerId','==',user.uid).get();
       } else {
-        snap = await db.collection('marketplace_orders').where('buyerId','==',user.uid).orderBy('createdAt','desc').limit(50).get();
+        snap = await db.collection('marketplace_orders').where('buyerId','==',user.uid).get();
       }
-      const orders = snap.docs.map(d=>({id:d.id,...d.data()}));
+      const orders = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>{
+        const ta = a.createdAt?.toDate?.()?.getTime()||0;
+        const tb = b.createdAt?.toDate?.()?.getTime()||0;
+        return tb - ta;
+      }).slice(0,50);
       // Fetch product names
       const productIds = [...new Set(orders.map(o=>o.productId))];
       const productNames = {};
