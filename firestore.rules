@@ -1,0 +1,96 @@
+rules_version = '2';
+// ═══════════════════════════════════════════════════════════════
+//  NABTEX — FIRESTORE SECURITY RULES
+//  Covers: existing collections + new Marketplace collections
+// ═══════════════════════════════════════════════════════════════
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── helpers ──────────────────────────────────────────────
+    function isAuth()        { return request.auth != null; }
+    function isSelf(uid)     { return isAuth() && request.auth.uid == uid; }
+    function owns(resource)  { return isAuth() && request.auth.uid == resource.data.ownerId; }
+    function ownsOrder(res)  { return isAuth() &&
+        (request.auth.uid == res.data.buyerId ||
+         request.auth.uid == res.data.sellerId); }
+
+    // ── EXISTING COLLECTIONS (unchanged) ─────────────────────
+    match /users/{uid} {
+      allow read:  if true;
+      allow write: if isSelf(uid);
+    }
+    match /farms/{docId} {
+      allow read:  if isAuth();
+      allow write: if isAuth() && request.auth.uid == resource.data.userId;
+      allow create: if isAuth();
+    }
+    match /plants/{docId}      { allow read: if true; allow write: if false; }
+    match /diseases/{docId}    { allow read: if true; allow write: if false; }
+    match /goals/{docId} {
+      allow read:  if isAuth() && isSelf(resource.data.userId);
+      allow write: if isAuth() && request.auth.uid == request.resource.data.userId;
+    }
+
+    // ── MARKETPLACE: PRODUCTS ─────────────────────────────────
+    // Anyone can browse active/sold products.
+    // Only owner can create/edit/delete their own product.
+    match /marketplace_products/{productId} {
+      allow read:   if true;
+      allow create: if isAuth()
+                    && request.resource.data.ownerId == request.auth.uid
+                    && request.resource.data.title   is string
+                    && request.resource.data.title.size() > 0
+                    && request.resource.data.price   is number
+                    && request.resource.data.price   >= 0;
+      allow update: if owns(resource)
+                    || (isAuth()                          // allow view-count increment by anyone
+                        && request.resource.data.diff(resource.data).affectedKeys()
+                                                          .hasOnly(['views','avgRating','reviewCount']));
+      allow delete: if owns(resource);
+    }
+
+    // ── MARKETPLACE: ORDERS ───────────────────────────────────
+    // Buyer creates, buyer or seller reads, seller updates status.
+    match /marketplace_orders/{orderId} {
+      allow read:   if ownsOrder(resource);
+      allow create: if isAuth()
+                    && request.resource.data.buyerId == request.auth.uid
+                    && request.resource.data.quantity is number
+                    && request.resource.data.quantity > 0;
+      allow update: if isAuth()
+                    && request.auth.uid == resource.data.sellerId
+                    && request.resource.data.diff(resource.data).affectedKeys()
+                                                                 .hasOnly(['status','updatedAt']);
+      allow delete: if false;
+    }
+
+    // ── MARKETPLACE: REVIEWS ─────────────────────────────────
+    // Anyone reads; authenticated non-owners write once per product.
+    match /marketplace_reviews/{reviewId} {
+      allow read:   if true;
+      allow create: if isAuth()
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.rating  is int
+                    && request.resource.data.rating  >= 1
+                    && request.resource.data.rating  <= 5
+                    && request.resource.data.text    is string
+                    && request.resource.data.text.size() > 0;
+      allow update: if isAuth() && request.auth.uid == resource.data.userId;
+      allow delete: if isAuth() && request.auth.uid == resource.data.userId;
+    }
+
+    // ── MARKETPLACE: NOTIFICATIONS ───────────────────────────
+    // Each user reads their own notifications; system creates for any auth user.
+    match /marketplace_notifications/{notifId} {
+      allow read:   if isAuth() && request.auth.uid == resource.data.userId;
+      allow create: if isAuth();
+      allow update: if isAuth() && request.auth.uid == resource.data.userId;
+      allow delete: if isAuth() && request.auth.uid == resource.data.userId;
+    }
+
+    // ── DENY ALL ELSE ─────────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
