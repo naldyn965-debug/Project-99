@@ -17652,6 +17652,7 @@ let mktState = {
   currentOrderSellerId: null,
   uploadedImages: [],
   uploadedImageFiles: [],
+  _detailImgs: [],
   notifs: [],
   notifListener: null,
   productsListener: null,
@@ -18394,17 +18395,32 @@ async function _renderDetailPanel(productId) {
     db.collection('marketplace_products').doc(productId).update({ views: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
     // Gallery HTML
     const imgs = p.images && p.images.length ? p.images : [];
-    const mainImg = imgs.length ? `<img class="mkt-gallery-main" id="mkt-gallery-main" src="${imgs[0]}" alt="${_esc(p.title)}">` : `<div style="width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:64px;background:var(--bg2);">${CAT_EMOJIS[p.category]||'📦'}</div>`;
-    const thumbs = imgs.length > 1 ? `<div class="mkt-gallery-thumbs">${imgs.map((img,i)=>`<img class="mkt-gallery-thumb ${i===0?'active':''}" src="${img}" onclick="MKT._switchImg('${img}',this)" alt="صورة ${i+1}">`).join('')}</div>` : '';
+    const mainImg = imgs.length
+      ? `<img class="mkt-gallery-main" id="mkt-gallery-main" src="${imgs[0]}" alt="${_esc(p.title)}">`
+      : `<div style="width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:64px;background:var(--bg2);">${CAT_EMOJIS[p.category]||'📦'}</div>`;
+
+    // Store images in state for gallery switching (avoids huge inline onclick with Base64)
+    mktState._detailImgs = imgs;
+
+    const thumbs = imgs.length > 1
+      ? `<div class="mkt-gallery-thumbs">${imgs.map((img,i)=>`<img class="mkt-gallery-thumb ${i===0?'active':''}" src="${img}" onclick="MKT._switchImgIdx(${i},this)" alt="صورة ${i+1}">`).join('')}</div>`
+      : '';
     const statusBadge = p.status==='sold' ? '❌ مباع' : p.status==='inactive' ? '⏸️ غير نشط' : '✅ متاح';
     const stockBadge = p.stock > 0 ? `<span class="mkt-stock-badge mkt-stock-in">✅ متوفر (${p.stock} ${p.unit||'وحدة'})</span>` : `<span class="mkt-stock-badge mkt-stock-out">❌ نفذ</span>`;
     const whatsappBtn = p.whatsapp ? `<a class="mkt-btn-whatsapp" href="https://wa.me/2${p.whatsapp.replace(/^0/,'')}" target="_blank" rel="noopener">💬 تواصل عبر واتساب</a>` : '';
     const callBtn = p.phone ? `<a class="mkt-btn-call" href="tel:${p.phone}">📞 اتصل الآن</a>` : '';
     const orderBtn = p.status==='active' && p.ownerId !== (auth.currentUser?.uid||'') ? `<button class="mkt-btn-order" onclick="MKT.openOrderModal('${productId}','${p.ownerId}','${_esc(p.title)}')">📦 طلب شراء</button>` : '';
     const sellerInitials = (p.sellerName||'م').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    // Reviews
-    const reviewsSnap = await db.collection('marketplace_reviews').where('productId','==',productId).orderBy('createdAt','desc').limit(10).get();
-    const reviews = reviewsSnap.docs.map(d=>({id:d.id,...d.data()}));
+    // Reviews — simple query, no compound index needed
+    const reviewsSnap = await db.collection('marketplace_reviews').where('productId','==',productId).get();
+    const reviews = reviewsSnap.docs
+      .map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>{
+        const ta = a.createdAt?.toDate?.()?.getTime()||0;
+        const tb = b.createdAt?.toDate?.()?.getTime()||0;
+        return tb - ta;
+      })
+      .slice(0,10);
     const avgRating = reviews.length ? (reviews.reduce((a,b)=>a+(b.rating||0),0)/reviews.length) : 0;
     const reviewsHtml = reviews.map(r=>`
       <div class="mkt-review-card">
@@ -18488,6 +18504,15 @@ async function _renderDetailPanel(productId) {
     container.innerHTML = '<div class="mkt-empty"><div class="mkt-empty-icon">⚠️</div><div class="mkt-empty-title">حدث خطأ في تحميل المنتج</div></div>';
   }
 }
+
+window.MKT._switchImgIdx = function(idx, thumb) {
+  const main = document.getElementById('mkt-gallery-main');
+  if (main && mktState._detailImgs && mktState._detailImgs[idx]) {
+    main.src = mktState._detailImgs[idx];
+  }
+  document.querySelectorAll('.mkt-gallery-thumb').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
+};
 
 window.MKT._switchImg = function(src, thumb) {
   const main = document.getElementById('mkt-gallery-main');
