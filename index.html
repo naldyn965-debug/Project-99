@@ -19063,7 +19063,7 @@ async function _renderSellerPanel() {
             ${p.images&&p.images.length ? `<img src="${p.images[0]}" alt="${_esc(p.title)}" onerror="this.parentElement.innerHTML='${CAT_EMOJIS[p.category]||'📦'}'">` : (CAT_EMOJIS[p.category]||'📦')}
           </div>
           <div class="mkt-my-product-info">
-            <div class="mkt-my-product-title">${_esc(p.title||'')}</div>
+            <div class="mkt-my-product-name">${_esc(p.title||'')}</div>
             <div class="mkt-my-product-meta">
               ${_statusLabel(p.status)} · 📍${_esc(p.governorate||'')} · 👁️${p.views||0}
               ${p.avgRating ? ` · ${_starHtml(p.avgRating)} ${p.avgRating}` : ''}
@@ -19090,8 +19090,10 @@ async function _renderSellerPanel() {
 }
 
 function _statusLabel(status) {
-  if (status==='active') return '<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(27,107,58,.1);color:var(--mkt-g);border:1px solid rgba(27,107,58,.2);padding:2px 9px;border-radius:20px;font-size:11px;font-weight:800;"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.8' stroke-linecap='round' style='width:10px;height:10px'><polyline points='20 6 9 17 4 12'/></svg>نشط</span>';
-  if (status==='sold')   return '<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(239,68,68,.08);color:#ef4444;border:1px solid rgba(239,68,68,.2);padding:2px 9px;border-radius:20px;font-size:11px;font-weight:800;"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.8' stroke-linecap='round' style='width:10px;height:10px'><line x1='18' y1='6' x2='6' y2='18'/><line x1='6' y1='6' x2='18' y2='18'/></svg>مباع</span>';
+  var svgCheck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" style="width:10px;height:10px"><polyline points="20 6 9 17 4 12"/></svg>';
+  var svgX     = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" style="width:10px;height:10px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+  if (status==='active') return '<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(27,107,58,.1);color:var(--mkt-g);border:1px solid rgba(27,107,58,.2);padding:2px 9px;border-radius:20px;font-size:11px;font-weight:800;">' + svgCheck + 'نشط</span>';
+  if (status==='sold')   return '<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(239,68,68,.08);color:#ef4444;border:1px solid rgba(239,68,68,.2);padding:2px 9px;border-radius:20px;font-size:11px;font-weight:800;">' + svgX + 'مباع</span>';
   return '<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(100,116,139,.08);color:var(--slate);border:1px solid var(--line2);padding:2px 9px;border-radius:20px;font-size:11px;font-weight:800;">موقوف</span>';
 }
 
