@@ -3686,6 +3686,10 @@ body.modal-open { overflow: hidden; }
   background: var(--bg);
   overflow-x: hidden;
 }
+/* Ensure panel-home hero fills top immediately on load */
+#mkt-panel-home {
+  min-height: 50svh;
+}
 
 /* ══════════════════════════════════════════════════════════
    SUB-NAV — GLASS PREMIUM STICKY
@@ -18234,6 +18238,16 @@ let mktState = {
 window.MKT = {
 
   onPageEnter() {
+    // Measure real nav height and apply to subnav sticky top
+    requestAnimationFrame(() => {
+      const nav = document.querySelector('.nav');
+      if (nav) {
+        const h = nav.offsetHeight;
+        document.getElementById('pg-market').style.setProperty('--mkt-nav-h', h + 'px');
+        const subnav = document.querySelector('.mkt-subnav');
+        if (subnav) subnav.style.top = h + 'px';
+      }
+    });
     if (!mktState.initialized) {
       mktState.initialized = true;
       _setupNotifListener();
@@ -18348,7 +18362,7 @@ window.MKT = {
     if (qty < 1) { _toast('أدخل كمية صحيحة', 'error'); return; }
     const btn = document.getElementById('mkt-order-submit-btn');
     btn.disabled = true;
-    btn.innerHTML = '<span>⏳ جاري الإرسال...</span>';
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:17px;height:17px;animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> جاري الإرسال...';
     try {
       const user = auth.currentUser;
       await db.collection('marketplace_orders').add({
@@ -18361,15 +18375,12 @@ window.MKT = {
         status:    'pending',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-      // Notify seller
-      await db.collection('marketplace_notifications').add({
-        userId:    mktState.currentOrderSellerId,
-        type:      'new_order',
-        message:   `طلب شراء جديد بكمية ${qty}`,
-        productId: mktState.currentOrderProductId,
-        read:      false,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
+      // Notify seller with product name
+      const prodSnap = await db.collection('marketplace_products').doc(mktState.currentOrderProductId).get();
+      const prodName = prodSnap.exists ? prodSnap.data().title : 'منتج';
+      await _sendNotif(mktState.currentOrderSellerId, 'new_order',
+        `طلب شراء جديد: "${prodName}" — الكمية: ${qty}`,
+        { productId: mktState.currentOrderProductId });
       MKT.closeOrderModal();
       _toast('✅ تم إرسال طلبك للبائع بنجاح!', 'success');
     } catch(e) {
@@ -18471,10 +18482,26 @@ window.MKT = {
 
   async updateOrderStatus(orderId, status) {
     try {
-      await db.collection('marketplace_orders').doc(orderId).update({ status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-      _toast(status === 'accepted' ? '✅ تم قبول الطلب' : '❌ تم رفض الطلب', 'success');
+      const orderDoc = await db.collection('marketplace_orders').doc(orderId).get();
+      await db.collection('marketplace_orders').doc(orderId).update({
+        status,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      // Notify buyer
+      if (orderDoc.exists) {
+        const o = orderDoc.data();
+        const prodSnap = await db.collection('marketplace_products').doc(o.productId).get();
+        const prodName = prodSnap.exists ? prodSnap.data().title : 'المنتج';
+        const msg = status === 'accepted'
+          ? `✅ تم قبول طلبك لـ "${prodName}"`
+          : `❌ تم رفض طلبك لـ "${prodName}"`;
+        await _sendNotif(o.buyerId, status === 'accepted' ? 'order_accepted' : 'order_rejected', msg,
+          { productId: o.productId, orderId });
+      }
+      _toast(status === 'accepted' ? 'تم قبول الطلب' : 'تم رفض الطلب',
+             status === 'accepted' ? 'success' : 'error');
       _renderOrdersPanel();
-    } catch(e) { _toast('حدث خطأ', 'error'); }
+    } catch(e) { console.error(e); _toast('حدث خطأ', 'error'); }
   },
 
   async submitReview(productId, sellerId) {
@@ -18985,6 +19012,7 @@ window.MKT._submitProduct = async function() {
     if (progressBar) progressBar.style.width = '100%';
     setTimeout(() => { if (progressWrap) progressWrap.style.display = 'none'; }, 500);
 
+    await _sendNotif(user.uid, 'product_published', `تم نشر منتجك "${title}" بنجاح في السوق`);
     _toast('🎉 تم نشر منتجك بنجاح!', 'success');
     mktState.uploadedImages = [];
     mktState.uploadedImageFiles = [];
@@ -19362,6 +19390,21 @@ async function _renderOrdersPanel() {
 /* ───────────────────────────────────────────────
    NOTIFICATIONS
 ─────────────────────────────────────────────── */
+/* ── NOTIFICATION HELPER ──────────────────────────────────────── */
+async function _sendNotif(userId, type, message, extra = {}) {
+  if (!userId) return;
+  try {
+    await db.collection('marketplace_notifications').add({
+      userId,
+      type,
+      message,
+      read: false,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      ...extra
+    });
+  } catch(e) { console.warn('[MKT] sendNotif error:', e.message); }
+}
+
 function _setupNotifListener() {
   auth.onAuthStateChanged(user => {
     if (mktState.notifListener) { mktState.notifListener(); mktState.notifListener=null; }
@@ -19394,13 +19437,19 @@ function _renderNotifList(notifs) {
   const typeIcon = (type) => {
     if (type === 'new_order')    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12h6M9 16h4"/></svg>';
     if (type === 'review')       return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
-    if (type === 'price_update') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>';
+    if (type === 'price_update')    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>';
+    if (type === 'order_accepted') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><path d="M12 2L4 7v7c0 5 4 9.3 8 10 4-.7 8-5 8-10V7L12 2z"/><path d="m9 12 2 2 4-4"/></svg>';
+    if (type === 'order_rejected') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>';
+    if (type === 'product_published') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><path d="M12 22V12m0 0C12 8 8 5 4 6m8 6c0-4 4-7 8-6"/></svg>';
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><path d="M6 8a6 6 0 0 1 12 0c0 5.5 2.5 8 2.5 8H3.5S6 13.5 6 8"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>';
   };
   const typeColor = (type) => {
     if (type === 'new_order')    return 'background:linear-gradient(135deg,#b8760f,#e8a020)';
     if (type === 'review')       return 'background:linear-gradient(135deg,#d97706,#f59e0b)';
     if (type === 'price_update') return 'background:linear-gradient(135deg,#0369a1,#0ea5e9)';
+    if (type === 'order_accepted')    return 'background:linear-gradient(135deg,#1a9e50,#25D366)';
+    if (type === 'order_rejected')    return 'background:linear-gradient(135deg,#b91c1c,#ef4444)';
+    if (type === 'product_published') return 'background:linear-gradient(135deg,var(--mkt-g),var(--mkt-gl))';
     return 'background:linear-gradient(135deg,var(--mkt-g),var(--mkt-gl))';
   };
   list.innerHTML = notifs.map(n=>`
@@ -19419,12 +19468,15 @@ function _markSingleNotifRead(id) {
 
 function _markNotifsRead() {
   const user = auth.currentUser;
-  if (!user || !mktState.notifs.length) return;
+  if (!user || !mktState.notifs?.length) return;
+  const unread = mktState.notifs.filter(n => !n.read);
+  if (!unread.length) return;
   const batch = db.batch();
-  mktState.notifs.forEach(n => {
+  unread.forEach(n => {
     batch.update(db.collection('marketplace_notifications').doc(n.id), { read: true });
   });
-  batch.commit().catch(()=>{});
+  batch.commit().catch(() => {});
+  _updateNotifBadge(0);
 }
 
 // Close notif panel when clicking outside
