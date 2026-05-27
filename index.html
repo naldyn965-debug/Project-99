@@ -3683,7 +3683,9 @@ body.modal-open { overflow: hidden; }
 #pg-market {
   min-height: 100svh;
   padding-top: 64px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   background: var(--bg);
+  overflow-x: hidden;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -3691,7 +3693,7 @@ body.modal-open { overflow: hidden; }
 ══════════════════════════════════════════════════════════ */
 .mkt-subnav {
   position: sticky;
-  top: 64px;
+  top: calc(64px + env(safe-area-inset-top, 0px));
   z-index: 400;
   background: var(--glass);
   backdrop-filter: blur(28px) saturate(200%);
@@ -3752,33 +3754,24 @@ body.modal-open { overflow: hidden; }
 
 /* ── PANELS — SMOOTH TRANSITION ─────────────────────────── */
 .mkt-panel {
-  display: block;
-  opacity: 0;
-  transform: translateY(16px) scale(.99);
-  pointer-events: none;
-  position: absolute;
-  left: 0; right: 0;
-  visibility: hidden;
-  transition: opacity .38s var(--mkt-ease), transform .38s var(--mkt-ease);
-  will-change: opacity, transform;
+  display: none;
 }
 .mkt-panel.active {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
-  position: relative;
-  visibility: visible;
+  display: block;
+  animation: mktPanelIn .36s var(--mkt-ease) both;
 }
 .mkt-panel.leaving {
-  opacity: 0;
-  transform: translateY(-10px) scale(1.005);
+  display: block;
+  animation: mktPanelOut .22s var(--mkt-ease) both;
   pointer-events: none;
-  position: absolute;
-  visibility: hidden;
 }
-@keyframes mktFadeIn {
-  from { opacity: 0; transform: translateY(18px) scale(.99); }
+@keyframes mktPanelIn {
+  from { opacity: 0; transform: translateY(14px) scale(.99); }
   to   { opacity: 1; transform: none; }
+}
+@keyframes mktPanelOut {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: translateY(-8px); }
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -3787,7 +3780,7 @@ body.modal-open { overflow: hidden; }
 .mkt-hero {
   position: relative;
   overflow: hidden;
-  padding: 72px 24px 96px;
+  padding: 72px 24px 80px;
   text-align: center;
   background:
     linear-gradient(160deg, #071a0e 0%, #0d3320 40%, #12452c 65%, #081a10 100%);
@@ -4197,7 +4190,7 @@ body.modal-open { overflow: hidden; }
 ══════════════════════════════════════════════════════════ */
 .mkt-grid-wrap {
   max-width: var(--max);
-  margin: 36px auto;
+  margin: 28px auto 40px;
   padding: 0 24px;
 }
 .mkt-grid-header {
@@ -5423,7 +5416,6 @@ body.modal-open { overflow: hidden; }
 /* ── PANEL CONTAINER — needs relative positioning ────────────────── */
 .mkt-panel-container {
   position: relative;
-  min-height: 60svh;
 }
 
 </style>
@@ -18264,27 +18256,25 @@ window.MKT = {
     if (name === 'seller') _renderSellerPanel();
     if (name === 'orders') _renderOrdersPanel();
 
-    // Animate out current panel
     mktState._transitioning = true;
-    if (currentPanel) {
-      currentPanel.classList.add('leaving');
-      currentPanel.classList.remove('active');
-    }
 
-    // Small delay then animate in next panel
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
+    // Animate out current, then swap
+    if (currentPanel) {
+      currentPanel.classList.remove('active');
+      currentPanel.classList.add('leaving');
+      setTimeout(() => {
+        currentPanel.classList.remove('leaving');
+        // Show next panel
         nextPanel.classList.add('active');
-        // Scroll to top of marketplace
-        const pg = document.getElementById('pg-market');
-        if (pg) pg.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Cleanup
-        setTimeout(() => {
-          if (currentPanel) currentPanel.classList.remove('leaving');
-          mktState._transitioning = false;
-        }, 400);
-      });
-    });
+        // Scroll subnav into view
+        const subnav = document.querySelector('.mkt-subnav');
+        if (subnav) subnav.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => { mktState._transitioning = false; }, 380);
+      }, 220);
+    } else {
+      nextPanel.classList.add('active');
+      mktState._transitioning = false;
+    }
   },
 
   doSearch() {
