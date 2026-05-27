@@ -3696,7 +3696,7 @@ body.modal-open { overflow: hidden; }
 ══════════════════════════════════════════════════════════ */
 .mkt-subnav {
   position: sticky;
-  top: calc(64px + env(safe-area-inset-top, 0px));
+  top: 0;
   z-index: 400;
   background: var(--glass);
   backdrop-filter: blur(28px) saturate(200%);
@@ -18209,6 +18209,7 @@ const PAGE_SIZE = 12;
 let mktState = {
   products: [],
   filtered: [],
+  notifs: [],
   lastDoc: null,
   loading: false,
   hasMore: true,
@@ -18238,16 +18239,6 @@ let mktState = {
 window.MKT = {
 
   onPageEnter() {
-    // Measure real nav height and apply to subnav sticky top
-    requestAnimationFrame(() => {
-      const nav = document.querySelector('.nav');
-      if (nav) {
-        const h = nav.offsetHeight;
-        document.getElementById('pg-market').style.setProperty('--mkt-nav-h', h + 'px');
-        const subnav = document.querySelector('.mkt-subnav');
-        if (subnav) subnav.style.top = h + 'px';
-      }
-    });
     if (!mktState.initialized) {
       mktState.initialized = true;
       _setupNotifListener();
@@ -19392,9 +19383,9 @@ async function _renderOrdersPanel() {
 ─────────────────────────────────────────────── */
 /* ── NOTIFICATION HELPER ──────────────────────────────────────── */
 async function _sendNotif(userId, type, message, extra = {}) {
-  if (!userId) return;
+  if (!userId) { console.warn('[MKT] sendNotif: no userId'); return; }
   try {
-    await db.collection('marketplace_notifications').add({
+    const ref = await db.collection('marketplace_notifications').add({
       userId,
       type,
       message,
@@ -19402,25 +19393,57 @@ async function _sendNotif(userId, type, message, extra = {}) {
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       ...extra
     });
-  } catch(e) { console.warn('[MKT] sendNotif error:', e.message); }
+    console.log('[MKT] Notif sent:', type, '→', userId, 'id:', ref.id);
+  } catch(e) {
+    console.error('[MKT] sendNotif error:', e.code, e.message);
+  }
 }
 
 function _setupNotifListener() {
-  auth.onAuthStateChanged(user => {
-    if (mktState.notifListener) { mktState.notifListener(); mktState.notifListener=null; }
+  // Attach listener immediately if user is already logged in
+  const attachListener = (user) => {
+    if (mktState.notifListener) {
+      mktState.notifListener();
+      mktState.notifListener = null;
+    }
     if (!user) { _updateNotifBadge(0); return; }
+    console.log('[MKT] Attaching notif listener for', user.uid);
     mktState.notifListener = db.collection('marketplace_notifications')
-      .where('userId','==',user.uid)
-      .where('read','==',false)
-      .orderBy('createdAt','desc')
-      .limit(20)
+      .where('userId', '==', user.uid)
+      .where('read', '==', false)
+      .orderBy('createdAt', 'desc')
+      .limit(30)
       .onSnapshot(snap => {
-        const notifs = snap.docs.map(d=>({id:d.id,...d.data()}));
+        console.log('[MKT] Notifs snapshot:', snap.size, 'unread');
+        const notifs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         mktState.notifs = notifs;
         _updateNotifBadge(notifs.length);
         _renderNotifList(notifs);
-      }, err => console.warn('[MKT] Notif listener:', err.message));
-  });
+      }, err => {
+        console.error('[MKT] Notif listener error:', err.code, err.message);
+        // Retry without orderBy if index missing
+        if (err.code === 'failed-precondition') {
+          mktState.notifListener = db.collection('marketplace_notifications')
+            .where('userId', '==', user.uid)
+            .where('read', '==', false)
+            .onSnapshot(snap => {
+              const notifs = snap.docs
+                .map(d => ({ id: d.id, ...d.data() }))
+                .sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+              mktState.notifs = notifs;
+              _updateNotifBadge(notifs.length);
+              _renderNotifList(notifs);
+            }, e2 => console.error('[MKT] Notif fallback error:', e2.message));
+        }
+      });
+  };
+
+  // Try current user first (already logged in)
+  if (auth.currentUser) {
+    attachListener(auth.currentUser);
+  }
+  // Also listen for auth changes
+  auth.onAuthStateChanged(user => attachListener(user));
 }
 
 function _renderNotifList(notifs) {
