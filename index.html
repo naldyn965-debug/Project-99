@@ -3750,9 +3750,32 @@ body.modal-open { overflow: hidden; }
 }
 .mkt-tab.active svg { transform: scale(1.1); }
 
-/* ── PANELS ─────────────────────────────────────────────── */
-.mkt-panel { display: none; }
-.mkt-panel.active { display: block; animation: mktFadeIn .4s var(--mkt-ease) both; }
+/* ── PANELS — SMOOTH TRANSITION ─────────────────────────── */
+.mkt-panel {
+  display: block;
+  opacity: 0;
+  transform: translateY(16px) scale(.99);
+  pointer-events: none;
+  position: absolute;
+  left: 0; right: 0;
+  visibility: hidden;
+  transition: opacity .38s var(--mkt-ease), transform .38s var(--mkt-ease);
+  will-change: opacity, transform;
+}
+.mkt-panel.active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  position: relative;
+  visibility: visible;
+}
+.mkt-panel.leaving {
+  opacity: 0;
+  transform: translateY(-10px) scale(1.005);
+  pointer-events: none;
+  position: absolute;
+  visibility: hidden;
+}
 @keyframes mktFadeIn {
   from { opacity: 0; transform: translateY(18px) scale(.99); }
   to   { opacity: 1; transform: none; }
@@ -4067,16 +4090,19 @@ body.modal-open { overflow: hidden; }
 .mkt-filters {
   background: var(--bg2);
   border-bottom: 1px solid var(--line);
-  padding: 10px 24px;
+  padding: 10px 20px;
 }
 .mkt-filters-inner {
   max-width: var(--max);
   margin: 0 auto;
   display: flex;
-  gap: 10px;
   align-items: center;
-  flex-wrap: wrap;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+.mkt-filters-inner::-webkit-scrollbar { display: none; }
 .mkt-filter-icon-label {
   display: flex;
   align-items: center;
@@ -4093,12 +4119,12 @@ body.modal-open { overflow: hidden; }
 .mkt-filters-selects {
   display: flex;
   gap: 8px;
-  flex: 1;
-  flex-wrap: wrap;
+  flex-shrink: 0;
+  align-items: center;
 }
 .mkt-filter-select {
-  height: 38px;
-  padding: 0 34px 0 16px;
+  height: 36px;
+  padding: 0 30px 0 14px;
   border-radius: 40px;
   border: 1.5px solid var(--line2);
   background: var(--card);
@@ -4109,34 +4135,38 @@ body.modal-open { overflow: hidden; }
   cursor: pointer;
   direction: rtl;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  white-space: nowrap;
+  flex-shrink: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: left 12px center;
-  transition: border-color .18s, box-shadow .18s, background .18s;
+  background-position: left 10px center;
+  transition: border-color .18s, box-shadow .18s;
   box-shadow: 0 1px 4px rgba(0,0,0,.04);
 }
 .mkt-filter-select:focus {
   outline: none;
   border-color: var(--mkt-g);
-  box-shadow: 0 0 0 3px rgba(27,107,58,.12), 0 1px 4px rgba(0,0,0,.04);
-  background-color: var(--bg);
+  box-shadow: 0 0 0 3px rgba(27,107,58,.12);
 }
 .mkt-filter-clear {
-  display: flex; align-items: center; gap: 6px;
-  padding: 0 16px;
-  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 14px;
+  height: 36px;
   border-radius: 40px;
-  border: 1.5px solid rgba(239,68,68,.28);
-  background: rgba(239,68,68,.05);
+  border: 1.5px solid rgba(239,68,68,.3);
+  background: rgba(239,68,68,.06);
   color: #ef4444;
   font-size: 12px;
   font-weight: 800;
   font-family: var(--f-ui);
   cursor: pointer;
   transition: all .18s;
-  margin-right: auto;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
-.mkt-filter-clear:hover { background: rgba(239,68,68,.12); border-color: #ef4444; transform: scale(1.02); }
+.mkt-filter-clear:hover { background: rgba(239,68,68,.14); border-color: #ef4444; }
 .mkt-active-filters {
   max-width: var(--max);
   margin: 8px auto 0;
@@ -5371,6 +5401,31 @@ body.modal-open { overflow: hidden; }
   text-transform: uppercase;
 }
 
+
+/* ── TAB PRESS FEEDBACK ──────────────────────────────────────────── */
+.mkt-tab {
+  position: relative;
+  overflow: hidden;
+}
+.mkt-tab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,.12);
+  opacity: 0;
+  transition: opacity .15s;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.mkt-tab:active::before { opacity: 1; }
+.mkt-tab:active { transform: scale(.95) !important; }
+
+/* ── PANEL CONTAINER — needs relative positioning ────────────────── */
+.mkt-panel-container {
+  position: relative;
+  min-height: 60svh;
+}
+
 </style>
 
   <!-- CURSOR -->
@@ -6358,6 +6413,9 @@ body.modal-open { overflow: hidden; }
     </div>
   </div>
 
+  <!-- PANELS CONTAINER -->
+  <div class="mkt-panel-container">
+
   <!-- PANEL: MARKETPLACE HOME -->
   <div class="mkt-panel active" id="mkt-panel-home">
 
@@ -6474,15 +6532,12 @@ body.modal-open { overflow: hidden; }
     <div class="mkt-filters">
       <div class="mkt-filters-inner">
         <div class="mkt-filter-icon-label">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
           تصفية
         </div>
         <div class="mkt-filters-selects">
           <select class="mkt-filter-select" id="mkt-filter-gov" onchange="MKT.applyFilters()">
-            <option value="">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
-              كل المحافظات
-            </option>
+            <option value="">كل المحافظات</option>
             <option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option>
             <option>الدقهلية</option><option>البحيرة</option><option>الشرقية</option>
             <option>المنوفية</option><option>الغربية</option><option>كفر الشيخ</option>
@@ -6496,21 +6551,21 @@ body.modal-open { overflow: hidden; }
           <select class="mkt-filter-select" id="mkt-filter-price" onchange="MKT.applyFilters()">
             <option value="">كل الأسعار</option>
             <option value="0-100">أقل من 100 ج</option>
-            <option value="100-500">100 - 500 ج</option>
-            <option value="500-2000">500 - 2,000 ج</option>
-            <option value="2000-10000">2,000 - 10,000 ج</option>
-            <option value="10000+">أكثر من 10,000 ج</option>
+            <option value="100-500">100 — 500 ج</option>
+            <option value="500-2000">500 — 2,000 ج</option>
+            <option value="2000-10000">2,000 — 10,000 ج</option>
+            <option value="10000+">+10,000 ج</option>
           </select>
           <select class="mkt-filter-select" id="mkt-filter-status" onchange="MKT.applyFilters()">
             <option value="">كل الحالات</option>
             <option value="active">متاح</option>
             <option value="sold">مباع</option>
           </select>
+          <button class="mkt-filter-clear" onclick="MKT.clearFilters()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            مسح
+          </button>
         </div>
-        <button class="mkt-filter-clear" onclick="MKT.clearFilters()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          مسح
-        </button>
       </div>
     </div>
     <div class="mkt-active-filters" id="mkt-active-filters"></div>
@@ -6566,6 +6621,8 @@ body.modal-open { overflow: hidden; }
   <div class="mkt-panel" id="mkt-panel-detail">
     <div class="mkt-detail-wrap" id="mkt-detail-content"></div>
   </div>
+
+  </div><!-- end panel-container -->
 
 </div><!-- end #pg-market -->
 
@@ -18192,16 +18249,42 @@ window.MKT = {
   },
 
   showPanel(name) {
-    document.querySelectorAll('.mkt-panel').forEach(p => p.classList.remove('active'));
+    if (mktState._transitioning) return;
+    const currentPanel = document.querySelector('.mkt-panel.active');
+    const nextPanel    = document.getElementById('mkt-panel-' + name);
+    if (!nextPanel || currentPanel === nextPanel) return;
+
+    // Update tabs immediately
     document.querySelectorAll('.mkt-tab').forEach(t => t.classList.remove('active'));
-    const panel = document.getElementById('mkt-panel-' + name);
-    const tab   = document.getElementById('mkt-tab-' + name);
-    if (panel) panel.classList.add('active');
-    if (tab)   tab.classList.add('active');
-    window.scrollTo(0, 0);
+    const tab = document.getElementById('mkt-tab-' + name);
+    if (tab) tab.classList.add('active');
+
+    // Pre-render content before animation
     if (name === 'add')    _renderAddPanel();
     if (name === 'seller') _renderSellerPanel();
     if (name === 'orders') _renderOrdersPanel();
+
+    // Animate out current panel
+    mktState._transitioning = true;
+    if (currentPanel) {
+      currentPanel.classList.add('leaving');
+      currentPanel.classList.remove('active');
+    }
+
+    // Small delay then animate in next panel
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        nextPanel.classList.add('active');
+        // Scroll to top of marketplace
+        const pg = document.getElementById('pg-market');
+        if (pg) pg.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Cleanup
+        setTimeout(() => {
+          if (currentPanel) currentPanel.classList.remove('leaving');
+          mktState._transitioning = false;
+        }, 400);
+      });
+    });
   },
 
   doSearch() {
