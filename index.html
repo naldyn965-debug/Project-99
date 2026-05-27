@@ -5423,6 +5423,122 @@ body.modal-open { overflow: hidden; }
   padding: 0;
 }
 
+
+/* ── NOTIFICATIONS PAGE PANEL ───────────────────────────────────── */
+.mkt-notif-page-wrap {
+  max-width: var(--max);
+  margin: 28px auto 60px;
+  padding: 0 20px;
+}
+.mkt-notif-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.mkt-notif-page-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.mkt-notif-clear-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: 1.5px solid rgba(239,68,68,.28);
+  background: rgba(239,68,68,.06);
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: var(--f-ui);
+  cursor: pointer;
+  transition: all .18s;
+}
+.mkt-notif-clear-btn:hover {
+  background: rgba(239,68,68,.14);
+  border-color: #ef4444;
+}
+.mkt-notif-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  margin-bottom: 10px;
+  position: relative;
+  transition: transform .2s var(--mkt-spring), box-shadow .2s;
+  box-shadow: var(--mkt-shadow-card);
+}
+.mkt-notif-card:hover {
+  transform: translateX(3px);
+  box-shadow: var(--mkt-shadow-hover);
+  border-color: rgba(27,107,58,.18);
+}
+.mkt-notif-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 3px 12px rgba(0,0,0,.2);
+}
+.mkt-notif-card-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #fff;
+}
+.mkt-notif-card-body { flex: 1; min-width: 0; }
+.mkt-notif-card-msg {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.55;
+  margin-bottom: 5px;
+}
+.mkt-notif-card-time {
+  font-size: 11px;
+  color: var(--slate);
+  font-weight: 600;
+}
+.mkt-notif-card-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--mkt-g);
+  flex-shrink: 0;
+  margin-top: 4px;
+  box-shadow: 0 0 6px rgba(27,107,58,.6);
+}
+.mkt-notif-empty {
+  text-align: center;
+  padding: 80px 24px;
+}
+.mkt-notif-empty svg {
+  width: 52px;
+  height: 52px;
+  display: block;
+  margin: 0 auto 16px;
+  opacity: .2;
+  color: var(--ink);
+}
+.mkt-notif-empty-title {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.mkt-notif-empty-sub {
+  font-size: 13px;
+  color: var(--slate);
+  line-height: 1.8;
+}
+
 </style>
 
   <!-- CURSOR -->
@@ -6402,7 +6518,7 @@ body.modal-open { overflow: hidden; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12h6M9 16h4"/></svg>
         الطلبات
       </button>
-      <button class="mkt-tab mkt-tab-notif-btn" id="mkt-tab-notif" onclick="MKT.toggleNotifPanel()" style="position:relative;">
+      <button class="mkt-tab" id="mkt-tab-notif" onclick="MKT.showPanel('notif')" style="position:relative;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 5.5 2.5 8 2.5 8H3.5S6 13.5 6 8"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
         الإشعارات
         <span class="mkt-notif-badge" id="mkt-notif-count" style="display:none;">0</span>
@@ -6619,6 +6735,28 @@ body.modal-open { overflow: hidden; }
     <div class="mkt-detail-wrap" id="mkt-detail-content"></div>
   </div>
 
+  <!-- PANEL: NOTIFICATIONS -->
+  <div class="mkt-panel" id="mkt-panel-notif">
+    <div class="mkt-notif-page-wrap">
+      <div class="mkt-notif-page-header">
+        <div class="mkt-notif-page-title">
+          <div class="mkt-section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 5.5 2.5 8 2.5 8H3.5S6 13.5 6 8"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </div>
+          <div>
+            <div class="mkt-section-title">الإشعارات</div>
+            <div class="mkt-section-sub">تحديثات طلباتك ومنتجاتك</div>
+          </div>
+        </div>
+        <button class="mkt-notif-clear-btn" onclick="MKT.clearNotifs()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          مسح الكل
+        </button>
+      </div>
+      <div id="mkt-notif-list-page"></div>
+    </div>
+  </div>
+
   </div><!-- end panel-container -->
 
 </div><!-- end #pg-market -->
@@ -6626,24 +6764,7 @@ body.modal-open { overflow: hidden; }
 <!-- MARKETPLACE GLOBAL ELEMENTS -->
 
 <!-- Notifications panel (floating) -->
-<div class="mkt-notif-panel" id="mkt-notif-panel" dir="rtl">
-  <div class="mkt-notif-header">
-    <div class="mkt-notif-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:#f59e0b;flex-shrink:0"><path d="M6 8a6 6 0 0 1 12 0c0 5.5 2.5 8 2.5 8H3.5S6 13.5 6 8"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-      الإشعارات
-    </div>
-    <div class="mkt-notif-clear" onclick="MKT.clearNotifs()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-left:4px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-      مسح الكل
-    </div>
-  </div>
-  <div id="mkt-notif-list">
-    <div style="padding:40px 24px;text-align:center;color:var(--slate);font-size:13px;line-height:2;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:40px;height:40px;display:block;margin:0 auto 12px;opacity:.25"><path d="M6 8a6 6 0 0 1 12 0c0 5.5 2.5 8 2.5 8H3.5S6 13.5 6 8"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-      لا توجد إشعارات جديدة
-    </div>
-  </div>
-</div>
+<!-- notif-panel removed — now uses mkt-panel-notif tab -->
 
 <!-- Order Request Modal -->
 <div class="mkt-order-modal-overlay" id="mkt-order-modal-overlay" onclick="if(event.target===this)MKT.closeOrderModal()">
@@ -18261,6 +18382,7 @@ window.MKT = {
     if (name === 'add')    _renderAddPanel();
     if (name === 'seller') _renderSellerPanel();
     if (name === 'orders') _renderOrdersPanel();
+    if (name === 'notif')  _renderNotifPage();
 
     mktState._transitioning = true;
 
@@ -18383,11 +18505,7 @@ window.MKT = {
   },
 
   toggleNotifPanel() {
-    const panel = document.getElementById('mkt-notif-panel');
-    panel.classList.toggle('open');
-    if (panel.classList.contains('open')) {
-      _markNotifsRead();
-    }
+    MKT.showPanel('notif');
   },
 
   clearNotifs() {
@@ -18399,10 +18517,11 @@ window.MKT = {
         const batch = db.batch();
         snap.docs.forEach(d => batch.delete(d.ref));
         return batch.commit();
-      });
-    document.getElementById('mkt-notif-list').innerHTML =
-      '<div style="padding:32px;text-align:center;color:var(--slate);font-size:14px;">لا توجد إشعارات</div>';
+      }).catch(e => console.error('[MKT] clearNotifs:', e));
+    mktState.notifs = [];
     _updateNotifBadge(0);
+    _renderNotifListInPage([]);
+    _renderNotifList([]);
   },
 
   async deleteProduct(productId) {
@@ -19382,6 +19501,60 @@ async function _renderOrdersPanel() {
    NOTIFICATIONS
 ─────────────────────────────────────────────── */
 /* ── NOTIFICATION HELPER ──────────────────────────────────────── */
+function _renderNotifPage() {
+  const container = document.getElementById('mkt-notif-list-page');
+  if (!container) return;
+  // Mark all as read when page opens
+  _markNotifsRead();
+  // Render current notifs
+  _renderNotifListInPage(mktState.notifs || []);
+}
+
+function _renderNotifListInPage(notifs) {
+  const container = document.getElementById('mkt-notif-list-page');
+  if (!container) return;
+  if (!notifs.length) {
+    container.innerHTML = `
+      <div class="mkt-notif-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M6 8a6 6 0 0 1 12 0c0 5.5 2.5 8 2.5 8H3.5S6 13.5 6 8"/>
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+        </svg>
+        <div class="mkt-notif-empty-title">لا توجد إشعارات</div>
+        <div class="mkt-notif-empty-sub">ستصلك إشعارات فور ورود طلبات أو تحديثات</div>
+      </div>`;
+    return;
+  }
+  const typeIcon = (type) => {
+    const icons = {
+      new_order:         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12h6M9 16h4"/></svg>',
+      order_accepted:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L4 7v7c0 5 4 9.3 8 10 4-.7 8-5 8-10V7L12 2z"/><path d="m9 12 2 2 4-4"/></svg>',
+      order_rejected:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>',
+      product_published: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M12 14C12 9 6 6 4 8"/><path d="M12 10C12 6 17 3 20 5.5"/></svg>',
+    };
+    return icons[type] || icons.new_order;
+  };
+  const typeGrad = (type) => ({
+    new_order:         'linear-gradient(135deg,#b8760f,#e8a020)',
+    order_accepted:    'linear-gradient(135deg,#1a9e50,#25D366)',
+    order_rejected:    'linear-gradient(135deg,#b91c1c,#ef4444)',
+    product_published: 'linear-gradient(135deg,var(--mkt-g),var(--mkt-gl))',
+  }[type] || 'linear-gradient(135deg,var(--mkt-g),var(--mkt-gl))');
+
+  container.innerHTML = notifs.map(n => `
+    <div class="mkt-notif-card">
+      <div class="mkt-notif-card-icon" style="background:${typeGrad(n.type)}">${typeIcon(n.type)}</div>
+      <div class="mkt-notif-card-body">
+        <div class="mkt-notif-card-msg">${_esc(n.message||'')}</div>
+        <div class="mkt-notif-card-time">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;display:inline;vertical-align:middle;margin-left:3px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          ${_timeAgo(n.createdAt)}
+        </div>
+      </div>
+      ${!n.read ? '<div class="mkt-notif-card-dot"></div>' : ''}
+    </div>`).join('');
+}
+
 async function _sendNotif(userId, type, message, extra = {}) {
   if (!userId) { console.warn('[MKT] sendNotif: no userId'); return; }
   try {
@@ -19419,6 +19592,11 @@ function _setupNotifListener() {
         mktState.notifs = notifs;
         _updateNotifBadge(notifs.length);
         _renderNotifList(notifs);
+        // Also update the notif page if open
+        const notifPanel = document.getElementById('mkt-panel-notif');
+        if (notifPanel && notifPanel.classList.contains('active')) {
+          _renderNotifListInPage(notifs);
+        }
       }, err => {
         console.error('[MKT] Notif listener error:', err.code, err.message);
         // Retry without orderBy if index missing
