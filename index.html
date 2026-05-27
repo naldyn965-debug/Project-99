@@ -5539,6 +5539,290 @@ body.modal-open { overflow: hidden; }
   line-height: 1.8;
 }
 
+
+/* ══════════════════════════════════════════════════════════
+   ORDER MODAL — 3-STEP FORM
+══════════════════════════════════════════════════════════ */
+.mkt-order-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 18px 0 24px;
+}
+.mkt-order-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.mkt-order-step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--line2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--slate);
+  background: var(--bg2);
+  transition: all .3s var(--mkt-spring);
+}
+.mkt-order-step-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--slate);
+  letter-spacing: .03em;
+  white-space: nowrap;
+  transition: color .3s;
+}
+.mkt-order-step.active .mkt-order-step-num {
+  background: linear-gradient(135deg, var(--mkt-g), var(--mkt-gl));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(27,107,58,.4);
+}
+.mkt-order-step.active .mkt-order-step-label { color: var(--mkt-g); }
+.mkt-order-step.done .mkt-order-step-num {
+  background: rgba(27,107,58,.12);
+  border-color: var(--mkt-g);
+  color: var(--mkt-g);
+}
+.mkt-order-step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--line2);
+  min-width: 32px;
+  max-width: 48px;
+  margin-bottom: 18px;
+  transition: background .3s;
+}
+.mkt-order-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--mkt-g);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.mkt-order-section-title svg { width: 15px; height: 15px; }
+.mkt-order-review-card {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.mkt-review-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.mkt-review-row:last-child { border-bottom: none; }
+.mkt-review-lbl {
+  color: var(--slate);
+  font-weight: 700;
+  min-width: 72px;
+  flex-shrink: 0;
+}
+.mkt-review-val {
+  color: var(--ink);
+  font-weight: 800;
+  flex: 1;
+  line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ORDER CARD v2 — WITH BUYER INFO
+══════════════════════════════════════════════════════════ */
+.mkt-order-card-v2 {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--mkt-r);
+  margin-bottom: 14px;
+  overflow: hidden;
+  box-shadow: var(--mkt-shadow-card);
+  transition: box-shadow .22s, border-color .22s;
+}
+.mkt-order-card-v2:hover {
+  box-shadow: var(--mkt-shadow-hover);
+  border-color: rgba(27,107,58,.2);
+}
+.mkt-order-card-top {
+  padding: 16px 18px 14px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.mkt-order-card-main { flex: 1; min-width: 0; }
+.mkt-order-card-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px 0 7px;
+  flex-wrap: wrap;
+}
+.mkt-order-time {
+  font-size: 11px;
+  color: var(--slate);
+  font-weight: 600;
+}
+.mkt-order-qty-row {
+  font-size: 12px;
+  color: var(--slate);
+  font-weight: 700;
+}
+.mkt-order-qty-row strong { color: var(--mkt-g); }
+.mkt-order-buyer-info {
+  border-top: 1px solid var(--line);
+  background: rgba(27,107,58,.03);
+  padding: 14px 18px;
+}
+.mkt-order-buyer-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--mkt-g);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 12px;
+}
+.mkt-order-buyer-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.mkt-order-buyer-row {
+  display: flex;
+  gap: 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.mkt-order-buyer-lbl {
+  color: var(--slate);
+  font-weight: 700;
+  min-width: 68px;
+  flex-shrink: 0;
+}
+.mkt-order-buyer-val {
+  color: var(--ink);
+  font-weight: 800;
+  flex: 1;
+}
+.mkt-order-contact-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.mkt-order-btn-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  background: var(--card);
+  border: 1.5px solid var(--line2);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+  font-family: var(--f-ui);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .2s var(--mkt-spring);
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
+}
+.mkt-order-btn-call:hover {
+  border-color: var(--mkt-g);
+  color: var(--mkt-g);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(27,107,58,.18);
+}
+.mkt-order-btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #1a9e50, #25D366);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: var(--f-ui);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .2s var(--mkt-spring);
+  box-shadow: 0 3px 12px rgba(37,211,102,.3);
+}
+.mkt-order-btn-whatsapp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37,211,102,.45);
+}
+.mkt-order-btn-accept {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  background: linear-gradient(135deg, var(--mkt-g), var(--mkt-gl));
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: var(--f-ui);
+  border: none;
+  cursor: pointer;
+  transition: all .2s var(--mkt-spring);
+  box-shadow: 0 3px 12px rgba(27,107,58,.35);
+}
+.mkt-order-btn-accept:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(27,107,58,.5);
+}
+.mkt-order-btn-reject {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  background: rgba(239,68,68,.08);
+  border: 1.5px solid rgba(239,68,68,.3);
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: var(--f-ui);
+  cursor: pointer;
+  transition: all .2s var(--mkt-spring);
+}
+.mkt-order-btn-reject:hover {
+  background: rgba(239,68,68,.15);
+  border-color: #ef4444;
+  transform: translateY(-2px);
+}
+
+/* Order modal max-height scroll on small screens */
+.mkt-order-modal {
+  max-height: 90svh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+@media(max-width:480px) {
+  .mkt-order-steps { gap: 0; }
+  .mkt-order-step-line { min-width: 20px; }
+  .mkt-order-step-label { font-size: 9px; }
+}
+
 </style>
 
   <!-- CURSOR -->
@@ -6769,6 +7053,8 @@ body.modal-open { overflow: hidden; }
 <!-- Order Request Modal -->
 <div class="mkt-order-modal-overlay" id="mkt-order-modal-overlay" onclick="if(event.target===this)MKT.closeOrderModal()">
   <div class="mkt-order-modal" dir="rtl">
+
+    <!-- Header -->
     <button class="mkt-order-modal-close" onclick="MKT.closeOrderModal()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" style="width:14px;height:14px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
@@ -6778,19 +7064,123 @@ body.modal-open { overflow: hidden; }
       </div>
       طلب شراء
     </div>
+
+    <!-- Product name badge -->
     <div class="mkt-order-modal-sub" id="mkt-order-modal-product-name">—</div>
-    <div class="mkt-field">
-      <label>الكمية المطلوبة <span class="mkt-field-required">*</span></label>
-      <input type="number" class="mkt-input" id="mkt-order-qty" min="1" value="1" placeholder="1">
+
+    <!-- Step indicator -->
+    <div class="mkt-order-steps">
+      <div class="mkt-order-step active" id="mkt-step-1-ind">
+        <div class="mkt-order-step-num">١</div>
+        <div class="mkt-order-step-label">بياناتك</div>
+      </div>
+      <div class="mkt-order-step-line"></div>
+      <div class="mkt-order-step" id="mkt-step-2-ind">
+        <div class="mkt-order-step-num">٢</div>
+        <div class="mkt-order-step-label">تفاصيل الطلب</div>
+      </div>
+      <div class="mkt-order-step-line"></div>
+      <div class="mkt-order-step" id="mkt-step-3-ind">
+        <div class="mkt-order-step-num">٣</div>
+        <div class="mkt-order-step-label">تأكيد</div>
+      </div>
     </div>
-    <div class="mkt-field">
-      <label>ملاحظات للبائع</label>
-      <textarea class="mkt-textarea" id="mkt-order-notes" placeholder="أي تفاصيل إضافية..." style="min-height:80px;"></textarea>
+
+    <!-- STEP 1: Buyer Info -->
+    <div id="mkt-order-step-1">
+      <div class="mkt-order-section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        بياناتك الشخصية
+      </div>
+      <div class="mkt-field">
+        <label>الاسم الكامل <span class="mkt-field-required">*</span></label>
+        <input type="text" class="mkt-input" id="mkt-order-buyer-name" placeholder="محمد أحمد علي">
+      </div>
+      <div class="mkt-field">
+        <label>رقم الهاتف <span class="mkt-field-required">*</span></label>
+        <input type="tel" class="mkt-input" id="mkt-order-buyer-phone" placeholder="01XXXXXXXXX" maxlength="11">
+      </div>
+      <div class="mkt-field">
+        <label>رقم واتساب (اختياري)</label>
+        <input type="tel" class="mkt-input" id="mkt-order-buyer-whatsapp" placeholder="01XXXXXXXXX (لو مختلف عن الهاتف)">
+      </div>
+      <div class="mkt-field">
+        <label>المحافظة <span class="mkt-field-required">*</span></label>
+        <select class="mkt-select" id="mkt-order-buyer-gov">
+          <option value="">اختر محافظتك</option>
+          <option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option>
+          <option>الدقهلية</option><option>البحيرة</option><option>الشرقية</option>
+          <option>المنوفية</option><option>الغربية</option><option>كفر الشيخ</option>
+          <option>الفيوم</option><option>بني سويف</option><option>المنيا</option>
+          <option>أسيوط</option><option>سوهاج</option><option>قنا</option>
+          <option>الأقصر</option><option>أسوان</option><option>الوادي الجديد</option>
+          <option>مطروح</option><option>شمال سيناء</option><option>جنوب سيناء</option>
+          <option>البحر الأحمر</option><option>السويس</option><option>الإسماعيلية</option>
+          <option>بورسعيد</option><option>دمياط</option>
+        </select>
+      </div>
+      <div class="mkt-field">
+        <label>العنوان التفصيلي <span class="mkt-field-required">*</span></label>
+        <textarea class="mkt-textarea" id="mkt-order-buyer-address" placeholder="المدينة، الحي، الشارع..." style="min-height:70px;"></textarea>
+      </div>
+      <button class="mkt-submit-btn" onclick="MKT._orderStep2()">
+        التالي
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
     </div>
-    <button class="mkt-submit-btn" onclick="MKT.submitOrder()" id="mkt-order-submit-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="20 6 9 17 4 12"/></svg>
-      إرسال الطلب
-    </button>
+
+    <!-- STEP 2: Order Details -->
+    <div id="mkt-order-step-2" style="display:none;">
+      <div class="mkt-order-section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12h6M9 16h4"/></svg>
+        تفاصيل الطلب
+      </div>
+      <div class="mkt-field">
+        <label>الكمية المطلوبة <span class="mkt-field-required">*</span></label>
+        <input type="number" class="mkt-input" id="mkt-order-qty" min="1" value="1" placeholder="1">
+      </div>
+      <div class="mkt-field">
+        <label>طريقة الاستلام <span class="mkt-field-required">*</span></label>
+        <select class="mkt-select" id="mkt-order-delivery">
+          <option value="delivery">توصيل لعنواني</option>
+          <option value="pickup">استلام من البائع مباشرة</option>
+        </select>
+      </div>
+      <div class="mkt-field">
+        <label>ملاحظات إضافية للبائع</label>
+        <textarea class="mkt-textarea" id="mkt-order-notes" placeholder="مثلاً: أحتاج التسليم صباحاً، أو حجم معين..." style="min-height:80px;"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="mkt-submit-btn" style="background:var(--card);color:var(--ink);border:1.5px solid var(--line2);box-shadow:none;flex:1;" onclick="MKT._orderBack1()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:16px;height:16px"><path d="m9 18 6-6-6-6"/></svg>
+          رجوع
+        </button>
+        <button class="mkt-submit-btn" style="flex:2;" onclick="MKT._orderStep3()">
+          مراجعة الطلب
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:16px;height:16px"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Review & Confirm -->
+    <div id="mkt-order-step-3" style="display:none;">
+      <div class="mkt-order-section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        مراجعة وتأكيد
+      </div>
+      <div class="mkt-order-review-card" id="mkt-order-review-content"></div>
+      <div style="display:flex;gap:10px;margin-top:16px;">
+        <button class="mkt-submit-btn" style="background:var(--card);color:var(--ink);border:1.5px solid var(--line2);box-shadow:none;flex:1;" onclick="MKT._orderBack2()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:16px;height:16px"><path d="m9 18 6-6-6-6"/></svg>
+          تعديل
+        </button>
+        <button class="mkt-submit-btn" style="flex:2;" onclick="MKT.submitOrder()" id="mkt-order-submit-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><polyline points="20 6 9 17 4 12"/></svg>
+          تأكيد وإرسال الطلب
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -18458,10 +18848,22 @@ window.MKT = {
     if (!_requireAuth()) return;
     mktState.currentOrderProductId = productId;
     mktState.currentOrderSellerId  = sellerId;
+    // Set product name badge
     const nameEl = document.getElementById('mkt-order-modal-product-name');
     if (nameEl) nameEl.textContent = productName || 'المنتج';
-    document.getElementById('mkt-order-qty').value = 1;
-    document.getElementById('mkt-order-notes').value = '';
+    // Pre-fill buyer info from profile
+    const user = auth.currentUser;
+    if (user) {
+      const nameInput = document.getElementById('mkt-order-buyer-name');
+      if (nameInput && !nameInput.value) nameInput.value = user.displayName || '';
+    }
+    // Reset to step 1
+    MKT._orderGoStep(1);
+    // Reset fields
+    const qty = document.getElementById('mkt-order-qty');
+    const notes = document.getElementById('mkt-order-notes');
+    if (qty) qty.value = 1;
+    if (notes) notes.value = '';
     document.getElementById('mkt-order-modal-overlay').classList.add('open');
   },
 
@@ -18469,40 +18871,102 @@ window.MKT = {
     document.getElementById('mkt-order-modal-overlay').classList.remove('open');
   },
 
+  _orderGoStep(n) {
+    [1,2,3].forEach(i => {
+      const step = document.getElementById('mkt-order-step-' + i);
+      const ind  = document.getElementById('mkt-step-' + i + '-ind');
+      if (step) step.style.display = i === n ? 'block' : 'none';
+      if (ind)  { ind.classList.toggle('active', i === n); ind.classList.toggle('done', i < n); }
+    });
+  },
+
+  _orderStep2() {
+    const name    = document.getElementById('mkt-order-buyer-name')?.value?.trim();
+    const phone   = document.getElementById('mkt-order-buyer-phone')?.value?.trim();
+    const gov     = document.getElementById('mkt-order-buyer-gov')?.value;
+    const address = document.getElementById('mkt-order-buyer-address')?.value?.trim();
+    if (!name)    { _toast('أدخل اسمك الكامل', 'error'); return; }
+    if (!phone || phone.length < 10) { _toast('أدخل رقم هاتف صحيح', 'error'); return; }
+    if (!gov)     { _toast('اختر محافظتك', 'error'); return; }
+    if (!address) { _toast('أدخل عنوانك التفصيلي', 'error'); return; }
+    MKT._orderGoStep(2);
+  },
+
+  _orderBack1() { MKT._orderGoStep(1); },
+  _orderBack2() { MKT._orderGoStep(2); },
+
+  _orderStep3() {
+    const qty = parseInt(document.getElementById('mkt-order-qty')?.value) || 1;
+    if (qty < 1) { _toast('أدخل كمية صحيحة', 'error'); return; }
+    // Build review card
+    const name     = document.getElementById('mkt-order-buyer-name')?.value?.trim();
+    const phone    = document.getElementById('mkt-order-buyer-phone')?.value?.trim();
+    const whatsapp = document.getElementById('mkt-order-buyer-whatsapp')?.value?.trim();
+    const gov      = document.getElementById('mkt-order-buyer-gov')?.value;
+    const address  = document.getElementById('mkt-order-buyer-address')?.value?.trim();
+    const delivery = document.getElementById('mkt-order-delivery')?.value;
+    const notes    = document.getElementById('mkt-order-notes')?.value?.trim();
+    const product  = document.getElementById('mkt-order-modal-product-name')?.textContent;
+    const deliveryLabel = delivery === 'pickup' ? 'استلام من البائع' : 'توصيل لعنواني';
+    const reviewEl = document.getElementById('mkt-order-review-content');
+    if (reviewEl) reviewEl.innerHTML = `
+      <div class="mkt-review-row"><span class="mkt-review-lbl">المنتج</span><span class="mkt-review-val">${_esc(product)}</span></div>
+      <div class="mkt-review-row"><span class="mkt-review-lbl">المشتري</span><span class="mkt-review-val">${_esc(name)}</span></div>
+      <div class="mkt-review-row"><span class="mkt-review-lbl">الهاتف</span><span class="mkt-review-val" dir="ltr">${_esc(phone)}</span></div>
+      ${whatsapp ? `<div class="mkt-review-row"><span class="mkt-review-lbl">واتساب</span><span class="mkt-review-val" dir="ltr">${_esc(whatsapp)}</span></div>` : ''}
+      <div class="mkt-review-row"><span class="mkt-review-lbl">المحافظة</span><span class="mkt-review-val">${_esc(gov)}</span></div>
+      <div class="mkt-review-row"><span class="mkt-review-lbl">العنوان</span><span class="mkt-review-val">${_esc(address)}</span></div>
+      <div class="mkt-review-row"><span class="mkt-review-lbl">الكمية</span><span class="mkt-review-val">${qty}</span></div>
+      <div class="mkt-review-row"><span class="mkt-review-lbl">الاستلام</span><span class="mkt-review-val">${deliveryLabel}</span></div>
+      ${notes ? `<div class="mkt-review-row"><span class="mkt-review-lbl">ملاحظات</span><span class="mkt-review-val">${_esc(notes)}</span></div>` : ''}
+    `;
+    MKT._orderGoStep(3);
+  },
+
   async submitOrder() {
     if (!_requireAuth()) return;
-    const qty   = parseInt(document.getElementById('mkt-order-qty')?.value) || 1;
-    const notes = document.getElementById('mkt-order-notes')?.value?.trim() || '';
-    if (qty < 1) { _toast('أدخل كمية صحيحة', 'error'); return; }
+    const name     = document.getElementById('mkt-order-buyer-name')?.value?.trim();
+    const phone    = document.getElementById('mkt-order-buyer-phone')?.value?.trim();
+    const whatsapp = document.getElementById('mkt-order-buyer-whatsapp')?.value?.trim() || phone;
+    const gov      = document.getElementById('mkt-order-buyer-gov')?.value;
+    const address  = document.getElementById('mkt-order-buyer-address')?.value?.trim();
+    const qty      = parseInt(document.getElementById('mkt-order-qty')?.value) || 1;
+    const delivery = document.getElementById('mkt-order-delivery')?.value || 'delivery';
+    const notes    = document.getElementById('mkt-order-notes')?.value?.trim() || '';
     const btn = document.getElementById('mkt-order-submit-btn');
     btn.disabled = true;
     btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:17px;height:17px;animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> جاري الإرسال...';
     try {
       const user = auth.currentUser;
-      await db.collection('marketplace_orders').add({
-        productId: mktState.currentOrderProductId,
-        sellerId:  mktState.currentOrderSellerId,
-        buyerId:   user.uid,
-        buyerName: user.displayName || user.email || 'مشتري',
-        quantity:  qty,
-        notes:     notes,
-        status:    'pending',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      // Notify seller with product name
       const prodSnap = await db.collection('marketplace_products').doc(mktState.currentOrderProductId).get();
       const prodName = prodSnap.exists ? prodSnap.data().title : 'منتج';
+      await db.collection('marketplace_orders').add({
+        productId:    mktState.currentOrderProductId,
+        productName:  prodName,
+        sellerId:     mktState.currentOrderSellerId,
+        buyerId:      user.uid,
+        buyerName:    name,
+        buyerPhone:   phone,
+        buyerWhatsapp: whatsapp,
+        buyerGov:     gov,
+        buyerAddress: address,
+        quantity:     qty,
+        delivery:     delivery,
+        notes:        notes,
+        status:       'pending',
+        createdAt:    firebase.firestore.FieldValue.serverTimestamp()
+      });
       await _sendNotif(mktState.currentOrderSellerId, 'new_order',
-        `طلب شراء جديد: "${prodName}" — الكمية: ${qty}`,
+        `طلب شراء جديد: "${prodName}" — ${name} — الكمية: ${qty}`,
         { productId: mktState.currentOrderProductId });
       MKT.closeOrderModal();
-      _toast('✅ تم إرسال طلبك للبائع بنجاح!', 'success');
+      _toast('تم إرسال طلبك للبائع بنجاح!', 'success');
     } catch(e) {
       console.error(e);
       _toast('حدث خطأ، حاول مرة أخرى', 'error');
     }
     btn.disabled = false;
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:18px;height:18px;"><polyline points="20 6 9 17 4 12"/></svg> إرسال الطلب';
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:18px;height:18px;"><polyline points="20 6 9 17 4 12"/></svg> تأكيد وإرسال الطلب';
   },
 
   toggleNotifPanel() {
@@ -19448,28 +19912,57 @@ async function _renderOrdersPanel() {
           <div class="mkt-empty-sub">لم تصلك أي طلبات بعد</div>
         </div>` :
         orders.map(o=>`
-          <div class="mkt-order-card">
-            <div class="mkt-order-info">
-              <div class="mkt-order-product-name">${_esc(productNames[o.productId]||'—')}</div>
-              <div class="mkt-order-meta">
-                ${tab==='received' ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-left:3px"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> ${_esc(o.buyerName||'—')}` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-left:3px"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><path d="M3 9l2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"/><path d="M12 3v6"/></svg> البائع`} ·
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-left:3px"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> ${o.quantity||1} ·
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-left:3px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> ${_timeAgo(o.createdAt)}
-                ${o.notes ? `<br><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;display:inline;vertical-align:middle;margin-left:3px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> ${_esc(o.notes)}` : ''}
+          <div class="mkt-order-card-v2">
+            <div class="mkt-order-card-top">
+              <div class="mkt-order-card-main">
+                <div class="mkt-order-product-name">${_esc(productNames[o.productId]||o.productName||'—')}</div>
+                <div class="mkt-order-card-badges">
+                  <span class="mkt-order-status ${o.status==='pending'?'mkt-status-pending':o.status==='accepted'?'mkt-status-confirmed':'mkt-status-cancelled'}">
+                    ${o.status==='pending'?'معلق':o.status==='accepted'?'✓ مقبول':'✕ مرفوض'}
+                  </span>
+                  <span class="mkt-order-time">${_timeAgo(o.createdAt)}</span>
+                </div>
+                <div class="mkt-order-qty-row">الكمية: <strong>${o.quantity||1}</strong>${o.delivery?` · ${o.delivery==='pickup'?'استلام مباشر':'توصيل'}`:''}${o.buyerGov?` · ${_esc(o.buyerGov)}`:''}</div>
               </div>
             </div>
-            <span class="mkt-order-status ${o.status==='pending'?'mkt-status-pending':o.status==='accepted'?'mkt-status-accepted':'mkt-status-rejected'}">
-              ${o.status==='pending'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-left:4px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>معلق':o.status==='accepted'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg>مقبول':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-left:4px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>مرفوض'}
-            </span>
-            ${tab==='received' && o.status==='pending' ? `
-              <div class="mkt-order-actions" style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-                <button class="mkt-action-btn" style="background:linear-gradient(135deg,var(--mkt-g),var(--mkt-gl));color:#fff;border:none;padding:7px 16px;border-radius:30px;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 3px 12px rgba(27,107,58,.35);transition:all .2s" onclick="MKT.updateOrderStatus('${o.id}','accepted')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" style="width:12px;height:12px"><polyline points="20 6 9 17 4 12"/></svg>قبول
+            ${tab==='received' ? `
+            <div class="mkt-order-buyer-info">
+              <div class="mkt-order-buyer-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:14px;height:14px;color:var(--mkt-g)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                بيانات المشتري
+              </div>
+              <div class="mkt-order-buyer-grid">
+                <div class="mkt-order-buyer-row"><span class="mkt-order-buyer-lbl">الاسم</span><span class="mkt-order-buyer-val">${_esc(o.buyerName||'—')}</span></div>
+                ${o.buyerPhone?`<div class="mkt-order-buyer-row"><span class="mkt-order-buyer-lbl">الهاتف</span><span class="mkt-order-buyer-val" dir="ltr">${_esc(o.buyerPhone)}</span></div>`:''}
+                ${o.buyerGov?`<div class="mkt-order-buyer-row"><span class="mkt-order-buyer-lbl">المحافظة</span><span class="mkt-order-buyer-val">${_esc(o.buyerGov)}</span></div>`:''}
+                ${o.buyerAddress?`<div class="mkt-order-buyer-row"><span class="mkt-order-buyer-lbl">العنوان</span><span class="mkt-order-buyer-val">${_esc(o.buyerAddress)}</span></div>`:''}
+                ${o.notes?`<div class="mkt-order-buyer-row"><span class="mkt-order-buyer-lbl">ملاحظات</span><span class="mkt-order-buyer-val">${_esc(o.notes)}</span></div>`:''}
+              </div>
+              <div class="mkt-order-contact-btns">
+                ${o.buyerPhone?`
+                <a href="tel:${_esc(o.buyerPhone)}" class="mkt-order-btn-call">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:14px;height:14px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  اتصال
+                </a>
+                <a href="https://wa.me/2${(o.buyerWhatsapp||o.buyerPhone||'').replace(/^0/,'')}" target="_blank" class="mkt-order-btn-whatsapp">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:14px;height:14px"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                  واتساب
+                </a>`:''}
+                ${o.status==='pending'?`
+                <button class="mkt-order-btn-accept" onclick="MKT.updateOrderStatus('${o.id}','accepted')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:12px;height:12px"><polyline points="20 6 9 17 4 12"/></svg> قبول
                 </button>
-                <button class="mkt-action-btn mkt-action-btn-del" onclick="MKT.updateOrderStatus('${o.id}','rejected')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-left:4px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>رفض
-                </button>
-              </div>` : ''}
+                <button class="mkt-order-btn-reject" onclick="MKT.updateOrderStatus('${o.id}','rejected')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:12px;height:12px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> رفض
+                </button>`:''}
+              </div>
+            </div>` : `
+            <div class="mkt-order-buyer-info" style="padding:10px 14px;">
+              <div style="font-size:12px;color:var(--slate);">
+                حالة طلبك: <strong style="color:${o.status==='accepted'?'var(--mkt-g)':o.status==='rejected'?'#ef4444':'var(--mkt-gold)'}">${o.status==='pending'?'قيد المراجعة':o.status==='accepted'?'تم القبول ✓':'مرفوض ✕'}</strong>
+              </div>
+              ${o.notes?`<div style="font-size:11px;color:var(--slate);margin-top:4px;">ملاحظاتك: ${_esc(o.notes)}</div>`:''}
+            </div>`}
           </div>`).join('');
       container.innerHTML = `
         <div class="mkt-orders-title">
