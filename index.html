@@ -6059,130 +6059,67 @@ body.modal-open { overflow: hidden; }
 
 <!-- ══════════ PAGE: PROFILE (PREMIUM) ══════════ -->
 <div class="page" id="pg-profile">
-  <div class="prf-page">
-    <!-- ══ HERO BANNER ══ -->
-    <div class="prf-hero">
-      <div class="prf-hero-orbs">
-        <div class="prf-orb"></div><div class="prf-orb"></div><div class="prf-orb"></div>
-      </div>
-      <div class="prf-hero-pattern"></div>
-      <div class="prf-hero-veil"></div>
-      <div class="prf-avatar-zone">
-        <div class="prf-avatar-ring" onclick="document.getElementById('avatarFileInput').click()" title="تغيير الصورة">
-          <div class="prf-avatar-inner">
-            <img id="profileAvatar" src="" alt="">
-            <span id="profileAvatarPlaceholder" class="prf-avatar-ph">👤</span>
+  <section class="profile-page" style="padding: 80px 0; min-height: 80vh;">
+    <div class="W">
+      <div class="profile-card" style="max-width: 700px; margin: 0 auto; background: var(--card); border-radius: var(--r4); box-shadow: var(--s4); overflow: hidden;">
+        <div style="background: linear-gradient(135deg, var(--brand-d) 0%, var(--brand) 100%); padding: 32px; text-align: center;">
+          <div style="width: 100px; height: 100px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; border: 4px solid white; overflow: hidden;">
+            <img loading="lazy" decoding="async" id="profileAvatar" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+            <span id="profileAvatarPlaceholder" style="font-size: 48px;">👤</span>
           </div>
-        </div>
-        <div class="prf-avatar-cam" onclick="document.getElementById('avatarFileInput').click()">📷</div>
-        <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleAvatarChange(event)">
-      </div>
-    </div>
-    <div class="prf-container">
-      <!-- IDENTITY -->
-      <div class="prf-identity prf-reveal">
-        <div class="prf-name-wrap">
-          <h1 class="prf-name" id="profileName">--</h1>
-          <button class="prf-edit-btn edit-profile-btn" onclick="toggleProfileEdit()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:11px;height:11px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            تعديل الاسم
-          </button>
-        </div>
-        <p class="prf-email" id="profileEmail">--</p>
-        <button class="prf-role-badge edit-role-btn" onclick="editRole()">
-          <span>🌾</span><span id="profileRole">--</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:10px;height:10px;opacity:.6"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-      </div>
-      <!-- STATS -->
-      <div class="prf-stats-row prf-reveal" style="transition-delay:.08s">
-        <div class="prf-stat" onclick="showPage('search')" style="cursor:pointer">
-          <div class="prf-stat-icon">❤️</div>
-          <div class="prf-stat-num" id="profileFavCount">0</div>
-          <div class="prf-stat-label">المفضلات</div>
-        </div>
-        <div class="prf-stat">
-          <div class="prf-stat-icon">📅</div>
-          <div class="prf-stat-num" id="profileJoinDate">--</div>
-          <div class="prf-stat-label">يوم معنا</div>
-        </div>
-        <div class="prf-stat" onclick="showPage('market')" style="cursor:pointer">
-          <div class="prf-stat-icon">🛒</div>
-          <div class="prf-stat-num" id="profileOrdersCount">0</div>
-          <div class="prf-stat-label">طلباتي</div>
-        </div>
-      </div>
-      <!-- QUICK ACTIONS -->
-      <div class="prf-section prf-reveal" style="transition-delay:.13s">
-        <div class="prf-section-head">
-          <div class="prf-section-title"><div class="prf-section-icon">⚡</div>إجراءات سريعة</div>
-        </div>
-        <div class="prf-section-body">
-          <div class="prf-actions-grid">
-            <button class="prf-action-btn" onclick="showPage('farm')"><div class="prf-action-icon">🌾</div><span>إدارة مزرعتي</span></button>
-            <button class="prf-action-btn" onclick="showPage('market')"><div class="prf-action-icon">🛒</div><span>السوق الزراعي</span></button>
-            <button class="prf-action-btn" onclick="showPage('search')"><div class="prf-action-icon">🔍</div><span>موسوعة النباتات</span></button>
-            <button class="prf-action-btn" onclick="changePassword()"><div class="prf-action-icon">🔐</div><span>تغيير كلمة المرور</span></button>
+          <div class="profile-name-edit" style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <h2 id="profileName" style="font-family: var(--f-display); font-size: 1.8rem; color: white; margin: 0;">--</h2>
+            <button class="edit-profile-btn" onclick="toggleProfileEdit()" style="background: rgba(255,255,255,0.2); border: none; border-radius: 40px; padding: 6px 14px; color: white; font-size: 12px; cursor: pointer; transition: all 0.2s;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> تعديل</button>
           </div>
+          <p id="profileEmail" style="color: rgba(255,255,255,0.8); margin-top: 8px;">--</p>
         </div>
-      </div>
-      <!-- ACCOUNT INFO -->
-      <div class="prf-section prf-reveal" style="transition-delay:.18s">
-        <div class="prf-section-head">
-          <div class="prf-section-title"><div class="prf-section-icon">👤</div>معلومات الحساب</div>
-        </div>
-        <div class="prf-section-body">
-          <div class="prf-info-row">
-            <span class="prf-info-label"><span>📧</span>البريد الإلكتروني</span>
-            <span class="prf-info-val" id="profileEmailInfo">--</span>
-          </div>
-          <div class="prf-info-row">
-            <span class="prf-info-label"><span>🎭</span>الدور</span>
-            <span class="prf-info-val" id="profileRoleInfo">--</span>
-          </div>
-          <div class="prf-info-row">
-            <span class="prf-info-label"><span>🔑</span>طريقة التسجيل</span>
-            <span class="prf-provider-badge" id="profileProvider">--</span>
-          </div>
-        </div>
-      </div>
-      <!-- FARM ARCHIVE -->
-      <div class="prf-section prf-reveal" style="transition-delay:.23s">
-        <div class="prf-section-head">
-          <div class="prf-section-title"><div class="prf-section-icon">🌾</div>أرشيف مزرعتي</div>
-          <button class="prf-section-link" onclick="showPage('farm')">إدارة المزرعة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px"><polyline points="15 18 9 12 15 6"/></svg></button>
-        </div>
-        <div class="prf-section-body">
-          <div class="prf-archive-grid" id="profile-farm-archive">
-            <div style="color:var(--muted);font-size:13px;padding:20px;grid-column:1/-1;text-align:center;">
-              <div class="farm-spinner" style="margin:0 auto 12px;display:block;"></div>جاري تحميل الأرشيف...
+        <div style="padding: 32px;">
+          <div class="profile-stats" style="display: flex; gap: 24px; justify-content: space-around; margin-bottom: 32px;">
+            <div style="text-align: center;">
+              <div class="stat-number" style="font-size: 28px; font-weight: bold; color: var(--brand);" id="profileFavCount">0</div>
+              <div style="font-size: 12px; color: var(--muted);">المفضلات</div>
+            </div>
+            <div style="text-align: center;">
+              <div class="stat-number" style="font-size: 28px; font-weight: bold; color: var(--brand);" id="profileJoinDate">--</div>
+              <div style="font-size: 12px; color: var(--muted);">منذ الانضمام</div>
             </div>
           </div>
-        </div>
-      </div>
-      <!-- FAVORITES -->
-      <div class="prf-section prf-reveal" style="transition-delay:.28s">
-        <div class="prf-section-head">
-          <div class="prf-section-title"><div class="prf-section-icon">❤️</div>نباتاتي المفضلة</div>
-          <button class="prf-section-link" onclick="showPage('search')">استكشف المزيد <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px"><polyline points="15 18 9 12 15 6"/></svg></button>
-        </div>
-        <div class="prf-section-body">
-          <div class="prf-fav-chips" id="profileFavChips">
-            <span style="color:var(--muted);font-size:13px;">جاري التحميل...</span>
+          <div class="profile-info" style="border-top: 1px solid var(--line); padding-top: 24px;">
+            <div class="info-row" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line);">
+              <span style="font-weight: 600; color: var(--ink);">الدور</span>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span id="profileRole" style="color: var(--slate);">--</span>
+                <button class="edit-role-btn" onclick="editRole()" style="background: none; border: none; color: var(--brand); font-size: 12px; cursor: pointer;">تعديل</button>
+              </div>
+            </div>
+            <div class="info-row" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+              <span style="font-weight: 600; color: var(--ink);">طريقة التسجيل</span>
+              <span id="profileProvider" style="color: var(--slate);">--</span>
+            </div>
+          </div>
+          <div class="profile-actions" style="margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <button class="btn-sub" onclick="saveProfileChanges()" id="saveProfileBtn" style="display: none; flex: 1;">💾 حفظ التغييرات</button>
+            <button class="btn-sub" onclick="changePassword()" style="background: var(--bg2); color: var(--ink); border: 1px solid var(--line);">🔐 تغيير كلمة المرور</button>
           </div>
         </div>
       </div>
-    </div><!-- /prf-container -->
-    <!-- SAVE BAR -->
-    <div class="prf-save-bar prf-container" id="prfSaveBar">
-      <span class="prf-save-msg">✏️ لديك تعديلات غير محفوظة</span>
-      <div class="prf-save-actions">
-        <button class="prf-save-cancel" onclick="cancelProfileEdit()">إلغاء</button>
-        <button class="prf-save-confirm" id="saveProfileBtn" onclick="saveProfileChanges()">💾 حفظ</button>
+
+      <!-- ── FARM ARCHIVE IN PROFILE ── -->
+      <div style="max-width:700px; margin: 32px auto 0;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+          <h3 style="font-family:var(--f-display); font-size:1.3rem; color:var(--ink); margin:0;">🌾 أرشيف مزرعتي</h3>
+          <button class="sec-link" onclick="showPage('farm')" style="font-size:12px;">إدارة المزرعة ←</button>
+        </div>
+        <div id="profile-farm-archive" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px;">
+          <div style="color:var(--muted); font-size:13px; padding:16px; grid-column:1/-1; text-align:center;">
+            <div class="farm-spinner" style="margin:0 auto 12px; display:block;"></div>
+            جاري تحميل الأرشيف...
+          </div>
+        </div>
       </div>
     </div>
-  </div><!-- /prf-page -->
-
+  </section>
+</div>
 
 <!-- ══════════ PAGE: DISEASES ══════════ -->
 <div class="page" id="pg-diseases">
@@ -16965,114 +16902,68 @@ function refreshAllFavIcons() {
 }
 
 // ======================== PROFILE FUNCTIONS ========================
-function handleAvatarChange(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  tempAvatarFile = file;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    const img = document.getElementById('profileAvatar');
-    const ph = document.getElementById('profileAvatarPlaceholder');
-    if (img) { img.src = ev.target.result; img.style.display = 'block'; }
-    if (ph) ph.style.display = 'none';
-  };
-  reader.readAsDataURL(file);
-  showPrfSaveBar();
-}
-
-function showPrfSaveBar() {
-  const bar = document.getElementById('prfSaveBar');
-  if (bar) bar.classList.add('visible');
-}
-
-function cancelProfileEdit() {
-  profileEditMode = false;
-  const bar = document.getElementById('prfSaveBar');
-  if (bar) bar.classList.remove('visible');
-  const nameEl = document.getElementById('profileName');
-  if (nameEl) nameEl.textContent = currentUser ? (currentUser.displayName || currentUser.email.split('@')[0]) : '--';
-  const editBtn = document.querySelector('.edit-profile-btn');
-  if (editBtn) editBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:11px;height:11px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> تعديل الاسم';
-  tempAvatarFile = null;
-}
-
 async function loadUserProfile() {
   if (!currentUser) return;
-  setTimeout(() => {
-    document.querySelectorAll('#pg-profile .prf-reveal').forEach((el, i) => {
-      setTimeout(() => el.classList.add('in'), i * 70);
-    });
-  }, 100);
-
-  const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const profileName = document.getElementById('profileName');
+  const profileEmail = document.getElementById('profileEmail');
+  const profileRoleSpan = document.getElementById('profileRole');
+  const profileFavCount = document.getElementById('profileFavCount');
+  const profileJoinDate = document.getElementById('profileJoinDate');
+  const profileProvider = document.getElementById('profileProvider');
+  
   const displayName = currentUser.displayName || currentUser.email.split('@')[0];
-  setEl('profileName', displayName);
-  setEl('profileEmail', currentUser.email);
-  setEl('profileEmailInfo', currentUser.email);
-  setEl('profileFavCount', userFavorites.size);
-
-  const img = document.getElementById('profileAvatar');
-  const ph = document.getElementById('profileAvatarPlaceholder');
-  if (currentUser.photoURL) {
-    if (img) { img.src = currentUser.photoURL; img.style.display = 'block'; }
-    if (ph) ph.style.display = 'none';
-  } else {
-    if (img) img.style.display = 'none';
-    if (ph) ph.style.display = 'flex';
-  }
-
-  if (currentUser.providerData) {
-    const pid = currentUser.providerData[0]?.providerId;
-    if (pid === 'google.com') userProvider = 'Google';
-    else if (pid === 'password') userProvider = 'البريد الإلكتروني';
-    else userProvider = '--';
-    setEl('profileProvider', userProvider);
-  }
-
+  if (profileName) profileName.textContent = displayName;
+  if (profileEmail) profileEmail.textContent = currentUser.email;
+  if (profileFavCount) profileFavCount.textContent = userFavorites.size;
+  
   try {
     const userDoc = await db.collection('users').doc(currentUser.uid).get();
     if (userDoc.exists) {
       const role = userDoc.data().role || 'مزارع';
       userRole = role;
-      setEl('profileRole', role);
-      setEl('profileRoleInfo', role);
+      if (profileRoleSpan) profileRoleSpan.textContent = role;
       if (userDoc.data().createdAt) {
-        const diffDays = Math.ceil(Math.abs(new Date() - userDoc.data().createdAt.toDate()) / 86400000);
-        setEl('profileJoinDate', diffDays);
+        const createdDate = userDoc.data().createdAt.toDate();
+        const now = new Date();
+        const diffTime = Math.abs(now - createdDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (profileJoinDate) profileJoinDate.textContent = diffDays + ' يوم';
+      } else {
+        if (profileJoinDate) profileJoinDate.textContent = '--';
       }
     } else {
+      if (profileRoleSpan) profileRoleSpan.textContent = 'مزارع';
       userRole = 'مزارع';
-      setEl('profileRole', 'مزارع');
-      setEl('profileRoleInfo', 'مزارع');
+      if (profileJoinDate) profileJoinDate.textContent = '--';
     }
-  } catch(err) {
+  } catch (err) {
+    console.error("Error loading user role:", err);
+    if (profileRoleSpan) profileRoleSpan.textContent = 'مزارع';
     userRole = 'مزارع';
-    setEl('profileRole', 'مزارع');
-    setEl('profileRoleInfo', 'مزارع');
+    if (profileJoinDate) profileJoinDate.textContent = '--';
+  }
+  
+  if (currentUser.providerData) {
+    const provider = currentUser.providerData[0]?.providerId;
+    if (provider === 'google.com') userProvider = 'Google';
+    else if (provider === 'password') userProvider = 'البريد الإلكتروني';
+    else userProvider = '--';
+    if (profileProvider) profileProvider.textContent = userProvider;
+  }
+  
+  const profileAvatar = document.getElementById('profileAvatar');
+  const profileAvatarPlaceholder = document.getElementById('profileAvatarPlaceholder');
+  if (currentUser.photoURL) {
+    profileAvatar.src = currentUser.photoURL;
+    profileAvatar.style.display = 'block';
+    profileAvatarPlaceholder.style.display = 'none';
+  } else {
+    profileAvatar.style.display = 'none';
+    profileAvatarPlaceholder.style.display = 'flex';
   }
 
-  try {
-    const ordSnap = await db.collection('marketplace_orders').where('buyerId','==',currentUser.uid).get();
-    setEl('profileOrdersCount', ordSnap.size);
-  } catch(e) { setEl('profileOrdersCount', '0'); }
-
-  loadProfileFavChips();
+  // Load farm archive in profile
   loadProfileFarmArchive();
-}
-
-function loadProfileFavChips() {
-  const container = document.getElementById('profileFavChips');
-  if (!container) return;
-  const favArr = Array.from(userFavorites).slice(0, 14);
-  if (!favArr.length) {
-    container.innerHTML = '<span style="color:var(--muted);font-size:13px;">لا توجد مفضلات بعد — ابدأ بإضافة نباتات ❤️</span>';
-    return;
-  }
-  container.innerHTML = favArr.map(id => {
-    const plant = typeof App !== 'undefined' && App.plants ? App.plants.find(p => p.id === id || p.name === id) : null;
-    const label = plant ? plant.name : id;
-    return `<button class="prf-fav-chip" onclick="showPage('search');setTimeout(()=>doFullSearch('${label.replace(/'/g,"\'")}'),80)">${label}</button>`;
-  }).join('');
 }
 
 function loadProfileFarmArchive() {
@@ -17116,21 +17007,29 @@ function toggleProfileEdit() {
   profileEditMode = !profileEditMode;
   const profileNameSpan = document.getElementById('profileName');
   const editBtn = document.querySelector('.edit-profile-btn');
+  const saveBtn = document.getElementById('saveProfileBtn');
+  const roleEditBtn = document.querySelector('.edit-role-btn');
   if (profileEditMode) {
     const currentName = profileNameSpan.textContent;
     const input = document.createElement('input');
     input.type = 'text';
     input.value = currentName;
     input.id = 'editNameInput';
-    input.style.cssText = 'font-size:1.6rem;font-family:var(--f-display);background:var(--bg2);border:1.5px solid var(--brand-l);border-radius:10px;padding:6px 14px;width:240px;text-align:center;color:var(--ink);outline:none;';
-    input.onchange = () => showPrfSaveBar();
-    input.oninput = () => showPrfSaveBar();
+    input.style.cssText = 'font-size:1.8rem; font-family:var(--f-display); background:var(--bg2); border:1px solid var(--line); border-radius:8px; padding:4px 12px; width:200px; text-align:center;';
     profileNameSpan.innerHTML = '';
     profileNameSpan.appendChild(input);
-    input.focus(); input.select();
-    if (editBtn) editBtn.innerHTML = '✕ إلغاء';
+    input.focus();
+    editBtn.textContent = 'إلغاء';
+    saveBtn.style.display = 'block';
+    roleEditBtn.style.display = 'inline-block';
   } else {
-    cancelProfileEdit();
+    const input = document.getElementById('editNameInput');
+    if (input) {
+      profileNameSpan.textContent = input.value;
+    }
+    editBtn.textContent = '✏️ تعديل';
+    saveBtn.style.display = 'none';
+    roleEditBtn.style.display = 'inline-block';
   }
 }
 
@@ -17162,13 +17061,11 @@ function saveRoleEdit() {
   const roleSpan = document.getElementById('profileRole');
   roleSpan.textContent = newRole;
   userRole = newRole.replace(/[🌾👨‍🔬🎓🏢]\s*/, '');
-  const rInfo = document.getElementById('profileRoleInfo');
-  if (rInfo) rInfo.textContent = newRole;
   if (currentUser) {
     db.collection('users').doc(currentUser.uid).set({ role: userRole }, { merge: true }).catch(console.error);
   }
   const roleEditBtn = document.querySelector('.edit-role-btn');
-  roleEditBtn.innerHTML = '<span>🌾</span><span class="prf-role-text">' + newRole + '</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:10px;height:10px;opacity:.6"><polyline points="6 9 12 15 18 9"/></svg>';
+  roleEditBtn.textContent = 'تعديل';
   roleEditBtn.onclick = editRole;
 }
 
@@ -17190,9 +17087,7 @@ async function saveProfileChanges() {
     tempAvatarFile = null;
   }
   await loadUserProfile();
-  profileEditMode = false;
-  const bar = document.getElementById('prfSaveBar');
-  if (bar) bar.classList.remove('visible');
+  toggleProfileEdit();
   showToast('✅ تم حفظ الملف الشخصي', 'ok');
 }
 
@@ -25503,245 +25398,6 @@ document.addEventListener('click', e => {
 #pwa-fab:active{transform:scale(.95)!important}
 @keyframes pwaSlideDown{from{opacity:0;transform:translateX(-50%) translateY(-12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes offlinePulse{0%,100%{opacity:1;box-shadow:0 0 6px rgba(245,158,11,.6)}50%{opacity:.5;box-shadow:0 0 3px rgba(245,158,11,.2)}}
-
-/* ═══════════════════════════════════════════
-   PREMIUM PROFILE PAGE V2
-═══════════════════════════════════════════ */
-.prf-page { min-height:100vh; padding:0 0 80px; background:var(--bg); }
-
-/* ── Hero Banner ── */
-.prf-hero {
-  position:relative; height:260px; overflow:hidden;
-  background:linear-gradient(135deg, #0a3d20 0%, #1B6B3A 45%, #0f552e 70%, #c9871a 100%);
-}
-.prf-hero-orbs { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
-.prf-orb {
-  position:absolute; border-radius:50%;
-  background:radial-gradient(circle, rgba(255,255,255,.08) 0%, transparent 70%);
-  animation:prfOrbFloat 8s ease-in-out infinite;
-}
-.prf-orb:nth-child(1){width:300px;height:300px;top:-80px;right:-60px;animation-delay:0s;}
-.prf-orb:nth-child(2){width:200px;height:200px;bottom:-40px;left:10%;animation-delay:2.5s;}
-.prf-orb:nth-child(3){width:150px;height:150px;top:20px;left:40%;animation-delay:5s;}
-@keyframes prfOrbFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-20px) scale(1.08)}}
-
-.prf-hero-pattern {
-  position:absolute; inset:0;
-  background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.015) 0px, rgba(255,255,255,.015) 1px, transparent 1px, transparent 40px),
-    repeating-linear-gradient(-45deg, rgba(255,255,255,.015) 0px, rgba(255,255,255,.015) 1px, transparent 1px, transparent 40px);
-}
-.prf-hero-veil {
-  position:absolute; bottom:0; left:0; right:0; height:120px;
-  background:linear-gradient(to bottom, transparent, var(--bg));
-  z-index:2;
-}
-
-/* ── Avatar Zone ── */
-.prf-avatar-zone {
-  position:absolute; bottom:-55px; left:50%; transform:translateX(-50%);
-  z-index:10; display:flex; flex-direction:column; align-items:center;
-}
-.prf-avatar-ring {
-  width:110px; height:110px; border-radius:50%;
-  background:linear-gradient(135deg, var(--gold), var(--brand-l), var(--brand-d));
-  padding:3px; box-shadow:0 8px 32px rgba(0,0,0,.25), 0 0 0 4px var(--bg);
-  cursor:pointer; transition:transform .3s var(--ease-spring), box-shadow .3s;
-  position:relative; overflow:visible;
-}
-.prf-avatar-ring:hover { transform:scale(1.06); box-shadow:0 12px 40px rgba(27,107,58,.35), 0 0 0 4px var(--bg); }
-.prf-avatar-inner {
-  width:100%; height:100%; border-radius:50%; overflow:hidden;
-  background:linear-gradient(135deg, var(--brand-d), var(--brand));
-  display:flex; align-items:center; justify-content:center;
-}
-.prf-avatar-inner img { width:100%; height:100%; object-fit:cover; display:none; }
-.prf-avatar-inner .prf-avatar-ph { font-size:44px; line-height:1; }
-.prf-avatar-cam {
-  position:absolute; bottom:2px; left:2px;
-  width:28px; height:28px; border-radius:50%;
-  background:var(--gold); border:2px solid var(--bg);
-  display:flex; align-items:center; justify-content:center;
-  font-size:13px; cursor:pointer; transition:transform .2s var(--ease-spring);
-  box-shadow:0 2px 8px rgba(0,0,0,.2);
-}
-.prf-avatar-cam:hover { transform:scale(1.2); }
-
-/* ── Main Container ── */
-.prf-container { max-width:860px; margin:0 auto; padding:0 20px; }
-
-/* ── Identity Block ── */
-.prf-identity {
-  text-align:center; padding-top:70px; padding-bottom:28px;
-  position:relative;
-}
-.prf-name-wrap { display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
-.prf-name {
-  font-family:var(--f-display); font-size:2rem; color:var(--ink);
-  font-weight:700; line-height:1.1; letter-spacing:-.01em;
-}
-.prf-edit-btn {
-  display:inline-flex; align-items:center; gap:5px;
-  padding:5px 14px; border-radius:var(--rpill);
-  background:var(--brand-pale); border:1.5px solid var(--line2);
-  color:var(--brand); font-size:12px; font-weight:700;
-  cursor:pointer; transition:all .2s var(--ease-spring); font-family:var(--f-ui);
-}
-.prf-edit-btn:hover { background:var(--brand); color:#fff; border-color:var(--brand); transform:scale(1.05); }
-.prf-email { color:var(--muted); font-size:14px; margin-bottom:10px; }
-.prf-role-badge {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:5px 16px; border-radius:var(--rpill);
-  background:linear-gradient(135deg, var(--brand-pale), var(--gold-pale));
-  border:1.5px solid var(--line2); color:var(--brand);
-  font-size:13px; font-weight:700; cursor:pointer;
-  transition:all .2s var(--ease-spring);
-}
-.prf-role-badge:hover { transform:translateY(-2px); box-shadow:0 4px 16px rgba(27,107,58,.15); }
-
-/* ── Stats Row ── */
-.prf-stats-row {
-  display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px;
-}
-.prf-stat {
-  background:var(--card); border-radius:var(--r3);
-  border:1.5px solid var(--line); padding:18px 12px; text-align:center;
-  transition:all .3s var(--ease-spring); cursor:default;
-  position:relative; overflow:hidden;
-}
-.prf-stat::before {
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(135deg, var(--brand-pale), transparent);
-  opacity:0; transition:opacity .3s;
-}
-.prf-stat:hover { transform:translateY(-3px); box-shadow:var(--s3); border-color:var(--brand-l); }
-.prf-stat:hover::before { opacity:1; }
-.prf-stat-icon { font-size:20px; margin-bottom:6px; }
-.prf-stat-num { font-family:var(--f-display); font-size:1.8rem; font-weight:700; color:var(--brand); line-height:1; }
-.prf-stat-label { font-size:11px; color:var(--muted); font-weight:600; margin-top:4px; letter-spacing:.03em; }
-
-/* ── Section Cards ── */
-.prf-section {
-  background:var(--card); border-radius:var(--r3);
-  border:1.5px solid var(--line); overflow:hidden; margin-bottom:16px;
-  transition:box-shadow .3s;
-}
-.prf-section:hover { box-shadow:var(--s2); }
-.prf-section-head {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:16px 20px; border-bottom:1.5px solid var(--line);
-  background:linear-gradient(135deg, var(--bg2), transparent);
-}
-.prf-section-title {
-  display:flex; align-items:center; gap:10px;
-  font-size:15px; font-weight:800; color:var(--ink);
-}
-.prf-section-icon {
-  width:32px; height:32px; border-radius:10px;
-  background:linear-gradient(135deg, var(--brand), var(--brand-d));
-  display:flex; align-items:center; justify-content:center; font-size:15px;
-}
-.prf-section-link {
-  font-size:12px; font-weight:700; color:var(--brand);
-  background:none; border:none; cursor:pointer; font-family:var(--f-ui);
-  padding:5px 10px; border-radius:var(--rpill);
-  transition:all .2s; display:flex; align-items:center; gap:4px;
-}
-.prf-section-link:hover { background:var(--brand-pale); }
-.prf-section-body { padding:20px; }
-
-/* ── Info Rows ── */
-.prf-info-row {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:13px 0; border-bottom:1px solid var(--line); gap:12px;
-}
-.prf-info-row:last-child { border-bottom:none; padding-bottom:0; }
-.prf-info-label { font-size:13px; color:var(--muted); font-weight:600; display:flex; align-items:center; gap:7px; }
-.prf-info-val { font-size:14px; color:var(--ink); font-weight:600; }
-.prf-provider-badge {
-  display:inline-flex; align-items:center; gap:5px; padding:3px 10px;
-  border-radius:var(--rpill); background:var(--bg2); border:1px solid var(--line2);
-  font-size:12px; font-weight:700; color:var(--slate);
-}
-
-/* ── Quick Actions ── */
-.prf-actions-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
-.prf-action-btn {
-  display:flex; align-items:center; gap:10px; padding:14px 16px;
-  border-radius:var(--r2); border:1.5px solid var(--line);
-  background:var(--bg2); cursor:pointer; font-family:var(--f-ui);
-  font-size:13px; font-weight:700; color:var(--ink);
-  transition:all .22s var(--ease-spring); text-align:right;
-}
-.prf-action-btn:hover { background:var(--brand); color:#fff; border-color:var(--brand); transform:translateY(-2px); box-shadow:0 6px 20px rgba(27,107,58,.25); }
-.prf-action-btn:hover .prf-action-icon { background:rgba(255,255,255,.2); }
-.prf-action-icon { width:34px; height:34px; border-radius:9px; background:var(--card); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; transition:background .2s; }
-
-/* ── Farm Archive ── */
-.prf-archive-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
-
-/* ── Market Summary ── */
-.prf-market-row {
-  display:flex; align-items:center; gap:12px; padding:12px 0;
-  border-bottom:1px solid var(--line); cursor:pointer;
-  transition:background .15s; border-radius:var(--r1); margin:0 -8px; padding-right:8px; padding-left:8px;
-}
-.prf-market-row:last-child { border-bottom:none; }
-.prf-market-row:hover { background:var(--bg2); }
-.prf-market-thumb { width:44px; height:44px; border-radius:10px; object-fit:cover; background:var(--bg2); flex-shrink:0; font-size:22px; display:flex; align-items:center; justify-content:center; }
-.prf-market-info { flex:1; min-width:0; }
-.prf-market-name { font-size:13px; font-weight:700; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.prf-market-meta { font-size:11px; color:var(--muted); margin-top:2px; }
-.prf-market-price { font-size:14px; font-weight:800; color:var(--brand); font-family:var(--f-display); flex-shrink:0; }
-
-/* ── Fav Plants ── */
-.prf-fav-chips { display:flex; flex-wrap:wrap; gap:8px; }
-.prf-fav-chip {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:6px 14px; border-radius:var(--rpill);
-  background:var(--brand-pale); border:1.5px solid var(--line2);
-  font-size:12px; font-weight:700; color:var(--brand);
-  cursor:pointer; transition:all .2s var(--ease-spring);
-}
-.prf-fav-chip:hover { background:var(--brand); color:#fff; transform:scale(1.05); }
-
-/* ── Save Bar ── */
-.prf-save-bar {
-  display:none; position:sticky; bottom:20px; z-index:50;
-  background:var(--card); border:1.5px solid var(--brand);
-  border-radius:var(--rpill); padding:12px 20px;
-  box-shadow:0 8px 32px rgba(27,107,58,.25);
-  align-items:center; justify-content:space-between; gap:12px;
-  animation:prfSaveBarIn .35s var(--ease-spring) both;
-  max-width:860px; margin:16px auto 0;
-}
-.prf-save-bar.visible { display:flex; }
-@keyframes prfSaveBarIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.prf-save-msg { font-size:13px; color:var(--slate); font-weight:600; }
-.prf-save-actions { display:flex; gap:8px; }
-.prf-save-cancel { padding:8px 16px; border-radius:var(--rpill); border:1.5px solid var(--line2); background:none; color:var(--slate); font-size:13px; font-weight:700; cursor:pointer; font-family:var(--f-ui); transition:all .2s; }
-.prf-save-cancel:hover { background:var(--bg2); }
-.prf-save-confirm { padding:8px 20px; border-radius:var(--rpill); background:var(--brand); color:#fff; font-size:13px; font-weight:700; cursor:pointer; border:none; font-family:var(--f-ui); transition:all .2s var(--ease-spring); }
-.prf-save-confirm:hover { background:var(--brand-l); transform:scale(1.04); }
-
-/* ── Skeleton loader ── */
-.prf-skeleton { background:linear-gradient(90deg,var(--bg2) 25%,var(--bg3) 50%,var(--bg2) 75%); background-size:200% 100%; animation:prfSkeletonShimmer 1.4s infinite; border-radius:8px; }
-@keyframes prfSkeletonShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-/* ── Animations ── */
-.prf-reveal { opacity:0; transform:translateY(18px); transition:opacity .5s var(--ease-out), transform .5s var(--ease-out); }
-.prf-reveal.in { opacity:1; transform:translateY(0); }
-
-/* ── Responsive ── */
-@media(max-width:600px){
-  .prf-hero { height:200px; }
-  .prf-stats-row { grid-template-columns:repeat(3,1fr); gap:8px; }
-  .prf-stat { padding:12px 8px; }
-  .prf-stat-num { font-size:1.4rem; }
-  .prf-actions-grid { grid-template-columns:1fr 1fr; }
-  .prf-name { font-size:1.5rem; }
-  .prf-container { padding:0 14px; }
-  .prf-archive-grid { grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); }
-}
 </style>
 <script>
 function openPwaModal(){
