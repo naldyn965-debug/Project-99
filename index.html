@@ -3682,8 +3682,7 @@ body.modal-open { overflow: hidden; }
 /* ── PAGE WRAPPER ──────────────────────────────────────── */
 #pg-market {
   min-height: 100svh;
-  padding-top: 64px;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-top: 0;
   background: var(--bg);
   overflow-x: hidden;
 }
@@ -3780,7 +3779,7 @@ body.modal-open { overflow: hidden; }
 .mkt-hero {
   position: relative;
   overflow: hidden;
-  padding: 72px 24px 80px;
+  padding: 44px 20px 64px;
   text-align: center;
   background:
     linear-gradient(160deg, #071a0e 0%, #0d3320 40%, #12452c 65%, #081a10 100%);
@@ -5416,6 +5415,8 @@ body.modal-open { overflow: hidden; }
 /* ── PANEL CONTAINER — needs relative positioning ────────────────── */
 .mkt-panel-container {
   position: relative;
+  margin: 0;
+  padding: 0;
 }
 
 </style>
