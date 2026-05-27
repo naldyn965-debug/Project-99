@@ -18331,6 +18331,7 @@ let mktState = {
   products: [],
   filtered: [],
   notifs: [],
+  notifAllListener: null,
   lastDoc: null,
   loading: false,
   hasMore: true,
@@ -19504,10 +19505,10 @@ async function _renderOrdersPanel() {
 function _renderNotifPage() {
   const container = document.getElementById('mkt-notif-list-page');
   if (!container) return;
-  // Mark all as read when page opens
-  _markNotifsRead();
-  // Render current notifs
+  // Render all notifs (read + unread)
   _renderNotifListInPage(mktState.notifs || []);
+  // Mark unread as read after a short delay (user has seen them)
+  setTimeout(() => _markNotifsRead(), 1500);
 }
 
 function _renderNotifListInPage(notifs) {
@@ -19573,54 +19574,51 @@ async function _sendNotif(userId, type, message, extra = {}) {
 }
 
 function _setupNotifListener() {
-  // Attach listener immediately if user is already logged in
   const attachListener = (user) => {
-    if (mktState.notifListener) {
-      mktState.notifListener();
-      mktState.notifListener = null;
-    }
+    // Detach old listeners
+    if (mktState.notifListener)      { mktState.notifListener();      mktState.notifListener = null; }
+    if (mktState.notifAllListener)   { mktState.notifAllListener();   mktState.notifAllListener = null; }
     if (!user) { _updateNotifBadge(0); return; }
-    console.log('[MKT] Attaching notif listener for', user.uid);
+
+    // ── Listener 1: ALL notifications (for the page display — persists after read) ──
+    mktState.notifAllListener = db.collection('marketplace_notifications')
+      .where('userId', '==', user.uid)
+      .orderBy('createdAt', 'desc')
+      .limit(50)
+      .onSnapshot(snap => {
+        const allNotifs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        mktState.notifs = allNotifs;
+        // Update page if open
+        const notifPanel = document.getElementById('mkt-panel-notif');
+        if (notifPanel && notifPanel.classList.contains('active')) {
+          _renderNotifListInPage(allNotifs);
+        }
+      }, err => {
+        // Fallback: no orderBy (no composite index needed)
+        mktState.notifAllListener = db.collection('marketplace_notifications')
+          .where('userId', '==', user.uid)
+          .onSnapshot(snap => {
+            const allNotifs = snap.docs
+              .map(d => ({ id: d.id, ...d.data() }))
+              .sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+            mktState.notifs = allNotifs;
+            const notifPanel = document.getElementById('mkt-panel-notif');
+            if (notifPanel && notifPanel.classList.contains('active')) {
+              _renderNotifListInPage(allNotifs);
+            }
+          }, e2 => console.error('[MKT] Notif all fallback:', e2.message));
+      });
+
+    // ── Listener 2: UNREAD only (for badge count) ──
     mktState.notifListener = db.collection('marketplace_notifications')
       .where('userId', '==', user.uid)
       .where('read', '==', false)
-      .orderBy('createdAt', 'desc')
-      .limit(30)
       .onSnapshot(snap => {
-        console.log('[MKT] Notifs snapshot:', snap.size, 'unread');
-        const notifs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        mktState.notifs = notifs;
-        _updateNotifBadge(notifs.length);
-        _renderNotifList(notifs);
-        // Also update the notif page if open
-        const notifPanel = document.getElementById('mkt-panel-notif');
-        if (notifPanel && notifPanel.classList.contains('active')) {
-          _renderNotifListInPage(notifs);
-        }
-      }, err => {
-        console.error('[MKT] Notif listener error:', err.code, err.message);
-        // Retry without orderBy if index missing
-        if (err.code === 'failed-precondition') {
-          mktState.notifListener = db.collection('marketplace_notifications')
-            .where('userId', '==', user.uid)
-            .where('read', '==', false)
-            .onSnapshot(snap => {
-              const notifs = snap.docs
-                .map(d => ({ id: d.id, ...d.data() }))
-                .sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
-              mktState.notifs = notifs;
-              _updateNotifBadge(notifs.length);
-              _renderNotifList(notifs);
-            }, e2 => console.error('[MKT] Notif fallback error:', e2.message));
-        }
-      });
+        _updateNotifBadge(snap.size);
+      }, () => {});
   };
 
-  // Try current user first (already logged in)
-  if (auth.currentUser) {
-    attachListener(auth.currentUser);
-  }
-  // Also listen for auth changes
+  if (auth.currentUser) attachListener(auth.currentUser);
   auth.onAuthStateChanged(user => attachListener(user));
 }
 
@@ -19676,8 +19674,7 @@ function _markNotifsRead() {
   unread.forEach(n => {
     batch.update(db.collection('marketplace_notifications').doc(n.id), { read: true });
   });
-  batch.commit().catch(() => {});
-  _updateNotifBadge(0);
+  batch.commit().catch(e => console.warn('[MKT] markRead:', e.message));
 }
 
 // Close notif panel when clicking outside
