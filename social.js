@@ -585,6 +585,12 @@ async function suggestHtml() {
 async function renderFeed() {
   const root = document.getElementById('social-feed-root');
   if (!root) return;
+  // لو الـ feed موجود بالفعل، مش هنعيد رسمه — بس نحدث البوستات
+  const alreadyRendered = !!document.getElementById('soc-posts');
+  if (alreadyRendered) {
+    loadFeed(true);
+    return;
+  }
   // Render shell IMMEDIATELY — don't await suggestHtml first
   root.innerHTML = `
 <div class="soc-feed-header">
@@ -599,16 +605,10 @@ ${S.uid?`<div class="soc-create-card" onclick="SOCIAL.openPost()">${av(S.profile
   const lm = document.getElementById('soc-lm'); if(lm) io.observe(lm);
   // Load posts immediately, load suggestions in background
   loadFeed(true);
-  suggestHtml().then(sg => {
+  // استنى الـ auth الأول عشان S.uid يكون جاهز قبل ما نجيب الاقتراحات
+  waitForAuth().then(() => suggestHtml()).then(sg => {
     const slot = document.getElementById('soc-suggest-slot');
     if (slot && sg) slot.outerHTML = sg;
-    // بعد ما الـ suggest اتحطت، شيل أي حساب موجود في followingSet
-    S.followingSet.forEach(uid => {
-      document.querySelectorAll(`[data-suggest-uid="${uid}"]`).forEach(c => c.remove());
-    });
-    // لو مفيش كروت فضلت، شيل الـ section كلها
-    const sec = document.querySelector('.soc-suggest-section');
-    if (sec && sec.querySelectorAll('.soc-suggest-card').length === 0) sec.remove();
   });
 }
 
