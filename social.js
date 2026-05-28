@@ -140,6 +140,7 @@
   cursor:pointer; display:flex; align-items:center; gap:4px; backdrop-filter:blur(6px); transition:background .2s;
 }
 .soc-cover-edit-btn:hover { background:rgba(0,0,0,.65); }
+.soc-cover-edit-btn.uploading,.soc-avatar-edit-btn.uploading { opacity:.6; pointer-events:none; }
 .soc-profile-header { padding:0 16px 16px; background:var(--card); border-bottom:1px solid var(--line); }
 .soc-profile-avatar-wrap { display:flex; align-items:flex-end; gap:12px; margin-top:-44px; margin-bottom:11px; }
 .soc-profile-avatar-container { position:relative; flex-shrink:0; }
@@ -373,10 +374,21 @@ const toast = msg => {
 const getDB = () => window.db || null;
 const getAuth = () => window.auth || null;
 
+// In-memory profile cache — eliminates repeated Firestore reads for same UID
+const _profileCache = {};
 async function getProfile(uid) {
+  if (!uid) return null;
+  if (_profileCache[uid]) return _profileCache[uid];
   const db = getDB(); if (!db) return null;
-  try { const s = await db.collection('social_profiles').doc(uid).get(); return s.exists ? s.data() : null; }
-  catch(e) { return null; }
+  try {
+    const s = await db.collection('social_profiles').doc(uid).get();
+    const data = s.exists ? s.data() : null;
+    if (data) _profileCache[uid] = data;
+    return data;
+  } catch(e) { return null; }
+}
+function invalidateProfileCache(uid) {
+  if (uid) delete _profileCache[uid];
 }
 
 async function ensureProfile(user) {
@@ -529,19 +541,24 @@ async function suggestHtml() {
 async function renderFeed() {
   const root = document.getElementById('social-feed-root');
   if (!root) return;
-  const sg = await suggestHtml();
+  // Render shell IMMEDIATELY — don't await suggestHtml first
   root.innerHTML = `
 <div class="soc-feed-header">
   <div class="soc-feed-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>الفيد الزراعي</div>
   <div class="soc-feed-tabs"><button class="soc-ft active" id="sft-f" onclick="SOCIAL.ftab('following')">متابَعون</button><button class="soc-ft" id="sft-e" onclick="SOCIAL.ftab('explore')">استكشاف</button></div>
 </div>
 ${S.uid?`<div class="soc-create-card" onclick="SOCIAL.openPost()">${av(S.profile,'soc-avatar-sm')}<div style="flex:1"><div class="soc-create-placeholder">شارك تجربتك الزراعية مع المجتمع...</div><div class="soc-create-actions"><button class="soc-create-action-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>صورة</button><button class="soc-create-action-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg>منتج</button><button class="soc-create-action-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>موقع</button></div></div></div>`:`<div style="margin:12px;padding:13px;background:var(--brand-pale);border-radius:var(--r2);text-align:center;font-size:13px;color:var(--brand);font-weight:700;">سجّل الدخول للتفاعل مع المجتمع الزراعي 🌿</div>`}
-${sg}
+<div id="soc-suggest-slot"></div>
 <div id="soc-posts">${skel()}</div>
 <div class="soc-load-spinner" id="soc-lm" style="display:none;"><div class="soc-spinner"></div></div>`;
   const io = new IntersectionObserver(e=>{if(e[0].isIntersecting&&!S.feedLoading)loadFeed(false);},{threshold:.1});
   const lm = document.getElementById('soc-lm'); if(lm) io.observe(lm);
+  // Load posts immediately, load suggestions in background
   loadFeed(true);
+  suggestHtml().then(sg => {
+    const slot = document.getElementById('soc-suggest-slot');
+    if (slot && sg) slot.outerHTML = sg;
+  });
 }
 
 async function renderProfile(uid, isSelf) {
@@ -557,13 +574,13 @@ async function renderProfile(uid, isSelf) {
   root.innerHTML = `
 <div class="soc-profile-cover" style="${cov}">
   <div class="soc-profile-cover-overlay"></div>
-  ${isSelf?`<button class="soc-cover-edit-btn" onclick="SOCIAL.soon()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>تغيير الغلاف</button>`:''}
+  ${isSelf?`<button class="soc-cover-edit-btn" onclick="document.getElementById('soc-cover-input').click()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>تغيير الغلاف</button>`:''}
 </div>
 <div class="soc-profile-header">
   <div class="soc-profile-avatar-wrap">
     <div class="soc-profile-avatar-container">
       ${av(p,'soc-avatar-xl')}
-      ${isSelf?`<button class="soc-avatar-edit-btn" onclick="SOCIAL.soon()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></button>`:''}
+      ${isSelf?`<button class="soc-avatar-edit-btn" onclick="document.getElementById('soc-avatar-input').click()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></button>`:''}
     </div>
   </div>
   <div class="soc-profile-name">${p.displayName||'مزارع'}${vb}</div>
@@ -666,6 +683,8 @@ function injectGlobal() {
     </div>
   </div>
 </div>
+<input type="file" id="soc-avatar-input" accept="image/*" style="display:none" onchange="SOCIAL.uploadImg(event,'avatar')">
+<input type="file" id="soc-cover-input" accept="image/*" style="display:none" onchange="SOCIAL.uploadImg(event,'cover')">
 <div class="soc-modal-overlay" id="soc-em" onclick="if(event.target===this)SOCIAL.closeEdit()">
   <div class="soc-modal" dir="rtl">
     <div class="soc-modal-header"><span>تعديل الصفحة</span><button class="soc-modal-close" onclick="SOCIAL.closeEdit()">✕</button></div>
@@ -904,6 +923,8 @@ window.SOCIAL = {
       };
       await db.collection('social_profiles').doc(S.uid).update(u);
       S.profile={...S.profile,...u};
+      invalidateProfileCache(S.uid);
+      _profileCache[S.uid] = S.profile;
       this.closeEdit(); toast('✅ تم حفظ التغييرات');
       renderProfile(S.uid, true);
     }catch(e){toast('حدث خطأ');}
@@ -913,6 +934,61 @@ window.SOCIAL = {
   lb(url) { const lb=document.getElementById('soc-lb'); const img=document.getElementById('soc-lb-img'); if(!lb||!img)return; img.src=url; lb.classList.add('open'); },
   closeLb() { const lb=document.getElementById('soc-lb'); if(lb)lb.classList.remove('open'); },
   soon() { toast('📷 هذه الميزة قريباً'); },
+
+  async uploadImg(e, type) {
+    if (!S.uid) { toast('سجّل الدخول أولاً'); return; }
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    // Validate: image only, max 5MB
+    if (!file.type.startsWith('image/')) { toast('يُرجى اختيار صورة'); return; }
+    if (file.size > 5 * 1024 * 1024) { toast('الصورة أكبر من 5MB'); return; }
+
+    const isAvatar = (type === 'avatar');
+    const fieldKey = isAvatar ? 'photoURL' : 'coverURL';
+    const path = `social_images/${S.uid}/${isAvatar ? 'avatar' : 'cover'}_${Date.now()}`;
+
+    // Optimistic UI — show local preview immediately
+    const localURL = URL.createObjectURL(file);
+    if (isAvatar) {
+      document.querySelectorAll('.soc-avatar-xl img, .soc-avatar-xl').forEach(el => {
+        if (el.tagName === 'IMG') { el.src = localURL; }
+        else {
+          el.style.background = 'transparent';
+          el.innerHTML = `<img src="${localURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+        }
+      });
+    } else {
+      const cover = document.querySelector('.soc-profile-cover');
+      if (cover) cover.style.backgroundImage = `url('${localURL}')`;
+    }
+
+    toast('⏳ جاري رفع الصورة...');
+
+    try {
+      const stor = window.storage;
+      if (!stor) { toast('خدمة التخزين غير متاحة'); return; }
+      const ref = stor.ref(path);
+      await ref.put(file);
+      const downloadURL = await ref.getDownloadURL();
+
+      // Update Firestore profile
+      const db = getDB();
+      await db.collection('social_profiles').doc(S.uid).update({ [fieldKey]: downloadURL });
+
+      // Update local state + cache
+      S.profile = { ...S.profile, [fieldKey]: downloadURL };
+      invalidateProfileCache(S.uid);
+      _profileCache[S.uid] = S.profile;
+
+      toast('✅ تم تغيير الصورة بنجاح');
+      e.target.value = '';
+    } catch (err) {
+      console.error('uploadImg error', err);
+      toast('حدث خطأ أثناء الرفع');
+      // Revert optimistic UI on failure
+      renderProfile(S.uid, true);
+    }
+  },
 
   followers(uid) { switchPanel('followers'); waitForAuth().then(()=>renderFollowers(uid)); },
   following(uid) { switchPanel('following'); waitForAuth().then(()=>renderFollowing(uid)); },
