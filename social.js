@@ -370,15 +370,8 @@ const toast = msg => {
   setTimeout(() => el.classList.remove('show'), 2800);
 };
 
-const getDB = () => {
-  // Try window.db first (in case host page exposes it), then firebase directly
-  if (window.db) return window.db;
-  try { return window.firebase && window.firebase.firestore ? window.firebase.firestore() : null; } catch(e) { return null; }
-};
-const getAuth = () => {
-  if (window.auth) return window.auth;
-  try { return window.firebase && window.firebase.auth ? window.firebase.auth() : null; } catch(e) { return null; }
-};
+const getDB = () => window.db || null;
+const getAuth = () => window.auth || null;
 
 async function getProfile(uid) {
   const db = getDB(); if (!db) return null;
