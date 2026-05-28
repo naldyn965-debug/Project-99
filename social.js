@@ -333,7 +333,13 @@ const S = {
 function waitForAuth() {
   return new Promise(resolve => {
     if (S.authReady) { resolve(); return; }
+    // Add listener
     S._authListeners.push(resolve);
+    // Safety timeout: resolve after 5s max so UI never hangs
+    setTimeout(() => {
+      const idx = S._authListeners.indexOf(resolve);
+      if (idx !== -1) { S._authListeners.splice(idx, 1); resolve(); }
+    }, 5000);
   });
 }
 
@@ -364,8 +370,15 @@ const toast = msg => {
   setTimeout(() => el.classList.remove('show'), 2800);
 };
 
-const getDB = () => window.db;
-const getFS = () => window.firebase && window.firebase.firestore;
+const getDB = () => {
+  // Try window.db first (in case host page exposes it), then firebase directly
+  if (window.db) return window.db;
+  try { return window.firebase && window.firebase.firestore ? window.firebase.firestore() : null; } catch(e) { return null; }
+};
+const getAuth = () => {
+  if (window.auth) return window.auth;
+  try { return window.firebase && window.firebase.auth ? window.firebase.auth() : null; } catch(e) { return null; }
+};
 
 async function getProfile(uid) {
   const db = getDB(); if (!db) return null;
@@ -676,20 +689,32 @@ function injectGlobal() {
   document.body.appendChild(el);
 }
 
+// Social panels that SOCIAL module manages directly
+const SOCIAL_PANELS = ['feed','profile-me','followers','following'];
+
 function switchPanel(name) {
-  // Use MKT.showPanel if available (handles animation)
-  if (window.MKT && window.MKT.showPanel) {
-    window.MKT.showPanel(name);
-  } else {
-    // Fallback: manually toggle panels
-    document.querySelectorAll('.mkt-panel').forEach(p => p.classList.remove('active'));
+  const isSocialPanel = SOCIAL_PANELS.includes(name);
+
+  if (isSocialPanel) {
+    // For social panels: manage directly without waiting for MKT animation
+    // Remove active from all panels
+    document.querySelectorAll('.mkt-panel').forEach(p => {
+      p.classList.remove('active');
+      p.classList.remove('leaving');
+    });
+    // Activate the target panel immediately
     const panel = document.getElementById('mkt-panel-' + name);
     if (panel) panel.classList.add('active');
+    // Update tab highlight
+    document.querySelectorAll('.mkt-tab').forEach(t => t.classList.remove('active'));
+    const tab = document.getElementById('mkt-tab-' + name);
+    if (tab) tab.classList.add('active');
+    // Reset MKT transitioning flag so MKT isn't stuck
+    if (window.mktState) window.mktState._transitioning = false;
+  } else {
+    // Non-social panels: delegate to MKT
+    if (window.MKT && window.MKT.showPanel) window.MKT.showPanel(name);
   }
-  // Always update tab active state for social tabs
-  document.querySelectorAll('.mkt-tab').forEach(t => t.classList.remove('active'));
-  const tab = document.getElementById('mkt-tab-' + name);
-  if (tab) tab.classList.add('active');
 }
 
 /* ─── PUBLIC API ─────────────────────────────────────────────── */
@@ -698,7 +723,13 @@ window.SOCIAL = {
     if (S.initialized) return;
     S.initialized = true;
     injectGlobal();
-    const auth = window.auth; if (!auth) return;
+    const auth = getAuth(); 
+    if (!auth) {
+      // Firebase not ready yet, retry after short delay
+      S.initialized = false;
+      setTimeout(() => SOCIAL.init(), 500);
+      return;
+    }
     auth.onAuthStateChanged(async user => {
       S.uid = user ? user.uid : null;
       S.profile = user ? await ensureProfile(user) : null;
@@ -920,9 +951,18 @@ window.SOCIAL = {
 };
 
 /* ─── BOOT ─────────────────────────────────────────────────────*/
-function boot() { injectGlobal(); SOCIAL.init(); }
+function boot() {
+  injectGlobal();
+  // Wait for firebase to be available before init
+  if (window.firebase && window.firebase.apps && window.firebase.apps.length > 0) {
+    SOCIAL.init();
+  } else {
+    // Firebase not ready yet, wait
+    setTimeout(boot, 300);
+  }
+}
 if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot);
-else setTimeout(boot, 800);
+else boot();
 
 document.addEventListener('click', e=>{
   if (e.target.closest('#mkt-tab-notif')) setTimeout(()=>SOCIAL.loadSocialNotifications(), 450);
