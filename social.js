@@ -663,7 +663,7 @@ async function ptab(tab, uid) {
     } else if (tab==='products') {
       // Try both sellerId and ownerId fields for compatibility
       // ownerId is indexed; try ownerId first, fallback to sellerId without orderBy
-      let snap = await db.collection('marketplace_products').where('ownerId','==',uid).orderBy('createdAt','desc').limit(18).get();
+      let snap = await db.collection('marketplace_products').where('ownerId','==',uid).limit(18).get();
       if (snap.empty) snap = await db.collection('marketplace_products').where('sellerId','==',uid).limit(18).get();
       if (snap.empty) { el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg>`,'لا توجد منتجات'); return; }
       el.innerHTML=`<div class="soc-profile-products-grid">${snap.docs.map(d=>{const p=d.data(),img=p.images&&p.images[0]||p.imageURL;return`<div class="soc-profile-product-thumb" onclick="MKT&&MKT.openDetail&&MKT.openDetail('${d.id}')">${img?`<img src="${img}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg2);"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></div>`}<div class="soc-profile-product-thumb-overlay"><span>${p.price?p.price+' ج.م':''}</span></div></div>`;}).join('')}</div>`;
@@ -678,9 +678,11 @@ async function ptab(tab, uid) {
   } catch(e) {
     console.warn('ptab error', tab, e.code || e.message);
     clearTimeout(spinTimeout);
-    const errLabel = e.code === 'permission-denied' ? 'لا توجد صلاحية — تحقق من Firebase Rules'
-                   : e.code === 'failed-precondition' ? 'يجب إضافة Index في Firebase Console'
-                   : 'حدث خطأ في التحميل';
+    const errLabel = (e.code === 'permission-denied' || e.code === 7)
+      ? 'يرجى رفع ملف firestore.rules على Firebase Console'
+      : (e.code === 'failed-precondition' || e.code === 9)
+      ? 'يرجى رفع ملف firestore.indexes على Firebase Console'
+      : `خطأ: ${e.code||e.message||'غير معروف'}`;
     el.innerHTML = emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`, errLabel);
   } finally {
     clearTimeout(spinTimeout);
@@ -1059,10 +1061,11 @@ window.SOCIAL = {
       toast('✅ تم تغيير الصورة بنجاح');
     } catch (err) {
       console.error('uploadImg error:', err.code, err.message);
-      let errMsg = 'حدث خطأ أثناء الرفع';
-      if (err.code === 'storage/unauthorized') errMsg = 'غير مصرح برفع الصورة';
+      let errMsg = 'خطأ في الرفع: ' + (err.code || err.message || 'غير معروف');
+      if (err.code === 'storage/unauthorized') errMsg = 'مرفوض — يرجى رفع storage.rules على Firebase';
       else if (err.code === 'storage/quota-exceeded') errMsg = 'تجاوز حد التخزين';
       else if (err.code === 'storage/canceled') errMsg = 'تم إلغاء الرفع';
+      else if (err.code === 'storage/unknown') errMsg = 'خطأ غير معروف في Storage — تحقق من Firebase Console';
       toast(errMsg);
       // Revert optimistic UI on failure
       if (S.uid) renderProfile(S.uid, true);
