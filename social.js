@@ -602,6 +602,13 @@ ${S.uid?`<div class="soc-create-card" onclick="SOCIAL.openPost()">${av(S.profile
   suggestHtml().then(sg => {
     const slot = document.getElementById('soc-suggest-slot');
     if (slot && sg) slot.outerHTML = sg;
+    // بعد ما الـ suggest اتحطت، شيل أي حساب موجود في followingSet
+    S.followingSet.forEach(uid => {
+      document.querySelectorAll(`[data-suggest-uid="${uid}"]`).forEach(c => c.remove());
+    });
+    // لو مفيش كروت فضلت، شيل الـ section كلها
+    const sec = document.querySelector('.soc-suggest-section');
+    if (sec && sec.querySelectorAll('.soc-suggest-card').length === 0) sec.remove();
   });
 }
 
