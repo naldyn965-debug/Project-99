@@ -566,7 +566,7 @@ async function suggestHtml() {
       const p=d.data();
       const inn = p.photoURL?`<img src="${p.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:init(p.displayName);
       const bg = p.photoURL?'background:transparent;':'background:linear-gradient(145deg,var(--brand-l),var(--brand-d));';
-      return `<div class="soc-suggest-card" onclick="SOCIAL.profile('${d.id}')">
+      return `<div class="soc-suggest-card" data-suggest-uid="${d.id}" onclick="SOCIAL.profile('${d.id}')">
 <div class="soc-avatar" style="width:46px;height:46px;font-size:16px;margin:0 auto;${bg}">${inn}</div>
 <div class="soc-suggest-name">${p.displayName||'مزارع'}</div>
 <div class="soc-suggest-handle">${p.location||'@'+(p.username||'')}</div>
@@ -891,6 +891,14 @@ window.SOCIAL = {
         btn.classList.add('following');
         btn.innerHTML = svgFollowing + ' تتابعه';
         toast('✅ تم المتابعة');
+        // إخفاء الكارد من الحسابات المقترحة بعد المتابعة
+        const card = btn.closest('[data-suggest-uid]');
+        if (card) {
+          card.style.transition = 'opacity .3s, transform .3s';
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.85)';
+          setTimeout(() => { card.remove(); }, 300);
+        }
       }
       // تحديث عداد المتابعين في صفحة البروفايل لو مفتوحة
       if (S.profileUid === targetUid) {
