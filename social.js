@@ -493,28 +493,35 @@ async function loadFeed(reset) {
       uids.push(S.uid);
       // Firestore 'in' requires at least 1 element and max 10
       const safeUids = uids.slice(0,10);
-      q = db.collection('social_posts').where('authorUid','in',safeUids).orderBy('createdAt','desc').limit(7);
+      // No orderBy on 'in' query — avoids composite index; sort client-side
+      q = db.collection('social_posts').where('authorUid','in',safeUids).limit(20);
     } else {
-      // Explore: fetch all posts
-      q = db.collection('social_posts').orderBy('createdAt','desc').limit(7);
+      // Explore: fetch posts, sort client-side
+      q = db.collection('social_posts').limit(20);
     }
     if (S.feedLast && !reset) q = q.startAfter(S.feedLast);
     const snap = await q.get();
-    S.feedLast = snap.docs[snap.docs.length-1]||null;
-    const uids2 = [...new Set(snap.docs.map(d=>d.data().authorUid))];
+    // Sort client-side by createdAt descending (avoids composite index)
+    const sortedDocs = snap.docs.slice().sort((a,b)=>{
+      const ta=a.data().createdAt; const tb=b.data().createdAt;
+      const sa=ta&&ta.seconds?ta.seconds:0; const sb=tb&&tb.seconds?tb.seconds:0;
+      return sb-sa;
+    });
+    S.feedLast = sortedDocs[sortedDocs.length-1]||null;
+    const uids2 = [...new Set(sortedDocs.map(d=>d.data().authorUid))];
     const pm = {}; await Promise.all(uids2.map(async u=>{pm[u]=await getProfile(u);}));
-    if (snap.empty && reset) {
+    if (sortedDocs.length === 0 && reset) {
       // If following tab is empty, suggest switching to explore
       const emptyMsg = S.feedTab==='following'
         ? `<div class="soc-profile-empty" style="margin:24px 13px;background:var(--card);border-radius:var(--r3);border:1px solid var(--line)"><svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="soc-profile-empty-title">لا توجد منشورات من المتابَعين بعد</div><button onclick="SOCIAL.ftab('explore')" style="margin-top:9px;padding:7px 18px;background:var(--brand);color:#fff;border:none;border-radius:var(--rpill);font-size:12.5px;font-weight:800;font-family:var(--f-ui);cursor:pointer">استكشاف عام</button></div>`
         : `<div class="soc-profile-empty" style="margin:24px 13px;background:var(--card);border-radius:var(--r3);border:1px solid var(--line)"><svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="soc-profile-empty-title">لا توجد منشورات بعد</div></div>`;
       cont.innerHTML = emptyMsg;
     } else {
-      const html = snap.docs.map((d,i)=>postCard(d.id,d.data(),pm[d.data().authorUid],i)).join('');
+      const html = sortedDocs.map((d,i)=>postCard(d.id,d.data(),pm[d.data().authorUid],i)).join('');
       if (reset) cont.innerHTML = html; else cont.insertAdjacentHTML('beforeend',html);
     }
     const lm = document.getElementById('soc-lm');
-    if (lm) lm.style.display = snap.docs.length<7?'none':'flex';
+    if (lm) lm.style.display = sortedDocs.length < 7 ? 'none' : 'flex';
   } catch(e) {
     console.warn('loadFeed error:', e.code || e.message);
     if (reset) {
@@ -647,10 +654,12 @@ async function ptab(tab, uid) {
   const emptyHtml = (icon, label) => `<div class="soc-profile-empty">${icon}<div class="soc-profile-empty-title">${label}</div></div>`;
   try {
     if (tab==='posts') {
-      const snap = await db.collection('social_posts').where('authorUid','==',uid).orderBy('createdAt','desc').limit(10).get();
+      // No orderBy = no composite index needed; sort client-side
+      const snap = await db.collection('social_posts').where('authorUid','==',uid).limit(15).get();
       if (snap.empty) { el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>`,'لا توجد منشورات بعد'); return; }
+      const sortedDocs = snap.docs.slice().sort((a,b)=>{ const ta=a.data().createdAt; const tb=b.data().createdAt; const sa=ta&&ta.seconds?ta.seconds:0; const sb=tb&&tb.seconds?tb.seconds:0; return sb-sa; });
       const authorProfile = await getProfile(uid);
-      el.innerHTML = snap.docs.map((d,i)=>postCard(d.id,d.data(),authorProfile,i)).join('');
+      el.innerHTML = sortedDocs.map((d,i)=>postCard(d.id,d.data(),authorProfile,i)).join('');
     } else if (tab==='products') {
       // Try both sellerId and ownerId fields for compatibility
       // ownerId is indexed; try ownerId first, fallback to sellerId without orderBy
@@ -660,8 +669,8 @@ async function ptab(tab, uid) {
       el.innerHTML=`<div class="soc-profile-products-grid">${snap.docs.map(d=>{const p=d.data(),img=p.images&&p.images[0]||p.imageURL;return`<div class="soc-profile-product-thumb" onclick="MKT&&MKT.openDetail&&MKT.openDetail('${d.id}')">${img?`<img src="${img}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg2);"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></div>`}<div class="soc-profile-product-thumb-overlay"><span>${p.price?p.price+' ج.م':''}</span></div></div>`;}).join('')}</div>`;
     } else {
       // Photos tab — posts with images
-      // Single where + orderBy (indexed); filter posts with images client-side
-      const snap = await db.collection('social_posts').where('authorUid','==',uid).orderBy('createdAt','desc').limit(30).get();
+      // No orderBy = no composite index needed
+      const snap = await db.collection('social_posts').where('authorUid','==',uid).limit(30).get();
       const imgs=[]; snap.docs.forEach(d=>{ const dd=d.data(); if(dd.images&&dd.images.length) dd.images.forEach(u=>imgs.push(u)); });
       if(!imgs.length){el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,'لا توجد صور');return;}
       el.innerHTML=`<div class="soc-profile-products-grid">${imgs.map(u=>`<div class="soc-profile-product-thumb" onclick="SOCIAL.lb('${u}')"><img src="${u}" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><div class="soc-profile-product-thumb-overlay"><span>عرض</span></div></div>`).join('')}</div>`;
@@ -1017,18 +1026,23 @@ window.SOCIAL = {
 
       // Upload with progress tracking
       const uploadTask = storRef.put(file);
+      let downloadURL = '';
       await new Promise((resolve, reject) => {
         uploadTask.on('state_changed',
-          snap => {
-            const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+          snapshot => {
+            const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
             toast(`⏳ جاري الرفع ${pct}%`);
           },
           err => reject(err),
-          () => resolve()
+          async () => {
+            try {
+              // Use the completed snapshot ref to get the download URL
+              downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+              resolve();
+            } catch(e) { reject(e); }
+          }
         );
       });
-
-      const downloadURL = await storRef.getDownloadURL();
       const db = getDB();
       if (!db) throw new Error('db unavailable');
 
@@ -1063,7 +1077,7 @@ window.SOCIAL = {
 
   async loadSocialNotifications() {
     const db=getDB(); const uid=S.uid; if(!db||!uid)return;
-    const snap=await db.collection('social_notifications').where('toUid','==',uid).orderBy('createdAt','desc').limit(20).get();
+    const snap=await db.collection('social_notifications').where('toUid','==',uid).limit(20).get();
     const existing=document.getElementById('mkt-notif-list-page'); if(!existing||snap.empty)return;
     const prev=document.getElementById('soc-sn'); if(prev)prev.remove();
     const fromUids=[...new Set(snap.docs.map(d=>d.data().fromUid))];
