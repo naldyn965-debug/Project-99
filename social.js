@@ -638,20 +638,42 @@ async function ptab(tab, uid) {
   const emptyHtml = (icon, label) => `<div class="soc-profile-empty">${icon}<div class="soc-profile-empty-title">${label}</div></div>`;
   try {
     if (tab==='posts') {
-      const snap = await db.collection('social_posts').where('authorUid','==',uid).orderBy('createdAt','desc').limit(10).get();
+      // Try with orderBy first; if index missing, fall back to unordered query
+      let snap;
+      try {
+        snap = await db.collection('social_posts').where('authorUid','==',uid).orderBy('createdAt','desc').limit(10).get();
+      } catch(idxErr) {
+        // Index not ready — fallback: fetch without orderBy, sort in-memory
+        console.warn('ptab posts index missing, fallback:', idxErr.message);
+        snap = await db.collection('social_posts').where('authorUid','==',uid).limit(10).get();
+      }
       if (snap.empty) { el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>`,'لا توجد منشورات بعد'); return; }
       const authorProfile = await getProfile(uid);
-      el.innerHTML = snap.docs.map((d,i)=>postCard(d.id,d.data(),authorProfile,i)).join('');
+      // Sort in-memory by createdAt descending (safe even if index not ready)
+      const docs = snap.docs.slice().sort((a,b)=>{
+        const ta = a.data().createdAt; const tb = b.data().createdAt;
+        const da = ta ? (ta.toDate ? ta.toDate() : new Date(ta)) : new Date(0);
+        const db2 = tb ? (tb.toDate ? tb.toDate() : new Date(tb)) : new Date(0);
+        return db2 - da;
+      });
+      el.innerHTML = docs.map((d,i)=>postCard(d.id,d.data(),authorProfile,i)).join('');
     } else if (tab==='products') {
       // Try both sellerId and ownerId fields for compatibility
-      let snap = await db.collection('marketplace_products').where('sellerId','==',uid).orderBy('createdAt','desc').limit(18).get();
-      if (snap.empty) snap = await db.collection('marketplace_products').where('ownerId','==',uid).orderBy('createdAt','desc').limit(18).get();
+      let snap = await db.collection('marketplace_products').where('sellerId','==',uid).limit(18).get();
+      if (snap.empty) snap = await db.collection('marketplace_products').where('ownerId','==',uid).limit(18).get();
       if (snap.empty) { el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg>`,'لا توجد منتجات'); return; }
       el.innerHTML=`<div class="soc-profile-products-grid">${snap.docs.map(d=>{const p=d.data(),img=p.images&&p.images[0]||p.imageURL;return`<div class="soc-profile-product-thumb" onclick="MKT&&MKT.openDetail&&MKT.openDetail('${d.id}')">${img?`<img src="${img}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg2);"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></div>`}<div class="soc-profile-product-thumb-overlay"><span>${p.price?p.price+' ج.م':''}</span></div></div>`;}).join('')}</div>`;
     } else {
-      // Photos tab — posts with images
-      const snap = await db.collection('social_posts').where('authorUid','==',uid).where('hasImages','==',true).orderBy('createdAt','desc').limit(18).get();
-      const imgs=[]; snap.docs.forEach(d=>(d.data().images||[]).forEach(u=>imgs.push(u)));
+      // Photos tab — try with compound query, fallback without hasImages filter
+      let snap;
+      try {
+        snap = await db.collection('social_posts').where('authorUid','==',uid).where('hasImages','==',true).orderBy('createdAt','desc').limit(18).get();
+      } catch(idxErr) {
+        console.warn('ptab photos index missing, fallback:', idxErr.message);
+        // Fallback: get all posts for this user and filter client-side
+        snap = await db.collection('social_posts').where('authorUid','==',uid).limit(30).get();
+      }
+      const imgs=[]; snap.docs.forEach(d=>{if((d.data().images||[]).length)(d.data().images||[]).forEach(u=>imgs.push(u));});
       if(!imgs.length){el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,'لا توجد صور');return;}
       el.innerHTML=`<div class="soc-profile-products-grid">${imgs.map(u=>`<div class="soc-profile-product-thumb" onclick="SOCIAL.lb('${u}')"><img src="${u}" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><div class="soc-profile-product-thumb-overlay"><span>عرض</span></div></div>`).join('')}</div>`;
     }
@@ -916,11 +938,35 @@ window.SOCIAL = {
     if(!text&&S.imgs.length===0){toast('اكتب شيئاً أو أضف صورة');return;}
     const btn=document.getElementById('soc-psb'); if(btn)btn.disabled=true;
     try {
-      await db.collection('social_posts').add({authorUid:S.uid,text,images:S.imgs,hasImages:S.imgs.length>0,likesCount:0,commentsCount:0,sharesCount:0,likedBy:[],savedBy:[],createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+      // Upload base64 images to Firebase Storage first, collect download URLs
+      let imageURLs = [];
+      if (S.imgs.length > 0) {
+        const stor = window.storage;
+        if (!stor) throw new Error('storage unavailable');
+        toast(`⏳ جاري رفع الصور...`);
+        imageURLs = await Promise.all(S.imgs.map(async (dataURL, idx) => {
+          // Convert base64 dataURL to Blob
+          const res = await fetch(dataURL);
+          const blob = await res.blob();
+          const ext = blob.type.split('/')[1] || 'jpg';
+          const path = `post_images/${S.uid}/${Date.now()}_${idx}.${ext}`;
+          const ref = stor.ref(path);
+          await ref.put(blob);
+          return await ref.getDownloadURL();
+        }));
+      }
+      await db.collection('social_posts').add({
+        authorUid:S.uid, text, images:imageURLs,
+        hasImages:imageURLs.length>0,
+        likesCount:0, commentsCount:0, sharesCount:0,
+        likedBy:[], savedBy:[],
+        createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
       await db.collection('social_profiles').doc(S.uid).update({postsCount:firebase.firestore.FieldValue.increment(1)});
       this.closePost(); toast('✅ تم نشر المنشور');
       const fp=document.getElementById('mkt-panel-feed'); if(fp&&fp.classList.contains('active')) loadFeed(true);
-    } catch(e){toast('حدث خطأ');}
+    } catch(e){ console.error('submitPost error:', e); toast('حدث خطأ أثناء النشر'); }
     if(btn)btn.disabled=false;
   },
 
@@ -970,10 +1016,9 @@ window.SOCIAL = {
 
     const isAvatar = (type === 'avatar');
     const fieldKey = isAvatar ? 'photoURL' : 'coverURL';
-    // Use profile_photos path — matches storage.rules
     const path = `profile_photos/${S.uid}/${isAvatar ? 'avatar' : 'cover'}_${Date.now()}`;
 
-    // Optimistic UI — show local preview immediately before upload finishes
+    // Show local preview immediately
     const localURL = URL.createObjectURL(file);
     if (isAvatar) {
       const avatarEl = document.querySelector('.soc-avatar-xl');
@@ -983,13 +1028,14 @@ window.SOCIAL = {
       }
     } else {
       const cover = document.querySelector('.soc-profile-cover');
-      if (cover) cover.style.backgroundImage = `url('${localURL}')`;
+      if (cover) {
+        cover.style.backgroundImage = `url('${localURL}')`;
+        cover.style.backgroundSize = 'cover';
+        cover.style.backgroundPosition = 'center';
+      }
     }
 
-    // Show progress toast
     toast('⏳ جاري الرفع...');
-
-    // Disable input during upload
     const input = document.getElementById(isAvatar ? 'soc-avatar-input' : 'soc-cover-input');
     if (input) input.disabled = true;
 
@@ -998,7 +1044,6 @@ window.SOCIAL = {
       if (!stor) throw new Error('storage unavailable');
       const storRef = stor.ref(path);
 
-      // Upload with progress tracking
       const uploadTask = storRef.put(file);
       await new Promise((resolve, reject) => {
         uploadTask.on('state_changed',
@@ -1015,26 +1060,55 @@ window.SOCIAL = {
       const db = getDB();
       if (!db) throw new Error('db unavailable');
 
-      // Save to Firestore — update or create profile doc
       await db.collection('social_profiles').doc(S.uid).set(
         { [fieldKey]: downloadURL },
         { merge: true }
       );
 
-      // Update local state + cache immediately
+      // Update local state + cache
       S.profile = { ...(S.profile || {}), [fieldKey]: downloadURL };
       _profileCache[S.uid] = S.profile;
+
+      // Update DOM with the final Storage URL (replace the blob URL)
+      if (isAvatar) {
+        const avatarEl = document.querySelector('.soc-avatar-xl');
+        if (avatarEl) {
+          avatarEl.style.background = 'transparent';
+          avatarEl.innerHTML = `<img src="${downloadURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+        }
+      } else {
+        const cover = document.querySelector('.soc-profile-cover');
+        if (cover) {
+          cover.style.backgroundImage = `url('${downloadURL}')`;
+        }
+      }
 
       toast('✅ تم تغيير الصورة بنجاح');
     } catch (err) {
       console.error('uploadImg error:', err.code, err.message);
       let errMsg = 'حدث خطأ أثناء الرفع';
-      if (err.code === 'storage/unauthorized') errMsg = 'غير مصرح برفع الصورة';
+      if (err.code === 'storage/unauthorized') errMsg = 'غير مصرح برفع الصورة — تحقق من Firebase Storage Rules';
       else if (err.code === 'storage/quota-exceeded') errMsg = 'تجاوز حد التخزين';
       else if (err.code === 'storage/canceled') errMsg = 'تم إلغاء الرفع';
       toast(errMsg);
       // Revert optimistic UI on failure
-      if (S.uid) renderProfile(S.uid, true);
+      if (isAvatar) {
+        const avatarEl = document.querySelector('.soc-avatar-xl');
+        if (avatarEl && S.profile) {
+          avatarEl.style.background = S.profile.photoURL ? 'transparent' : 'linear-gradient(145deg,var(--brand-l),var(--brand-d))';
+          avatarEl.innerHTML = S.profile.photoURL
+            ? `<img src="${S.profile.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+            : init(S.profile.displayName || S.profile.username);
+        }
+      } else {
+        const cover = document.querySelector('.soc-profile-cover');
+        if (cover && S.profile && S.profile.coverURL) {
+          cover.style.backgroundImage = `url('${S.profile.coverURL}')`;
+        } else if (cover) {
+          cover.style.backgroundImage = '';
+          cover.style.background = 'linear-gradient(145deg,var(--brand-d),var(--brand-l),#e5a343)';
+        }
+      }
     } finally {
       if (input) { input.disabled = false; input.value = ''; }
     }
