@@ -100,6 +100,7 @@
 .soc-action-btn.saved { color:var(--brand); }
 .soc-action-btn svg { width:16px; height:16px; transition:transform .25s cubic-bezier(.34,1.56,.64,1); }
 .soc-action-btn:hover svg { transform:scale(1.13); }
+.soc-action-btn { transition:color .18s, background .18s, transform .25s cubic-bezier(.34,1.56,.64,1); }
 .soc-comments-wrap { border-top:1px solid var(--line); padding:10px 13px; display:none; }
 .soc-comments-wrap.open { display:block; animation:socFadeIn .2s ease both; }
 @keyframes socFadeIn { from{opacity:0;transform:translateY(-5px)} to{opacity:1;transform:none} }
@@ -236,33 +237,30 @@
 .soc-suggest-follow-btn:hover { background:var(--brand-d); }
 .soc-suggest-follow-btn.following { background:var(--bg2); color:var(--brand); border:1.5px solid var(--brand-l); }
 .soc-modal-overlay {
-  position:fixed; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-  z-index:3000; display:flex; align-items:flex-end; justify-content:center;
-  opacity:0; pointer-events:none; transition:opacity .3s ease;
+  position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  z-index:3000; display:flex; align-items:center; justify-content:center; padding:20px;
+  opacity:0; pointer-events:none; transition:opacity .28s ease;
+  box-sizing:border-box;
 }
 .soc-modal-overlay.open { opacity:1; pointer-events:all; }
-@media(min-width:600px){.soc-modal-overlay{align-items:center;}}
 .soc-modal {
-  width:100%; max-width:530px; max-height:88vh; background:var(--card);
-  border-radius:var(--r3) var(--r3) 0 0; overflow-y:auto;
+  width:100%; max-width:500px; max-height:82vh; background:var(--card);
+  border-radius:20px; overflow-y:auto;
   -webkit-overflow-scrolling:touch;
-  transform:translateY(100%); -webkit-transform:translateY(100%);
-  transition:transform .4s cubic-bezier(.16,1,.3,1);
-  visibility:hidden;
+  transform:scale(.93) translateY(10px); -webkit-transform:scale(.93) translateY(10px);
+  transition:transform .32s cubic-bezier(.16,1,.3,1), opacity .28s ease;
+  opacity:0;
+  box-shadow:0 24px 80px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06);
 }
 .soc-modal-overlay.open .soc-modal {
-  transform:translateY(0); -webkit-transform:translateY(0);
-  visibility:visible;
-}
-@media(min-width:600px){
-  .soc-modal{border-radius:var(--r3);transform:scale(.93);-webkit-transform:scale(.93);}
-  .soc-modal-overlay.open .soc-modal{transform:none;-webkit-transform:none;}
+  transform:scale(1) translateY(0); -webkit-transform:scale(1) translateY(0);
+  opacity:1;
 }
 .soc-modal-header {
-  display:flex; align-items:center; justify-content:space-between; padding:14px 17px;
+  display:flex; align-items:center; justify-content:space-between; padding:15px 18px;
   border-bottom:1px solid var(--line); font-size:15px; font-weight:900; color:var(--ink);
   position:sticky; top:0; background:var(--card); z-index:1;
-  border-radius:var(--r3) var(--r3) 0 0;
+  border-radius:20px 20px 0 0;
 }
 .soc-modal-header span { font-family:var(--f-ui); }
 .soc-modal-close { width:31px; height:31px; border-radius:50%; background:var(--bg2); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted); transition:all .2s; }
@@ -889,12 +887,60 @@ window.SOCIAL = {
   },
 
   async like(postId, btn) {
-    if (!S.uid||!getDB()){toast('سجّل الدخول أولاً');return;}
-    const ref=getDB().collection('social_posts').doc(postId);
-    const snap=await ref.get(); if(!snap.exists)return;
-    const liked=(snap.data().likedBy||[]).includes(S.uid);
-    if(liked){await ref.update({likesCount:firebase.firestore.FieldValue.increment(-1),likedBy:firebase.firestore.FieldValue.arrayRemove(S.uid)});btn.classList.remove('liked');const svg=btn.querySelector('svg');if(svg){svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');}}
-    else{await ref.update({likesCount:firebase.firestore.FieldValue.increment(1),likedBy:firebase.firestore.FieldValue.arrayUnion(S.uid)});btn.classList.add('liked');const svg=btn.querySelector('svg');if(svg){svg.setAttribute('fill','#e74c3c');svg.setAttribute('stroke','#e74c3c');}if(snap.data().authorUid!==S.uid)getDB().collection('social_notifications').add({toUid:snap.data().authorUid,fromUid:S.uid,type:'like',postId,read:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()});}
+    if (!S.uid) { toast('سجّل الدخول أولاً'); return; }
+    const db = getDB(); if (!db) { toast('سجّل الدخول أولاً'); return; }
+    if (btn.disabled) return;
+    btn.disabled = true;
+
+    // ── Optimistic UI update immediately ──
+    const wasLiked = btn.classList.contains('liked');
+    const svg = btn.querySelector('svg');
+    if (wasLiked) {
+      btn.classList.remove('liked');
+      if (svg) { svg.setAttribute('fill','none'); svg.setAttribute('stroke','currentColor'); }
+    } else {
+      btn.classList.add('liked');
+      if (svg) { svg.setAttribute('fill','#e74c3c'); svg.setAttribute('stroke','#e74c3c'); }
+      // heart bounce animation
+      btn.style.transform = 'scale(1.25)';
+      setTimeout(() => { btn.style.transform = ''; }, 250);
+    }
+
+    try {
+      const ref = db.collection('social_posts').doc(postId);
+      if (wasLiked) {
+        await ref.update({
+          likesCount: firebase.firestore.FieldValue.increment(-1),
+          likedBy: firebase.firestore.FieldValue.arrayRemove(S.uid)
+        });
+      } else {
+        await ref.update({
+          likesCount: firebase.firestore.FieldValue.increment(1),
+          likedBy: firebase.firestore.FieldValue.arrayUnion(S.uid)
+        });
+        // Send notification (non-blocking)
+        const snap = await ref.get();
+        if (snap.exists && snap.data().authorUid !== S.uid) {
+          db.collection('social_notifications').add({
+            toUid: snap.data().authorUid, fromUid: S.uid,
+            type: 'like', postId, read: false,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          }).catch(()=>{});
+        }
+      }
+    } catch(e) {
+      // Revert optimistic update on failure
+      if (wasLiked) {
+        btn.classList.add('liked');
+        if (svg) { svg.setAttribute('fill','#e74c3c'); svg.setAttribute('stroke','#e74c3c'); }
+      } else {
+        btn.classList.remove('liked');
+        if (svg) { svg.setAttribute('fill','none'); svg.setAttribute('stroke','currentColor'); }
+      }
+      toast('حدث خطأ، حاول مرة أخرى');
+      console.warn('like error:', e.code, e.message);
+    }
+    btn.disabled = false;
   },
 
   async save(postId, btn) {
