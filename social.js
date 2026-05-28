@@ -432,24 +432,22 @@ async function isFollowing(a, b) {
 async function follow(a, b) {
   const db = getDB();
   const FV = firebase.firestore.FieldValue;
-  // 1) سجّل المتابعة + الإشعار في batch
-  const batch = db.batch();
-  batch.set(db.collection('social_follows').doc(`${a}_${b}`), { followerUid:a, targetUid:b, createdAt:FV.serverTimestamp() });
-  batch.set(db.collection('social_notifications').doc(), { toUid:b, fromUid:a, type:'follow', read:false, createdAt:FV.serverTimestamp() });
-  await batch.commit();
-  // 2) تحديث العدادات بـ update منفصل — الـ Rules بتسمح به صراحةً
-  await db.collection('social_profiles').doc(a).update({ followingCount: FV.increment(1) });
-  await db.collection('social_profiles').doc(b).update({ followersCount: FV.increment(1) });
+  // سجّل المتابعة والإشعار
+  await db.collection('social_follows').doc(`${a}_${b}`).set({ followerUid:a, targetUid:b, createdAt:FV.serverTimestamp() });
+  db.collection('social_notifications').add({ toUid:b, fromUid:a, type:'follow', read:false, createdAt:FV.serverTimestamp() }).catch(()=>{});
+  // تحديث العدادات — بتجاهل الخطأ لو الـ profile مش موجود
+  db.collection('social_profiles').doc(a).update({ followingCount: FV.increment(1) }).catch(()=>{});
+  db.collection('social_profiles').doc(b).update({ followersCount: FV.increment(1) }).catch(()=>{});
 }
 
 async function unfollow(a, b) {
   const db = getDB();
   const FV = firebase.firestore.FieldValue;
-  // 1) احذف المتابعة
+  // احذف المتابعة
   await db.collection('social_follows').doc(`${a}_${b}`).delete();
-  // 2) تحديث العدادات بـ update منفصل
-  await db.collection('social_profiles').doc(a).update({ followingCount: FV.increment(-1) });
-  await db.collection('social_profiles').doc(b).update({ followersCount: FV.increment(-1) });
+  // تحديث العدادات — بتجاهل الخطأ لو الـ profile مش موجود
+  db.collection('social_profiles').doc(a).update({ followingCount: FV.increment(-1) }).catch(()=>{});
+  db.collection('social_profiles').doc(b).update({ followersCount: FV.increment(-1) }).catch(()=>{});
 }
 
 const skel = () => Array(3).fill(0).map(()=>`<div class="soc-skeleton-card"><div class="soc-skel-row"><div class="soc-skel-circle"></div><div class="soc-skel-lines"><div class="soc-skel-line w70"></div><div class="soc-skel-line w40"></div></div></div><div class="soc-skel-line w100" style="margin-bottom:5px"></div><div class="soc-skel-line w70"></div><div class="soc-skel-img"></div></div>`).join('');
