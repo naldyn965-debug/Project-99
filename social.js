@@ -432,26 +432,24 @@ async function isFollowing(a, b) {
 async function follow(a, b) {
   const db = getDB();
   const FV = firebase.firestore.FieldValue;
+  // 1) سجّل المتابعة + الإشعار في batch
   const batch = db.batch();
-  // سجّل المتابعة
   batch.set(db.collection('social_follows').doc(`${a}_${b}`), { followerUid:a, targetUid:b, createdAt:FV.serverTimestamp() });
-  // set+merge بدل update — يشتغل حتى لو الـ profile مش موجود بعد
-  batch.set(db.collection('social_profiles').doc(a), { followingCount:FV.increment(1) }, { merge:true });
-  batch.set(db.collection('social_profiles').doc(b), { followersCount:FV.increment(1) }, { merge:true });
-  // إشعار للمتابَع
   batch.set(db.collection('social_notifications').doc(), { toUid:b, fromUid:a, type:'follow', read:false, createdAt:FV.serverTimestamp() });
   await batch.commit();
+  // 2) تحديث العدادات بـ update منفصل — الـ Rules بتسمح به صراحةً
+  await db.collection('social_profiles').doc(a).update({ followingCount: FV.increment(1) });
+  await db.collection('social_profiles').doc(b).update({ followersCount: FV.increment(1) });
 }
 
 async function unfollow(a, b) {
   const db = getDB();
   const FV = firebase.firestore.FieldValue;
-  const batch = db.batch();
-  batch.delete(db.collection('social_follows').doc(`${a}_${b}`));
-  // set+merge بدل update — أمان أكبر
-  batch.set(db.collection('social_profiles').doc(a), { followingCount:FV.increment(-1) }, { merge:true });
-  batch.set(db.collection('social_profiles').doc(b), { followersCount:FV.increment(-1) }, { merge:true });
-  await batch.commit();
+  // 1) احذف المتابعة
+  await db.collection('social_follows').doc(`${a}_${b}`).delete();
+  // 2) تحديث العدادات بـ update منفصل
+  await db.collection('social_profiles').doc(a).update({ followingCount: FV.increment(-1) });
+  await db.collection('social_profiles').doc(b).update({ followersCount: FV.increment(-1) });
 }
 
 const skel = () => Array(3).fill(0).map(()=>`<div class="soc-skeleton-card"><div class="soc-skel-row"><div class="soc-skel-circle"></div><div class="soc-skel-lines"><div class="soc-skel-line w70"></div><div class="soc-skel-line w40"></div></div></div><div class="soc-skel-line w100" style="margin-bottom:5px"></div><div class="soc-skel-line w70"></div><div class="soc-skel-img"></div></div>`).join('');
