@@ -2,31 +2,37 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function isAuth()       { return request.auth != null; }
-    function isSelf(uid)    { return isAuth() && request.auth.uid == uid; }
-    function owns(resource) { return isAuth() && request.auth.uid == resource.data.ownerId; }
-    function ownsOrder(res) { return isAuth() &&
-        (request.auth.uid == res.data.buyerId ||
-         request.auth.uid == res.data.sellerId); }
+    function isAuth()    { return request.auth != null; }
+    function isSelf(uid) { return isAuth() && request.auth.uid == uid; }
+    function owns(res)   { return isAuth() && request.auth.uid == res.data.ownerId; }
+    function ownsOrder(res) {
+      return isAuth() && (request.auth.uid == res.data.buyerId ||
+                          request.auth.uid == res.data.sellerId);
+    }
 
-    // ── EXISTING ─────────────────────────────────────────────
+    // ── USERS ──────────────────────────────────────────────
     match /users/{uid} {
       allow read:  if true;
       allow write: if isSelf(uid);
     }
+
+    // ── FARMS ──────────────────────────────────────────────
     match /farms/{docId} {
-      allow read:  if isAuth();
-      allow write: if isAuth();
+      allow read, write: if isAuth();
     }
+
+    // ── PLANTS / DISEASES ──────────────────────────────────
     match /plants/{docId}   { allow read: if true; allow write: if false; }
     match /diseases/{docId} { allow read: if true; allow write: if false; }
+
+    // ── GOALS ──────────────────────────────────────────────
     match /goals/{docId} {
       allow read, write: if isAuth();
     }
 
-    // ── MARKETPLACE ───────────────────────────────────────────
+    // ── MARKETPLACE ────────────────────────────────────────
     match /marketplace_products/{productId} {
-      allow read:   if true;
+      allow read: if true;
       allow create: if isAuth()
                     && request.resource.data.ownerId == request.auth.uid
                     && request.resource.data.title is string
@@ -42,60 +48,48 @@ service cloud.firestore {
       allow delete: if false;
     }
     match /marketplace_reviews/{reviewId} {
-      allow read:   if true;
+      allow read: if true;
       allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
-      allow update, delete: if isAuth() && request.auth.uid == resource.data.userId;
+      allow update, delete: if isAuth() && resource.data.userId == request.auth.uid;
     }
     match /marketplace_notifications/{notifId} {
-      allow read, update, delete: if isAuth() && request.auth.uid == resource.data.userId;
+      allow read, update, delete: if isAuth() && resource.data.userId == request.auth.uid;
       allow create: if isAuth();
     }
 
-    // ── SOCIAL MODULE ─────────────────────────────────────────
-
-    // Social Profiles — public read, self write
+    // ── SOCIAL: PROFILES ───────────────────────────────────
     match /social_profiles/{uid} {
-      allow read:   if true;
-      allow create: if isSelf(uid);
-      allow update: if isSelf(uid);
-      allow delete: if isSelf(uid);
+      allow read: if true;
+      allow write: if isSelf(uid);
     }
 
-    // Social Posts — public read, author write
+    // ── SOCIAL: POSTS ──────────────────────────────────────
     match /social_posts/{postId} {
-      allow read:   if true;
+      allow read: if true;
       allow create: if isAuth() && request.resource.data.authorUid == request.auth.uid;
-      allow update: if isAuth() && (
-                      resource.data.authorUid == request.auth.uid ||
-                      // allow like/save/share counter updates by anyone authenticated
-                      request.resource.data.diff(resource.data).affectedKeys()
-                        .hasOnly(['likesCount','likedBy','savedBy','sharesCount','commentsCount'])
-                    );
+      allow update: if isAuth() && resource.data.authorUid == request.auth.uid;
       allow delete: if isAuth() && resource.data.authorUid == request.auth.uid;
-
-      // Post comments sub-collection
       match /comments/{commentId} {
-        allow read:   if true;
-        allow create: if isAuth() && request.resource.data.authorUid == request.auth.uid;
+        allow read: if true;
+        allow create: if isAuth();
         allow delete: if isAuth() && resource.data.authorUid == request.auth.uid;
       }
     }
 
-    // Social Follows — authenticated read/write, follower owns doc
+    // ── SOCIAL: FOLLOWS ────────────────────────────────────
     match /social_follows/{followId} {
-      allow read:   if isAuth();
+      allow read: if isAuth();
       allow create: if isAuth() && request.resource.data.followerUid == request.auth.uid;
       allow delete: if isAuth() && resource.data.followerUid == request.auth.uid;
     }
 
-    // Social Notifications — recipient read/update, anyone authenticated create
+    // ── SOCIAL: NOTIFICATIONS ──────────────────────────────
     match /social_notifications/{notifId} {
-      allow read, update: if isAuth() && resource.data.toUid == request.auth.uid;
-      allow create:       if isAuth();
-      allow delete:       if isAuth() && resource.data.toUid == request.auth.uid;
+      allow read, update, delete: if isAuth() && resource.data.toUid == request.auth.uid;
+      allow create: if isAuth();
     }
 
-    // ── DENY ALL ELSE ─────────────────────────────────────────
+    // ── DENY ALL ELSE ──────────────────────────────────────
     match /{document=**} {
       allow read, write: if false;
     }
