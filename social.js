@@ -237,37 +237,51 @@
 .soc-suggest-follow-btn.following { background:var(--bg2); color:var(--brand); border:1.5px solid var(--brand-l); }
 .soc-modal-overlay {
   position:fixed; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-  z-index:3000; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s;
+  z-index:3000; display:flex; align-items:flex-end; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity .3s ease;
 }
 .soc-modal-overlay.open { opacity:1; pointer-events:all; }
 @media(min-width:600px){.soc-modal-overlay{align-items:center;}}
 .soc-modal {
   width:100%; max-width:530px; max-height:88vh; background:var(--card);
   border-radius:var(--r3) var(--r3) 0 0; overflow-y:auto;
-  transform:translateY(100%); transition:transform .4s cubic-bezier(.16,1,.3,1);
+  -webkit-overflow-scrolling:touch;
+  transform:translateY(100%); -webkit-transform:translateY(100%);
+  transition:transform .4s cubic-bezier(.16,1,.3,1);
+  visibility:hidden;
 }
-.soc-modal-overlay.open .soc-modal { transform:none; }
-@media(min-width:600px){.soc-modal{border-radius:var(--r3);transform:scale(.9);}}
-@media(min-width:600px){.soc-modal-overlay.open .soc-modal{transform:none;}}
+.soc-modal-overlay.open .soc-modal {
+  transform:translateY(0); -webkit-transform:translateY(0);
+  visibility:visible;
+}
+@media(min-width:600px){
+  .soc-modal{border-radius:var(--r3);transform:scale(.93);-webkit-transform:scale(.93);}
+  .soc-modal-overlay.open .soc-modal{transform:none;-webkit-transform:none;}
+}
 .soc-modal-header {
   display:flex; align-items:center; justify-content:space-between; padding:14px 17px;
   border-bottom:1px solid var(--line); font-size:15px; font-weight:900; color:var(--ink);
   position:sticky; top:0; background:var(--card); z-index:1;
+  border-radius:var(--r3) var(--r3) 0 0;
 }
+.soc-modal-header span { font-family:var(--f-ui); }
 .soc-modal-close { width:31px; height:31px; border-radius:50%; background:var(--bg2); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted); transition:all .2s; }
 .soc-modal-close:hover { background:var(--line); color:var(--ink); }
 .soc-modal-body { padding:16px; }
 .soc-post-textarea {
-  width:100%; min-height:105px; resize:none; border:1.5px solid var(--line); border-radius:var(--r2);
-  padding:11px; font-size:14px; font-family:var(--f-ui); color:var(--ink); background:var(--bg2); outline:none; transition:border-color .2s;
+  width:100%; min-height:120px; resize:none; border:1.5px solid var(--line); border-radius:var(--r2);
+  padding:11px 13px; font-size:14px; line-height:1.6; font-family:var(--f-ui); color:var(--ink);
+  background:var(--bg2); outline:none; transition:border-color .2s, background .2s;
+  box-sizing:border-box; display:block; -webkit-appearance:none;
+  direction:rtl; text-align:right;
 }
-.soc-post-textarea:focus { border-color:var(--brand-l); background:var(--bg); }
+.soc-post-textarea:focus { border-color:var(--brand-l); background:var(--bg); box-shadow:0 0 0 3px rgba(27,107,58,.08); }
 .soc-post-images-preview { display:flex; gap:7px; flex-wrap:wrap; margin-top:10px; }
 .soc-post-img-preview-item { width:72px; height:72px; border-radius:var(--r2); overflow:hidden; position:relative; }
 .soc-post-img-preview-item img { width:100%; height:100%; object-fit:cover; }
 .soc-post-img-remove { position:absolute; top:3px; left:3px; width:19px; height:19px; background:rgba(0,0,0,.6); color:#fff; border-radius:50%; border:none; cursor:pointer; font-size:10.5px; display:flex; align-items:center; justify-content:center; }
 .soc-post-options-bar { display:flex; align-items:center; gap:7px; padding:10px 0; border-top:1px solid var(--line); margin-top:11px; }
-.soc-post-opt-btn { width:36px; height:36px; border-radius:var(--r2); background:var(--bg2); border:1.5px solid var(--line); cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted); transition:all .2s; }
+.soc-post-opt-btn { min-width:36px; height:36px; padding:0 10px; border-radius:var(--r2); background:var(--bg2); border:1.5px solid var(--line); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; color:var(--muted); transition:all .2s; font-family:var(--f-ui); }
 .soc-post-opt-btn:hover { border-color:var(--brand-l); color:var(--brand); background:var(--brand-pale); }
 .soc-post-submit-btn {
   margin-right:auto; padding:8px 24px; border-radius:var(--rpill); background:var(--brand); color:#fff;
@@ -568,7 +582,7 @@ async function renderFeed() {
   <div class="soc-feed-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>الفيد الزراعي</div>
   <div class="soc-feed-tabs"><button class="soc-ft active" id="sft-f" onclick="SOCIAL.ftab('following')">متابَعون</button><button class="soc-ft" id="sft-e" onclick="SOCIAL.ftab('explore')">استكشاف</button></div>
 </div>
-${S.uid?`<div class="soc-create-card" onclick="SOCIAL.openPost()">${av(S.profile,'soc-avatar-sm')}<div style="flex:1"><div class="soc-create-placeholder">شارك تجربتك الزراعية مع المجتمع...</div><div class="soc-create-actions"><button class="soc-create-action-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>صورة</button><button class="soc-create-action-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg>منتج</button><button class="soc-create-action-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>موقع</button></div></div></div>`:`<div style="margin:12px;padding:13px;background:var(--brand-pale);border-radius:var(--r2);text-align:center;font-size:13px;color:var(--brand);font-weight:700;">سجّل الدخول للتفاعل مع المجتمع الزراعي 🌿</div>`}
+${S.uid?`<div class="soc-create-card" onclick="SOCIAL.openPost()">${av(S.profile,'soc-avatar-sm')}<div style="flex:1"><div class="soc-create-placeholder" onclick="event.stopPropagation();SOCIAL.openPost()">شارك تجربتك الزراعية مع المجتمع...</div><div class="soc-create-actions"><button class="soc-create-action-btn" onclick="event.stopPropagation();SOCIAL.openPost()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>صورة</button><button class="soc-create-action-btn" onclick="event.stopPropagation();SOCIAL.openPost()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg>منتج</button><button class="soc-create-action-btn" onclick="event.stopPropagation();SOCIAL.openPost()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>موقع</button></div></div></div>`:`<div style="margin:12px;padding:13px;background:var(--brand-pale);border-radius:var(--r2);text-align:center;font-size:13px;color:var(--brand);font-weight:700;">سجّل الدخول للتفاعل مع المجتمع الزراعي 🌿</div>`}
 <div id="soc-suggest-slot"></div>
 <div id="soc-posts">${skel()}</div>
 <div class="soc-load-spinner" id="soc-lm" style="display:none;"><div class="soc-spinner"></div></div>`;
@@ -725,14 +739,30 @@ function injectGlobal() {
 <div class="soc-modal-overlay" id="soc-pm" onclick="if(event.target===this)SOCIAL.closePost()">
   <div class="soc-modal" dir="rtl">
     <div class="soc-modal-header"><span>منشور جديد</span><button class="soc-modal-close" onclick="SOCIAL.closePost()">✕</button></div>
-    <div class="soc-modal-body">
-      <div style="display:flex;gap:10px;align-items:flex-start;"><div id="soc-pma"></div><textarea class="soc-post-textarea" id="soc-pt" placeholder="شارك خبرتك الزراعية..."></textarea></div>
+    <div class="soc-modal-body" style="padding:16px 15px 20px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;">
+        <div id="soc-pma" style="flex-shrink:0;padding-top:2px;"></div>
+        <textarea class="soc-post-textarea" id="soc-post-text"
+          placeholder="شارك خبرتك الزراعية مع المجتمع..."
+          dir="rtl" autocomplete="off" autocorrect="off" spellcheck="true"
+          rows="4"
+        ></textarea>
+      </div>
       <div class="soc-post-images-preview" id="soc-pip"></div>
-      <div class="soc-post-options-bar">
-        <button class="soc-post-opt-btn" onclick="document.getElementById('soc-iu').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></button>
+      <div class="soc-post-options-bar" style="display:flex;align-items:center;gap:8px;padding:10px 0 0;border-top:1px solid var(--line);margin-top:8px;flex-wrap:wrap;">
+        <button class="soc-post-opt-btn" title="إضافة صورة" onclick="document.getElementById('soc-iu').click()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span style="font-size:11px;font-weight:700;color:var(--muted)">صورة</span>
+        </button>
         <input type="file" id="soc-iu" accept="image/*" multiple style="display:none" onchange="SOCIAL.imgUp(event)">
-        <button class="soc-post-opt-btn" onclick="document.getElementById('soc-pt').value+=' #'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg></button>
-        <button class="soc-post-submit-btn" id="soc-psb" onclick="SOCIAL.submitPost()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>نشر</button>
+        <button class="soc-post-opt-btn" title="إضافة هاشتاق" onclick="document.getElementById('soc-post-text').value+=' #';document.getElementById('soc-post-text').focus()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+          <span style="font-size:11px;font-weight:700;color:var(--muted)">#هاشتاق</span>
+        </button>
+        <button class="soc-post-submit-btn" id="soc-psb" onclick="SOCIAL.submitPost()" style="margin-right:auto;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          نشر الآن
+        </button>
       </div>
     </div>
   </div>
@@ -920,12 +950,25 @@ window.SOCIAL = {
   openPost() {
     if(!S.uid){toast('سجّل الدخول أولاً');return;}
     const m=document.getElementById('soc-pm'); if(!m)return;
-    const ta=document.getElementById('soc-pt'); if(ta){ta.value='';ta.focus();}
+    // Reset textarea first (before open so layout is calculated)
+    const ta=document.getElementById('soc-post-text');
+    if(ta){ ta.value=''; }
     S.imgs=[]; this.renderPrev();
+    // Set avatar
+    const pma=document.getElementById('soc-pma');
+    if(pma) pma.innerHTML=av(S.profile,'soc-avatar-sm');
+    // Open modal
     m.classList.add('open');
-    const pma=document.getElementById('soc-pma'); if(pma) pma.innerHTML=av(S.profile,'soc-avatar-sm');
+    // Delay focus until after animation (important for iOS)
+    setTimeout(() => {
+      const taFocus=document.getElementById('soc-post-text');
+      if(taFocus){ taFocus.focus(); }
+    }, 420);
   },
-  closePost() { const m=document.getElementById('soc-pm'); if(m) m.classList.remove('open'); },
+  closePost() {
+    const m=document.getElementById('soc-pm');
+    if(m) m.classList.remove('open');
+  },
 
   imgUp(e) {
     Array.from(e.target.files).slice(0,4-S.imgs.length).forEach(f=>{
@@ -940,7 +983,7 @@ window.SOCIAL = {
 
   async submitPost() {
     const db=getDB(); if(!S.uid||!db)return;
-    const ta=document.getElementById('soc-pt'); const text=ta?ta.value.trim():'';
+    const ta=document.getElementById('soc-post-text'); const text=ta?ta.value.trim():'';
     if(!text&&S.imgs.length===0){toast('اكتب شيئاً أو أضف صورة');return;}
     const btn=document.getElementById('soc-psb'); if(btn)btn.disabled=true;
     try {
