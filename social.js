@@ -910,13 +910,11 @@ window.SOCIAL = {
 
     try {
       const ref = db.collection('social_posts').doc(postId);
-      // Use set+merge instead of update — works even if likedBy field missing
-      // and doesn't require post-owner permission
       const FV = firebase.firestore.FieldValue;
-      await ref.set({
+      await ref.update({
         likesCount: FV.increment(wasLiked ? -1 : 1),
         likedBy: wasLiked ? FV.arrayRemove(S.uid) : FV.arrayUnion(S.uid)
-      }, { merge: true });
+      });
 
       // Send notification async — don't await, don't block like
       if (!wasLiked) {
