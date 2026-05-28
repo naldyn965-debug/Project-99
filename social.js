@@ -340,6 +340,7 @@ const S = {
   initialized: false,
   authReady: false,
   _authListeners: [],
+  followingSet: new Set(), // الحسابات اللي بتتابعها
 };
 
 // Returns a promise that resolves once Firebase auth state is known
@@ -560,10 +561,10 @@ async function suggestHtml() {
       db.collection('social_profiles').orderBy('followersCount','desc').limit(10).get(),
       S.uid ? db.collection('social_follows').where('followerUid','==',S.uid).get() : Promise.resolve({docs:[]})
     ]);
-    // الـ IDs اللي بتتابعها فعلاً
-    const followingIds = new Set(followSnap.docs.map(d=>d.data().targetUid));
+    // حدّث الـ followingSet من Firestore عشان يكون دايماً sync
+    followSnap.docs.forEach(d => S.followingSet.add(d.data().targetUid));
     // فلتر: مش انت + مش بتتابعه فعلاً
-    const docs = snap.docs.filter(d=>d.id!==S.uid && !followingIds.has(d.id)).slice(0,5);
+    const docs = snap.docs.filter(d=>d.id!==S.uid && !S.followingSet.has(d.id)).slice(0,5);
     if (!docs.length) return '';
     const cards = docs.map(d=>{
       const p=d.data();
@@ -889,22 +890,23 @@ window.SOCIAL = {
     try {
       if (curr) {
         await unfollow(S.uid, targetUid);
+        S.followingSet.delete(targetUid);
         btn.classList.remove('following');
         btn.innerHTML = svgFollow + ' متابعة';
         toast('تم إلغاء المتابعة');
       } else {
         await follow(S.uid, targetUid);
+        S.followingSet.add(targetUid);
         btn.classList.add('following');
         btn.innerHTML = svgFollowing + ' تتابعه';
         toast('✅ تم المتابعة');
-        // إخفاء الكارد من الحسابات المقترحة بعد المتابعة
-        const card = btn.closest('[data-suggest-uid]');
-        if (card) {
+        // إخفاء كل كروت هذا الحساب من الحسابات المقترحة
+        document.querySelectorAll(`[data-suggest-uid="${targetUid}"]`).forEach(card => {
           card.style.transition = 'opacity .3s, transform .3s';
           card.style.opacity = '0';
           card.style.transform = 'scale(0.85)';
           setTimeout(() => { card.remove(); }, 300);
-        }
+        });
       }
       // تحديث عداد المتابعين في صفحة البروفايل لو مفتوحة
       if (S.profileUid === targetUid) {
