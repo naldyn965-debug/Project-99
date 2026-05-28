@@ -6811,6 +6811,15 @@ body.modal-open { overflow: hidden; }
         الإشعارات
         <span class="mkt-notif-badge" id="mkt-notif-count" style="display:none;">0</span>
       </button>
+      <!-- SOCIAL TABS (added by social module) -->
+      <button class="mkt-tab mkt-tab-social" id="mkt-tab-feed" onclick="SOCIAL.showPanel('feed')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+        الفيد
+      </button>
+      <button class="mkt-tab mkt-tab-social" id="mkt-tab-profile-me" onclick="SOCIAL.showMyProfile()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        صفحتي
+      </button>
     </div>
   </div>
 
@@ -7043,6 +7052,26 @@ body.modal-open { overflow: hidden; }
       </div>
       <div id="mkt-notif-list-page"></div>
     </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SOCIAL PANELS — added by social module
+  ══════════════════════════════════════════ -->
+  <!-- PANEL: SOCIAL FEED -->
+  <div class="mkt-panel" id="mkt-panel-feed">
+    <div id="social-feed-root"></div>
+  </div>
+  <!-- PANEL: USER PROFILE (self or other) -->
+  <div class="mkt-panel" id="mkt-panel-profile-me">
+    <div id="social-profile-root"></div>
+  </div>
+  <!-- PANEL: FOLLOWERS LIST -->
+  <div class="mkt-panel" id="mkt-panel-followers">
+    <div id="social-followers-root"></div>
+  </div>
+  <!-- PANEL: FOLLOWING LIST -->
+  <div class="mkt-panel" id="mkt-panel-following">
+    <div id="social-following-root"></div>
   </div>
 
   </div><!-- end panel-container -->
@@ -26338,5 +26367,8 @@ document.addEventListener('DOMContentLoaded',function(){
 
 })();
 </script>
+
+<!-- SOCIAL MODULE -->
+<script src="social.js"></script>
 </body>
 </html>
