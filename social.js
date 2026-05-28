@@ -733,13 +733,19 @@ async function renderFollowing(uid) {
   root.innerHTML=`<div class="soc-load-spinner" style="padding:55px 0"><div class="soc-spinner"></div></div>`;
   const snap=await getDB().collection('social_follows').where('followerUid','==',uid).limit(30).get();
   const uids=snap.docs.map(d=>d.data().targetUid);
+  // حدّث followingSet عشان الأزرار تظهر صح
+  uids.forEach(id => S.followingSet.add(id));
   const profs=await Promise.all(uids.map(getProfile));
   root.innerHTML=`<div class="soc-user-list-header" onclick="SOCIAL.backProfile()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>يتابع (${snap.docs.length})</div>${uids.length===0?`<div class="soc-profile-empty"><div class="soc-profile-empty-title">لا يتابع أحدًا بعد</div></div>`:profs.map((p,i)=>p?userItem(uids[i],p):'').join('')}`;
 }
 
 function userItem(uid, p) {
-  const my=S.uid;
-  return `<div class="soc-user-item" onclick="SOCIAL.profile('${uid}')">${av(p,'soc-avatar-sm')}<div class="soc-user-item-info"><div class="soc-user-item-name">${p.displayName||'مزارع'}</div><div class="soc-user-item-handle">@${p.username||uid.slice(0,8)}</div>${p.bio?`<div class="soc-user-item-bio">${p.bio.slice(0,52)}${p.bio.length>52?'...':''}</div>`:''}</div>${my&&my!==uid?`<button class="soc-follow-btn" style="padding:6px 13px;font-size:11.5px;" onclick="event.stopPropagation();SOCIAL.follow('${uid}',this)">متابعة</button>`:''}</div>`;
+  const my = S.uid;
+  if (!my || my === uid) return `<div class="soc-user-item" onclick="SOCIAL.profile('${uid}')">${av(p,'soc-avatar-sm')}<div class="soc-user-item-info"><div class="soc-user-item-name">${p.displayName||'مزارع'}</div><div class="soc-user-item-handle">@${p.username||uid.slice(0,8)}</div>${p.bio?`<div class="soc-user-item-bio">${p.bio.slice(0,52)}${p.bio.length>52?'...':''}</div>`:''}</div></div>`;
+  const isFollowing = S.followingSet.has(uid);
+  const svgFollow = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>`;
+  const svgFollowing = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>`;
+  return `<div class="soc-user-item" onclick="SOCIAL.profile('${uid}')">${av(p,'soc-avatar-sm')}<div class="soc-user-item-info"><div class="soc-user-item-name">${p.displayName||'مزارع'}</div><div class="soc-user-item-handle">@${p.username||uid.slice(0,8)}</div>${p.bio?`<div class="soc-user-item-bio">${p.bio.slice(0,52)}${p.bio.length>52?'...':''}</div>`:''}</div><button class="soc-follow-btn ${isFollowing?'following':''}" style="padding:6px 13px;font-size:11.5px;" onclick="event.stopPropagation();SOCIAL.follow('${uid}',this)">${isFollowing?svgFollowing+' تتابعه':svgFollow+' متابعة'}</button></div>`;
 }
 
 function injectGlobal() {
