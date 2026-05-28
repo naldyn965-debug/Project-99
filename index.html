@@ -3776,6 +3776,7 @@ body.modal-open { overflow: hidden; }
   from { opacity: 1; transform: none; }
   to   { opacity: 0; transform: translateY(-8px); }
 }
+@keyframes skelPulse { 0%,100%{opacity:1} 50%{opacity:.45} }
 
 /* ══════════════════════════════════════════════════════════
    HERO — ULTRA PREMIUM CINEMATIC
@@ -7059,11 +7060,42 @@ body.modal-open { overflow: hidden; }
   ══════════════════════════════════════════ -->
   <!-- PANEL: SOCIAL FEED -->
   <div class="mkt-panel" id="mkt-panel-feed">
-    <div id="social-feed-root"></div>
+    <div id="social-feed-root">
+      <!-- skeleton shown until social.js renders -->
+      <div style="padding:16px 14px 0;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;">
+        <div style="width:100px;height:18px;background:var(--line);border-radius:6px;animation:skelPulse 1.4s ease-in-out infinite;"></div>
+        <div style="width:130px;height:30px;background:var(--line);border-radius:10px;animation:skelPulse 1.4s ease-in-out infinite;"></div>
+      </div>
+      <div style="margin:13px 14px;padding:13px;background:var(--card);border-radius:var(--r3);border:1px solid var(--line);animation:skelPulse 1.4s ease-in-out infinite;">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;"><div style="width:38px;height:38px;border-radius:50%;background:var(--line);flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:7px;"><div style="height:10px;background:var(--line);border-radius:5px;width:70%;"></div><div style="height:10px;background:var(--line);border-radius:5px;width:40%;"></div></div></div>
+        <div style="height:10px;background:var(--line);border-radius:5px;width:100%;margin-bottom:5px;"></div>
+        <div style="height:10px;background:var(--line);border-radius:5px;width:70%;"></div>
+        <div style="height:160px;background:var(--line);border-radius:var(--r2);margin-top:9px;"></div>
+      </div>
+      <div style="margin:0 14px 13px;padding:13px;background:var(--card);border-radius:var(--r3);border:1px solid var(--line);animation:skelPulse 1.4s ease-in-out infinite;">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;"><div style="width:38px;height:38px;border-radius:50%;background:var(--line);flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:7px;"><div style="height:10px;background:var(--line);border-radius:5px;width:60%;"></div><div style="height:10px;background:var(--line);border-radius:5px;width:35%;"></div></div></div>
+        <div style="height:10px;background:var(--line);border-radius:5px;width:100%;margin-bottom:5px;"></div>
+        <div style="height:10px;background:var(--line);border-radius:5px;width:80%;"></div>
+      </div>
+    </div>
   </div>
   <!-- PANEL: USER PROFILE (self or other) -->
   <div class="mkt-panel" id="mkt-panel-profile-me">
-    <div id="social-profile-root"></div>
+    <div id="social-profile-root">
+      <!-- skeleton shown until social.js renders -->
+      <div style="width:100%;height:165px;background:linear-gradient(145deg,var(--brand-d),var(--brand-l));animation:skelPulse 1.4s ease-in-out infinite;"></div>
+      <div style="padding:0 16px 16px;background:var(--card);border-bottom:1px solid var(--line);">
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-top:-44px;margin-bottom:11px;">
+          <div style="width:92px;height:92px;border-radius:50%;background:var(--line);border:3px solid #fff;flex-shrink:0;animation:skelPulse 1.4s ease-in-out infinite;"></div>
+          <div style="flex:1;padding-bottom:6px;display:flex;flex-direction:column;gap:8px;">
+            <div style="width:140px;height:16px;background:var(--line);border-radius:6px;animation:skelPulse 1.4s ease-in-out infinite;"></div>
+            <div style="width:90px;height:11px;background:var(--line);border-radius:5px;animation:skelPulse 1.4s ease-in-out infinite;"></div>
+          </div>
+        </div>
+        <div style="height:11px;background:var(--line);border-radius:5px;width:85%;margin-bottom:7px;animation:skelPulse 1.4s ease-in-out infinite;"></div>
+        <div style="height:11px;background:var(--line);border-radius:5px;width:65%;animation:skelPulse 1.4s ease-in-out infinite;"></div>
+      </div>
+    </div>
   </div>
   <!-- PANEL: FOLLOWERS LIST -->
   <div class="mkt-panel" id="mkt-panel-followers">
@@ -7252,6 +7284,10 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
+// Expose on window so external scripts (social.js) can access them
+window.auth = auth;
+window.db = db;
+window.storage = storage;
 
 // ═══ FIRESTORE OFFLINE PERSISTENCE ═══════════════════
 // Enables Firestore to cache data locally → works offline
