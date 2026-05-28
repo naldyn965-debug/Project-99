@@ -325,7 +325,17 @@ const S = {
   profileUid: null,
   imgs: [],
   initialized: false,
+  authReady: false,
+  _authListeners: [],
 };
+
+// Returns a promise that resolves once Firebase auth state is known
+function waitForAuth() {
+  return new Promise(resolve => {
+    if (S.authReady) { resolve(); return; }
+    S._authListeners.push(resolve);
+  });
+}
 
 const rel = ts => {
   if (!ts) return '';
@@ -456,12 +466,17 @@ async function loadFeed(reset) {
   if (!cont || !db) { S.feedLoading=false; return; }
   if (reset) { cont.innerHTML=skel(); S.feedLast=null; }
   try {
-    let q = db.collection('social_posts').orderBy('createdAt','desc').limit(7);
+    let q;
     if (S.feedTab==='following' && S.uid) {
       const fs = await db.collection('social_follows').where('followerUid','==',S.uid).get();
       const uids = fs.docs.map(d=>d.data().targetUid);
       uids.push(S.uid);
-      q = db.collection('social_posts').where('authorUid','in',uids.slice(0,10)).orderBy('createdAt','desc').limit(7);
+      // Firestore 'in' requires at least 1 element and max 10
+      const safeUids = uids.slice(0,10);
+      q = db.collection('social_posts').where('authorUid','in',safeUids).orderBy('createdAt','desc').limit(7);
+    } else {
+      // Explore: fetch all posts
+      q = db.collection('social_posts').orderBy('createdAt','desc').limit(7);
     }
     if (S.feedLast && !reset) q = q.startAfter(S.feedLast);
     const snap = await q.get();
@@ -469,7 +484,11 @@ async function loadFeed(reset) {
     const uids2 = [...new Set(snap.docs.map(d=>d.data().authorUid))];
     const pm = {}; await Promise.all(uids2.map(async u=>{pm[u]=await getProfile(u);}));
     if (snap.empty && reset) {
-      cont.innerHTML = `<div class="soc-profile-empty" style="margin:24px 13px;background:var(--card);border-radius:var(--r3);border:1px solid var(--line)"><svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="soc-profile-empty-title">لا توجد منشورات بعد</div><button onclick="SOCIAL.ftab('explore')" style="margin-top:9px;padding:7px 18px;background:var(--brand);color:#fff;border:none;border-radius:var(--rpill);font-size:12.5px;font-weight:800;font-family:var(--f-ui);cursor:pointer">استكشاف عام</button></div>`;
+      // If following tab is empty, suggest switching to explore
+      const emptyMsg = S.feedTab==='following'
+        ? `<div class="soc-profile-empty" style="margin:24px 13px;background:var(--card);border-radius:var(--r3);border:1px solid var(--line)"><svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="soc-profile-empty-title">لا توجد منشورات من المتابَعين بعد</div><button onclick="SOCIAL.ftab('explore')" style="margin-top:9px;padding:7px 18px;background:var(--brand);color:#fff;border:none;border-radius:var(--rpill);font-size:12.5px;font-weight:800;font-family:var(--f-ui);cursor:pointer">استكشاف عام</button></div>`
+        : `<div class="soc-profile-empty" style="margin:24px 13px;background:var(--card);border-radius:var(--r3);border:1px solid var(--line)"><svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="soc-profile-empty-title">لا توجد منشورات بعد</div></div>`;
+      cont.innerHTML = emptyMsg;
     } else {
       const html = snap.docs.map((d,i)=>postCard(d.id,d.data(),pm[d.data().authorUid],i)).join('');
       if (reset) cont.innerHTML = html; else cont.insertAdjacentHTML('beforeend',html);
@@ -658,9 +677,19 @@ function injectGlobal() {
 }
 
 function switchPanel(name) {
-  if (window.MKT && window.MKT.showPanel) window.MKT.showPanel(name);
-  document.querySelectorAll('.mkt-tab-social').forEach(t=>t.classList.remove('active'));
-  const tab=document.getElementById(`mkt-tab-${name}`); if(tab) tab.classList.add('active');
+  // Use MKT.showPanel if available (handles animation)
+  if (window.MKT && window.MKT.showPanel) {
+    window.MKT.showPanel(name);
+  } else {
+    // Fallback: manually toggle panels
+    document.querySelectorAll('.mkt-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById('mkt-panel-' + name);
+    if (panel) panel.classList.add('active');
+  }
+  // Always update tab active state for social tabs
+  document.querySelectorAll('.mkt-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.getElementById('mkt-tab-' + name);
+  if (tab) tab.classList.add('active');
 }
 
 /* ─── PUBLIC API ─────────────────────────────────────────────── */
@@ -673,29 +702,34 @@ window.SOCIAL = {
     auth.onAuthStateChanged(async user => {
       S.uid = user ? user.uid : null;
       S.profile = user ? await ensureProfile(user) : null;
+      if (!S.authReady) {
+        S.authReady = true;
+        S._authListeners.forEach(fn => fn());
+        S._authListeners = [];
+      }
     });
   },
 
   async show(name) {
     switchPanel(name);
-    setTimeout(() => {
-      if (name==='feed') renderFeed();
-      if (name==='profile-me') {
-        if (S.uid) { S.profileUid=S.uid; renderProfile(S.uid,true); }
-        else {
-          const r=document.getElementById('social-profile-root');
-          if(r) r.innerHTML=`<div class="soc-profile-empty" style="padding:65px 20px;"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".25"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><div class="soc-profile-empty-title">سجّل الدخول لعرض صفحتك</div></div>`;
-        }
+    await waitForAuth();
+    if (name==='feed') renderFeed();
+    if (name==='profile-me') {
+      if (S.uid) { S.profileUid=S.uid; renderProfile(S.uid,true); }
+      else {
+        const r=document.getElementById('social-profile-root');
+        if(r) r.innerHTML=`<div class="soc-profile-empty" style="padding:65px 20px;"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".25"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><div class="soc-profile-empty-title">سجّل الدخول لعرض صفحتك</div></div>`;
       }
-    }, 280);
+    }
   },
 
   async profile(uid) {
     if (!uid) return;
     S.profileUid = uid;
-    const isSelf = uid===S.uid;
     switchPanel('profile-me');
-    setTimeout(()=>renderProfile(uid,isSelf), 280);
+    await waitForAuth();
+    const isSelf = uid===S.uid;
+    renderProfile(uid,isSelf);
   },
 
   ftab(tab) {
@@ -856,8 +890,8 @@ window.SOCIAL = {
   closeLb() { const lb=document.getElementById('soc-lb'); if(lb)lb.classList.remove('open'); },
   soon() { toast('📷 هذه الميزة قريباً'); },
 
-  followers(uid) { switchPanel('followers'); setTimeout(()=>renderFollowers(uid),280); },
-  following(uid) { switchPanel('following'); setTimeout(()=>renderFollowing(uid),280); },
+  followers(uid) { switchPanel('followers'); waitForAuth().then(()=>renderFollowers(uid)); },
+  following(uid) { switchPanel('following'); waitForAuth().then(()=>renderFollowing(uid)); },
   backProfile() { this.profile(S.profileUid); },
 
   async loadSocialNotifications() {
