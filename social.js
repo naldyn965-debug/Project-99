@@ -555,8 +555,15 @@ async function loadFeed(reset) {
 async function suggestHtml() {
   const db = getDB(); if (!db) return '';
   try {
-    const snap = await db.collection('social_profiles').orderBy('followersCount','desc').limit(6).get();
-    const docs = snap.docs.filter(d=>d.id!==S.uid).slice(0,5);
+    // جيب الحسابات + الحسابات اللي بتتابعها في نفس الوقت
+    const [snap, followSnap] = await Promise.all([
+      db.collection('social_profiles').orderBy('followersCount','desc').limit(10).get(),
+      S.uid ? db.collection('social_follows').where('followerUid','==',S.uid).get() : Promise.resolve({docs:[]})
+    ]);
+    // الـ IDs اللي بتتابعها فعلاً
+    const followingIds = new Set(followSnap.docs.map(d=>d.data().targetUid));
+    // فلتر: مش انت + مش بتتابعه فعلاً
+    const docs = snap.docs.filter(d=>d.id!==S.uid && !followingIds.has(d.id)).slice(0,5);
     if (!docs.length) return '';
     const cards = docs.map(d=>{
       const p=d.data();
@@ -569,6 +576,7 @@ async function suggestHtml() {
 <button class="soc-suggest-follow-btn" onclick="event.stopPropagation();SOCIAL.follow('${d.id}',this)">متابعة</button>
 </div>`;
     }).join('');
+    if (!cards) return '';
     return `<div class="soc-suggest-section"><div class="soc-suggest-title">حسابات مقترحة</div><div class="soc-suggest-scroll">${cards}</div></div>`;
   } catch(e){return '';}
 }
