@@ -868,6 +868,8 @@ window.SOCIAL = {
   ptab(tab, uid) { ptab(tab, uid||S.profileUid); },
 
   async follow(targetUid, btn) {
+    // استنى الـ auth يكون جاهز الأول
+    await waitForAuth();
     if (!S.uid){toast('سجّل الدخول أولاً');return;}
     // منع الضغط المزدوج
     if (btn._following) return;
