@@ -24,7 +24,7 @@ service cloud.firestore {
       allow read, write: if isAuth();
     }
 
-    // ── MARKETPLACE PRODUCTS (images stored as Base64 inside doc) ──
+    // ── MARKETPLACE ───────────────────────────────────────────
     match /marketplace_products/{productId} {
       allow read:   if true;
       allow create: if isAuth()
@@ -35,28 +35,67 @@ service cloud.firestore {
       allow update: if owns(resource) || isAuth();
       allow delete: if owns(resource);
     }
-
-    // ── ORDERS ───────────────────────────────────────────────
     match /marketplace_orders/{orderId} {
       allow read:   if ownsOrder(resource);
       allow create: if isAuth() && request.resource.data.buyerId == request.auth.uid;
       allow update: if isAuth() && request.auth.uid == resource.data.sellerId;
       allow delete: if false;
     }
-
-    // ── REVIEWS ──────────────────────────────────────────────
     match /marketplace_reviews/{reviewId} {
       allow read:   if true;
       allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
       allow update, delete: if isAuth() && request.auth.uid == resource.data.userId;
     }
-
-    // ── NOTIFICATIONS ────────────────────────────────────────
     match /marketplace_notifications/{notifId} {
       allow read, update, delete: if isAuth() && request.auth.uid == resource.data.userId;
       allow create: if isAuth();
     }
 
+    // ── SOCIAL MODULE ─────────────────────────────────────────
+
+    // Social Profiles — public read, self write
+    match /social_profiles/{uid} {
+      allow read:   if true;
+      allow create: if isSelf(uid);
+      allow update: if isSelf(uid);
+      allow delete: if isSelf(uid);
+    }
+
+    // Social Posts — public read, author write
+    match /social_posts/{postId} {
+      allow read:   if true;
+      allow create: if isAuth() && request.resource.data.authorUid == request.auth.uid;
+      allow update: if isAuth() && (
+                      resource.data.authorUid == request.auth.uid ||
+                      // allow like/save/share counter updates by anyone authenticated
+                      request.resource.data.diff(resource.data).affectedKeys()
+                        .hasOnly(['likesCount','likedBy','savedBy','sharesCount','commentsCount'])
+                    );
+      allow delete: if isAuth() && resource.data.authorUid == request.auth.uid;
+
+      // Post comments sub-collection
+      match /comments/{commentId} {
+        allow read:   if true;
+        allow create: if isAuth() && request.resource.data.authorUid == request.auth.uid;
+        allow delete: if isAuth() && resource.data.authorUid == request.auth.uid;
+      }
+    }
+
+    // Social Follows — authenticated read/write, follower owns doc
+    match /social_follows/{followId} {
+      allow read:   if isAuth();
+      allow create: if isAuth() && request.resource.data.followerUid == request.auth.uid;
+      allow delete: if isAuth() && resource.data.followerUid == request.auth.uid;
+    }
+
+    // Social Notifications — recipient read/update, anyone authenticated create
+    match /social_notifications/{notifId} {
+      allow read, update: if isAuth() && resource.data.toUid == request.auth.uid;
+      allow create:       if isAuth();
+      allow delete:       if isAuth() && resource.data.toUid == request.auth.uid;
+    }
+
+    // ── DENY ALL ELSE ─────────────────────────────────────────
     match /{document=**} {
       allow read, write: if false;
     }
