@@ -889,58 +889,56 @@ window.SOCIAL = {
   async like(postId, btn) {
     if (!S.uid) { toast('سجّل الدخول أولاً'); return; }
     const db = getDB(); if (!db) { toast('سجّل الدخول أولاً'); return; }
-    if (btn.disabled) return;
-    btn.disabled = true;
+    if (btn._liking) return;
+    btn._liking = true;
 
     // ── Optimistic UI update immediately ──
     const wasLiked = btn.classList.contains('liked');
     const svg = btn.querySelector('svg');
-    if (wasLiked) {
-      btn.classList.remove('liked');
-      if (svg) { svg.setAttribute('fill','none'); svg.setAttribute('stroke','currentColor'); }
-    } else {
-      btn.classList.add('liked');
-      if (svg) { svg.setAttribute('fill','#e74c3c'); svg.setAttribute('stroke','#e74c3c'); }
-      // heart bounce animation
-      btn.style.transform = 'scale(1.25)';
-      setTimeout(() => { btn.style.transform = ''; }, 250);
+    const applyLiked = (on) => {
+      btn.classList.toggle('liked', on);
+      if (svg) {
+        svg.setAttribute('fill', on ? '#e74c3c' : 'none');
+        svg.setAttribute('stroke', on ? '#e74c3c' : 'currentColor');
+      }
+    };
+    applyLiked(!wasLiked);
+    if (!wasLiked) {
+      btn.style.transform = 'scale(1.3)';
+      setTimeout(() => { btn.style.transform = ''; }, 220);
     }
 
     try {
       const ref = db.collection('social_posts').doc(postId);
-      if (wasLiked) {
-        await ref.update({
-          likesCount: firebase.firestore.FieldValue.increment(-1),
-          likedBy: firebase.firestore.FieldValue.arrayRemove(S.uid)
-        });
-      } else {
-        await ref.update({
-          likesCount: firebase.firestore.FieldValue.increment(1),
-          likedBy: firebase.firestore.FieldValue.arrayUnion(S.uid)
-        });
-        // Send notification (non-blocking)
-        const snap = await ref.get();
-        if (snap.exists && snap.data().authorUid !== S.uid) {
-          db.collection('social_notifications').add({
-            toUid: snap.data().authorUid, fromUid: S.uid,
-            type: 'like', postId, read: false,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          }).catch(()=>{});
-        }
+      // Use set+merge instead of update — works even if likedBy field missing
+      // and doesn't require post-owner permission
+      const FV = firebase.firestore.FieldValue;
+      await ref.set({
+        likesCount: FV.increment(wasLiked ? -1 : 1),
+        likedBy: wasLiked ? FV.arrayRemove(S.uid) : FV.arrayUnion(S.uid)
+      }, { merge: true });
+
+      // Send notification async — don't await, don't block like
+      if (!wasLiked) {
+        ref.get().then(snap => {
+          if (snap.exists && snap.data().authorUid !== S.uid) {
+            db.collection('social_notifications').add({
+              toUid: snap.data().authorUid, fromUid: S.uid,
+              type: 'like', postId, read: false,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).catch(() => {});
+          }
+        }).catch(() => {});
       }
     } catch(e) {
-      // Revert optimistic update on failure
-      if (wasLiked) {
-        btn.classList.add('liked');
-        if (svg) { svg.setAttribute('fill','#e74c3c'); svg.setAttribute('stroke','#e74c3c'); }
-      } else {
-        btn.classList.remove('liked');
-        if (svg) { svg.setAttribute('fill','none'); svg.setAttribute('stroke','currentColor'); }
-      }
-      toast('حدث خطأ، حاول مرة أخرى');
-      console.warn('like error:', e.code, e.message);
+      applyLiked(wasLiked); // revert
+      const msg = e.code === 'permission-denied'
+        ? 'تحقق من Firestore Rules في Firebase Console'
+        : 'حدث خطأ، حاول مرة أخرى';
+      toast(msg);
+      console.error('like error:', e.code, e.message);
     }
-    btn.disabled = false;
+    btn._liking = false;
   },
 
   async save(postId, btn) {
