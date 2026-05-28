@@ -393,6 +393,8 @@ function invalidateProfileCache(uid) {
 
 async function ensureProfile(user) {
   const db = getDB(); if (!db || !user) return null;
+  // Check cache first to avoid read on every auth state change
+  if (_profileCache[user.uid]) return _profileCache[user.uid];
   const ref = db.collection('social_profiles').doc(user.uid);
   const snap = await ref.get();
   if (!snap.exists) {
@@ -405,9 +407,9 @@ async function ensureProfile(user) {
       followersCount: 0, followingCount: 0, postsCount: 0, verified: false,
       joinedAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
-    await ref.set(p); return p;
+    await ref.set(p); _profileCache[user.uid] = p; return p;
   }
-  return snap.data();
+  const data = snap.data(); _profileCache[user.uid] = data; return data;
 }
 
 async function isFollowing(a, b) {
@@ -513,7 +515,19 @@ async function loadFeed(reset) {
     }
     const lm = document.getElementById('soc-lm');
     if (lm) lm.style.display = snap.docs.length<7?'none':'flex';
-  } catch(e){ console.warn('feed',e); }
+  } catch(e) {
+    console.warn('loadFeed error:', e.code || e.message);
+    if (reset) {
+      const errMsg = e.code === 'permission-denied'
+        ? 'لا توجد صلاحية للوصول — يُرجى مراجعة إعدادات Firebase'
+        : 'حدث خطأ في تحميل المنشورات';
+      if (cont) cont.innerHTML = `<div class="soc-profile-empty" style="margin:24px 13px;background:var(--card);border-radius:var(--r3);border:1px solid var(--line)">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div class="soc-profile-empty-title">${errMsg}</div>
+        <button onclick="loadFeed(true)" style="margin-top:9px;padding:7px 18px;background:var(--brand);color:#fff;border:none;border-radius:var(--rpill);font-size:12.5px;font-weight:800;font-family:var(--f-ui);cursor:pointer">إعادة المحاولة</button>
+      </div>`;
+    }
+  }
   S.feedLoading = false;
 }
 
@@ -616,22 +630,34 @@ async function ptab(tab, uid) {
   const el = document.getElementById('soc-pc'); if (!el) return;
   document.querySelectorAll('.soc-pt').forEach((b,i)=>b.classList.toggle('active',['posts','products','photos'][i]===tab));
   el.innerHTML = `<div class="soc-load-spinner" style="padding:38px 0"><div class="soc-spinner"></div></div>`;
-  const db = getDB(); if (!db) return;
+  const db = getDB();
+  if (!db) {
+    el.innerHTML = `<div class="soc-profile-empty"><div class="soc-profile-empty-title">تعذّر الاتصال بالخادم</div></div>`;
+    return;
+  }
   const emptyHtml = (icon, label) => `<div class="soc-profile-empty">${icon}<div class="soc-profile-empty-title">${label}</div></div>`;
-  if (tab==='posts') {
-    const snap = await db.collection('social_posts').where('authorUid','==',uid).orderBy('createdAt','desc').limit(10).get();
-    if (snap.empty) { el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>`,'لا توجد منشورات بعد'); return; }
-    const pm={}; pm[uid]=await getProfile(uid);
-    el.innerHTML = snap.docs.map((d,i)=>postCard(d.id,d.data(),pm[uid],i)).join('');
-  } else if (tab==='products') {
-    const snap = await db.collection('marketplace_products').where('sellerId','==',uid).orderBy('createdAt','desc').limit(18).get();
-    if (snap.empty) { el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg>`,'لا توجد منتجات'); return; }
-    el.innerHTML=`<div class="soc-profile-products-grid">${snap.docs.map(d=>{const p=d.data(),img=p.images&&p.images[0];return`<div class="soc-profile-product-thumb" onclick="MKT&&MKT.openDetail&&MKT.openDetail('${d.id}')">${img?`<img src="${img}" loading="lazy">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg2);"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></div>`}<div class="soc-profile-product-thumb-overlay"><span>${p.price?p.price+' ج.م':''}</span></div></div>`;}).join('')}</div>`;
-  } else {
-    const snap = await db.collection('social_posts').where('authorUid','==',uid).where('hasImages','==',true).orderBy('createdAt','desc').limit(18).get();
-    const imgs=[]; snap.docs.forEach(d=>(d.data().images||[]).forEach(u=>imgs.push(u)));
-    if(!imgs.length){el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,'لا توجد صور');return;}
-    el.innerHTML=`<div class="soc-profile-products-grid">${imgs.map(u=>`<div class="soc-profile-product-thumb" onclick="SOCIAL.lb('${u}')"><img src="${u}" loading="lazy"><div class="soc-profile-product-thumb-overlay"><span>عرض</span></div></div>`).join('')}</div>`;
+  try {
+    if (tab==='posts') {
+      const snap = await db.collection('social_posts').where('authorUid','==',uid).orderBy('createdAt','desc').limit(10).get();
+      if (snap.empty) { el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>`,'لا توجد منشورات بعد'); return; }
+      const authorProfile = await getProfile(uid);
+      el.innerHTML = snap.docs.map((d,i)=>postCard(d.id,d.data(),authorProfile,i)).join('');
+    } else if (tab==='products') {
+      // Try both sellerId and ownerId fields for compatibility
+      let snap = await db.collection('marketplace_products').where('sellerId','==',uid).orderBy('createdAt','desc').limit(18).get();
+      if (snap.empty) snap = await db.collection('marketplace_products').where('ownerId','==',uid).orderBy('createdAt','desc').limit(18).get();
+      if (snap.empty) { el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg>`,'لا توجد منتجات'); return; }
+      el.innerHTML=`<div class="soc-profile-products-grid">${snap.docs.map(d=>{const p=d.data(),img=p.images&&p.images[0]||p.imageURL;return`<div class="soc-profile-product-thumb" onclick="MKT&&MKT.openDetail&&MKT.openDetail('${d.id}')">${img?`<img src="${img}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg2);"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></div>`}<div class="soc-profile-product-thumb-overlay"><span>${p.price?p.price+' ج.م':''}</span></div></div>`;}).join('')}</div>`;
+    } else {
+      // Photos tab — posts with images
+      const snap = await db.collection('social_posts').where('authorUid','==',uid).where('hasImages','==',true).orderBy('createdAt','desc').limit(18).get();
+      const imgs=[]; snap.docs.forEach(d=>(d.data().images||[]).forEach(u=>imgs.push(u)));
+      if(!imgs.length){el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,'لا توجد صور');return;}
+      el.innerHTML=`<div class="soc-profile-products-grid">${imgs.map(u=>`<div class="soc-profile-product-thumb" onclick="SOCIAL.lb('${u}')"><img src="${u}" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><div class="soc-profile-product-thumb-overlay"><span>عرض</span></div></div>`).join('')}</div>`;
+    }
+  } catch(e) {
+    console.warn('ptab error', tab, e);
+    el.innerHTML = emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`, 'حدث خطأ في التحميل');
   }
 }
 
@@ -939,54 +965,78 @@ window.SOCIAL = {
     if (!S.uid) { toast('سجّل الدخول أولاً'); return; }
     const file = e.target.files && e.target.files[0];
     if (!file) return;
-    // Validate: image only, max 5MB
-    if (!file.type.startsWith('image/')) { toast('يُرجى اختيار صورة'); return; }
-    if (file.size > 5 * 1024 * 1024) { toast('الصورة أكبر من 5MB'); return; }
+    if (!file.type.startsWith('image/')) { toast('يُرجى اختيار صورة صالحة'); return; }
+    if (file.size > 8 * 1024 * 1024) { toast('الصورة أكبر من 8MB'); return; }
 
     const isAvatar = (type === 'avatar');
     const fieldKey = isAvatar ? 'photoURL' : 'coverURL';
-    const path = `social_images/${S.uid}/${isAvatar ? 'avatar' : 'cover'}_${Date.now()}`;
+    // Use profile_photos path — matches storage.rules
+    const path = `profile_photos/${S.uid}/${isAvatar ? 'avatar' : 'cover'}_${Date.now()}`;
 
-    // Optimistic UI — show local preview immediately
+    // Optimistic UI — show local preview immediately before upload finishes
     const localURL = URL.createObjectURL(file);
     if (isAvatar) {
-      document.querySelectorAll('.soc-avatar-xl img, .soc-avatar-xl').forEach(el => {
-        if (el.tagName === 'IMG') { el.src = localURL; }
-        else {
-          el.style.background = 'transparent';
-          el.innerHTML = `<img src="${localURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-        }
-      });
+      const avatarEl = document.querySelector('.soc-avatar-xl');
+      if (avatarEl) {
+        avatarEl.style.background = 'transparent';
+        avatarEl.innerHTML = `<img src="${localURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+      }
     } else {
       const cover = document.querySelector('.soc-profile-cover');
       if (cover) cover.style.backgroundImage = `url('${localURL}')`;
     }
 
-    toast('⏳ جاري رفع الصورة...');
+    // Show progress toast
+    toast('⏳ جاري الرفع...');
+
+    // Disable input during upload
+    const input = document.getElementById(isAvatar ? 'soc-avatar-input' : 'soc-cover-input');
+    if (input) input.disabled = true;
 
     try {
       const stor = window.storage;
-      if (!stor) { toast('خدمة التخزين غير متاحة'); return; }
-      const ref = stor.ref(path);
-      await ref.put(file);
-      const downloadURL = await ref.getDownloadURL();
+      if (!stor) throw new Error('storage unavailable');
+      const storRef = stor.ref(path);
 
-      // Update Firestore profile
+      // Upload with progress tracking
+      const uploadTask = storRef.put(file);
+      await new Promise((resolve, reject) => {
+        uploadTask.on('state_changed',
+          snap => {
+            const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+            toast(`⏳ جاري الرفع ${pct}%`);
+          },
+          err => reject(err),
+          () => resolve()
+        );
+      });
+
+      const downloadURL = await storRef.getDownloadURL();
       const db = getDB();
-      await db.collection('social_profiles').doc(S.uid).update({ [fieldKey]: downloadURL });
+      if (!db) throw new Error('db unavailable');
 
-      // Update local state + cache
-      S.profile = { ...S.profile, [fieldKey]: downloadURL };
-      invalidateProfileCache(S.uid);
+      // Save to Firestore — update or create profile doc
+      await db.collection('social_profiles').doc(S.uid).set(
+        { [fieldKey]: downloadURL },
+        { merge: true }
+      );
+
+      // Update local state + cache immediately
+      S.profile = { ...(S.profile || {}), [fieldKey]: downloadURL };
       _profileCache[S.uid] = S.profile;
 
       toast('✅ تم تغيير الصورة بنجاح');
-      e.target.value = '';
     } catch (err) {
-      console.error('uploadImg error', err);
-      toast('حدث خطأ أثناء الرفع');
+      console.error('uploadImg error:', err.code, err.message);
+      let errMsg = 'حدث خطأ أثناء الرفع';
+      if (err.code === 'storage/unauthorized') errMsg = 'غير مصرح برفع الصورة';
+      else if (err.code === 'storage/quota-exceeded') errMsg = 'تجاوز حد التخزين';
+      else if (err.code === 'storage/canceled') errMsg = 'تم إلغاء الرفع';
+      toast(errMsg);
       // Revert optimistic UI on failure
-      renderProfile(S.uid, true);
+      if (S.uid) renderProfile(S.uid, true);
+    } finally {
+      if (input) { input.disabled = false; input.value = ''; }
     }
   },
 
