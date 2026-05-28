@@ -431,20 +431,26 @@ async function isFollowing(a, b) {
 
 async function follow(a, b) {
   const db = getDB();
+  const FV = firebase.firestore.FieldValue;
   const batch = db.batch();
-  batch.set(db.collection('social_follows').doc(`${a}_${b}`), { followerUid:a, targetUid:b, createdAt:firebase.firestore.FieldValue.serverTimestamp() });
-  batch.update(db.collection('social_profiles').doc(a), { followingCount:firebase.firestore.FieldValue.increment(1) });
-  batch.update(db.collection('social_profiles').doc(b), { followersCount:firebase.firestore.FieldValue.increment(1) });
-  batch.set(db.collection('social_notifications').doc(), { toUid:b, fromUid:a, type:'follow', read:false, createdAt:firebase.firestore.FieldValue.serverTimestamp() });
+  // سجّل المتابعة
+  batch.set(db.collection('social_follows').doc(`${a}_${b}`), { followerUid:a, targetUid:b, createdAt:FV.serverTimestamp() });
+  // set+merge بدل update — يشتغل حتى لو الـ profile مش موجود بعد
+  batch.set(db.collection('social_profiles').doc(a), { followingCount:FV.increment(1) }, { merge:true });
+  batch.set(db.collection('social_profiles').doc(b), { followersCount:FV.increment(1) }, { merge:true });
+  // إشعار للمتابَع
+  batch.set(db.collection('social_notifications').doc(), { toUid:b, fromUid:a, type:'follow', read:false, createdAt:FV.serverTimestamp() });
   await batch.commit();
 }
 
 async function unfollow(a, b) {
   const db = getDB();
+  const FV = firebase.firestore.FieldValue;
   const batch = db.batch();
   batch.delete(db.collection('social_follows').doc(`${a}_${b}`));
-  batch.update(db.collection('social_profiles').doc(a), { followingCount:firebase.firestore.FieldValue.increment(-1) });
-  batch.update(db.collection('social_profiles').doc(b), { followersCount:firebase.firestore.FieldValue.increment(-1) });
+  // set+merge بدل update — أمان أكبر
+  batch.set(db.collection('social_profiles').doc(a), { followingCount:FV.increment(-1) }, { merge:true });
+  batch.set(db.collection('social_profiles').doc(b), { followersCount:FV.increment(-1) }, { merge:true });
   await batch.commit();
 }
 
@@ -867,23 +873,43 @@ window.SOCIAL = {
 
   async follow(targetUid, btn) {
     if (!S.uid){toast('سجّل الدخول أولاً');return;}
-    const curr=btn.classList.contains('following');
-    btn.disabled=true;
+    // منع الضغط المزدوج
+    if (btn._following) return;
+    btn._following = true;
+    btn.disabled = true;
+    const curr = btn.classList.contains('following');
+    const svgFollow = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>`;
+    const svgFollowing = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>`;
     try {
       if (curr) {
         await unfollow(S.uid, targetUid);
         btn.classList.remove('following');
-        btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> متابعة`;
+        btn.innerHTML = svgFollow + ' متابعة';
         toast('تم إلغاء المتابعة');
       } else {
         await follow(S.uid, targetUid);
         btn.classList.add('following');
-        btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg> تتابعه`;
+        btn.innerHTML = svgFollowing + ' تتابعه';
         toast('✅ تم المتابعة');
       }
-      if (S.profileUid===targetUid) { const np=await getProfile(targetUid); const el=document.getElementById('spf'); if(el&&np) el.textContent=np.followersCount||0; }
-    } catch(e){toast('حدث خطأ');}
-    btn.disabled=false;
+      // تحديث عداد المتابعين في صفحة البروفايل لو مفتوحة
+      if (S.profileUid === targetUid) {
+        const np = await getProfile(targetUid);
+        const el = document.getElementById('spf');
+        if (el && np) el.textContent = np.followersCount || 0;
+      }
+    } catch(e) {
+      // رجّع الـ UI للحالة الأصلية لو فشل
+      btn.classList.toggle('following', curr);
+      btn.innerHTML = curr ? (svgFollowing + ' تتابعه') : (svgFollow + ' متابعة');
+      const msg = e.code === 'permission-denied'
+        ? 'تحقق من Firestore Rules في Firebase Console'
+        : 'حدث خطأ، حاول مرة أخرى';
+      toast(msg);
+      console.error('follow error:', e.code, e.message);
+    }
+    btn._following = false;
+    btn.disabled = false;
   },
 
   async like(postId, btn) {
