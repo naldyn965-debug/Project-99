@@ -679,10 +679,10 @@ async function ptab(tab, uid) {
     console.warn('ptab error', tab, e.code || e.message);
     clearTimeout(spinTimeout);
     const errLabel = (e.code === 'permission-denied' || e.code === 7)
-      ? 'يرجى رفع ملف firestore.rules على Firebase Console'
+      ? 'خطأ في الصلاحيات — افتح Firebase Console وحدّث Firestore Rules'
       : (e.code === 'failed-precondition' || e.code === 9)
-      ? 'يرجى رفع ملف firestore.indexes على Firebase Console'
-      : `خطأ: ${e.code||e.message||'غير معروف'}`;
+      ? 'خطأ في Index — افتح Firebase Console وأضف Composite Index'
+      : `خطأ (${e.code||'unknown'}): ${e.message||''}`;
     el.innerHTML = emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`, errLabel);
   } finally {
     clearTimeout(spinTimeout);
@@ -994,14 +994,12 @@ window.SOCIAL = {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) { toast('يُرجى اختيار صورة صالحة'); return; }
-    if (file.size > 8 * 1024 * 1024) { toast('الصورة أكبر من 8MB'); return; }
+    if (file.size > 10 * 1024 * 1024) { toast('الصورة أكبر من 10MB'); return; }
 
     const isAvatar = (type === 'avatar');
     const fieldKey = isAvatar ? 'photoURL' : 'coverURL';
-    // Use profile_photos path — matches storage.rules
-    const path = `profile_photos/${S.uid}/${isAvatar ? 'avatar' : 'cover'}_${Date.now()}`;
 
-    // Optimistic UI — show local preview immediately before upload finishes
+    // Show local preview immediately (Optimistic UI)
     const localURL = URL.createObjectURL(file);
     if (isAvatar) {
       const avatarEl = document.querySelector('.soc-avatar-xl');
@@ -1014,60 +1012,90 @@ window.SOCIAL = {
       if (cover) cover.style.backgroundImage = `url('${localURL}')`;
     }
 
-    // Show progress toast
-    toast('⏳ جاري الرفع...');
-
-    // Disable input during upload
     const input = document.getElementById(isAvatar ? 'soc-avatar-input' : 'soc-cover-input');
     if (input) input.disabled = true;
+    toast('⏳ جاري معالجة الصورة...');
 
     try {
-      const stor = window.storage;
-      if (!stor) throw new Error('storage unavailable');
-      const storRef = stor.ref(path);
-
-      // Upload with progress tracking
-      const uploadTask = storRef.put(file);
-      let downloadURL = '';
-      await new Promise((resolve, reject) => {
-        uploadTask.on('state_changed',
-          snapshot => {
-            const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-            toast(`⏳ جاري الرفع ${pct}%`);
-          },
-          err => reject(err),
-          async () => {
-            try {
-              // Use the completed snapshot ref to get the download URL
-              downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-              resolve();
-            } catch(e) { reject(e); }
-          }
-        );
+      // ── Compress image using Canvas ──────────────────────────
+      const dataURL = await new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxW = isAvatar ? 400 : 1200;
+          const maxH = isAvatar ? 400 : 400;
+          let w = img.width, h = img.height;
+          if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+          if (h > maxH) { w = Math.round(w * maxH / h); h = maxH; }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', isAvatar ? 0.82 : 0.75));
+        };
+        img.onerror = reject;
+        img.src = localURL;
       });
+      URL.revokeObjectURL(localURL);
+
+      toast('⏳ جاري الحفظ...');
+
+      // ── Try Firebase Storage first ───────────────────────────
+      let finalURL = dataURL; // fallback: store as base64 in Firestore
+      const stor = window.storage;
+      if (stor) {
+        try {
+          const path = `profile_photos/${S.uid}/${isAvatar ? 'avatar' : 'cover'}_${Date.now()}`;
+          const storRef = stor.ref(path);
+          // Convert dataURL back to blob for smaller storage transfer
+          const res = await fetch(dataURL);
+          const blob = await res.blob();
+          const uploadTask = storRef.put(blob, { contentType: 'image/jpeg' });
+          const storageURL = await new Promise((res, rej) => {
+            uploadTask.on('state_changed',
+              snap => {
+                const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+                toast(`⏳ جاري الرفع ${pct}%`);
+              },
+              err => rej(err),
+              async () => {
+                try { res(await uploadTask.snapshot.ref.getDownloadURL()); }
+                catch(e) { rej(e); }
+              }
+            );
+          });
+          finalURL = storageURL; // Use Storage URL if succeeded
+        } catch(storErr) {
+          console.warn('Storage upload failed, using base64 fallback:', storErr.code);
+          // finalURL stays as dataURL (base64 in Firestore)
+        }
+      }
+
+      // ── Save URL to Firestore ────────────────────────────────
       const db = getDB();
       if (!db) throw new Error('db unavailable');
-
-      // Save to Firestore — update or create profile doc
       await db.collection('social_profiles').doc(S.uid).set(
-        { [fieldKey]: downloadURL },
+        { [fieldKey]: finalURL },
         { merge: true }
       );
 
-      // Update local state + cache immediately
-      S.profile = { ...(S.profile || {}), [fieldKey]: downloadURL };
+      // Update local state + cache
+      S.profile = { ...(S.profile || {}), [fieldKey]: finalURL };
       _profileCache[S.uid] = S.profile;
+
+      // Update UI with final URL
+      if (isAvatar) {
+        const avatarEl = document.querySelector('.soc-avatar-xl');
+        if (avatarEl) {
+          avatarEl.innerHTML = `<img src="${finalURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+        }
+      } else {
+        const cover = document.querySelector('.soc-profile-cover');
+        if (cover) cover.style.backgroundImage = `url('${finalURL}')`;
+      }
 
       toast('✅ تم تغيير الصورة بنجاح');
     } catch (err) {
-      console.error('uploadImg error:', err.code, err.message);
-      let errMsg = 'خطأ في الرفع: ' + (err.code || err.message || 'غير معروف');
-      if (err.code === 'storage/unauthorized') errMsg = 'مرفوض — يرجى رفع storage.rules على Firebase';
-      else if (err.code === 'storage/quota-exceeded') errMsg = 'تجاوز حد التخزين';
-      else if (err.code === 'storage/canceled') errMsg = 'تم إلغاء الرفع';
-      else if (err.code === 'storage/unknown') errMsg = 'خطأ غير معروف في Storage — تحقق من Firebase Console';
-      toast(errMsg);
-      // Revert optimistic UI on failure
+      console.error('uploadImg final error:', err.code, err.message);
+      toast('حدث خطأ: ' + (err.code || err.message || 'غير معروف'));
       if (S.uid) renderProfile(S.uid, true);
     } finally {
       if (input) { input.disabled = false; input.value = ''; }
