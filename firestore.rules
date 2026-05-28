@@ -58,20 +58,38 @@ service cloud.firestore {
     }
 
     // ── SOCIAL: PROFILES ───────────────────────────────────
+    // Fields another user can update on your profile (follow counters)
+    function isFollowCounterUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['followersCount', 'followingCount']);
+    }
+
     match /social_profiles/{uid} {
       allow read: if true;
-      allow write: if isSelf(uid);
+      // Owner can update anything; any auth user can update follow counters
+      allow write: if isSelf(uid) || (isAuth() && isFollowCounterUpdate());
     }
 
     // ── SOCIAL: POSTS ──────────────────────────────────────
+    // Fields any authenticated user can update (likes, saves, shares)
+    function isInteractionUpdate() {
+      let allowed = ['likesCount', 'likedBy', 'savedBy', 'sharesCount', 'commentsCount', 'updatedAt'];
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowed);
+    }
+
     match /social_posts/{postId} {
       allow read: if true;
       allow create: if isAuth() && request.resource.data.authorUid == request.auth.uid;
-      allow update: if isAuth() && resource.data.authorUid == request.auth.uid;
+      // Post owner can update anything; any auth user can update likes/saves/shares
+      allow update: if isAuth() && (
+        resource.data.authorUid == request.auth.uid ||
+        isInteractionUpdate()
+      );
       allow delete: if isAuth() && resource.data.authorUid == request.auth.uid;
       match /comments/{commentId} {
         allow read: if true;
         allow create: if isAuth();
+        allow update: if isAuth() && resource.data.authorUid == request.auth.uid;
         allow delete: if isAuth() && resource.data.authorUid == request.auth.uid;
       }
     }
