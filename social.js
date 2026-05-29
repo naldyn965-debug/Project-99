@@ -132,45 +132,55 @@
 .soc-create-action-btn:hover{color:var(--brand);border-color:var(--brand-l);background:var(--brand-pale)}
 
 /* ════════════════════════════════════════
-   POST CARDS  ★★★★
+   POST CARDS  ★★★★★ PREMIUM
 ════════════════════════════════════════ */
 .soc-post-card{
-  margin:12px 13px 0;
-  background:var(--card);border-radius:20px;
-  border:1px solid var(--line);overflow:hidden;
+  margin:14px 13px 0;
+  background:var(--card);
+  border-radius:24px;
+  border:1px solid var(--line);
+  overflow:hidden;
   position:relative;
-  transition:box-shadow .32s cubic-bezier(.16,1,.3,1),
-             transform .32s cubic-bezier(.16,1,.3,1),
-             border-color .32s;
-  animation:socCardIn .48s cubic-bezier(.16,1,.3,1) both;
+  transition:box-shadow .36s cubic-bezier(.16,1,.3,1),
+             transform .36s cubic-bezier(.16,1,.3,1),
+             border-color .28s;
+  animation:socCardIn .52s cubic-bezier(.16,1,.3,1) both;
+  box-shadow:0 2px 12px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04);
 }
 @keyframes socCardIn{
-  from{opacity:0;transform:translateY(18px) scale(.97)}
+  from{opacity:0;transform:translateY(22px) scale(.96)}
   to{opacity:1;transform:none}
 }
-/* top gradient accent */
+/* animated gradient top accent */
 .soc-post-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
-  background:linear-gradient(90deg,var(--brand-l),var(--brand-d),var(--gold-l),var(--brand-l));
-  background-size:200% 100%;
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--brand-d),var(--brand-l),#f0c040,var(--brand-l),var(--brand-d));
+  background-size:300% 100%;
   opacity:0;transition:opacity .32s;
-  animation:none;
+  border-radius:24px 24px 0 0;
+}
+/* inner glow */
+.soc-post-card::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at top,rgba(27,107,58,.05),transparent 65%);
+  opacity:0;transition:opacity .32s;pointer-events:none;
 }
 .soc-post-card:hover{
-  box-shadow:0 16px 44px rgba(27,107,58,.13),0 4px 14px rgba(0,0,0,.05);
-  transform:translateY(-3px);
-  border-color:rgba(27,107,58,.22);
+  box-shadow:0 20px 52px rgba(27,107,58,.15),0 6px 18px rgba(0,0,0,.08);
+  transform:translateY(-4px);
+  border-color:rgba(27,107,58,.24);
 }
 .soc-post-card:hover::before{
   opacity:1;
-  animation:accentSlide 2s linear infinite;
+  animation:accentSlide 2.4s linear infinite;
 }
+.soc-post-card:hover::after{opacity:1}
 @keyframes accentSlide{
-  0%{background-position:0% 0}100%{background-position:200% 0}
+  0%{background-position:0% 0}100%{background-position:300% 0}
 }
 
 /* post header */
-.soc-post-header{display:flex;align-items:center;gap:10px;padding:13px 14px 8px}
+.soc-post-header{display:flex;align-items:center;gap:10px;padding:14px 15px 9px;background:linear-gradient(180deg,rgba(27,107,58,.025),transparent)}
 .soc-post-user-info{flex:1;min-width:0}
 .soc-post-username{
   font-size:13.5px;font-weight:800;color:var(--ink);cursor:pointer;
@@ -179,12 +189,12 @@
 }
 .soc-post-username:hover{color:var(--brand)}
 .soc-verified-badge{
-  width:15px;height:15px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--brand-l),var(--brand-d));
+  width:18px;height:18px;flex-shrink:0;
   border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
-  box-shadow:0 2px 8px rgba(27,107,58,.45);
+  box-shadow:0 2px 10px rgba(27,107,58,.55),0 0 0 1.5px rgba(255,255,255,.5);
+  overflow:visible;
 }
-.soc-verified-badge svg{width:8px;height:8px}
+.soc-verified-badge svg{width:18px;height:18px;display:block}
 .soc-post-meta{
   font-size:10.5px;color:var(--muted);margin-top:2px;
   display:flex;align-items:center;gap:4px;flex-wrap:wrap;
@@ -635,30 +645,40 @@
 
 /* toast */
 .soc-msg-toast{
-  position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(8px);
-  background:var(--ink);color:var(--card);padding:9px 18px;
-  border-radius:var(--rpill);font-size:12.5px;font-weight:700;
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(12px);
+  background:rgba(18,32,22,.96);color:#fff;
+  padding:10px 20px 10px 14px;
+  border-radius:20px;font-size:13px;font-weight:700;
   z-index:4000;opacity:0;pointer-events:none;
-  transition:all .32s cubic-bezier(.16,1,.3,1);white-space:nowrap;
-  box-shadow:0 8px 28px rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.1);
+  transition:all .34s cubic-bezier(.16,1,.3,1);white-space:nowrap;
+  box-shadow:0 16px 48px rgba(0,0,0,.32),0 4px 16px rgba(0,0,0,.16),0 0 0 1px rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;gap:9px;
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
 }
 .soc-msg-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* notifications */
+/* notifications - premium */
 .soc-notif-item{
-  display:flex;align-items:flex-start;gap:10px;padding:12px 16px;
-  border-bottom:1px solid var(--line);transition:background .15s;
-  cursor:pointer;animation:socCardIn .3s ease both;
+  display:flex;align-items:flex-start;gap:12px;padding:14px 16px;
+  border-bottom:1px solid var(--line);transition:background .18s,transform .18s;
+  cursor:pointer;animation:socCardIn .3s ease both;position:relative;
 }
-.soc-notif-item:hover{background:var(--bg2)}
+.soc-notif-item:hover{background:var(--bg2);transform:translateX(-2px)}
 .soc-notif-item.unread{background:var(--brand-pale)}
-.soc-notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.soc-notif-icon.follow{background:#e8f5e9;color:var(--brand)}
-.soc-notif-icon.like{background:#fdecea;color:#e74c3c}
-.soc-notif-icon.comment{background:#e3f2fd;color:#1565c0}
-.soc-notif-text{flex:1;font-size:12.5px;line-height:1.5;color:var(--ink)}
-.soc-notif-text strong{font-weight:800}
-.soc-notif-time{font-size:10.5px;color:var(--muted);white-space:nowrap}
+.soc-notif-item.unread::before{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--brand-l),var(--brand-d));border-radius:0 3px 3px 0}
+.soc-notif-icon{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+.soc-notif-icon.follow{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);color:var(--brand)}
+.soc-notif-icon.like{background:linear-gradient(135deg,#fdecea,#fcd0cc);color:#e74c3c}
+.soc-notif-icon.comment{background:linear-gradient(135deg,#e3f2fd,#bbdefb);color:#1565c0}
+.soc-notif-icon svg{width:16px;height:16px}
+.soc-notif-text{flex:1;font-size:12.5px;line-height:1.55;color:var(--ink)}
+.soc-notif-text strong{font-weight:800;color:var(--brand)}
+.soc-notif-time{font-size:10.5px;color:var(--muted);white-space:nowrap;margin-top:2px}
 
 /* lightbox */
 .soc-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:5000;display:none;align-items:center;justify-content:center}
@@ -742,10 +762,15 @@ const av = (p, sz='', uid='') => {
   return `<div class="soc-avatar ${sz}" style="${bg}" ${oc}>${inn}</div>`;
 };
 
-const toast = msg => {
+const toast = (msg, type) => {
   const el = document.getElementById('soc-toast');
   if (!el) return;
-  el.textContent = msg; el.classList.add('show');
+  const svgOk   = `<svg viewBox="0 0 24 24" fill="none" style="width:15px;height:15px;flex-shrink:0"><circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/><polyline points="7 12.5 10.5 16 17 9" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+  const svgErr  = `<svg viewBox="0 0 24 24" fill="none" style="width:15px;height:15px;flex-shrink:0"><circle cx="12" cy="12" r="10" stroke="rgba(255,100,100,.6)" stroke-width="1.5"/><line x1="8" y1="8" x2="16" y2="16" stroke="#ff8080" stroke-width="2.3" stroke-linecap="round"/><line x1="16" y1="8" x2="8" y2="16" stroke="#ff8080" stroke-width="2.3" stroke-linecap="round"/></svg>`;
+  const icon = type === 'err' ? svgErr : svgOk;
+  const cleanMsg = (typeof msg === 'string') ? msg.replace(/^[✅❌⚠️]\s?/,'') : msg;
+  el.innerHTML = `${icon}<span>${cleanMsg}</span>`;
+  el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2800);
 };
 
@@ -839,7 +864,7 @@ function postCard(id, p, auth, delay) {
 
   /* verified badge */
   const vb = a.verified
-    ? `<span class="soc-verified-badge"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>`
+    ? `<span class="soc-verified-badge" title="موثّق"><svg viewBox="0 0 24 24" fill="none" style="width:100%;height:100%"><circle cx="12" cy="12" r="12" fill="url(#vgp)"/><defs><linearGradient id="vgp" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#2d9a58"/><stop offset="1" stop-color="#1a6b3a"/></linearGradient></defs><polyline points="7 12.2 10.5 15.5 17 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>`
     : '';
 
   /* farm pill */
@@ -1144,7 +1169,7 @@ async function renderProfile(uid, isSelf) {
     : `background:linear-gradient(135deg,var(--brand-d) 0%,var(--brand-l) 55%,var(--gold-l) 100%);`;
 
   const vb = p.verified
-    ? `<span class="soc-verified-badge"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>`
+    ? `<span class="soc-verified-badge" title="موثّق"><svg viewBox="0 0 24 24" fill="none" style="width:100%;height:100%"><circle cx="12" cy="12" r="12" fill="url(#vg)"/><defs><linearGradient id="vg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#2d9a58"/><stop offset="1" stop-color="#1a6b3a"/></linearGradient></defs><polyline points="7 12.2 10.5 15.5 17 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>`
     : '';
 
   const svgFollow    = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>`;
