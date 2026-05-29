@@ -402,11 +402,10 @@
 .soc-cover-edit-btn:hover{background:rgba(0,0,0,.78);transform:scale(1.03)}
 .soc-cover-edit-btn.uploading,.soc-avatar-edit-btn.uploading{opacity:.55;pointer-events:none}
 
-/* Avatar container: absolutely on the RIGHT, straddling cover/card */
+/* Avatar container: absolutely on the LEFT (RTL right side visually), straddling cover/card */
 .soc-profile-avatar-container{
   position:absolute;
-  /* bottom of wrapper padding = 0, so bottom:0 aligns to bottom of padding area */
-  bottom:0;right:16px;
+  bottom:0;left:16px;
   z-index:10;
 }
 /* Camera icon on avatar */
@@ -433,13 +432,13 @@
 /* ══ PROFILE HEADER CARD ══ */
 .soc-profile-header{
   position:relative;z-index:2;
-  /* top padding leaves room for the protruding avatar on the right */
   padding:14px 16px 20px;
-  /* right padding leaves space so text doesn't slide under avatar */
-  padding-right:130px;
+  /* left padding leaves space so text doesn't slide under avatar (avatar is on left in LTR/absolute) */
+  padding-left:144px;
   background:var(--card);
   border-bottom:1px solid var(--line);
   direction:rtl;
+  text-align:right;
 }
 
 /* name+handle */
@@ -723,8 +722,8 @@
   .soc-profile-cover{height:200px}
   .soc-profile-cover-wrap{padding-bottom:46px}
   .soc-avatar-xl{width:92px;height:92px;font-size:30px}
-  .soc-profile-avatar-container{bottom:0;right:12px}
-  .soc-profile-header{padding-right:110px}
+  .soc-profile-avatar-container{bottom:0;left:12px}
+  .soc-profile-header{padding-left:116px}
   .soc-profile-name{font-size:17px}
   .soc-stat-num{font-size:19px}
 }
