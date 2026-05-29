@@ -359,22 +359,21 @@
 ════════════════════════════════════════ */
 
 /* ══════════════════════════════════════════════
-   PROFILE — Premium Facebook/Instagram Layout
-   Avatar sits ACROSS the cover/card boundary
+   PROFILE — مطابق للصورة المرجعية 100%
 ══════════════════════════════════════════════ */
 
-/* Outer wrapper: clips the cover photo but lets avatar overflow */
+/* Wrapper يحتوي الكوفر والأفاتار معاً */
 .soc-profile-cover-wrap{
   position:relative;
   width:100%;
-  /* bottom padding = half avatar size (56px) so card starts below */
-  padding-bottom:56px;
   background:var(--card);
+  /* padding-bottom = نص حجم الأفاتار (56px) عشان الأفاتار يطلع نصه من الكوفر */
+  padding-bottom:56px;
 }
 
-/* Cover photo strip — clipped internally */
+/* شريط الكوفر */
 .soc-profile-cover{
-  width:100%;height:260px;position:relative;overflow:hidden;
+  width:100%;height:240px;position:relative;overflow:hidden;
   background:linear-gradient(135deg,var(--brand-d) 0%,var(--brand-l) 55%,var(--gold-l) 100%);
   display:block;
 }
@@ -384,33 +383,34 @@
 .soc-profile-cover img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
 .soc-profile-cover-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.04) 0%,rgba(0,0,0,.28) 100%);
+  background:linear-gradient(to bottom,rgba(0,0,0,.03) 0%,rgba(0,0,0,.18) 100%);
   z-index:1;
 }
 
-/* "تغيير الغلاف" — bottom-LEFT inside the cover */
+/* زر تغيير الغلاف — أسفل يسار الكوفر */
 .soc-cover-edit-btn{
   position:absolute;bottom:14px;left:14px;z-index:4;
-  background:rgba(15,15,15,.58);color:#fff;
-  border-radius:12px;padding:8px 16px;font-size:12px;font-weight:700;
+  background:rgba(10,10,10,.55);color:#fff;
+  border-radius:10px;padding:7px 14px;font-size:12px;font-weight:700;
   font-family:var(--f-ui);cursor:pointer;
-  display:flex;align-items:center;gap:7px;
+  display:flex;align-items:center;gap:6px;
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.2);
   transition:background .2s,transform .18s;
 }
 .soc-cover-edit-btn:hover{background:rgba(0,0,0,.78);transform:scale(1.03)}
 .soc-cover-edit-btn.uploading,.soc-avatar-edit-btn.uploading{opacity:.55;pointer-events:none}
 
-/* Avatar container: absolutely on the LEFT (RTL right side visually), straddling cover/card */
+/* الأفاتار — على اليمين، نصه داخل الكوفر ونصه في الكارد */
 .soc-profile-avatar-container{
   position:absolute;
-  bottom:0;left:16px;
+  bottom:0;
+  right:16px;
   z-index:10;
 }
-/* Camera icon on avatar */
+/* زر الكاميرا على الأفاتار */
 .soc-avatar-edit-btn{
-  position:absolute;bottom:4px;left:4px;width:30px;height:30px;
+  position:absolute;bottom:4px;right:4px;width:30px;height:30px;
   background:rgba(10,10,10,.62);
   border:2.5px solid var(--card);border-radius:50%;
   display:flex;align-items:center;justify-content:center;
@@ -420,63 +420,72 @@
 }
 .soc-avatar-edit-btn:hover{transform:scale(1.15);background:rgba(0,0,0,.82)}
 
-/* hide old cover-content elements */
+/* إخفاء العناصر القديمة */
 .soc-profile-cover-content{display:none!important}
 .soc-profile-cover-avatar-row{display:none!important}
 .soc-profile-cover-name-block{display:none!important}
 .soc-profile-cover-name{display:none!important}
 .soc-profile-cover-handle{display:none!important}
-/* hide old avatar-wrap (we replaced it with absolute positioning) */
 .soc-profile-avatar-wrap{display:none!important}
 
-/* ══ PROFILE HEADER CARD ══ */
+/* ══ بطاقة المعلومات تحت الكوفر ══ */
 .soc-profile-header{
   position:relative;z-index:2;
-  padding:14px 16px 20px;
-  /* left padding leaves space so text doesn't slide under avatar (avatar is on left in LTR/absolute) */
-  padding-left:144px;
+  /* right padding يحجز مساحة للأفاتار على اليمين */
+  padding:12px 148px 20px 16px;
   background:var(--card);
   border-bottom:1px solid var(--line);
   direction:rtl;
   text-align:right;
 }
 
-/* name+handle */
+/* الاسم والـ handle */
 .soc-profile-name-block{
-  display:flex;flex-direction:column;gap:2px;min-width:0;
+  display:flex;flex-direction:column;gap:3px;min-width:0;
+  margin-bottom:8px;
 }
 .soc-profile-name{
-  font-size:19px;font-weight:900;color:var(--ink);
-  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  font-size:20px;font-weight:900;color:var(--ink);
+  display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap;
   letter-spacing:-.015em;line-height:1.3;
 }
-.soc-profile-handle{font-size:12.5px;color:var(--muted);direction:ltr;text-align:right}
+.soc-profile-handle{
+  font-size:13px;color:var(--muted);
+  text-align:right;direction:ltr;
+}
 .soc-profile-email{
   font-size:12px;color:var(--muted);margin-top:1px;
-  display:flex;align-items:center;gap:4px;direction:ltr;
+  display:flex;align-items:center;gap:4px;direction:ltr;justify-content:flex-end;
 }
+
+/* صف الإيميل وتاريخ الانضمام */
+.soc-profile-meta-row{
+  display:flex;flex-wrap:wrap;gap:12px;
+  font-size:12px;color:var(--muted);
+  margin-bottom:16px;
+  justify-content:flex-end;
+}
+.soc-profile-meta-item{display:flex;align-items:center;gap:5px}
+.soc-profile-meta-item svg{width:13px;height:13px;color:var(--brand)}
 
 /* farm badge */
 .soc-profile-farm-badge{
   display:inline-flex;align-items:center;gap:5px;
-  margin-top:6px;padding:3px 11px;border-radius:var(--rpill);
+  margin-bottom:10px;padding:3px 11px;border-radius:var(--rpill);
   background:var(--brand-pale);border:1px solid rgba(27,107,58,.16);
   font-size:11.5px;font-weight:700;color:var(--brand);width:fit-content;
+  margin-right:auto;
 }
+.soc-profile-bio{font-size:13.5px;color:var(--ink2);line-height:1.68;margin:10px 0;text-align:right}
 
-.soc-profile-bio{font-size:13.5px;color:var(--ink2);line-height:1.68;margin:10px 0}
-.soc-profile-meta-row{display:flex;flex-wrap:wrap;gap:10px;font-size:11.5px;color:var(--muted);margin-bottom:14px}
-.soc-profile-meta-item{display:flex;align-items:center;gap:4px}
-.soc-profile-meta-item svg{width:12px;height:12px;color:var(--brand)}
-
-/* stats row — glass cards */
+/* stats */
 .soc-profile-stats{
-  display:flex;gap:8px;padding:0 0 14px;
-  border-bottom:1px solid var(--line);margin-bottom:14px;
+  display:flex;gap:8px;padding:0 0 16px;
+  border-bottom:1px solid var(--line);margin-bottom:16px;
 }
 .soc-stat-block{
   flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
-  cursor:pointer;padding:12px 4px;border-radius:14px;
+  cursor:pointer;padding:14px 4px;border-radius:14px;
   background:var(--bg2);border:1px solid var(--line);
   transition:all .28s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden;
 }
@@ -485,48 +494,41 @@
   background:linear-gradient(90deg,var(--brand-l),var(--brand-d));
   opacity:0;transition:opacity .28s;
 }
-.soc-stat-block:hover{
-  background:var(--card);border-color:rgba(27,107,58,.25);
-  box-shadow:0 6px 18px rgba(27,107,58,.1);transform:translateY(-2px);
-}
+.soc-stat-block:hover{background:var(--card);border-color:rgba(27,107,58,.25);box-shadow:0 6px 18px rgba(27,107,58,.1);transform:translateY(-2px)}
 .soc-stat-block:hover::before{opacity:1}
-.soc-stat-num{font-size:22px;font-weight:900;color:var(--ink);letter-spacing:-.03em;position:relative}
-.soc-stat-label{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.02em}
+.soc-stat-num{font-size:22px;font-weight:900;color:var(--ink);letter-spacing:-.03em}
+.soc-stat-label{font-size:10.5px;color:var(--muted);font-weight:700}
 
-/* action buttons */
+/* أزرار الإجراءات */
 .soc-profile-actions{display:flex;gap:8px;flex-wrap:wrap}
 .soc-follow-btn{
-  padding:10px 22px;border-radius:var(--rpill);font-size:13px;font-weight:800;
+  flex:1;padding:11px 18px;border-radius:var(--rpill);font-size:13px;font-weight:800;
   font-family:var(--f-ui);cursor:pointer;border:none;
   background:linear-gradient(135deg,var(--brand-l),var(--brand-d));
-  color:#fff;display:flex;align-items:center;gap:7px;
+  color:#fff;display:flex;align-items:center;justify-content:center;gap:7px;
   box-shadow:0 4px 16px rgba(27,107,58,.32),inset 0 1px 0 rgba(255,255,255,.18);
   transition:all .28s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;
 }
 .soc-follow-btn::after{
   content:'';position:absolute;top:-50%;left:-60%;width:60%;height:200%;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
-  transform:skewX(-20deg);
-  transition:left .5s ease;
+  transform:skewX(-20deg);transition:left .5s ease;
 }
 .soc-follow-btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 7px 22px rgba(27,107,58,.45)}
 .soc-follow-btn:hover::after{left:130%}
-.soc-follow-btn.following{
-  background:transparent;color:var(--brand);
-  border:2px solid var(--brand-l);box-shadow:none;
-}
+.soc-follow-btn.following{background:transparent;color:var(--brand);border:2px solid var(--brand-l);box-shadow:none;}
 .soc-follow-btn.following:hover{background:#fdecea;border-color:#e74c3c;color:#e74c3c}
 .soc-follow-btn svg{width:14px;height:14px}
 .soc-msg-btn{
-  padding:10px 16px;border-radius:var(--rpill);font-size:13px;font-weight:700;
+  flex:1;padding:11px 16px;border-radius:var(--rpill);font-size:13px;font-weight:700;
   font-family:var(--f-ui);cursor:pointer;
   border:1.5px solid var(--line);background:var(--bg2);color:var(--ink);
   transition:all .24s cubic-bezier(.16,1,.3,1);
-  display:flex;align-items:center;gap:6px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
 }
 .soc-msg-btn:hover{border-color:var(--brand-l);background:var(--brand-pale);color:var(--brand);transform:translateY(-1px)}
 
-/* profile tabs */
+/* تابات البروفايل */
 .soc-profile-tabs{
   display:flex;background:var(--glass);
   border-bottom:1.5px solid var(--line);
@@ -542,17 +544,10 @@
   font-family:var(--f-ui);
 }
 .soc-pt:hover{color:var(--brand);background:var(--brand-pale)}
-.soc-pt.active{
-  color:var(--brand);border-bottom-color:var(--brand);
-  background:var(--brand-pale);font-weight:800;
-}
+.soc-pt.active{color:var(--brand);border-bottom-color:var(--brand);background:var(--brand-pale);font-weight:800;}
 
-/* profile content */
 .soc-profile-content{min-height:40vh}
-.soc-profile-empty{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:52px 20px;text-align:center;gap:10px;color:var(--muted);
-}
+.soc-profile-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:52px 20px;text-align:center;gap:10px;color:var(--muted);}
 .soc-profile-empty svg{opacity:.18}
 .soc-profile-empty-title{font-size:14.5px;font-weight:700;color:var(--ink)}
 .soc-profile-products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:2px}
@@ -720,10 +715,10 @@
 @media(max-width:700px){
   .soc-feed-header,.soc-profile-tabs,.soc-user-list-header{top:58px}
   .soc-profile-cover{height:200px}
-  .soc-profile-cover-wrap{padding-bottom:46px}
-  .soc-avatar-xl{width:92px;height:92px;font-size:30px}
-  .soc-profile-avatar-container{bottom:0;left:12px}
-  .soc-profile-header{padding-left:116px}
+  .soc-profile-cover-wrap{padding-bottom:48px}
+  .soc-avatar-xl{width:96px;height:96px;font-size:32px}
+  .soc-profile-avatar-container{right:12px}
+  .soc-profile-header{padding:10px 124px 18px 14px}
   .soc-profile-name{font-size:17px}
   .soc-stat-num{font-size:19px}
 }
