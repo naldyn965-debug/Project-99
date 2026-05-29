@@ -461,16 +461,16 @@
 
 /* صف الإيميل وتاريخ الانضمام */
 .soc-profile-meta-row{
-  display:flex;flex-wrap:wrap;gap:8px 16px;
+  display:flex;flex-flow:row wrap;align-items:center;gap:8px;
   font-size:12px;color:var(--muted);
-  margin-top:4px;margin-bottom:14px;
-  justify-content:flex-start;
+  margin-top:6px;margin-bottom:14px;
   direction:rtl;
 }
 .soc-profile-meta-item{
-  display:flex;align-items:center;gap:5px;
+  display:inline-flex;align-items:center;gap:5px;
   background:var(--bg2);border:1px solid var(--line);
-  border-radius:20px;padding:3px 10px;
+  border-radius:20px;padding:4px 11px;
+  white-space:nowrap;flex-shrink:0;width:auto;
 }
 .soc-profile-meta-item svg{width:12px;height:12px;color:var(--brand);flex-shrink:0;}
 
