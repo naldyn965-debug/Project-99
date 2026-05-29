@@ -99,19 +99,13 @@
   cursor:pointer;position:relative;
   transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .28s;
 }
-.soc-avatar::after{
-  content:'';position:absolute;inset:0;border-radius:50%;
-  background:linear-gradient(145deg,rgba(255,255,255,.22),transparent 55%);
-  pointer-events:none;
-}
-.soc-avatar:hover{transform:scale(1.08);box-shadow:0 5px 18px rgba(27,107,58,.35)}
-.soc-avatar img{width:100%;height:100%;object-fit:cover}
+.soc-avatar:hover{transform:scale(1.06);box-shadow:0 4px 14px rgba(27,107,58,.28)}
+.soc-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
 .soc-avatar-sm{width:36px;height:36px;font-size:13px}
 .soc-avatar-xl{
   width:90px;height:90px;font-size:30px;
   border:3.5px solid var(--card);
-  box-shadow:0 6px 24px rgba(0,0,0,.18),0 0 0 1px rgba(27,107,58,.18),
-             inset 0 1px 0 rgba(255,255,255,.15);
+  box-shadow:0 4px 18px rgba(0,0,0,.16),0 0 0 1.5px rgba(27,107,58,.15);
   flex-shrink:0;
 }
 
@@ -240,28 +234,26 @@
 .soc-post-stat-item svg{width:12px;height:12px}
 
 /* action buttons */
-.soc-post-actions{display:flex;padding:4px 6px}
+.soc-post-actions{display:flex;padding:6px 8px;gap:2px;border-top:1px solid var(--line)}
 .soc-action-btn{
   flex:1;display:flex;align-items:center;justify-content:center;
-  gap:6px;padding:9px 4px;border-radius:12px;
+  gap:5px;padding:9px 4px;border-radius:12px;
   font-size:12px;font-weight:700;color:var(--muted);
   cursor:pointer;background:none;border:none;font-family:var(--f-ui);
-  transition:color .18s,background .18s;position:relative;overflow:hidden;
+  transition:color .2s,background .2s;
+  white-space:nowrap;overflow:visible;
 }
-.soc-action-btn::before{
-  content:'';position:absolute;inset:0;border-radius:12px;
-  background:var(--brand-pale);opacity:0;transition:opacity .18s;
-}
-.soc-action-btn:hover{color:var(--brand)}
-.soc-action-btn:hover::before{opacity:1}
+.soc-action-btn:hover{color:var(--brand);background:var(--brand-pale)}
 .soc-action-btn.liked{color:#e05252}
-.soc-action-btn.liked svg{fill:#e05252;color:#e05252}
+.soc-action-btn.liked:hover{color:#c0392b;background:#fdecea}
+.soc-action-btn.liked svg{fill:#e05252;stroke:#e05252}
 .soc-action-btn.saved{color:var(--brand)}
+.soc-action-btn.saved svg{fill:var(--brand)}
 .soc-action-btn svg{
-  width:17px;height:17px;position:relative;
-  transition:transform .28s cubic-bezier(.34,1.56,.64,1);
+  width:16px;height:16px;flex-shrink:0;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
 }
-.soc-action-btn:hover svg{transform:scale(1.2)}
+.soc-action-btn:hover svg{transform:scale(1.18)}
 
 /* comments */
 .soc-comments-wrap{
@@ -401,14 +393,16 @@
   background:var(--card);
   border-bottom:1px solid var(--line);
   position:relative;
+  direction:rtl;
 }
 
 /* avatar row — floats up over cover */
 .soc-profile-avatar-wrap{
   display:flex;align-items:flex-end;gap:0;
+  flex-direction:row;
   margin-top:-48px;margin-bottom:14px;position:relative;z-index:3;
 }
-.soc-profile-avatar-container{position:relative;flex-shrink:0;margin-left:12px}
+.soc-profile-avatar-container{position:relative;flex-shrink:0;margin-left:0;margin-right:0;}
 .soc-avatar-edit-btn{
   position:absolute;bottom:3px;left:3px;width:27px;height:27px;
   background:linear-gradient(135deg,var(--brand-l),var(--brand-d));
@@ -422,15 +416,16 @@
 
 /* name block beside avatar */
 .soc-profile-name-block{
-  flex:1;padding-bottom:6px;padding-right:2px;
+  flex:1;padding-bottom:8px;padding-right:14px;
   display:flex;flex-direction:column;justify-content:flex-end;
+  min-width:0;
 }
 .soc-profile-name{
   font-size:18px;font-weight:900;color:var(--ink);
-  display:flex;align-items:center;gap:6px;
-  letter-spacing:-.015em;line-height:1.2;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  letter-spacing:-.015em;line-height:1.25;
 }
-.soc-profile-handle{font-size:12px;color:var(--muted);margin-top:2px}
+.soc-profile-handle{font-size:12px;color:var(--muted);margin-top:3px;direction:ltr;text-align:right}
 
 /* farm badge */
 .soc-profile-farm-badge{
@@ -920,30 +915,30 @@ ${stats}
 
 <div class="soc-post-actions">
   <button class="soc-action-btn ${liked ? 'liked' : ''}" onclick="SOCIAL.like('${id}',this)">
-    <svg viewBox="0 0 24 24" fill="${lf}" stroke="${ls}" stroke-width="2.2" stroke-linecap="round">
+    <svg viewBox="0 0 24 24" fill="${lf}" stroke="${ls}" stroke-width="2.2" stroke-linecap="round" style="width:16px;height:16px;flex-shrink:0">
       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
     </svg>
-    إعجاب
+    <span>إعجاب</span>
   </button>
   <button class="soc-action-btn" onclick="SOCIAL.cmts('${id}')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:16px;height:16px;flex-shrink:0">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
-    تعليق
+    <span>تعليق</span>
   </button>
   <button class="soc-action-btn" onclick="SOCIAL.share('${id}')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:16px;height:16px;flex-shrink:0">
       <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
       <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
       <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
     </svg>
-    مشاركة
+    <span>مشاركة</span>
   </button>
   <button class="soc-action-btn ${saved ? 'saved' : ''}" onclick="SOCIAL.save('${id}',this)">
-    <svg viewBox="0 0 24 24" fill="${sf}" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+    <svg viewBox="0 0 24 24" fill="${sf}" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:16px;height:16px;flex-shrink:0">
       <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
     </svg>
-    حفظ
+    <span>حفظ</span>
   </button>
 </div>
 
