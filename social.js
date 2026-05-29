@@ -98,9 +98,9 @@
 .soc-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
 .soc-avatar-sm{width:36px;height:36px;font-size:13px}
 .soc-avatar-xl{
-  width:100px;height:100px;font-size:34px;
+  width:112px;height:112px;font-size:38px;
   border:4px solid var(--card);
-  box-shadow:0 4px 20px rgba(0,0,0,.22),0 0 0 1px rgba(255,255,255,.15);
+  box-shadow:0 8px 28px rgba(0,0,0,.28),0 0 0 1px rgba(0,0,0,.06);
   flex-shrink:0;
 }
 
@@ -358,84 +358,100 @@
    PROFILE PAGE  ★★★★★
 ════════════════════════════════════════ */
 
-/* ══ COVER BANNER — Facebook/Instagram style ══ */
+/* ══════════════════════════════════════════════
+   PROFILE — Premium Facebook/Instagram Layout
+   Avatar sits ACROSS the cover/card boundary
+══════════════════════════════════════════════ */
+
+/* Outer wrapper: clips the cover photo but lets avatar overflow */
+.soc-profile-cover-wrap{
+  position:relative;
+  width:100%;
+  /* bottom padding = half avatar size (56px) so card starts below */
+  padding-bottom:56px;
+  background:var(--card);
+}
+
+/* Cover photo strip — clipped internally */
 .soc-profile-cover{
-  width:100%;height:280px;position:relative;overflow:hidden;
+  width:100%;height:260px;position:relative;overflow:hidden;
   background:linear-gradient(135deg,var(--brand-d) 0%,var(--brand-l) 55%,var(--gold-l) 100%);
-  flex-shrink:0;
+  display:block;
 }
 .soc-profile-cover-bg{
-  position:absolute;inset:0;background-size:cover;background-position:center;
-  z-index:0;
+  position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;
 }
 .soc-profile-cover img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
 .soc-profile-cover-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.04) 0%,rgba(0,0,0,.22) 100%);
+  background:linear-gradient(to bottom,rgba(0,0,0,.04) 0%,rgba(0,0,0,.28) 100%);
   z-index:1;
 }
-/* "تغيير الغلاف" button — bottom-left inside cover */
+
+/* "تغيير الغلاف" — bottom-LEFT inside the cover */
 .soc-cover-edit-btn{
-  position:absolute;bottom:12px;left:12px;z-index:3;
-  background:rgba(0,0,0,.52);color:#fff;
-  border-radius:10px;padding:7px 14px;font-size:12px;font-weight:700;
+  position:absolute;bottom:14px;left:14px;z-index:4;
+  background:rgba(15,15,15,.58);color:#fff;
+  border-radius:12px;padding:8px 16px;font-size:12px;font-weight:700;
   font-family:var(--f-ui);cursor:pointer;
-  display:flex;align-items:center;gap:6px;
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  display:flex;align-items:center;gap:7px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border:1px solid rgba(255,255,255,.22);
-  transition:background .2s,transform .2s;
+  transition:background .2s,transform .18s;
 }
-.soc-cover-edit-btn:hover{background:rgba(0,0,0,.72);transform:scale(1.03)}
+.soc-cover-edit-btn:hover{background:rgba(0,0,0,.78);transform:scale(1.03)}
 .soc-cover-edit-btn.uploading,.soc-avatar-edit-btn.uploading{opacity:.55;pointer-events:none}
 
-/* cover-content hidden — name/avatar now live in header card below */
-.soc-profile-cover-content{display:none}
-.soc-profile-cover-avatar-row{display:none}
-.soc-profile-cover-name-block{display:none}
-.soc-profile-cover-name{display:none}
-.soc-profile-cover-handle{display:none}
+/* Avatar container: absolutely on the RIGHT, straddling cover/card */
+.soc-profile-avatar-container{
+  position:absolute;
+  /* bottom of wrapper padding = 0, so bottom:0 aligns to bottom of padding area */
+  bottom:0;right:16px;
+  z-index:10;
+}
+/* Camera icon on avatar */
+.soc-avatar-edit-btn{
+  position:absolute;bottom:4px;left:4px;width:30px;height:30px;
+  background:rgba(10,10,10,.62);
+  border:2.5px solid var(--card);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:#fff;
+  backdrop-filter:blur(8px);
+  transition:transform .28s cubic-bezier(.34,1.56,.64,1),background .2s;
+}
+.soc-avatar-edit-btn:hover{transform:scale(1.15);background:rgba(0,0,0,.82)}
 
-/* ══ PROFILE HEADER CARD — below cover, Facebook style ══ */
+/* hide old cover-content elements */
+.soc-profile-cover-content{display:none!important}
+.soc-profile-cover-avatar-row{display:none!important}
+.soc-profile-cover-name-block{display:none!important}
+.soc-profile-cover-name{display:none!important}
+.soc-profile-cover-handle{display:none!important}
+/* hide old avatar-wrap (we replaced it with absolute positioning) */
+.soc-profile-avatar-wrap{display:none!important}
+
+/* ══ PROFILE HEADER CARD ══ */
 .soc-profile-header{
   position:relative;z-index:2;
-  padding:0 16px 20px;
+  /* top padding leaves room for the protruding avatar on the right */
+  padding:14px 16px 20px;
+  /* right padding leaves space so text doesn't slide under avatar */
+  padding-right:130px;
   background:var(--card);
   border-bottom:1px solid var(--line);
   direction:rtl;
 }
 
-/* Avatar block that overlaps the cover from below */
-.soc-profile-avatar-wrap{
-  display:flex;align-items:flex-end;gap:0;
-  flex-direction:row;
-  margin-top:-54px;margin-bottom:12px;position:relative;z-index:3;
-}
-.soc-profile-avatar-container{position:relative;flex-shrink:0;}
-/* Camera edit button on avatar */
-.soc-avatar-edit-btn{
-  position:absolute;bottom:3px;left:3px;width:28px;height:28px;
-  background:rgba(0,0,0,.55);
-  border:2.5px solid var(--card);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:#fff;
-  backdrop-filter:blur(6px);
-  transition:transform .28s cubic-bezier(.34,1.56,.64,1),background .2s;
-}
-.soc-avatar-edit-btn:hover{transform:scale(1.18);background:rgba(0,0,0,.78)}
-
-/* name+handle+email block beside avatar */
+/* name+handle */
 .soc-profile-name-block{
-  flex:1;padding-bottom:4px;padding-right:14px;
-  display:flex;flex-direction:column;justify-content:flex-end;
-  min-width:0;
+  display:flex;flex-direction:column;gap:2px;min-width:0;
 }
 .soc-profile-name{
   font-size:19px;font-weight:900;color:var(--ink);
   display:flex;align-items:center;gap:6px;flex-wrap:wrap;
-  letter-spacing:-.015em;line-height:1.25;
+  letter-spacing:-.015em;line-height:1.3;
 }
-.soc-profile-handle{font-size:12px;color:var(--muted);margin-top:2px;direction:ltr;text-align:right}
-/* Email line */
+.soc-profile-handle{font-size:12.5px;color:var(--muted);direction:ltr;text-align:right}
 .soc-profile-email{
   font-size:12px;color:var(--muted);margin-top:1px;
   display:flex;align-items:center;gap:4px;direction:ltr;
@@ -704,10 +720,12 @@
 /* responsive */
 @media(max-width:700px){
   .soc-feed-header,.soc-profile-tabs,.soc-user-list-header{top:58px}
-  .soc-profile-cover{height:220px}
-  .soc-avatar-xl{width:82px;height:82px;font-size:28px}
-  .soc-profile-avatar-wrap{margin-top:-46px}
-  .soc-profile-name{font-size:16px}
+  .soc-profile-cover{height:200px}
+  .soc-profile-cover-wrap{padding-bottom:46px}
+  .soc-avatar-xl{width:92px;height:92px;font-size:30px}
+  .soc-profile-avatar-container{bottom:0;right:12px}
+  .soc-profile-header{padding-right:110px}
+  .soc-profile-name{font-size:17px}
   .soc-stat-num{font-size:19px}
 }
 `;
@@ -1187,40 +1205,42 @@ async function renderProfile(uid, isSelf) {
   const svgFollowing = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>`;
 
   root.innerHTML = `
-<div class="soc-profile-cover" style="${cov}">
-  <div class="soc-profile-cover-overlay"></div>
+<div class="soc-profile-cover-wrap">
+  <div class="soc-profile-cover" style="${cov}">
+    <div class="soc-profile-cover-overlay"></div>
 
-  ${isSelf ? `
-  <button class="soc-cover-edit-btn" onclick="document.getElementById('soc-cover-input').click()">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
-      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-      <circle cx="12" cy="13" r="4"/>
-    </svg>
-    تغيير الغلاف
-  </button>` : ''}
+    ${isSelf ? `
+    <button class="soc-cover-edit-btn" onclick="document.getElementById('soc-cover-input').click()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+      تغيير الغلاف
+    </button>` : ''}
+  </div>
+
+  <!-- Avatar sits across the cover/card boundary -->
+  <div class="soc-profile-avatar-container">
+    ${av(p, 'soc-avatar-xl')}
+    ${isSelf ? `
+    <button class="soc-avatar-edit-btn" onclick="document.getElementById('soc-avatar-input').click()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+    </button>` : ''}
+  </div>
 </div>
 
 <div class="soc-profile-header">
-  <!-- Avatar overlapping cover + name beside it -->
-  <div class="soc-profile-avatar-wrap">
-    <div class="soc-profile-avatar-container">
-      ${av(p, 'soc-avatar-xl')}
-      ${isSelf ? `
-      <button class="soc-avatar-edit-btn" onclick="document.getElementById('soc-avatar-input').click()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
-      </button>` : ''}
-    </div>
-    <div class="soc-profile-name-block">
-      <div class="soc-profile-name">${p.displayName || 'مزارع'}${vb}</div>
-      <div class="soc-profile-handle">@${p.username || uid.slice(0, 8)}</div>
-    </div>
+  <!-- Name block — avatar sits on the right via absolute, text fills the rest -->
+  <div class="soc-profile-name-block">
+    <div class="soc-profile-name">${p.displayName || 'مزارع'}${vb}</div>
+    <div class="soc-profile-handle">@${p.username || uid.slice(0, 8)}</div>
   </div>
 
-  <!-- Email + join date row -->
-  <div class="soc-profile-meta-row" style="margin-top:-4px;margin-bottom:12px;">
+  <!-- Email + join date -->
+  <div class="soc-profile-meta-row" style="margin-top:10px;margin-bottom:14px;">
     ${isSelf && S.currentUser && S.currentUser.email ? `<span class="soc-profile-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>${S.currentUser.email}</span>` : ''}
     ${p.joinedAt  ? `<span class="soc-profile-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>انضم ${rel(p.joinedAt)}</span>` : ''}
     ${p.location  ? `<span class="soc-profile-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>${p.location}</span>` : ''}
