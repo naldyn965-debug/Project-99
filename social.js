@@ -431,8 +431,9 @@
 /* ══ بطاقة المعلومات تحت الكوفر ══ */
 .soc-profile-header{
   position:relative;z-index:2;
-  /* right padding يحجز مساحة للأفاتار على اليمين */
-  padding:12px 148px 20px 16px;
+  /* نحجز مساحة للأفاتار (112px) + 16px فاصل + 16px padding داخلي */
+  padding:14px 16px 22px 16px;
+  padding-right:148px;
   background:var(--card);
   border-bottom:1px solid var(--line);
   direction:rtl;
@@ -441,17 +442,17 @@
 
 /* الاسم والـ handle */
 .soc-profile-name-block{
-  display:flex;flex-direction:column;gap:3px;min-width:0;
-  margin-bottom:8px;
+  display:flex;flex-direction:column;gap:4px;min-width:0;
+  margin-bottom:6px;
 }
 .soc-profile-name{
   font-size:20px;font-weight:900;color:var(--ink);
-  display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap;
+  display:flex;align-items:center;justify-content:flex-start;gap:6px;flex-wrap:wrap;
   letter-spacing:-.015em;line-height:1.3;
 }
 .soc-profile-handle{
   font-size:13px;color:var(--muted);
-  text-align:right;direction:ltr;
+  text-align:right;direction:rtl;
 }
 .soc-profile-email{
   font-size:12px;color:var(--muted);margin-top:1px;
@@ -460,47 +461,58 @@
 
 /* صف الإيميل وتاريخ الانضمام */
 .soc-profile-meta-row{
-  display:flex;flex-wrap:wrap;gap:12px;
+  display:flex;flex-wrap:wrap;gap:8px 16px;
   font-size:12px;color:var(--muted);
-  margin-bottom:16px;
-  justify-content:flex-end;
+  margin-top:4px;margin-bottom:14px;
+  justify-content:flex-start;
+  direction:rtl;
 }
-.soc-profile-meta-item{display:flex;align-items:center;gap:5px}
-.soc-profile-meta-item svg{width:13px;height:13px;color:var(--brand)}
+.soc-profile-meta-item{
+  display:flex;align-items:center;gap:5px;
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:20px;padding:3px 10px;
+}
+.soc-profile-meta-item svg{width:12px;height:12px;color:var(--brand);flex-shrink:0;}
 
 /* farm badge */
 .soc-profile-farm-badge{
   display:inline-flex;align-items:center;gap:5px;
-  margin-bottom:10px;padding:3px 11px;border-radius:var(--rpill);
-  background:var(--brand-pale);border:1px solid rgba(27,107,58,.16);
+  margin-bottom:10px;padding:4px 12px;border-radius:var(--rpill);
+  background:var(--brand-pale);border:1px solid rgba(27,107,58,.18);
   font-size:11.5px;font-weight:700;color:var(--brand);width:fit-content;
-  margin-right:auto;
+  margin-right:0;
 }
-.soc-profile-bio{font-size:13.5px;color:var(--ink2);line-height:1.68;margin:10px 0;text-align:right}
+.soc-profile-bio{
+  font-size:13.5px;color:var(--ink2);line-height:1.68;
+  margin:8px 0 14px;text-align:right;
+  padding:10px 13px;background:var(--bg2);
+  border-radius:10px;border:1px solid var(--line);
+}
 
 /* stats */
 .soc-profile-stats{
-  display:flex;gap:8px;padding:0 0 16px;
+  display:flex;gap:10px;padding:0 0 16px;
   border-bottom:1px solid var(--line);margin-bottom:16px;
 }
 .soc-stat-block{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
-  cursor:pointer;padding:14px 4px;border-radius:14px;
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;padding:14px 6px;border-radius:14px;
   background:var(--bg2);border:1px solid var(--line);
   transition:all .28s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden;
+  min-width:0;
 }
 .soc-stat-block::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
   background:linear-gradient(90deg,var(--brand-l),var(--brand-d));
   opacity:0;transition:opacity .28s;
 }
-.soc-stat-block:hover{background:var(--card);border-color:rgba(27,107,58,.25);box-shadow:0 6px 18px rgba(27,107,58,.1);transform:translateY(-2px)}
+.soc-stat-block:hover{background:var(--card);border-color:rgba(27,107,58,.28);box-shadow:0 6px 18px rgba(27,107,58,.1);transform:translateY(-2px)}
 .soc-stat-block:hover::before{opacity:1}
-.soc-stat-num{font-size:22px;font-weight:900;color:var(--ink);letter-spacing:-.03em}
-.soc-stat-label{font-size:10.5px;color:var(--muted);font-weight:700}
+.soc-stat-num{font-size:22px;font-weight:900;color:var(--ink);letter-spacing:-.03em;line-height:1.1}
+.soc-stat-label{font-size:11px;color:var(--muted);font-weight:700}
 
 /* أزرار الإجراءات */
-.soc-profile-actions{display:flex;gap:8px;flex-wrap:wrap}
+.soc-profile-actions{display:flex;gap:10px;flex-wrap:wrap}
 .soc-follow-btn{
   flex:1;padding:11px 18px;border-radius:var(--rpill);font-size:13px;font-weight:800;
   font-family:var(--f-ui);cursor:pointer;border:none;
@@ -715,12 +727,14 @@
 @media(max-width:700px){
   .soc-feed-header,.soc-profile-tabs,.soc-user-list-header{top:58px}
   .soc-profile-cover{height:200px}
-  .soc-profile-cover-wrap{padding-bottom:48px}
-  .soc-avatar-xl{width:96px;height:96px;font-size:32px}
+  .soc-profile-cover-wrap{padding-bottom:52px}
+  .soc-avatar-xl{width:100px;height:100px;font-size:33px}
   .soc-profile-avatar-container{right:12px}
-  .soc-profile-header{padding:10px 124px 18px 14px}
+  .soc-profile-header{padding:12px 14px 18px 14px;padding-right:128px}
   .soc-profile-name{font-size:17px}
   .soc-stat-num{font-size:19px}
+  .soc-profile-stats{gap:7px}
+  .soc-stat-block{padding:12px 4px;border-radius:12px}
 }
 `;
   const style = document.createElement('style');
