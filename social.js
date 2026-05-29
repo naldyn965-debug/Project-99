@@ -13,13 +13,8 @@
    Community + Profile  |  RTL  |  Glass·Glow·Depth
 ══════════════════════════════════════════════════════════════ */
 
-/* ── Tab NEW badge ─────────────────────────────────────────── */
+/* ── Tab NEW badge — removed ─────────────────────────────────── */
 .mkt-tab-social{position:relative}
-.mkt-tab-social::after{
-  content:'NEW';position:absolute;top:2px;left:2px;
-  background:linear-gradient(135deg,#2d9a58,#c9871a);color:#fff;
-  font-size:6.5px;font-weight:900;padding:1px 5px;border-radius:99px;letter-spacing:.06em;
-}
 
 /* ── Root containers ────────────────────────────────────────── */
 #social-feed-root,#social-profile-root,
@@ -365,7 +360,7 @@
 
 /* ══ COVER BANNER — Facebook/Instagram style ══ */
 .soc-profile-cover{
-  width:100%;height:200px;position:relative;overflow:hidden;
+  width:100%;height:280px;position:relative;overflow:hidden;
   background:linear-gradient(135deg,var(--brand-d) 0%,var(--brand-l) 55%,var(--gold-l) 100%);
   flex-shrink:0;
 }
@@ -413,7 +408,7 @@
 .soc-profile-avatar-wrap{
   display:flex;align-items:flex-end;gap:0;
   flex-direction:row;
-  margin-top:-48px;margin-bottom:12px;position:relative;z-index:3;
+  margin-top:-54px;margin-bottom:12px;position:relative;z-index:3;
 }
 .soc-profile-avatar-container{position:relative;flex-shrink:0;}
 /* Camera edit button on avatar */
@@ -709,9 +704,9 @@
 /* responsive */
 @media(max-width:700px){
   .soc-feed-header,.soc-profile-tabs,.soc-user-list-header{top:58px}
-  .soc-profile-cover{height:160px}
+  .soc-profile-cover{height:220px}
   .soc-avatar-xl{width:82px;height:82px;font-size:28px}
-  .soc-profile-avatar-wrap{margin-top:-42px}
+  .soc-profile-avatar-wrap{margin-top:-46px}
   .soc-profile-name{font-size:16px}
   .soc-stat-num{font-size:19px}
 }
