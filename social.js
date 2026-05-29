@@ -431,23 +431,23 @@
 /* ══ بطاقة المعلومات تحت الكوفر ══ */
 .soc-profile-header{
   position:relative;z-index:2;
-  /* نحجز مساحة للأفاتار (112px) + 16px فاصل + 16px padding داخلي */
   padding:14px 16px 22px 16px;
-  padding-right:148px;
   background:var(--card);
   border-bottom:1px solid var(--line);
   direction:rtl;
   text-align:right;
 }
 
-/* الاسم والـ handle */
+/* الاسم فقط يأخذ padding-right لتفادي الأفاتار */
 .soc-profile-name-block{
   display:flex;flex-direction:column;gap:4px;min-width:0;
-  margin-bottom:6px;
+  margin-bottom:10px;
+  padding-right:128px; /* يترك مكان الأفاتار على اليمين */
+  min-height:64px;   /* يكفل ارتفاع كافٍ حتى الأفاتار لا يتداخل مع الإيميل */
 }
 .soc-profile-name{
   font-size:20px;font-weight:900;color:var(--ink);
-  display:flex;align-items:center;justify-content:flex-start;gap:6px;flex-wrap:wrap;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
   letter-spacing:-.015em;line-height:1.3;
 }
 .soc-profile-handle{
@@ -456,7 +456,7 @@
 }
 .soc-profile-email{
   font-size:12px;color:var(--muted);margin-top:1px;
-  display:flex;align-items:center;gap:4px;direction:ltr;justify-content:flex-end;
+  display:flex;align-items:center;gap:4px;
 }
 
 /* صف الإيميل وتاريخ الانضمام */
@@ -730,7 +730,8 @@
   .soc-profile-cover-wrap{padding-bottom:52px}
   .soc-avatar-xl{width:100px;height:100px;font-size:33px}
   .soc-profile-avatar-container{right:12px}
-  .soc-profile-header{padding:12px 14px 18px 14px;padding-right:128px}
+  .soc-profile-header{padding:12px 14px 18px 14px;}
+  .soc-profile-name-block{padding-right:112px;min-height:56px;}
   .soc-profile-name{font-size:17px}
   .soc-stat-num{font-size:19px}
   .soc-profile-stats{gap:7px}
@@ -1227,7 +1228,7 @@ async function renderProfile(uid, isSelf) {
     </button>` : ''}
   </div>
 
-  <!-- Avatar sits across the cover/card boundary -->
+  <!-- Avatar straddles cover/header boundary -->
   <div class="soc-profile-avatar-container">
     ${av(p, 'soc-avatar-xl')}
     ${isSelf ? `
@@ -1241,7 +1242,7 @@ async function renderProfile(uid, isSelf) {
 </div>
 
 <div class="soc-profile-header">
-  <!-- Name block — avatar sits on the right via absolute, text fills the rest -->
+  <!-- صف الاسم — يحجز مساحة مساوية للأفاتار على اليمين عبر padding -->
   <div class="soc-profile-name-block">
     <div class="soc-profile-name">${p.displayName || 'مزارع'}${vb}</div>
     <div class="soc-profile-handle">@${p.username || uid.slice(0, 8)}</div>
