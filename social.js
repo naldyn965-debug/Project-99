@@ -1535,22 +1535,57 @@ function injectGlobal() {
   <div class="soc-post-sheet">
     <div class="soc-post-sheet-handle"></div>
     <div class="soc-post-sheet-title">خيارات المنشور</div>
-    <button class="soc-post-sheet-item" onclick="SOCIAL.closeSheet();SOCIAL.editPost(SOCIAL._sheetPid)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-      </svg>
-      تعديل المنشور
-    </button>
-    <div class="soc-post-sheet-divider"></div>
-    <button class="soc-post-sheet-item danger" onclick="SOCIAL.closeSheet();SOCIAL.confirmDelete(SOCIAL._sheetPid)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-        <path d="M10 11v6"/><path d="M14 11v6"/>
-        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-      </svg>
-      حذف المنشور
-    </button>
+
+    <!-- خيارات صاحب المنشور (أنا) -->
+    <div id="soc-sheet-owner">
+      <button class="soc-post-sheet-item" onclick="SOCIAL.closeSheet();SOCIAL.editPost(SOCIAL._sheetPid)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        تعديل المنشور
+      </button>
+      <div class="soc-post-sheet-divider"></div>
+      <button class="soc-post-sheet-item danger" onclick="SOCIAL.closeSheet();SOCIAL.confirmDelete(SOCIAL._sheetPid)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6"/><path d="M14 11v6"/>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+        حذف المنشور
+      </button>
+    </div>
+
+    <!-- خيارات منشور شخص آخر -->
+    <div id="soc-sheet-other">
+      <!-- متابعة — تظهر لو مش متابعه -->
+      <button class="soc-post-sheet-item" id="soc-sheet-follow-btn" onclick="SOCIAL.closeSheet();SOCIAL.sheetFollow()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+        </svg>
+        متابعة
+      </button>
+      <!-- إلغاء متابعة — تظهر لو بتتابعه -->
+      <button class="soc-post-sheet-item" id="soc-sheet-unfollow-btn" onclick="SOCIAL.closeSheet();SOCIAL.sheetFollow()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <line x1="22" y1="11" x2="16" y2="11"/>
+        </svg>
+        إلغاء المتابعة
+      </button>
+      <div class="soc-post-sheet-divider"></div>
+      <button class="soc-post-sheet-item" onclick="SOCIAL.closeSheet();toast('تم الإبلاغ، شكراً')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+          <line x1="4" y1="22" x2="4" y2="15"/>
+        </svg>
+        الإبلاغ عن المنشور
+      </button>
+    </div>
+
     <button class="soc-post-sheet-cancel" onclick="SOCIAL.closeSheet()">إلغاء</button>
   </div>
 </div>
@@ -1796,19 +1831,64 @@ window.SOCIAL = {
   },
 
   menu(postId, authorUid) {
-    if(S.uid===authorUid){
-      // أنا صاحب المنشور — افتح الـ sheet
-      this._sheetPid = postId;
-      const ov = document.getElementById('soc-pas');
-      if(ov) ov.classList.add('open');
+    this._sheetPid = postId;
+    this._sheetAuthorUid = authorUid;
+    const ov = document.getElementById('soc-pas'); if(!ov) return;
+    const ownerDiv  = document.getElementById('soc-sheet-owner');
+    const otherDiv  = document.getElementById('soc-sheet-other');
+    const followBtn   = document.getElementById('soc-sheet-follow-btn');
+    const unfollowBtn = document.getElementById('soc-sheet-unfollow-btn');
+
+    if(S.uid === authorUid){
+      // منشوري — أظهر خيارات التعديل/الحذف فقط
+      if(ownerDiv)  ownerDiv.style.display  = '';
+      if(otherDiv)  otherDiv.style.display  = 'none';
     } else {
-      toast('تم الإبلاغ، شكراً');
+      // منشور شخص آخر — أظهر متابعة أو إلغاء متابعة
+      if(ownerDiv)  ownerDiv.style.display  = 'none';
+      if(otherDiv)  otherDiv.style.display  = '';
+      const isFollowing = S.followingSet.has(authorUid);
+      if(followBtn)   followBtn.style.display   = isFollowing ? 'none' : '';
+      if(unfollowBtn) unfollowBtn.style.display = isFollowing ? '' : 'none';
     }
+    ov.classList.add('open');
   },
 
   closeSheet() {
     const ov = document.getElementById('soc-pas');
     if(ov) ov.classList.remove('open');
+  },
+
+  sheetFollow() {
+    // استخدم الـ follow button الموجود في صفحة البروفايل لو موجود
+    // أو استدعِ follow() مباشرة
+    const uid = this._sheetAuthorUid; if(!uid) return;
+    const isFollowing = S.followingSet.has(uid);
+    if(isFollowing){
+      S.followingSet.delete(uid);
+      toast('تم إلغاء المتابعة');
+    } else {
+      S.followingSet.add(uid);
+      toast('✅ تمت المتابعة');
+    }
+    // حدّث زر المتابعة في صفحة البروفايل لو كانت مفتوحة
+    const pfBtn = document.getElementById('sfbm');
+    if(pfBtn) this.follow(uid, pfBtn);
+    else {
+      // لو مش في صفحة البروفايل، نفّذ مباشرة
+      const db = getDB(); if(!db || !S.uid) return;
+      const FV = firebase.firestore.FieldValue;
+      if(isFollowing){
+        db.collection('social_follows').where('followerUid','==',S.uid).where('targetUid','==',uid).get()
+          .then(s=>s.forEach(d=>d.ref.delete())).catch(()=>{});
+        db.collection('social_profiles').doc(uid).update({followersCount:FV.increment(-1)}).catch(()=>{});
+        db.collection('social_profiles').doc(S.uid).update({followingCount:FV.increment(-1)}).catch(()=>{});
+      } else {
+        db.collection('social_follows').add({followerUid:S.uid,targetUid:uid,createdAt:FV.serverTimestamp()}).catch(()=>{});
+        db.collection('social_profiles').doc(uid).update({followersCount:FV.increment(1)}).catch(()=>{});
+        db.collection('social_profiles').doc(S.uid).update({followingCount:FV.increment(1)}).catch(()=>{});
+      }
+    }
   },
 
   confirmDelete(postId) {
