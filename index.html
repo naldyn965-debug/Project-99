@@ -125,6 +125,8 @@
   --s3:0 8px 28px rgba(0,0,0,.5);
   --s4:0 16px 48px rgba(0,0,0,.6);
   --s5:0 24px 64px rgba(0,0,0,.7);
+  --brand-pale:rgba(27,107,58,.12);
+  --brand-mist:rgba(27,107,58,.08);
 }
 
 /* ═══════════════════════════════════════════
@@ -17313,7 +17315,7 @@ const App = {
     localStorage.setItem('nb-dark',this.dark?'1':'0');
     this.dark?document.body.setAttribute('data-dark',''):document.body.removeAttribute('data-dark');
     (function(){ var b=document.getElementById('thm-btn'); if(b){ b.classList.toggle('is-dark',!this.dark); } }).call(this);
-    showToast(this.dark?'🌙 الوضع الداكن':'☀️ الوضع الفاتح','inf');
+    /* theme toast removed */
   },
 
   _heroCanvas(){

@@ -764,16 +764,17 @@
   cursor:pointer;animation:socCardIn .3s ease both;position:relative;
 }
 .soc-notif-item:hover{background:var(--bg2);transform:translateX(-2px)}
-.soc-notif-item.unread{background:var(--brand-pale)}
+.soc-notif-item.unread{background:var(--brand-pale);border-right:3px solid var(--brand-l)}
 .soc-notif-item.unread::before{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--brand-l),var(--brand-d));border-radius:0 3px 3px 0}
 .soc-notif-icon{
   width:38px;height:38px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
   box-shadow:0 2px 10px rgba(0,0,0,.1);
 }
-.soc-notif-icon.follow{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);color:var(--brand)}
-.soc-notif-icon.like{background:linear-gradient(135deg,#fdecea,#fcd0cc);color:#e74c3c}
-.soc-notif-icon.comment{background:linear-gradient(135deg,#e3f2fd,#bbdefb);color:#1565c0}
+.soc-notif-icon.follow{background:rgba(27,107,58,.15);color:var(--brand)}
+.soc-notif-icon.like{background:rgba(231,76,60,.12);color:#e74c3c}
+.soc-notif-icon.comment{background:rgba(21,101,192,.12);color:#5b9bd5}
+/* dark mode: الألوان بتشتغل تلقائياً لأنها rgba شفافة على الـ card */
 .soc-notif-icon svg{width:16px;height:16px}
 .soc-notif-text{flex:1;font-size:12.5px;line-height:1.55;color:var(--ink)}
 .soc-notif-text strong{font-weight:800;color:var(--brand)}
