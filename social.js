@@ -504,7 +504,7 @@
    header padding = 16px → spacer الفعلي = 72-16+16 = 72px
    name-block: text-align center لتمركز الاسم تحت وسط الأفاتار */
 .soc-profile-avatar-spacer{
-  width:108px;
+  width:124px;
   flex-shrink:0;
 }
 .soc-profile-name-block{
@@ -798,7 +798,7 @@
   .soc-avatar-xl{width:100px;height:100px;font-size:33px}
   .soc-profile-avatar-container{right:12px}
   .soc-profile-header{padding:12px 14px 18px 14px;}
-  .soc-profile-avatar-spacer{width:90px;}
+  .soc-profile-avatar-spacer{width:104px;}
   .soc-profile-name{font-size:17px}
   .soc-stat-num{font-size:19px}
   .soc-profile-stats{gap:7px}
