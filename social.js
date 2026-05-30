@@ -1861,35 +1861,13 @@ window.SOCIAL = {
   },
 
   sheetFollow() {
-    // استخدم الـ follow button الموجود في صفحة البروفايل لو موجود
-    // أو استدعِ follow() مباشرة
-    const uid = this._sheetAuthorUid; if(!uid) return;
+    const uid = this._sheetAuthorUid; if(!uid || !S.uid) return;
+    // ابنِ زر وهمي بالـ state الحالي وادّيه لـ follow() — ده يضمن منطق موحّد بدون تكرار
     const isFollowing = S.followingSet.has(uid);
-    if(isFollowing){
-      S.followingSet.delete(uid);
-      toast('تم إلغاء المتابعة');
-    } else {
-      S.followingSet.add(uid);
-      toast('✅ تمت المتابعة');
-    }
-    // حدّث زر المتابعة في صفحة البروفايل لو كانت مفتوحة
-    const pfBtn = document.getElementById('sfbm');
-    if(pfBtn) this.follow(uid, pfBtn);
-    else {
-      // لو مش في صفحة البروفايل، نفّذ مباشرة
-      const db = getDB(); if(!db || !S.uid) return;
-      const FV = firebase.firestore.FieldValue;
-      if(isFollowing){
-        db.collection('social_follows').where('followerUid','==',S.uid).where('targetUid','==',uid).get()
-          .then(s=>s.forEach(d=>d.ref.delete())).catch(()=>{});
-        db.collection('social_profiles').doc(uid).update({followersCount:FV.increment(-1)}).catch(()=>{});
-        db.collection('social_profiles').doc(S.uid).update({followingCount:FV.increment(-1)}).catch(()=>{});
-      } else {
-        db.collection('social_follows').add({followerUid:S.uid,targetUid:uid,createdAt:FV.serverTimestamp()}).catch(()=>{});
-        db.collection('social_profiles').doc(uid).update({followersCount:FV.increment(1)}).catch(()=>{});
-        db.collection('social_profiles').doc(S.uid).update({followingCount:FV.increment(1)}).catch(()=>{});
-      }
-    }
+    const fakeBtn = document.createElement('button');
+    if(isFollowing) fakeBtn.classList.add('following');
+    fakeBtn._following = false;
+    this.follow(uid, fakeBtn);
   },
 
   confirmDelete(postId) {
