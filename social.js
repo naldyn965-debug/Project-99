@@ -1651,6 +1651,30 @@ window.SOCIAL = {
       S.uid = user ? user.uid : null;
       S.currentUser = user || null;
       S.profile = user ? await ensureProfile(user) : null;
+      if (user && S.profile) {
+        // ── إعادة حساب العدادات من social_follows لضمان دقتها ──
+        const db = getDB();
+        if (db) {
+          try {
+            const [followersSnap, followingSnap] = await Promise.all([
+              db.collection('social_follows').where('targetUid',  '==', user.uid).get(),
+              db.collection('social_follows').where('followerUid','==', user.uid).get()
+            ]);
+            const realFollowers = followersSnap.size;
+            const realFollowing = followingSnap.size;
+            // حدّث Firestore بس لو العدادات مختلفة
+            const updates = {};
+            if (S.profile.followersCount !== realFollowers) updates.followersCount = realFollowers;
+            if (S.profile.followingCount  !== realFollowing) updates.followingCount  = realFollowing;
+            if (Object.keys(updates).length > 0) {
+              db.collection('social_profiles').doc(user.uid).update(updates).catch(()=>{});
+              S.profile = { ...S.profile, ...updates };
+              invalidateProfileCache(user.uid);
+              _profileCache[user.uid] = S.profile;
+            }
+          } catch(e) { /* بتجاهل هادئ لو مفيش صلاحية */ }
+        }
+      }
       if (!S.authReady) {
         S.authReady = true;
         S._authListeners.forEach(fn => fn());
