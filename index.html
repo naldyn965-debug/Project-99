@@ -4920,6 +4920,7 @@ body.modal-open { overflow: hidden; }
   position: absolute; inset: 0;
   background: linear-gradient(135deg, rgba(27,107,58,.04), transparent);
   opacity: 0; transition: opacity .25s;
+  pointer-events: none; /* لا يمسك الـ clicks — يتركها تعدي للأزرار */
 }
 .mkt-my-product-card:hover { transform: translateX(4px); box-shadow: var(--mkt-shadow-hover); border-color: rgba(27,107,58,.2); }
 .mkt-my-product-card:hover::before { opacity: 1; }
