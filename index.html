@@ -21327,8 +21327,12 @@ document.addEventListener('click', e => {
           '</div>' +
           '<nav class="farm-top-nav">' + navHtml + '</nav>' +
           '<div class="farm-topbar-end">' +
-            '<div class="farm-user-pill">' +
-              '<div class="farm-topbar-user">' + userAvatar + '</div>' +
+            '<div class="farm-name-badge">' +
+              '<div class="farm-name-badge-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2C6.48 2 2 6.48 2 12"/><path d="M12 22V12"/><path d="M12 12C8 8 4 9 2 12"/><path d="M12 12c4-4 8-3 10 0"/><circle cx="12" cy="12" r="2"/></svg></div>' +
+              '<div class="farm-name-badge-text">' +
+                '<span class="farm-name-badge-label">مزرعتي</span>' +
+                '<span class="farm-name-badge-value">' + farmName + '</span>' +
+              '</div>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -24095,12 +24099,12 @@ document.addEventListener('click', e => {
     color: #fff;
   }
 
-  /* brand */
+  /* brand — logo only (farm name moved to right badge) */
   .farm-topbar-brand {
     display: flex;
     align-items: center;
     gap: 9px;
-    padding: 0 12px 0 2px;
+    padding: 0 10px 0 2px;
     border-right: 1px solid var(--line);
     margin-right: 4px;
   }
@@ -24116,34 +24120,10 @@ document.addEventListener('click', e => {
     box-shadow: 0 2px 8px rgba(27,107,58,0.3), inset 0 1px 0 rgba(255,255,255,0.12);
   }
 
-  .farm-topbar-name-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-  }
-  .farm-topbar-os {
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: var(--brand);
-    line-height: 1;
-    font-family: var(--f-ui);
-    opacity: .7;
-  }
-  .farm-topbar-farm {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink);
-    font-family: var(--f-ui);
-    line-height: 1;
-    white-space: nowrap;
-    max-width: 130px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  [data-dark] .farm-topbar-farm { color: rgba(255,255,255,.92); }
-  [data-dark] .farm-topbar-os   { color: rgba(27,200,90,.75); opacity: 1; }
+  /* old name wrap hidden — farm name shown in badge on right */
+  .farm-topbar-name-wrap { display: none; }
+  .farm-topbar-os        { display: none; }
+  .farm-topbar-farm      { display: none; }
 
   /* center: top nav layout wrapper */
   .farm-top-nav {
@@ -24156,41 +24136,87 @@ document.addEventListener('click', e => {
     padding: 0 8px;
   }
 
-  /* end: user */
+  /* end: premium farm name badge */
   .farm-topbar-end { flex-shrink: 0; }
-  .farm-user-pill {
+
+  .farm-name-badge {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 4px;
-    border-radius: 100px;
+    gap: 9px;
+    padding: 7px 14px 7px 10px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--brand-pale) 0%, var(--brand-mist) 100%);
     border: 1px solid var(--line2);
-    background: var(--bg2);
-    cursor: pointer;
-    transition: all .2s;
+    box-shadow: 0 1px 4px rgba(27,107,58,.08), inset 0 1px 0 rgba(255,255,255,.7);
+    transition: box-shadow .2s ease, border-color .2s ease;
+    position: relative;
+    overflow: hidden;
   }
-  .farm-user-pill:hover { background: var(--bg3); }
-  [data-dark] .farm-user-pill {
-    border-color: rgba(255,255,255,.08);
-    background: rgba(255,255,255,.04);
+  /* subtle shimmer streak */
+  .farm-name-badge::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,.35), transparent);
+    pointer-events: none;
+    animation: badgeShimmer 3.5s ease-in-out infinite;
   }
-  [data-dark] .farm-user-pill:hover { background: rgba(255,255,255,.08); }
+  @keyframes badgeShimmer {
+    0%   { left: -60%; }
+    50%  { left: 120%; }
+    100% { left: 120%; }
+  }
 
-  .farm-user-avatar {
+  .farm-name-badge-icon {
     width: 28px; height: 28px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1.5px solid rgba(27,107,58,0.5);
+    border-radius: 8px;
+    background: linear-gradient(135deg, #22a04e 0%, #1a6b36 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(27,107,58,.35), inset 0 1px 0 rgba(255,255,255,.2);
   }
 
-  .farm-user-avatar-placeholder {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    background: var(--brand-mist);
-    color: var(--brand);
-    display: flex; align-items: center; justify-content: center;
-    border: 2px solid rgba(27,107,58,0.15);
+  .farm-name-badge-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
   }
+  .farm-name-badge-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--brand);
+    opacity: .65;
+    line-height: 1;
+    font-family: var(--f-ui);
+  }
+  .farm-name-badge-value {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+    font-family: var(--f-ui);
+    line-height: 1;
+    white-space: nowrap;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Dark mode overrides */
+  [data-dark] .farm-name-badge {
+    background: linear-gradient(135deg, rgba(27,107,58,.18) 0%, rgba(27,107,58,.10) 100%);
+    border-color: rgba(27,107,58,.28);
+    box-shadow: 0 1px 4px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  [data-dark] .farm-name-badge-label { color: rgba(34,197,94,.75); opacity: 1; }
+  [data-dark] .farm-name-badge-value { color: rgba(255,255,255,.92); }
+
+  /* legacy selectors kept for safety (elements removed from DOM) */
+  .farm-user-avatar { display: none; }
+  .farm-user-avatar-placeholder { display: none; }
 
   .farm-back-btn-sm {
     display: inline-flex;
@@ -25146,15 +25172,16 @@ document.addEventListener('click', e => {
       height: 56px;
       top: 0;
     }
-    .farm-topbar-brand { padding: 0 8px 0 2px; }
-    .farm-topbar-farm  { max-width: 80px; font-size: 11px; }
-    .farm-topbar-os    { display: none; }
+    .farm-topbar-brand { padding: 0 6px 0 2px; }
     .farm-topbar-logo  { width: 28px; height: 28px; border-radius: 7px; }
     .farm-top-nav      { padding: 3px; border-radius: 10px; }
-    .farm-nav-item     { padding: 0 9px; height: 30px; font-size: 10px; animation: none; opacity: 1; transform: none !important; border-radius: 7px; }
+    .farm-nav-item     { padding: 0 8px; height: 30px; font-size: 10px; animation: none; opacity: 1; transform: none !important; border-radius: 7px; }
     .farm-nav-icon     { width: 13px; height: 13px; }
-    .farm-user-pill    { padding: 2px; }
-    .farm-user-avatar, .farm-user-avatar-placeholder { width: 24px; height: 24px; }
+    /* badge compact on mobile */
+    .farm-name-badge   { padding: 5px 10px 5px 7px; gap: 6px; border-radius: 9px; }
+    .farm-name-badge-icon { width: 22px; height: 22px; border-radius: 6px; }
+    .farm-name-badge-label { display: none; }
+    .farm-name-badge-value { font-size: 11.5px; max-width: 90px; }
     .farm-main { padding: 14px 12px; padding-top: 70px; }
     .farm-stats-grid { grid-template-columns: repeat(2, 1fr); }
     .farm-quick-btns { grid-template-columns: 1fr; }
