@@ -18043,6 +18043,11 @@ function showCatPage(catId){
   showPage('cat');
   document.getElementById(map[catId])?.classList.add('active');
   App.buildCatPage(catId);
+  // ── Hash Routing: حفظ الـ catId مع الصفحة ──
+  var _catHash = '#pg:cat:' + catId;
+  if(location.hash !== _catHash){
+    history.replaceState({page:'cat', catId:catId}, '', _catHash);
+  }
 }
 
 // ======================== SEARCH FUNCTIONS ========================
@@ -18108,6 +18113,14 @@ function spRow(r,q,i){
 
 // ======================== PLANT MODAL ========================
 let CP=null,CT='ov';
+// ── مساعد: يجيب الـ hash الصحيح للصفحة الحالية (مع catId لو cat) ──
+function _currentPageHash(){
+  if(currentPage === 'cat'){
+    var _catHash = location.hash.match(/^#pg:cat:([^:]+)/);
+    if(_catHash) return '#pg:cat:' + _catHash[1];
+  }
+  return '#pg:' + currentPage;
+}
 function openModal(id,tab='ov'){
   CP=DB.find(p=>p.id===id);if(!CP)return;CT=tab;
   document.getElementById('modal-content').innerHTML=buildModal();
@@ -18116,16 +18129,17 @@ function openModal(id,tab='ov'){
   document.body.style.overflow='hidden';
   document.body.classList.add('modal-open');
   document.addEventListener('keydown',_onEsc);
-  // ── Hash Routing: حفظ النبات المفتوح ──
-  history.pushState({page:currentPage, plant:id, tab:tab}, '', '#pg:'+currentPage+':plant:'+id);
+  // ── Hash Routing: حفظ النبات مع الحفاظ على catId لو موجود ──
+  var _base = _currentPageHash();
+  history.pushState({page:currentPage, plant:id, tab:tab}, '', _base+':plant:'+id);
 }
 function closeModal(){
   document.getElementById('modal-bg').classList.remove('on');
   document.body.style.overflow='';
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown',_onEsc);
-  // ── Hash Routing: إزالة hash النبات، الرجوع لـ hash الصفحة ──
-  var _pageHash = '#pg:' + currentPage;
+  // ── Hash Routing: الرجوع لـ hash الصفحة (مع catId لو cat) ──
+  var _pageHash = _currentPageHash();
   if(location.hash !== _pageHash){
     history.pushState({page:currentPage}, '', _pageHash);
   }
@@ -18797,16 +18811,30 @@ document.addEventListener('DOMContentLoaded',()=>App.init());
 // ██  HASH ROUTING — استعادة الحالة عند الريفريش / الرجوع
 // ════════════════════════════════════════════════════════
 (function(){
+  var _CAT_IDS = ['vegetables','fruits','ornamental','medicinal','fieldcrops','citrus'];
+
   // ── دالة تفسير الـ hash ──
   function _parseHash(hash){
-    if(!hash || hash === '#') return {page:'home', plant:null};
-    // صيغة: #pg:farm:plant:plant-123  أو  #pg:farm  أو  #pg:cat/vegetables
+    if(!hash || hash === '#') return {page:'home', catId:null, plant:null};
     var h = hash.replace(/^#/,'');
+
+    // صيغة: #pg:cat:vegetables:plant:plant-123
+    var catPlantMatch = h.match(/^pg:cat:([^:]+):plant:(.+)$/);
+    if(catPlantMatch) return {page:'cat', catId:catPlantMatch[1], plant:catPlantMatch[2]};
+
+    // صيغة: #pg:cat:vegetables
+    var catMatch = h.match(/^pg:cat:([^:]+)$/);
+    if(catMatch) return {page:'cat', catId:catMatch[1], plant:null};
+
+    // صيغة: #pg:farm:plant:plant-123  أو  #pg:search:plant:plant-123
     var plantMatch = h.match(/^pg:([^:]+):plant:(.+)$/);
-    if(plantMatch) return {page: plantMatch[1], plant: plantMatch[2]};
+    if(plantMatch) return {page:plantMatch[1], catId:null, plant:plantMatch[2]};
+
+    // صيغة: #pg:farm
     var pageMatch = h.match(/^pg:(.+)$/);
-    if(pageMatch) return {page: pageMatch[1], plant:null};
-    return {page:'home', plant:null};
+    if(pageMatch) return {page:pageMatch[1], catId:null, plant:null};
+
+    return {page:'home', catId:null, plant:null};
   }
 
   // ── استعادة الحالة من الـ hash ──
@@ -18817,32 +18845,33 @@ document.addEventListener('DOMContentLoaded',()=>App.init());
     // تحقق أن الصفحة موجودة
     if(!document.getElementById('pg-'+pg)) pg = 'home';
 
-    // لو الصفحة مش الـ home اعرضها بدون pushState جديد
     if(pg !== 'home'){
-      showPage(pg, {force:true});
-      // امنع pushState مكرر بعد showPage
-      history.replaceState({page:pg}, '', hash || ('#pg:'+pg));
+      if(pg === 'cat' && state.catId && _CAT_IDS.indexOf(state.catId) !== -1){
+        // صفحة فئة: لازم نستدعي showCatPage عشان تبني المحتوى
+        showCatPage(state.catId);
+      } else {
+        showPage(pg, {force:true});
+      }
+      history.replaceState({page:pg, catId:state.catId}, '', hash);
     }
 
     // لو فيه نبات محفوظ افتح المودال بعد ما الصفحة تتحمل
     if(state.plant){
       setTimeout(function(){
-        // اتأكد إن الـ DB محملة
         if(typeof DB !== 'undefined' && DB.length){
           openModal(state.plant);
-          history.replaceState({page:pg, plant:state.plant}, '', hash);
+          history.replaceState({page:pg, catId:state.catId, plant:state.plant}, '', hash);
         }
-      }, 600);
+      }, 700);
     }
   }
 
   // ── عند الريفريش: نفذ بعد App.init ──
   var _initHash = location.hash;
   if(_initHash && _initHash !== '#'){
-    // أضاف setTimeout لأن App.init + _buildHome بيشتغلوا async
-    setTimeout(function(){ _restoreFromHash(_initHash); }, 350);
+    // setTimeout لأن App.init + _buildHome بيشتغلوا async
+    setTimeout(function(){ _restoreFromHash(_initHash); }, 400);
   } else {
-    // مفيش hash → اكتب #pg:home للـ home
     setTimeout(function(){
       if(!location.hash || location.hash === '#'){
         history.replaceState({page:'home'}, '', '#pg:home');
@@ -18866,8 +18895,11 @@ document.addEventListener('DOMContentLoaded',()=>App.init());
       document.removeEventListener('keydown', window._onEsc || function(){});
     }
 
-    // انتقل للصفحة المطلوبة بدون pushState جديد
-    if(pg !== currentPage){
+    // انتقل للصفحة المطلوبة
+    if(pg === 'cat' && state.catId && _CAT_IDS.indexOf(state.catId) !== -1){
+      showCatPage(state.catId);
+      history.replaceState({page:'cat', catId:state.catId}, '', hash);
+    } else if(pg !== currentPage){
       showPage(pg, {force:true});
       history.replaceState({page:pg}, '', '#pg:'+pg);
     }
@@ -18876,8 +18908,8 @@ document.addEventListener('DOMContentLoaded',()=>App.init());
     if(state.plant){
       setTimeout(function(){
         openModal(state.plant);
-        history.replaceState({page:pg, plant:state.plant}, '', hash);
-      }, 400);
+        history.replaceState({page:pg, catId:state.catId, plant:state.plant}, '', hash);
+      }, 450);
     }
   });
 })();
