@@ -17956,8 +17956,6 @@ function showPage(pg,opts={}){
       });
     }, 480);
   }
-  window.scrollTo(0,0);
-  document.documentElement.scrollTop=0;
   if(prev&&prev!==next){
     prev.style.animation='none';
     prev.style.opacity='';
@@ -21381,7 +21379,6 @@ document.addEventListener('click', e => {
     }
 
     function _doRenderFarmView(mc, view) {
-      window.scrollTo({ top: 0, behavior: 'instant' });
       showFarmLoader(false);
       var h = '';
       if      (view === 'dashboard') h = renderDashboard();
