@@ -113,6 +113,11 @@ service cloud.firestore {
       allow create: if isAuth();
     }
 
+    // ── FAVORITES ──────────────────────────────────────────
+    match /favorites/{uid} {
+      allow read, write: if isSelf(uid);
+    }
+
     // ── DENY ALL ELSE ──────────────────────────────────────
     match /{document=**} {
       allow read, write: if false;
