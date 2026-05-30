@@ -24028,18 +24028,28 @@ document.addEventListener('click', e => {
     display: flex;
     align-items: center;
     gap: 0;
-    padding: 0 16px 0 12px;
+    padding: 0 20px 0 14px;
     background: var(--card);
-    backdrop-filter: blur(24px) saturate(200%);
-    -webkit-backdrop-filter: blur(24px) saturate(200%);
+    backdrop-filter: blur(32px) saturate(220%);
+    -webkit-backdrop-filter: blur(32px) saturate(220%);
     border-bottom: 1px solid var(--line);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 500;
-    height: 58px;
-    box-shadow: var(--s2);
+    height: 62px;
+    box-shadow: 0 1px 0 var(--line), 0 4px 24px rgba(0,0,0,.12);
+  }
+  /* subtle green accent line at very bottom of topbar */
+  .farm-topbar::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(27,107,58,.55) 30%, rgba(34,197,94,.7) 50%, rgba(27,107,58,.55) 70%, transparent 100%);
+    pointer-events: none;
   }
 
   /* start: back + brand */
@@ -24115,7 +24125,7 @@ document.addEventListener('click', e => {
     text-overflow: ellipsis;
   }
 
-  /* center: top nav */
+  /* center: top nav layout wrapper */
   .farm-top-nav {
     flex: 1;
     display: flex;
@@ -24193,66 +24203,93 @@ document.addEventListener('click', e => {
   .farm-top-nav::-webkit-scrollbar { display: none; }
 
   /* ── Farm tabs — same style as mkt-tab ── */
+  /* ── Premium segmented nav pills ── */
+  .farm-top-nav {
+    background: rgba(0,0,0,.18);
+    border-radius: 14px;
+    padding: 5px;
+    gap: 2px;
+    border: 1px solid rgba(255,255,255,.07);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,.25);
+    max-height: 46px;
+  }
+
   .farm-nav-item {
     flex-shrink: 0;
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 7px 16px;
-    border-radius: 40px;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--slate);
+    padding: 7px 14px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,.52);
     cursor: pointer;
-    border: 1.5px solid transparent;
+    border: 1px solid transparent;
     background: none;
     font-family: var(--f-ui);
-    transition: all .22s var(--mkt-ease);
+    transition: color .18s ease, background .18s ease, box-shadow .18s ease, transform .15s ease;
     white-space: nowrap;
-    letter-spacing: .015em;
+    letter-spacing: .02em;
     position: relative;
     overflow: hidden;
-    height: auto;
+    height: 36px;
     min-width: unset;
     opacity: 0;
-    animation: tabIn .4s var(--ease-out) forwards;
+    animation: tabIn .35s cubic-bezier(.16,1,.3,1) forwards;
   }
-  @keyframes tabIn { to { opacity: 1; } }
+  @keyframes tabIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
   .farm-nav-icon {
-    width: 16px; height: 16px;
+    width: 15px; height: 15px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    transition: transform .3s var(--mkt-spring);
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .18s ease;
+    opacity: .7;
   }
-  .farm-nav-label { line-height: 1; }
-  .farm-nav-pip  { display: none; } /* مش محتاجها مع pill style */
+  .farm-nav-label {
+    line-height: 1;
+    transition: opacity .18s ease;
+  }
+  .farm-nav-pip  { display: none; }
 
   .farm-nav-item:hover {
-    color: var(--brand);
-    background: rgba(27,107,58,.07);
-    border-color: rgba(27,107,58,.18);
+    color: rgba(255,255,255,.82);
+    background: rgba(255,255,255,.07);
   }
-  .farm-nav-item:hover .farm-nav-icon { transform: scale(1.18) rotate(-5deg); }
+  .farm-nav-item:hover .farm-nav-icon { transform: scale(1.15); opacity: .9; }
 
   .farm-nav-active {
-    background: linear-gradient(135deg, var(--mkt-g), var(--mkt-gl)) !important;
+    background: linear-gradient(145deg, rgba(34,160,78,.95) 0%, rgba(21,107,54,.98) 100%) !important;
     color: #fff !important;
-    border-color: transparent !important;
-    box-shadow: 0 3px 16px rgba(27,107,58,.4), inset 0 1px 0 rgba(255,255,255,.2);
+    border-color: rgba(34,197,94,.25) !important;
+    box-shadow: 0 2px 12px rgba(27,107,58,.5), 0 1px 0 rgba(255,255,255,.15) inset !important;
   }
-  .farm-nav-active .farm-nav-icon { transform: scale(1.1); }
+  .farm-nav-active .farm-nav-icon { transform: scale(1.08); opacity: 1; }
+  .farm-nav-active .farm-nav-label { opacity: 1; }
 
-  /* ripple */
+  /* shimmer on active tab */
+  .farm-nav-active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.1) 50%, transparent 70%);
+    border-radius: 9px;
+    pointer-events: none;
+  }
+
   .farm-nav-item::before {
     content: '';
     position: absolute; inset: 0;
     background: rgba(255,255,255,0);
     transition: background .2s;
-    border-radius: 40px;
+    border-radius: 9px;
     pointer-events: none;
   }
-  .farm-nav-item:active { transform: scale(.95); }
+  .farm-nav-item:active { transform: scale(.96); }
 
   .farm-sf-dot {
     width: 6px; height: 6px;
@@ -24266,7 +24303,7 @@ document.addEventListener('click', e => {
   .farm-main {
     flex: 1;
     padding: 28px 32px;
-    padding-top: 86px; /* 58px topbar + 28px gap */
+    padding-top: 90px; /* 62px topbar + 28px gap */
     min-height: 100vh;
     overflow-y: auto;
   }
@@ -25061,20 +25098,20 @@ document.addEventListener('click', e => {
     .farm-nav { flex-direction: row; overflow-x: auto; gap: 3px; }
     .farm-nav-item { flex-direction: column; gap: 3px; padding: 7px 9px; font-size: 10px; min-width: 60px; flex-shrink: 0; }
     .farm-topbar {
-      padding: 0 8px;
-      height: 52px;
+      padding: 0 10px;
+      height: 56px;
       top: 0;
     }
     .farm-topbar-brand { padding: 0 8px 0 2px; }
     .farm-topbar-farm  { max-width: 80px; font-size: 11px; }
     .farm-topbar-os    { display: none; }
     .farm-topbar-logo  { width: 28px; height: 28px; border-radius: 7px; }
-    .farm-top-nav      { gap: 0; justify-content: flex-start; }
-    .farm-nav-item     { padding: 0 10px; min-width: 56px; font-size: 9.5px; height: 52px; animation: none; opacity: 1; transform: none !important; }
-    .farm-nav-icon     { width: 18px; height: 18px; }
+    .farm-top-nav      { padding: 3px; border-radius: 10px; }
+    .farm-nav-item     { padding: 0 9px; height: 30px; font-size: 10px; animation: none; opacity: 1; transform: none !important; border-radius: 7px; }
+    .farm-nav-icon     { width: 13px; height: 13px; }
     .farm-user-pill    { padding: 2px; }
     .farm-user-avatar, .farm-user-avatar-placeholder { width: 24px; height: 24px; }
-    .farm-main { padding: 14px 12px; padding-top: 66px; }
+    .farm-main { padding: 14px 12px; padding-top: 70px; }
     .farm-stats-grid { grid-template-columns: repeat(2, 1fr); }
     .farm-quick-btns { grid-template-columns: 1fr; }
     .farm-form-grid  { grid-template-columns: 1fr; }
