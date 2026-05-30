@@ -197,6 +197,59 @@
 }
 .soc-post-more-btn:hover{background:var(--bg2);color:var(--ink);transform:scale(1.1)}
 
+/* ── Post Action Bottom Sheet ── */
+.soc-post-sheet-overlay{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.soc-post-sheet-overlay.open{opacity:1;pointer-events:all;}
+.soc-post-sheet{
+  width:100%;max-width:520px;
+  background:var(--card);
+  border-radius:22px 22px 0 0;
+  padding:0 0 calc(env(safe-area-inset-bottom) + 12px);
+  transform:translateY(100%);
+  transition:transform .32s cubic-bezier(.34,1.1,.64,1);
+  direction:rtl;
+  overflow:hidden;
+}
+.soc-post-sheet-overlay.open .soc-post-sheet{transform:translateY(0);}
+.soc-post-sheet-handle{
+  width:38px;height:4px;border-radius:99px;
+  background:var(--line);margin:12px auto 4px;
+}
+.soc-post-sheet-title{
+  font-size:11px;font-weight:700;color:var(--muted);
+  text-align:center;padding:6px 0 10px;letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.soc-post-sheet-item{
+  display:flex;align-items:center;gap:13px;
+  padding:15px 22px;cursor:pointer;
+  font-size:15px;font-weight:600;color:var(--ink);
+  transition:background .15s;border:none;background:none;
+  width:100%;text-align:right;direction:rtl;
+  font-family:var(--f-ui);
+}
+.soc-post-sheet-item:hover{background:var(--bg2);}
+.soc-post-sheet-item svg{flex-shrink:0;color:var(--muted);}
+.soc-post-sheet-item.danger{color:#e53935;}
+.soc-post-sheet-item.danger svg{color:#e53935;}
+.soc-post-sheet-divider{height:1px;background:var(--line);margin:2px 0;}
+.soc-post-sheet-cancel{
+  display:flex;align-items:center;justify-content:center;
+  padding:14px;cursor:pointer;
+  font-size:15px;font-weight:700;color:var(--muted);
+  transition:background .15s;border:none;background:none;
+  width:100%;font-family:var(--f-ui);
+  margin-top:4px;
+}
+.soc-post-sheet-cancel:hover{background:var(--bg2);}
+
 /* post text */
 .soc-post-text{padding:0 14px 10px;font-size:13.5px;line-height:1.72;color:var(--ink);white-space:pre-wrap}
 .soc-post-tag{
@@ -1476,6 +1529,31 @@ function injectGlobal() {
 </div>
 <input type="file" id="soc-avatar-input" accept="image/*" style="display:none" onchange="SOCIAL.uploadImg(event,'avatar')">
 <input type="file" id="soc-cover-input" accept="image/*" style="display:none" onchange="SOCIAL.uploadImg(event,'cover')">
+
+<!-- ── Post Action Sheet ── -->
+<div class="soc-post-sheet-overlay" id="soc-pas" onclick="if(event.target===this)SOCIAL.closeSheet()">
+  <div class="soc-post-sheet">
+    <div class="soc-post-sheet-handle"></div>
+    <div class="soc-post-sheet-title">خيارات المنشور</div>
+    <button class="soc-post-sheet-item" onclick="SOCIAL.closeSheet();SOCIAL.editPost(SOCIAL._sheetPid)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      </svg>
+      تعديل المنشور
+    </button>
+    <div class="soc-post-sheet-divider"></div>
+    <button class="soc-post-sheet-item danger" onclick="SOCIAL.closeSheet();SOCIAL.confirmDelete(SOCIAL._sheetPid)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+        <path d="M10 11v6"/><path d="M14 11v6"/>
+        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+      </svg>
+      حذف المنشور
+    </button>
+    <button class="soc-post-sheet-cancel" onclick="SOCIAL.closeSheet()">إلغاء</button>
+  </div>
+</div>
 <div class="soc-modal-overlay" id="soc-em" onclick="if(event.target===this)SOCIAL.closeEdit()">
   <div class="soc-modal" dir="rtl">
     <div class="soc-modal-header"><span>تعديل الصفحة</span><button class="soc-modal-close" onclick="SOCIAL.closeEdit()">✕</button></div>
@@ -1718,7 +1796,80 @@ window.SOCIAL = {
   },
 
   menu(postId, authorUid) {
-    if(S.uid===authorUid){if(confirm('هل تريد حذف هذا المنشور؟'))this.delPost(postId);}else toast('تم الإبلاغ، شكراً');
+    if(S.uid===authorUid){
+      // أنا صاحب المنشور — افتح الـ sheet
+      this._sheetPid = postId;
+      const ov = document.getElementById('soc-pas');
+      if(ov) ov.classList.add('open');
+    } else {
+      toast('تم الإبلاغ، شكراً');
+    }
+  },
+
+  closeSheet() {
+    const ov = document.getElementById('soc-pas');
+    if(ov) ov.classList.remove('open');
+  },
+
+  confirmDelete(postId) {
+    if(!postId) return;
+    if(confirm('هل تريد حذف هذا المنشور نهائياً؟')) this.delPost(postId);
+  },
+
+  editPost(postId) {
+    if(!postId) return;
+    const db = getDB(); if(!db || !S.uid) return;
+    db.collection('social_posts').doc(postId).get().then(doc => {
+      if(!doc.exists) return toast('المنشور غير موجود');
+      const data = doc.data();
+      if(data.authorUid !== S.uid) return toast('ليس لديك صلاحية');
+      // افتح modal النشر بالبيانات الحالية
+      const m = document.getElementById('soc-pm'); if(!m) return;
+      const ta = document.getElementById('soc-post-text'); if(!ta) return;
+      ta.value = data.text || '';
+      S.imgs = [];
+      this.renderPrev();
+      // غير الـ header ليعبر عن التعديل
+      const header = m.querySelector('.soc-modal-header span');
+      if(header) header.textContent = 'تعديل المنشور';
+      // غير زر النشر ليحفظ التعديل
+      const btn = document.getElementById('soc-psb'); if(!btn) return;
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> حفظ التعديل`;
+      btn.onclick = () => this.saveEdit(postId);
+      // أفاتار
+      const pma = document.getElementById('soc-pma');
+      if(pma) pma.innerHTML = av(S.profile,'soc-avatar-sm');
+      m.classList.add('open');
+      setTimeout(() => ta.focus(), 320);
+    });
+  },
+
+  async saveEdit(postId) {
+    const ta = document.getElementById('soc-post-text');
+    const text = ta ? ta.value.trim() : '';
+    if(!text) return toast('اكتب نصاً للمنشور');
+    const db = getDB(); if(!db || !S.uid) return;
+    const btn = document.getElementById('soc-psb');
+    if(btn){ btn.disabled=true; btn.style.opacity='.6'; }
+    try {
+      await db.collection('social_posts').doc(postId).update({
+        text,
+        editedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      this.closePost();
+      toast('✅ تم تعديل المنشور');
+      // أعد reset الزر للوضع الأصلي
+      if(btn){
+        btn.disabled=false; btn.style.opacity='';
+        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> نشر الآن`;
+        btn.onclick = () => this.submitPost();
+      }
+      const header = document.querySelector('#soc-pm .soc-modal-header span');
+      if(header) header.textContent = 'منشور جديد';
+    } catch(e) {
+      toast('حدث خطأ، حاول مرة أخرى');
+      if(btn){ btn.disabled=false; btn.style.opacity=''; }
+    }
   },
 
   async delPost(postId) {
