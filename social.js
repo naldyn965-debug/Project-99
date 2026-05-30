@@ -441,14 +441,15 @@
 /* صف الاسم + spacer بجانب الأفاتار */
 .soc-profile-top-row{
   display:flex;
-  flex-direction:row-reverse; /* RTL: الأفاتار-spacer على اليمين، الاسم على اليسار */
+  flex-direction:row-reverse; /* RTL: spacer على اليمين، الاسم يبدأ من تحت مركز الأفاتار */
   align-items:center;
-  gap:14px;
+  gap:0;
   margin-bottom:2px;
 }
-/* spacer يحجز نفس عرض الأفاتار (112px) حتى الاسم يقف بجانبه بصرياً */
+/* الأفاتار: right=16px، عرضه 112px → مركزه عند 72px من الحافة
+   header padding-right=16px → spacer = 72-16 = 56px لمحاذاة الاسم تحت المركز */
 .soc-profile-avatar-spacer{
-  width:112px;
+  width:56px;
   flex-shrink:0;
 }
 .soc-profile-name-block{
@@ -742,8 +743,7 @@
   .soc-avatar-xl{width:100px;height:100px;font-size:33px}
   .soc-profile-avatar-container{right:12px}
   .soc-profile-header{padding:12px 14px 18px 14px;}
-  .soc-profile-avatar-spacer{width:100px;}
-  .soc-profile-top-row{gap:10px;}
+  .soc-profile-avatar-spacer{width:48px;}
   .soc-profile-name{font-size:17px}
   .soc-stat-num{font-size:19px}
   .soc-profile-stats{gap:7px}
