@@ -21303,7 +21303,6 @@ document.addEventListener('click', e => {
         return '<button class="farm-nav-item' + active + '" onclick="FarmNav(\'' + n.view + '\')" style="animation-delay:' + (i * 0.06) + 's">' +
           '<span class="farm-nav-icon">' + n.svg + '</span>' +
           '<span class="farm-nav-label">' + n.label + '</span>' +
-          '<span class="farm-nav-pip"></span>' +
         '</button>';
       }).join('');
 
@@ -24185,109 +24184,75 @@ document.addEventListener('click', e => {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2px;
+    gap: 4px;
     height: 100%;
-    padding: 0 4px;
+    padding: 0 6px;
     overflow-x: auto;
     scrollbar-width: none;
   }
   .farm-top-nav::-webkit-scrollbar { display: none; }
 
-  /* Each tab */
+  /* ── Farm tabs — same style as mkt-tab ── */
   .farm-nav-item {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    padding: 0 14px;
-    height: 58px;
-    min-width: 72px;
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    font-size: 10.5px;
-    font-weight: 600;
-    font-family: var(--f-ui);
-    cursor: pointer;
-    white-space: nowrap;
-    letter-spacing: .02em;
-    /* entrance */
-    opacity: 0;
-    transform: translateY(-4px);
-    animation: tabIn .4s var(--ease-out) forwards;
-    transition: color .2s, background .2s;
-    overflow: hidden;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 40px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--slate);
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    background: none;
+    font-family: var(--f-ui);
+    transition: all .22s var(--mkt-ease);
+    white-space: nowrap;
+    letter-spacing: .015em;
+    position: relative;
+    overflow: hidden;
+    height: auto;
+    min-width: unset;
+    opacity: 0;
+    animation: tabIn .4s var(--ease-out) forwards;
   }
-  @keyframes tabIn {
-    to { opacity: 1; transform: none; }
+  @keyframes tabIn { to { opacity: 1; } }
+
+  .farm-nav-icon {
+    width: 16px; height: 16px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: transform .3s var(--mkt-spring);
   }
+  .farm-nav-label { line-height: 1; }
+  .farm-nav-pip  { display: none; } /* مش محتاجها مع pill style */
 
   .farm-nav-item:hover {
-    color: var(--ink);
-    background: var(--bg2);
+    color: var(--brand);
+    background: rgba(27,107,58,.07);
+    border-color: rgba(27,107,58,.18);
   }
+  .farm-nav-item:hover .farm-nav-icon { transform: scale(1.18) rotate(-5deg); }
 
   .farm-nav-active {
-    color: var(--brand) !important;
-    background: rgba(27,107,58,0.12) !important;
+    background: linear-gradient(135deg, var(--mkt-g), var(--mkt-gl)) !important;
+    color: #fff !important;
+    border-color: transparent !important;
+    box-shadow: 0 3px 16px rgba(27,107,58,.4), inset 0 1px 0 rgba(255,255,255,.2);
   }
+  .farm-nav-active .farm-nav-icon { transform: scale(1.1); }
 
-  /* active underline */
-  .farm-nav-pip {
-    position: absolute;
-    bottom: 0; left: 50%;
-    transform: translateX(-50%) scaleX(0);
-    width: 60%;
-    height: 2.5px;
-    background: linear-gradient(90deg, rgba(27,200,90,0.9), rgba(80,230,140,1));
-    border-radius: 2px 2px 0 0;
-    transition: transform .3s var(--ease-spring);
-    box-shadow: 0 0 8px rgba(27,200,90,0.6);
-  }
-  .farm-nav-active .farm-nav-pip { transform: translateX(-50%) scaleX(1); }
-
-  /* icon */
-  .farm-nav-icon {
-    width: 22px; height: 22px;
-    display: flex; align-items: center; justify-content: center;
-    color: inherit;
-    transition: transform .25s var(--ease-spring), color .2s;
-    flex-shrink: 0;
-  }
-  .farm-nav-item:hover .farm-nav-icon { transform: translateY(-2px) scale(1.1); }
-  .farm-nav-active .farm-nav-icon { transform: none; }
-
-  /* hover glow */
+  /* ripple */
   .farm-nav-item::before {
     content: '';
-    position: absolute;
-    inset: 8px 6px;
-    border-radius: 8px;
-    background: rgba(27,107,58,0);
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0);
     transition: background .2s;
+    border-radius: 40px;
     pointer-events: none;
   }
-  .farm-nav-item:hover::before { background: rgba(27,107,58,0.12); }
-  .farm-nav-active::before     { background: rgba(27,107,58,0.15); }
-
-  /* click ripple */
-  .farm-nav-item::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at center, rgba(80,230,140,0.15) 0%, transparent 70%);
-    opacity: 0;
-    transform: scale(0.5);
-    border-radius: 0;
-    transition: opacity .5s, transform .5s;
-    pointer-events: none;
-  }
-  .farm-nav-item:active::after { opacity: 1; transform: scale(1); transition: none; }
-
-  .farm-nav-label { line-height: 1; }
+  .farm-nav-item:active { transform: scale(.95); }
 
   .farm-sf-dot {
     width: 6px; height: 6px;
