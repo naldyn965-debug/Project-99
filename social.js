@@ -438,12 +438,23 @@
   text-align:right;
 }
 
-/* الاسم فقط يأخذ padding-right لتفادي الأفاتار */
+/* صف الاسم + spacer بجانب الأفاتار */
+.soc-profile-top-row{
+  display:flex;
+  flex-direction:row-reverse; /* RTL: الأفاتار-spacer على اليمين، الاسم على اليسار */
+  align-items:center;
+  gap:14px;
+  margin-bottom:2px;
+}
+/* spacer يحجز نفس عرض الأفاتار (112px) حتى الاسم يقف بجانبه بصرياً */
+.soc-profile-avatar-spacer{
+  width:112px;
+  flex-shrink:0;
+}
 .soc-profile-name-block{
-  display:flex;flex-direction:column;gap:4px;min-width:0;
-  margin-bottom:10px;
-  padding-right:128px; /* يترك مكان الأفاتار على اليمين */
-  min-height:64px;   /* يكفل ارتفاع كافٍ حتى الأفاتار لا يتداخل مع الإيميل */
+  display:flex;flex-direction:column;gap:3px;
+  flex:1;min-width:0;
+  text-align:right;
 }
 .soc-profile-name{
   font-size:20px;font-weight:900;color:var(--ink);
@@ -731,7 +742,8 @@
   .soc-avatar-xl{width:100px;height:100px;font-size:33px}
   .soc-profile-avatar-container{right:12px}
   .soc-profile-header{padding:12px 14px 18px 14px;}
-  .soc-profile-name-block{padding-right:112px;min-height:56px;}
+  .soc-profile-avatar-spacer{width:100px;}
+  .soc-profile-top-row{gap:10px;}
   .soc-profile-name{font-size:17px}
   .soc-stat-num{font-size:19px}
   .soc-profile-stats{gap:7px}
@@ -1242,14 +1254,17 @@ async function renderProfile(uid, isSelf) {
 </div>
 
 <div class="soc-profile-header">
-  <!-- صف الاسم — يحجز مساحة مساوية للأفاتار على اليمين عبر padding -->
-  <div class="soc-profile-name-block">
-    <div class="soc-profile-name">${p.displayName || 'مزارع'}${vb}</div>
-    <div class="soc-profile-handle">@${p.username || uid.slice(0, 8)}</div>
+
+  <!-- صف الاسم: spacer بعرض الأفاتار على اليمين + الاسم جنبه مباشرة -->
+  <div class="soc-profile-top-row">
+    <div class="soc-profile-avatar-spacer"></div>
+    <div class="soc-profile-name-block">
+      <div class="soc-profile-name">${p.displayName || 'مزارع'}${vb}</div>
+    </div>
   </div>
 
   <!-- Email + join date -->
-  <div class="soc-profile-meta-row" style="margin-top:10px;margin-bottom:14px;">
+  <div class="soc-profile-meta-row" style="margin-top:12px;margin-bottom:14px;">
     ${isSelf && S.currentUser && S.currentUser.email ? `<span class="soc-profile-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>${S.currentUser.email}</span>` : ''}
     ${p.joinedAt  ? `<span class="soc-profile-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>انضم ${rel(p.joinedAt)}</span>` : ''}
     ${p.location  ? `<span class="soc-profile-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>${p.location}</span>` : ''}
