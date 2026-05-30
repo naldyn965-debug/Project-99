@@ -1851,34 +1851,57 @@ window.SOCIAL = {
     const db = getDB(); if(!db || !S.uid) return;
     const btn = document.getElementById('soc-psb');
     if(btn){ btn.disabled=true; btn.style.opacity='.6'; }
+    // ── Optimistic: حدّث نص الكارد فوراً ──
+    const card = document.querySelector(`[data-pid="${postId}"]`);
+    const textEl = card ? card.querySelector('.soc-post-text') : null;
+    const oldText = textEl ? textEl.textContent : '';
+    if(textEl){
+      textEl.textContent = text;
+      // إضافة علامة "تم التعديل" خفيفة
+      if(!card.querySelector('.soc-edited-badge')){
+        textEl.insertAdjacentHTML('afterend','<span class="soc-edited-badge" style="font-size:10px;color:var(--muted);padding:0 14px 6px;display:block;">تم التعديل</span>');
+      }
+    }
+    this.closePost();
+    toast('✅ تم تعديل المنشور');
+    // reset الزر للوضع الأصلي
+    if(btn){
+      btn.disabled=false; btn.style.opacity='';
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> نشر الآن`;
+      btn.onclick = () => this.submitPost();
+    }
+    const header = document.querySelector('#soc-pm .soc-modal-header span');
+    if(header) header.textContent = 'منشور جديد';
+    // ── Firestore في الـ background ──
     try {
       await db.collection('social_posts').doc(postId).update({
         text,
         editedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-      this.closePost();
-      toast('✅ تم تعديل المنشور');
-      // أعد reset الزر للوضع الأصلي
-      if(btn){
-        btn.disabled=false; btn.style.opacity='';
-        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> نشر الآن`;
-        btn.onclick = () => this.submitPost();
-      }
-      const header = document.querySelector('#soc-pm .soc-modal-header span');
-      if(header) header.textContent = 'منشور جديد';
     } catch(e) {
+      // revert DOM
+      if(textEl) textEl.textContent = oldText;
       toast('حدث خطأ، حاول مرة أخرى');
-      if(btn){ btn.disabled=false; btn.style.opacity=''; }
     }
   },
 
   async delPost(postId) {
     const db=getDB(); if(!db||!S.uid)return;
-    await db.collection('social_posts').doc(postId).delete();
-    await db.collection('social_profiles').doc(S.uid).update({postsCount:firebase.firestore.FieldValue.increment(-1)});
+    // ── Optimistic: ازل الكارد فوراً ──
     const el=document.querySelector(`[data-pid="${postId}"]`);
-    if(el) el.style.cssText='opacity:0;transform:scale(.93);transition:.3s;height:0;overflow:hidden;margin:0;padding:0;';
+    if(el){
+      el.style.cssText='opacity:0;transform:scale(.95);transition:.28s ease;pointer-events:none;';
+      setTimeout(()=>{ el.style.cssText='opacity:0;transform:scale(.95);max-height:0;overflow:hidden;margin:0;padding:0;transition:.25s ease;'; setTimeout(()=>el.remove(),260); },280);
+    }
+    // ── حدّث عداد المنشورات فوراً ──
+    const sc = document.querySelector('.soc-stat-block:last-child .soc-stat-num');
+    if(sc) sc.textContent = Math.max(0,(parseInt(sc.textContent)||1)-1);
     toast('✅ تم حذف المنشور');
+    // ── Firestore في الـ background ──
+    try {
+      await db.collection('social_posts').doc(postId).delete();
+      await db.collection('social_profiles').doc(S.uid).update({postsCount:firebase.firestore.FieldValue.increment(-1)});
+    } catch(e){ toast('حدث خطأ في الحذف'); }
   },
 
   openPost() {
@@ -1920,12 +1943,39 @@ window.SOCIAL = {
     const ta=document.getElementById('soc-post-text'); const text=ta?ta.value.trim():'';
     if(!text&&S.imgs.length===0){toast('اكتب شيئاً أو أضف صورة');return;}
     const btn=document.getElementById('soc-psb'); if(btn)btn.disabled=true;
+    // ── Optimistic: أضف المنشور للـ DOM فوراً ──
+    const tempId = 'temp_'+Date.now();
+    const tempData = {
+      authorUid: S.uid, text, images: S.imgs.slice(),
+      hasImages: S.imgs.length>0, likesCount:0, commentsCount:0,
+      sharesCount:0, likedBy:[], savedBy:[],
+      createdAt: {seconds: Math.floor(Date.now()/1000)}
+    };
+    const cont = document.getElementById('soc-posts');
+    if(cont){
+      const cardHtml = postCard(tempId, tempData, S.profile, 0);
+      cont.insertAdjacentHTML('afterbegin', cardHtml);
+      // أنيميشن ظهور
+      const newCard = cont.querySelector('[data-pid="'+tempId+'"]');
+      if(newCard){ newCard.style.cssText='opacity:0;transform:translateY(-12px);transition:.35s'; requestAnimationFrame(()=>{ newCard.style.cssText='opacity:1;transform:translateY(0);transition:.35s'; }); }
+    }
+    this.closePost();
+    toast('✅ تم نشر المنشور');
+    // ── حدّث عداد المنشورات في الـ stats ──
+    const sc = document.querySelector('.soc-stat-block:last-child .soc-stat-num');
+    if(sc) sc.textContent = (parseInt(sc.textContent)||0)+1;
     try {
-      await db.collection('social_posts').add({authorUid:S.uid,text,images:S.imgs,hasImages:S.imgs.length>0,likesCount:0,commentsCount:0,sharesCount:0,likedBy:[],savedBy:[],createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+      const ref = await db.collection('social_posts').add({authorUid:S.uid,text,images:S.imgs,hasImages:S.imgs.length>0,likesCount:0,commentsCount:0,sharesCount:0,likedBy:[],savedBy:[],createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
       await db.collection('social_profiles').doc(S.uid).update({postsCount:firebase.firestore.FieldValue.increment(1)});
-      this.closePost(); toast('✅ تم نشر المنشور');
-      const fp=document.getElementById('mkt-panel-feed'); if(fp&&fp.classList.contains('active')) loadFeed(true);
-    } catch(e){toast('حدث خطأ');}
+      // استبدل الـ tempId بالـ id الحقيقي في الـ DOM
+      const tempEl = document.querySelector('[data-pid="'+tempId+'"]');
+      if(tempEl) tempEl.setAttribute('data-pid', ref.id);
+    } catch(e){
+      toast('حدث خطأ في النشر');
+      // ازل الكارد المؤقت
+      const tempEl = document.querySelector('[data-pid="'+tempId+'"]');
+      if(tempEl) tempEl.remove();
+    }
     if(btn)btn.disabled=false;
   },
 
@@ -1952,11 +2002,17 @@ window.SOCIAL = {
         location:document.getElementById('soc-el').value.trim(),
         updatedAt:firebase.firestore.FieldValue.serverTimestamp()
       };
-      await db.collection('social_profiles').doc(S.uid).update(u);
+      // ── Optimistic: حدّث الـ DOM فوراً قبل Firestore ──
       S.profile={...S.profile,...u};
       invalidateProfileCache(S.uid);
       _profileCache[S.uid] = S.profile;
+      // حدّث الاسم في صفحة البروفايل مباشرة
+      const nameEl = document.querySelector('.soc-profile-name');
+      if(nameEl && u.displayName){ const first=nameEl.firstChild; if(first&&first.nodeType===3) first.textContent=u.displayName; else nameEl.childNodes[0] && (nameEl.childNodes[0].textContent=u.displayName); }
+      const bioEl = document.querySelector('.soc-profile-bio');
+      if(bioEl && u.bio) bioEl.textContent=u.bio;
       this.closeEdit(); toast('✅ تم حفظ التغييرات');
+      await db.collection('social_profiles').doc(S.uid).update(u);
       renderProfile(S.uid, true);
     }catch(e){toast('حدث خطأ');}
     if(btn)btn.disabled=false;
