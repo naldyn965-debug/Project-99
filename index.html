@@ -20053,11 +20053,11 @@ document.addEventListener('click', function(e) {
   const action = btn.dataset.action;
   const id     = btn.dataset.id;
   const phone  = btn.dataset.phone;
-  e.preventDefault();
+  // stopPropagation فقط — بدون preventDefault عشان iOS ما يبلوك الـ click
   e.stopPropagation();
   // Contact actions
-  if (action === 'call')      { _openCall(phone); return; }
-  if (action === 'whatsapp')  { _openWA(phone);   return; }
+  if (action === 'call')      { e.preventDefault(); _openCall(phone); return; }
+  if (action === 'whatsapp')  { e.preventDefault(); _openWA(phone);   return; }
   // Seller product actions
   if (action === 'edit')      { MKT.openEditModal(id);   return; }
   if (action === 'marksold')  { MKT.markSold(id);        return; }
@@ -20065,7 +20065,15 @@ document.addEventListener('click', function(e) {
   // Order actions
   if (action === 'accept')    { MKT.updateOrderStatus(id, 'accepted'); return; }
   if (action === 'reject')    { MKT.updateOrderStatus(id, 'rejected'); return; }
-});
+}, true);  /* useCapture=true يضمن إن الـ delegation يشتغل قبل أي listener تاني */
+
+/* iOS: touchstart بيعالج الـ 300ms delay على Safari */
+document.addEventListener('touchstart', function(e) {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  // فقط mark الـ button كـ touched — الـ click هيشتغل بعدها تلقائياً
+  btn._touched = true;
+}, { passive: true, capture: true });
 
 async function _renderOrdersPanel() {
   const container = document.getElementById('mkt-orders-content');
