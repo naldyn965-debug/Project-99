@@ -1721,15 +1721,29 @@ window.SOCIAL = {
           setTimeout(() => { card.remove(); }, 300);
         });
       }
-      // تحديث عداد المتابعين optimistic — بدون cache
+      // ── 1. حدّث followersCount لو بتفرج على صفحة الشخص ده ──
       if (S.profileUid === targetUid) {
         const el = document.getElementById('spf');
         if (el) {
           const current = parseInt(el.textContent) || 0;
           el.textContent = curr ? Math.max(0, current - 1) : current + 1;
         }
-        // invalidate الـ cache عشان أي قراءة جاية تاخد القيمة الصح
         invalidateProfileCache(targetUid);
+      }
+      // ── 2. حدّث followingCount في صفحتي أنا optimistic ──
+      if (S.profile) {
+        S.profile.followingCount = (S.profile.followingCount || 0) + (curr ? -1 : 1);
+        if (S.profile.followingCount < 0) S.profile.followingCount = 0;
+        // لو بتفرج على صفحتك دلوقتي حدّث الـ DOM مباشرة
+        if (S.profileUid === S.uid) {
+          const statBlocks = document.querySelectorAll('.soc-stat-block');
+          // الترتيب: متابع [0]، يتابع [1]، منشور [2]
+          if (statBlocks[1]) {
+            const numEl = statBlocks[1].querySelector('.soc-stat-num');
+            if (numEl) numEl.textContent = S.profile.followingCount;
+          }
+        }
+        invalidateProfileCache(S.uid);
       }
     } catch(e) {
       // رجّع الـ UI للحالة الأصلية لو فشل
