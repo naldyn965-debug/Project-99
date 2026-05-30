@@ -17753,7 +17753,19 @@ function updateAuthUI(user) {
 }
 
 // ======================== AUTH EVENT LISTENER ========================
+var _prevAuthUid = null; // track previous user to detect account switches
+
 auth.onAuthStateChanged(async (user) => {
+  var newUid = user ? user.uid : null;
+
+  /* If the user changed (switch or logout), wipe the previous user's farm cache */
+  if (_prevAuthUid && _prevAuthUid !== newUid) {
+    if (typeof window._farmClearLocalCache === 'function') {
+      window._farmClearLocalCache(_prevAuthUid);
+    }
+  }
+  _prevAuthUid = newUid;
+
   currentUser = user;
   updateAuthUI(user);
   if (user) {
@@ -20862,14 +20874,28 @@ document.addEventListener('click', e => {
        Stores farm data with larger quota than localStorage (5MB+)
        Falls back to localStorage if IDB unavailable
        ═══════════════════════════════════════════════════════════ */
-    var NABTEX_IDB_NAME    = 'nabtex-farm-db';
     var NABTEX_IDB_VERSION = 1;
     var _idb = null; // IDB instance cached here
+    var _idbUid = null; // uid the current _idb was opened for
+
+    /* ── User-scoped IDB name: prevents data leaking between accounts in PWA ── */
+    function idbName() {
+      var u = uid();
+      return u ? ('nabtex-farm-db--' + u) : 'nabtex-farm-db--guest';
+    }
 
     function openIDB() {
       return new Promise(function(resolve, reject) {
+        var currentUid = uid();
+        /* If cached IDB belongs to a different user, close it and reopen */
+        if (_idb && _idbUid !== currentUid) {
+          try { _idb.close(); } catch(e) {}
+          _idb = null;
+          _idbUid = null;
+        }
         if (_idb) { resolve(_idb); return; }
         if (!window.indexedDB) { resolve(null); return; }
+        var NABTEX_IDB_NAME = idbName();
         var req = indexedDB.open(NABTEX_IDB_NAME, NABTEX_IDB_VERSION);
         req.onupgradeneeded = function(e) {
           var db = e.target.result;
@@ -20888,16 +20914,17 @@ document.addEventListener('click', e => {
           }
           console.log('[Nabtex IDB] ✅ IndexedDB schema created v1');
         };
-        req.onsuccess = function(e) { _idb = e.target.result; resolve(_idb); };
+        req.onsuccess = function(e) { _idb = e.target.result; _idbUid = currentUid; resolve(_idb); };
         req.onerror   = function(e) { console.warn('[Nabtex IDB] Open failed:', e); resolve(null); };
       });
     }
 
     function idbSet(storeName, key, value) {
       return openIDB().then(function(db) {
+        var fbKey = 'idb_' + storeName + '_' + key + (uid() ? ('__' + uid()) : '');
         if (!db) {
           // Fallback to localStorage
-          try { localStorage.setItem('idb_' + storeName + '_' + key, JSON.stringify(value)); } catch(e){}
+          try { localStorage.setItem(fbKey, JSON.stringify(value)); } catch(e){}
           return;
         }
         return new Promise(function(resolve) {
@@ -20905,7 +20932,7 @@ document.addEventListener('click', e => {
           tx.objectStore(storeName).put({ key: key, value: value, ts: Date.now() });
           tx.oncomplete = resolve;
           tx.onerror = function() {
-            try { localStorage.setItem('idb_' + storeName + '_' + key, JSON.stringify(value)); } catch(e){}
+            try { localStorage.setItem(fbKey, JSON.stringify(value)); } catch(e){}
             resolve();
           };
         });
@@ -20914,10 +20941,11 @@ document.addEventListener('click', e => {
 
     function idbGet(storeName, key) {
       return openIDB().then(function(db) {
+        var fbKey = 'idb_' + storeName + '_' + key + (uid() ? ('__' + uid()) : '');
         if (!db) {
           // Fallback from localStorage
           try {
-            var raw = localStorage.getItem('idb_' + storeName + '_' + key);
+            var raw = localStorage.getItem(fbKey);
             return raw ? JSON.parse(raw) : null;
           } catch(e) { return null; }
         }
@@ -20973,9 +21001,10 @@ document.addEventListener('click', e => {
       console.log('[Nabtex IDB]', db ? '✅ IndexedDB ready' : '⚠️ Using localStorage fallback');
     });
 
-    var FARM_CACHE_KEY  = 'nabtex_farm_cache_v2';
-    var FARM_OPS_KEY    = 'nabtex_farm_ops_v2';
-    var FARM_EXP_KEY    = 'nabtex_farm_exp_v2';
+    /* ── User-scoped localStorage keys: prevents data cross-contamination in PWA ── */
+    function farmCacheKey()   { var u = uid(); return u ? ('nabtex_farm_cache_v2__' + u) : 'nabtex_farm_cache_v2__guest'; }
+    function farmOpsKey()     { var u = uid(); return u ? ('nabtex_farm_ops_v2__'   + u) : 'nabtex_farm_ops_v2__guest';   }
+    function farmExpKey()     { var u = uid(); return u ? ('nabtex_farm_exp_v2__'   + u) : 'nabtex_farm_exp_v2__guest';   }
     var farmIsOffline   = false;
 
     function farmCacheSave(data) {
@@ -20988,7 +21017,7 @@ document.addEventListener('click', e => {
       /* Write to IDB (primary) */
       idbSet('farmData', 'core', payload).catch(function(){});
       /* Write to localStorage (backup) */
-      try { localStorage.setItem(FARM_CACHE_KEY, JSON.stringify(payload)); } catch(e) {}
+      try { localStorage.setItem(farmCacheKey(), JSON.stringify(payload)); } catch(e) {}
     }
 
     function farmOpsCacheSave(ops) {
@@ -21000,15 +21029,15 @@ document.addEventListener('click', e => {
       /* Write to localStorage (backup — smaller, keep only 200) */
       try {
         var lsPayload = { ts: Date.now(), ops: trimmed.slice(0, 200) };
-        localStorage.setItem(FARM_OPS_KEY, JSON.stringify(lsPayload));
+        localStorage.setItem(farmOpsKey(), JSON.stringify(lsPayload));
       } catch(e) {
-        try { localStorage.removeItem(FARM_OPS_KEY); localStorage.setItem(FARM_OPS_KEY, JSON.stringify({ ts: Date.now(), ops: trimmed.slice(0,100) })); } catch(e2){}
+        try { localStorage.removeItem(farmOpsKey()); localStorage.setItem(farmOpsKey(), JSON.stringify({ ts: Date.now(), ops: trimmed.slice(0,100) })); } catch(e2){}
       }
     }
 
     function farmOpsCacheLoad() {
       try {
-        var raw = localStorage.getItem(FARM_OPS_KEY);
+        var raw = localStorage.getItem(farmOpsKey());
         if (!raw) return null;
         var d = JSON.parse(raw);
         return (d && d.ops) ? d : null;
@@ -21017,7 +21046,7 @@ document.addEventListener('click', e => {
 
     function farmCacheLoad() {
       try {
-        var raw = localStorage.getItem(FARM_CACHE_KEY);
+        var raw = localStorage.getItem(farmCacheKey());
         if (!raw) return null;
         var d = JSON.parse(raw);
         if (!d || !d.farms) return null;
@@ -21026,7 +21055,7 @@ document.addEventListener('click', e => {
     }
 
     /* ── Offline Pending Queue — saves ops locally when offline ── */
-    var FARM_PENDING_KEY = 'nabtex_farm_pending_v1';
+    function farmPendingKey() { var u = uid(); return u ? ('nabtex_farm_pending_v1__' + u) : 'nabtex_farm_pending_v1__guest'; }
 
     function pendingQueueAdd(opData) {
       try {
@@ -21034,19 +21063,19 @@ document.addEventListener('click', e => {
         opData._pendingId = Date.now() + '_' + Math.random().toString(36).substr(2,6);
         opData._pendingTs = Date.now();
         q.push(opData);
-        localStorage.setItem(FARM_PENDING_KEY, JSON.stringify(q));
+        localStorage.setItem(farmPendingKey(), JSON.stringify(q));
         return opData._pendingId;
       } catch(e) { return null; }
     }
 
     function pendingQueueGet() {
-      try { return JSON.parse(localStorage.getItem(FARM_PENDING_KEY) || '[]'); } catch(e) { return []; }
+      try { return JSON.parse(localStorage.getItem(farmPendingKey()) || '[]'); } catch(e) { return []; }
     }
 
     function pendingQueueRemove(pendingId) {
       try {
         var q = pendingQueueGet().filter(function(o){ return o._pendingId !== pendingId; });
-        localStorage.setItem(FARM_PENDING_KEY, JSON.stringify(q));
+        localStorage.setItem(farmPendingKey(), JSON.stringify(q));
       } catch(e){}
     }
 
@@ -21097,19 +21126,39 @@ document.addEventListener('click', e => {
 
     function expCacheSave(expenses) {
       try {
-        localStorage.setItem(FARM_EXP_KEY, JSON.stringify({ ts: Date.now(), expenses: expenses }));
+        localStorage.setItem(farmExpKey(), JSON.stringify({ ts: Date.now(), expenses: expenses }));
       } catch(e) {
-        try { localStorage.removeItem(FARM_EXP_KEY); localStorage.setItem(FARM_EXP_KEY, JSON.stringify({ ts: Date.now(), expenses: {} })); } catch(e2){}
+        try { localStorage.removeItem(farmExpKey()); localStorage.setItem(farmExpKey(), JSON.stringify({ ts: Date.now(), expenses: {} })); } catch(e2){}
       }
     }
 
     function expCacheLoad() {
       try {
-        var raw = localStorage.getItem(FARM_EXP_KEY);
+        var raw = localStorage.getItem(farmExpKey());
         if (!raw) return null;
         var d = JSON.parse(raw);
         return (d && d.expenses) ? d : null;
       } catch(e) { return null; }
+    }
+
+    /* ── Clear all local farm cache for a specific uid (called on logout / user switch) ── */
+    function farmClearLocalCache(targetUid) {
+      var u = targetUid || uid();
+      if (!u) return;
+      var suffix = '__' + u;
+      var keysToRemove = [
+        'nabtex_farm_cache_v2' + suffix,
+        'nabtex_farm_ops_v2'   + suffix,
+        'nabtex_farm_exp_v2'   + suffix,
+        'nabtex_farm_pending_v1' + suffix,
+      ];
+      keysToRemove.forEach(function(k) { try { localStorage.removeItem(k); } catch(e){} });
+      /* Close & discard IDB instance — next openIDB() call will open the right one */
+      if (_idb && _idbUid === u) {
+        try { _idb.close(); } catch(e) {}
+        _idb = null;
+        _idbUid = null;
+      }
     }
 
     function farmShowOfflineBadge(show, lastSyncTs) {
@@ -23997,6 +24046,9 @@ document.addEventListener('click', e => {
       var cached = farmCacheLoad();
       farmShowOfflineBadge(true, cached ? cached.ts : null);
     });
+
+    /* Expose clear function globally so auth state changes can call it */
+    window._farmClearLocalCache = farmClearLocalCache;
 
   })(); // end FarmSystem
 
