@@ -1721,11 +1721,15 @@ window.SOCIAL = {
           setTimeout(() => { card.remove(); }, 300);
         });
       }
-      // تحديث عداد المتابعين في صفحة البروفايل لو مفتوحة
+      // تحديث عداد المتابعين optimistic — بدون cache
       if (S.profileUid === targetUid) {
-        const np = await getProfile(targetUid);
         const el = document.getElementById('spf');
-        if (el && np) el.textContent = np.followersCount || 0;
+        if (el) {
+          const current = parseInt(el.textContent) || 0;
+          el.textContent = curr ? Math.max(0, current - 1) : current + 1;
+        }
+        // invalidate الـ cache عشان أي قراءة جاية تاخد القيمة الصح
+        invalidateProfileCache(targetUid);
       }
     } catch(e) {
       // رجّع الـ UI للحالة الأصلية لو فشل
