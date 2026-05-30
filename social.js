@@ -697,7 +697,7 @@
 .soc-post-textarea{
   width:100%;min-height:120px;resize:none;
   border:1.5px solid var(--line);border-radius:14px;
-  padding:12px 14px;font-size:14px;line-height:1.65;
+  padding:12px 14px;font-size:16px;line-height:1.65;
   font-family:var(--f-ui);color:var(--ink);background:var(--bg2);
   outline:none;transition:border-color .2s,box-shadow .2s;
   box-sizing:border-box;display:block;-webkit-appearance:none;
@@ -735,8 +735,9 @@
 .soc-edit-label{font-size:11px;font-weight:900;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
 .soc-edit-input{
   width:100%;padding:9px 13px;border:1.5px solid var(--line);border-radius:10px;
-  font-size:13px;font-family:var(--f-ui);color:var(--ink);background:var(--bg2);
+  font-size:16px;font-family:var(--f-ui);color:var(--ink);background:var(--bg2);
   outline:none;transition:border-color .2s,box-shadow .2s;
+  /* font-size:16px يمنع iOS من عمل zoom تلقائي عند الكتابة */
 }
 .soc-edit-input:focus{border-color:var(--brand-l);box-shadow:0 0 0 3px rgba(27,107,58,.09)}
 .soc-edit-textarea{resize:none;min-height:72px}
