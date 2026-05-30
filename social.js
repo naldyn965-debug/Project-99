@@ -446,16 +446,18 @@
   gap:0;
   margin-bottom:2px;
 }
-/* الأفاتار: right=16px، عرضه 112px → مركزه عند 72px من الحافة
-   header padding-right=16px → spacer = 72-16 = 56px لمحاذاة الاسم تحت المركز */
+/* spacer = مركز الأفاتار من حافة الـ header
+   الأفاتار: right=16px، عرضه 112px → مركزه عند 72px من الحافة
+   header padding = 16px → spacer الفعلي = 72-16+16 = 72px
+   name-block: text-align center لتمركز الاسم تحت وسط الأفاتار */
 .soc-profile-avatar-spacer{
-  width:72px;
+  width:88px;
   flex-shrink:0;
 }
 .soc-profile-name-block{
   display:flex;flex-direction:column;gap:3px;
   flex:1;min-width:0;
-  text-align:right;
+  text-align:center;
 }
 .soc-profile-name{
   font-size:20px;font-weight:900;color:var(--ink);
@@ -743,7 +745,7 @@
   .soc-avatar-xl{width:100px;height:100px;font-size:33px}
   .soc-profile-avatar-container{right:12px}
   .soc-profile-header{padding:12px 14px 18px 14px;}
-  .soc-profile-avatar-spacer{width:62px;}
+  .soc-profile-avatar-spacer{width:74px;}
   .soc-profile-name{font-size:17px}
   .soc-stat-num{font-size:19px}
   .soc-profile-stats{gap:7px}
