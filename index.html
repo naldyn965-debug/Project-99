@@ -6390,6 +6390,18 @@ body.modal-open { overflow: hidden; }
     #saveProfileBtn:hover{transform:scale(1.03) translateY(-1px);box-shadow:0 7px 22px rgba(27,107,58,.45)}
     .prf-chpw-btn{display:flex;align-items:center;gap:7px;background:var(--bg2);color:var(--ink);border:1.5px solid var(--line);border-radius:40px;padding:10px 18px;font-size:13px;font-weight:700;font-family:var(--f-ui);cursor:pointer;transition:all .22s}
     .prf-chpw-btn:hover{border-color:rgba(27,107,58,.3);background:var(--brand-pale);color:var(--brand)}
+    /* ── Archive Card ─────────────────────────────── */
+    .prf-arch-wrap{max-width:700px;margin:24px auto 0;background:var(--card);border-radius:24px;box-shadow:0 8px 32px rgba(0,0,0,.08),0 0 0 1px rgba(27,107,58,.08);overflow:hidden}
+    .prf-arch-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,var(--brand-pale) 0%,transparent 80%)}
+    .prf-arch-title-group{display:flex;align-items:center;gap:12px}
+    .prf-arch-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--brand-d),var(--brand));border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 14px rgba(27,107,58,.3)}
+    .prf-arch-sup{font-size:10.5px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1}
+    .prf-arch-main{font-family:var(--f-display);font-size:1.1rem;color:var(--ink);font-weight:800;line-height:1.2;margin-top:2px}
+    .prf-arch-goto{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:40px;background:linear-gradient(135deg,var(--brand-l),var(--brand-d));color:#fff;border:none;font-size:12.5px;font-weight:700;font-family:var(--f-ui);cursor:pointer;transition:all .22s;box-shadow:0 3px 12px rgba(27,107,58,.28);white-space:nowrap}
+    .prf-arch-goto:hover{transform:scale(1.05) translateY(-1px);box-shadow:0 6px 20px rgba(27,107,58,.42)}
+    .prf-arch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;padding:20px 24px}
+    .prf-arch-loading{color:var(--muted);font-size:13px;text-align:center;grid-column:1/-1;padding:28px 0}
+    @media(max-width:600px){.prf-arch-hdr{padding:14px 16px}.prf-arch-grid{padding:14px 16px}.prf-arch-icon{width:36px;height:36px;border-radius:10px}.prf-arch-main{font-size:1rem}}
   </style>
   <section class="profile-page" style="padding: 80px 0; min-height: 80vh;">
     <div class="W">
@@ -6454,13 +6466,24 @@ body.modal-open { overflow: hidden; }
       </div>
 
       <!-- ── FARM ARCHIVE IN PROFILE ── -->
-      <div style="max-width:700px; margin: 32px auto 0;">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-          <h3 style="font-family:var(--f-display); font-size:1.3rem; color:var(--ink); margin:0;">🌾 أرشيف مزرعتي</h3>
-          <button class="sec-link" onclick="showPage('farm')" style="font-size:12px;">إدارة المزرعة ←</button>
+      <div class="prf-arch-wrap">
+        <div class="prf-arch-hdr">
+          <div class="prf-arch-title-group">
+            <div class="prf-arch-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2C6.48 2 2 6.48 2 12"/><path d="M12 22V12"/><path d="M12 12C8 8 4 9 2 12"/><path d="M12 12c4-4 8-3 10 0"/><circle cx="12" cy="12" r="2" fill="#fff" stroke="none"/></svg>
+            </div>
+            <div>
+              <div class="prf-arch-sup">سجلات المزرعة</div>
+              <div class="prf-arch-main">أرشيف مزرعتي</div>
+            </div>
+          </div>
+          <button class="prf-arch-goto" onclick="showPage('farm')">
+            إدارة المزرعة
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
         </div>
-        <div id="profile-farm-archive" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px;">
-          <div style="color:var(--muted); font-size:13px; padding:16px; grid-column:1/-1; text-align:center;">
+        <div id="profile-farm-archive" class="prf-arch-grid">
+          <div class="prf-arch-loading">
             <div class="farm-spinner" style="margin:0 auto 12px; display:block;"></div>
             جاري تحميل الأرشيف...
           </div>
