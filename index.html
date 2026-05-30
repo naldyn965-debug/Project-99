@@ -17232,18 +17232,24 @@ const App = {
         userFavorites.add(id);
         this.favs.add(id);
       }
-      saveUserFavorites();
+      saveUserFavorites(()=>{
+        if(btn){
+          btn.classList.toggle('on',!was);
+          btn.textContent=was?'🤍':'❤️';
+        }
+        showToast(was?'تم الحذف من المفضلة':'❤️ أُضيف للمفضلة','inf');
+      });
       loadUserProfile();
     } else {
       if (was) this.favs.delete(id);
       else this.favs.add(id);
       localStorage.setItem('nb-favs', JSON.stringify([...this.favs]));
+      if(btn){
+        btn.classList.toggle('on',!was);
+        btn.textContent=was?'🤍':'❤️';
+      }
+      showToast(was?'تم الحذف من المفضلة':'❤️ أُضيف للمفضلة','inf');
     }
-    if(btn){
-      btn.classList.toggle('on',!was);
-      btn.textContent=was?'🤍':'❤️';
-    }
-    showToast(was?'تم الحذف من المفضلة':'❤️ أُضيف للمفضلة','inf');
   },
 
   buildCatPage(catId){
@@ -17421,11 +17427,12 @@ async function loadUserFavorites() {
   }
 }
 
-async function saveUserFavorites() {
+async function saveUserFavorites(onSuccess) {
   if (!currentUser) return;
   const favArray = Array.from(userFavorites);
   try {
     await db.collection('favorites').doc(currentUser.uid).set({ plants: favArray });
+    if (typeof onSuccess === 'function') onSuccess();
   } catch (err) {
     console.error("Error saving favorites:", err);
     showToast("⚠️ فشل حفظ المفضلة", "err");
