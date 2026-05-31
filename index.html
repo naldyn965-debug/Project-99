@@ -19043,10 +19043,12 @@ document.addEventListener('DOMContentLoaded',()=>App.init());
     if(state.productId && pg === 'market'){
       setTimeout(function(){
         if(typeof MKT !== 'undefined'){
+          // نصفّر الـ transitioning عشان مش يتجاهل الـ showPanel
+          mktState._transitioning = false;
           MKT.showPanel('detail');
           _renderDetailPanel(state.productId);
         }
-      }, 900);
+      }, 1200);
     }
   } // ── نفذ بعد App.init ──
   var _initHash = location.hash;
@@ -19098,6 +19100,7 @@ document.addEventListener('DOMContentLoaded',()=>App.init());
     if(state.productId && pg === 'market'){
       setTimeout(function(){
         if(typeof MKT !== 'undefined'){
+          mktState._transitioning = false;
           MKT.showPanel('detail');
           _renderDetailPanel(state.productId);
         }
