@@ -5033,11 +5033,13 @@ body.modal-open { overflow: hidden; }
   display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
 }
 .mkt-action-btn {
-  padding: 7px 16px; border-radius: 40px;
+  padding: 8px 14px; border-radius: 40px;
   font-size: 12px; font-weight: 800; font-family: var(--f-ui);
   cursor: pointer; transition: all .2s var(--mkt-spring);
   white-space: nowrap;
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
 }
+.mkt-action-btn svg { width: 12px; height: 12px; flex-shrink: 0; display: block; }
 .mkt-action-btn-edit {
   background: none; border: 1.5px solid var(--line2); color: var(--slate);
 }
@@ -5138,7 +5140,8 @@ body.modal-open { overflow: hidden; }
   .mkt-detail-grid    { grid-template-columns: 1fr; }
   .mkt-seller-stats   { grid-template-columns: repeat(2,1fr); }
   .mkt-my-product-card{ flex-wrap: wrap; }
-  .mkt-my-product-actions { width: 100%; flex-direction: row; }
+  .mkt-my-product-actions { width: 100%; flex-direction: row; flex-wrap: wrap; gap: 7px; }
+  .mkt-my-product-actions .mkt-action-btn { flex: 1 1 calc(50% - 4px); min-width: calc(50% - 4px); }
   .mkt-order-card     { flex-wrap: wrap; }
   .mkt-form-card      { padding: 18px 16px; }
   .mkt-notif-panel    { width: calc(100vw - 24px); left: 12px; }
@@ -19212,9 +19215,9 @@ function _mktToggleSharePanel(productId, title) {
     }).catch(() => {});
     return;
   }
-  // Desktop: toggle share panel
+  // Desktop: toggle share panel if rendered (detail view), else copy link (seller card)
   const panel = document.getElementById('mkt-share-panel-' + productId);
-  if (panel) panel.classList.toggle('open');
+  if (panel) { panel.classList.toggle('open'); } else { _mktCopyLink(productId); }
 }
 
 function _mktShareWA(productId, title) {
@@ -20455,16 +20458,16 @@ async function _renderSellerPanel() {
           </div>
           <div class="mkt-my-product-actions">
             <button class="mkt-action-btn mkt-action-btn-edit" data-action="edit" data-id="${p.id}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-left:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               تعديل
             </button>
-            ${p.status!=='sold' ? `<button class="mkt-action-btn mkt-action-btn-edit" style="color:var(--mkt-g);border-color:rgba(27,107,58,.3)" data-action="marksold" data-id="${p.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg>مباع</button>` : ''}
+            ${p.status!=='sold' ? `<button class="mkt-action-btn mkt-action-btn-edit" style="color:var(--mkt-g);border-color:rgba(27,107,58,.3)" data-action="marksold" data-id="${p.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> مباع</button>` : ''}
             <button class="mkt-action-btn mkt-action-btn-share" onclick="event.stopPropagation();_mktToggleSharePanel('${p.id}','${_esc(p.title)}')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-left:4px"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
               مشاركة
             </button>
             <button class="mkt-action-btn mkt-action-btn-del" data-action="delete" data-id="${p.id}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-left:4px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
               حذف
             </button>
           </div>
