@@ -19019,9 +19019,9 @@ document.addEventListener('DOMContentLoaded',()=>App.init());
     // تحقق أن الصفحة موجودة
     if(!document.getElementById('pg-'+pg)) pg = 'home';
 
-    // لو رابط مشاركة منتج سوق — نضع الـ ID قبل showPage عشان onPageEnter يلتقطه
+    // لو رابط مشاركة منتج سوق — نضع الـ ID في window عشان onPageEnter يلتقطه
     if(state.productId && pg === 'market'){
-      mktState.deepLinkProductId = state.productId;
+      window._mktDeepLink = state.productId;
     }
 
     if(pg !== 'home'){
@@ -19092,12 +19092,14 @@ document.addEventListener('DOMContentLoaded',()=>App.init());
 
     // لو رابط تفاصيل منتج سوق
     if(state.productId && pg === 'market'){
-      setTimeout(function(){
-        if(typeof MKT !== 'undefined'){
+      window._mktDeepLink = state.productId;
+      if(typeof MKT !== 'undefined'){
+        setTimeout(function(){
           mktState._transitioning = false;
-          MKT.openDetail(state.productId);
-        }
-      }, 400);
+          MKT.openDetail(window._mktDeepLink || state.productId);
+          window._mktDeepLink = null;
+        }, 400);
+      }
     }
   });
 })();
@@ -19339,9 +19341,9 @@ window.MKT = {
       _setupNotifListener();
     }
     // لو في deep link لمنتج معين — افتحه مباشرة بدل تحميل الـ grid
-    if (mktState.deepLinkProductId) {
-      const pid = mktState.deepLinkProductId;
-      mktState.deepLinkProductId = null;
+    if (window._mktDeepLink) {
+      const pid = window._mktDeepLink;
+      window._mktDeepLink = null;
       mktState._transitioning = false;
       // نحمل الـ products في الخلفية بدون انتظار
       _loadProducts(true);
