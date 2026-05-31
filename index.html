@@ -19019,6 +19019,11 @@ document.addEventListener('DOMContentLoaded',()=>App.init());
     // تحقق أن الصفحة موجودة
     if(!document.getElementById('pg-'+pg)) pg = 'home';
 
+    // لو رابط مشاركة منتج سوق — نضع الـ ID قبل showPage عشان onPageEnter يلتقطه
+    if(state.productId && pg === 'market'){
+      mktState.deepLinkProductId = state.productId;
+    }
+
     if(pg !== 'home'){
       if(pg === 'cat' && state.catId && _CAT_IDS.indexOf(state.catId) !== -1){
         // صفحة فئة: لازم نستدعي showCatPage عشان تبني المحتوى
@@ -19039,17 +19044,6 @@ document.addEventListener('DOMContentLoaded',()=>App.init());
       }, 700);
     }
 
-    // لو رابط مشاركة منتج سوق — افتح صفحة تفاصيله مباشرة
-    if(state.productId && pg === 'market'){
-      setTimeout(function(){
-        if(typeof MKT !== 'undefined'){
-          // نصفّر الـ transitioning عشان مش يتجاهل الـ showPanel
-          mktState._transitioning = false;
-          MKT.showPanel('detail');
-          _renderDetailPanel(state.productId);
-        }
-      }, 1200);
-    }
   } // ── نفذ بعد App.init ──
   var _initHash = location.hash;
   if(_initHash && _initHash !== '#'){
@@ -19101,10 +19095,9 @@ document.addEventListener('DOMContentLoaded',()=>App.init());
       setTimeout(function(){
         if(typeof MKT !== 'undefined'){
           mktState._transitioning = false;
-          MKT.showPanel('detail');
-          _renderDetailPanel(state.productId);
+          MKT.openDetail(state.productId);
         }
-      }, 550);
+      }, 400);
     }
   });
 })();
@@ -19344,6 +19337,20 @@ window.MKT = {
     if (!mktState.initialized) {
       mktState.initialized = true;
       _setupNotifListener();
+    }
+    // لو في deep link لمنتج معين — افتحه مباشرة بدل تحميل الـ grid
+    if (mktState.deepLinkProductId) {
+      const pid = mktState.deepLinkProductId;
+      mktState.deepLinkProductId = null;
+      mktState._transitioning = false;
+      // نحمل الـ products في الخلفية بدون انتظار
+      _loadProducts(true);
+      // نفتح الـ detail مباشرة
+      setTimeout(function() {
+        mktState._transitioning = false;
+        MKT.openDetail(pid);
+      }, 350);
+      return;
     }
     _loadProducts(true);
   },
