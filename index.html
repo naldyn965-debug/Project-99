@@ -19981,7 +19981,7 @@ function _productCardHtml(p) {
       <div class="mkt-pcard-fav" onclick="event.stopPropagation()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:#ef4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </div>
-      <div class="mkt-pcard-share" onclick="event.stopPropagation();_mktOpenShareModal('${p.id}','${_esc(p.title)}')">
+      <div class="mkt-pcard-share" data-action="share" data-id="${p.id}" data-title="${_esc(p.title)}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
       </div>
     </div>
@@ -20528,7 +20528,7 @@ async function _renderSellerPanel() {
               تعديل
             </button>
             ${p.status!=='sold' ? `<button class="mkt-action-btn mkt-action-btn-edit" style="color:var(--mkt-g);border-color:rgba(27,107,58,.3)" data-action="marksold" data-id="${p.id}" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> مباع</button>` : ''}
-            <button class="mkt-action-btn mkt-action-btn-share" onclick="event.stopPropagation();_mktOpenShareModal('${p.id}','${_esc(p.title)}')">
+            <button class="mkt-action-btn mkt-action-btn-share" data-action="share" data-id="${p.id}" data-title="${_esc(p.title)}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
               مشاركة
             </button>
@@ -20572,6 +20572,7 @@ document.addEventListener('click', function(e) {
   if (action === 'edit')      { MKT.openEditModal(id);   return; }
   if (action === 'marksold')  { MKT.markSold(id);        return; }
   if (action === 'delete')    { MKT.deleteProduct(id);   return; }
+  if (action === 'share')     { _mktOpenShareModal(id, btn.dataset.title || ''); return; }
   // Order actions
   if (action === 'accept')    { MKT.updateOrderStatus(id, 'accepted'); return; }
   if (action === 'reject')    { MKT.updateOrderStatus(id, 'rejected'); return; }
