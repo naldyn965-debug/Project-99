@@ -20558,6 +20558,8 @@ function _statusLabel(status) {
 ─────────────────────────────────────────────── */
 // Universal event delegation for all dynamic buttons
 document.addEventListener('click', function(e) {
+  // لو الـ click جاي من داخل الـ share modal — اتركه يكمل لـ onclick الأصلي
+  if (e.target.closest('#mkt-share-modal-overlay')) return;
   const btn = e.target.closest('[data-action]');
   if (!btn) return;
   const action = btn.dataset.action;
