@@ -19290,19 +19290,17 @@ function _mktShareWA(productId, title) {
 }
 
 function _mktShareFB(productId) {
-  var url   = _mktShareUrl(productId);
-  var title = window._mktShareModalTitle || 'منتج زراعي — نبتيكس';
-  if (navigator.share) {
-    _mktCloseShareModal();
-    navigator.share({ title: title, url: url }).catch(function() {});
+  var fbUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(_mktShareUrl(productId));
+  /* موبايل: نفس آلية واتساب بالضبط — بدون popup dimensions حتى يعرف الـ OS يوجّه للتطبيق */
+  if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 900) {
+    window.open(fbUrl, '_blank', 'noopener');
     return;
   }
-  var fbUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
-  var left  = Math.max(0, Math.round((screen.width  - 620) / 2));
-  var top   = Math.max(0, Math.round((screen.height - 400) / 2));
+  /* ديسكتوب: Popup فيسبوك مرتب */
+  var left = Math.max(0, Math.round((screen.width  - 620) / 2));
+  var top  = Math.max(0, Math.round((screen.height - 400) / 2));
   var w = window.open(fbUrl, 'fbShareDialog',
-    'width=620,height=400,left=' + left + ',top=' + top +
-    ',toolbar=0,menubar=0,location=0,scrollbars=0,status=0');
+    'width=620,height=400,left=' + left + ',top=' + top + ',toolbar=0,menubar=0,location=0,scrollbars=0,status=0');
   if (w) { w.focus(); } else { window.open(fbUrl, '_blank'); }
 }
 
