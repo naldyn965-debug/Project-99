@@ -19291,9 +19291,10 @@ function _mktShareWA(productId, title) {
 
 function _mktShareFB(productId) {
   var fbUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(_mktShareUrl(productId));
-  /* موبايل: نفس آلية واتساب بالضبط — بدون popup dimensions حتى يعرف الـ OS يوجّه للتطبيق */
+  /* موبايل: بدون features string تماماً — أي argument ثالث بيخلي المتصفح يتعامل معاه كـ popup ويحجبه */
   if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 900) {
-    window.open(fbUrl, '_blank', 'noopener');
+    var mobileWin = window.open(fbUrl, '_blank');
+    if (!mobileWin) { location.href = fbUrl; } /* fallback لو popup اتحجب */
     return;
   }
   /* ديسكتوب: Popup فيسبوك مرتب */
@@ -19301,7 +19302,7 @@ function _mktShareFB(productId) {
   var top  = Math.max(0, Math.round((screen.height - 400) / 2));
   var w = window.open(fbUrl, 'fbShareDialog',
     'width=620,height=400,left=' + left + ',top=' + top + ',toolbar=0,menubar=0,location=0,scrollbars=0,status=0');
-  if (w) { w.focus(); } else { window.open(fbUrl, '_blank'); }
+  if (w) { w.focus(); } else { location.href = fbUrl; }
 }
 
 function _mktShareTW(productId, title) {
