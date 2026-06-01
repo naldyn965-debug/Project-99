@@ -19290,19 +19290,34 @@ function _mktShareWA(productId, title) {
 }
 
 function _mktShareFB(productId) {
-  var fbUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(_mktShareUrl(productId));
-  /* موبايل: بدون features string تماماً — أي argument ثالث بيخلي المتصفح يتعامل معاه كـ popup ويحجبه */
-  if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 900) {
-    var mobileWin = window.open(fbUrl, '_blank');
-    if (!mobileWin) { location.href = fbUrl; } /* fallback لو popup اتحجب */
+  var shareUrl   = _mktShareUrl(productId);
+  var shareTitle = '🌱 ' + (window._mktShareModalTitle || 'منتج زراعي');
+
+  /* ── iOS (iPhone / iPad) ──────────────────────────────────────────────────
+     على iOS، أي رابط facebook.com يُعامَل كـ Universal Link ويفتح تطبيق
+     فيسبوك مباشرةً بدل شاشة المشاركة. الحل الوحيد: Web Share API (native
+     iOS share sheet) — الـ user يختار فيسبوك من القائمة الطبيعية. ─────── */
+  if (/iPhone|iPad|iPod/i.test(navigator.userAgent) && navigator.share) {
+    _mktCloseShareModal();
+    navigator.share({ url: shareUrl, title: shareTitle }).catch(function() {});
     return;
   }
-  /* ديسكتوب: Popup فيسبوك مرتب */
+
+  var fbUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl);
+
+  /* ── Android ─────────────────────────────────────────────────────────── */
+  if (/Mobi|Android/i.test(navigator.userAgent) || window.innerWidth < 900) {
+    var mw = window.open(fbUrl, '_blank');
+    if (!mw) { location.href = fbUrl; }
+    return;
+  }
+
+  /* ── Desktop: popup ─────────────────────────────────────────────────── */
   var left = Math.max(0, Math.round((screen.width  - 620) / 2));
   var top  = Math.max(0, Math.round((screen.height - 400) / 2));
-  var w = window.open(fbUrl, 'fbShareDialog',
+  var dw = window.open(fbUrl, 'fbShareDialog',
     'width=620,height=400,left=' + left + ',top=' + top + ',toolbar=0,menubar=0,location=0,scrollbars=0,status=0');
-  if (w) { w.focus(); } else { location.href = fbUrl; }
+  if (dw) { dw.focus(); } else { location.href = fbUrl; }
 }
 
 function _mktShareTW(productId, title) {
