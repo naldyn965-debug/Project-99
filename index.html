@@ -3692,6 +3692,10 @@ body.modal-open { overflow: hidden; }
   background: var(--bg);
   overflow-x: hidden;
 }
+/* لما يكون الـ detail panel مفتوح، الـ min-height مش محتاجة — بتعمل فراغ أبيض زيادة */
+#pg-market.mkt-in-detail {
+  min-height: auto;
+}
 /* Ensure panel-home hero fills top immediately on load */
 #mkt-panel-home {
   min-height: 50svh;
@@ -19364,6 +19368,10 @@ window.MKT = {
     const currentPanel = document.querySelector('.mkt-panel.active');
     const nextPanel    = document.getElementById('mkt-panel-' + name);
     if (!nextPanel || currentPanel === nextPanel) return;
+
+    // ← إضافة/إزالة class على #pg-market عشان تلغي min-height في الـ detail panel
+    const mktPage = document.getElementById('pg-market');
+    if (mktPage) mktPage.classList.toggle('mkt-in-detail', name === 'detail');
 
     // Update tabs immediately
     document.querySelectorAll('.mkt-tab').forEach(t => t.classList.remove('active'));
