@@ -27162,6 +27162,15 @@ document.addEventListener('DOMContentLoaded',function(){
 
           /* Ask SW for cache status */
           reg.active?.postMessage({ type: 'CACHE_STATUS' });
+
+          /* Register Background Sync on install — must be inside .then(reg) scope */
+          reg.ready.then(function() {
+            if ('sync' in reg) {
+              reg.sync.register('nabtex-farm-sync')
+                .then(function() { LOG('✅ Background Sync registered'); })
+                .catch(function(e) { LOG('ℹ️ Background Sync not available:', e.message); });
+            }
+          }).catch(function(){});
         })
         .catch(function (err) {
           LOG('⚠️ SW registration failed (site still works online):', err.message);
@@ -27184,15 +27193,6 @@ document.addEventListener('DOMContentLoaded',function(){
           }
         }
       });
-
-      /* Register Background Sync on install */
-      reg.ready.then(function() {
-        if ('sync' in reg) {
-          reg.sync.register('nabtex-farm-sync')
-            .then(function() { LOG('✅ Background Sync registered'); })
-            .catch(function(e) { LOG('ℹ️ Background Sync not available:', e.message); });
-        }
-      }).catch(function(){});
 
       /* Reload when new SW takes over — delayed to avoid interruption */
       navigator.serviceWorker.addEventListener('controllerchange', function () {
