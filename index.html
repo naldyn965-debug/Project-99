@@ -758,6 +758,8 @@ body.modal-open { overflow: hidden; }
 .toast.inf{background:linear-gradient(135deg,rgba(27,54,36,.96),rgba(14,38,22,.97));color:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.12)}
 .toast.inf .toast-icon-wrap{background:rgba(255,255,255,.15)}
 @keyframes tIn{from{transform:translateY(-18px) scale(.88);opacity:0}to{transform:none;opacity:1}}
+@keyframes bgIn{from{opacity:0}to{opacity:1}}
+@keyframes mboxUp{from{opacity:0;transform:scale(.93) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .auth-bg{position:fixed;inset:0;z-index:800;display:none;align-items:center;justify-content:center;padding:20px}
 .auth-bg.on{display:flex;animation:bgIn .25s ease}
 .auth-veil{position:absolute;inset:0;background:rgba(8,18,11,.82);backdrop-filter:blur(14px)}
@@ -919,14 +921,15 @@ body.modal-open { overflow: hidden; }
 /* تحسينات نافذة المصادقة على الهواتف */
 @media (max-width: 520px) {
   .auth-bg {
-    align-items: flex-end;
-    padding: 0;
+    align-items: center;
+    padding: 16px;
   }
   .auth-box {
-    border-radius: 24px 24px 0 0;
-    max-height: 90vh;
+    border-radius: var(--r4);
+    max-height: 92vh;
     overflow-y: auto;
     margin: 0;
+    width: 100%;
   }
   .auth-body {
     padding: 20px;
