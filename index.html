@@ -212,30 +212,11 @@ img{display:block;max-width:100%}
 .logo:hover .logo-mark{transform:rotate(-8deg) scale(1.1)}
 .logo-name{font-family:var(--f-display);font-size:22px;color:var(--ink);letter-spacing:.01em}
 .logo-name span{color:var(--brand)}
-.nav-links{display:flex;gap:2px;margin-right:32px;flex-wrap:wrap}
+.nav-links{display:flex;gap:2px;margin-right:20px;flex-wrap:nowrap;align-items:center}
 .nl{padding:6px 14px;border-radius:var(--rpill);font-size:14px;font-weight:600;color:var(--slate);transition:all .15s;letter-spacing:.01em}
 .nl:hover{color:var(--brand);background:var(--brand-pale)}
 .nl.active{color:var(--brand);font-weight:700}
-/* Farm nav link — distinct badge style */
-.nl-farm {
-  background: linear-gradient(135deg, rgba(27,107,58,.12), rgba(201,135,26,.1));
-  border: 1px solid rgba(27,107,58,.2);
-  border-radius: var(--rpill);
-  padding: 6px 14px !important;
-  color: var(--brand) !important;
-  font-weight: 700 !important;
-  transition: all .25s var(--ease-spring) !important;
-}
-.nl-farm:hover {
-  background: var(--brand) !important;
-  color: #fff !important;
-  border-color: var(--brand) !important;
-  transform: translateY(-1px);
-}
-.nl-farm.active {
-  background: var(--brand) !important;
-  color: #fff !important;
-}
+/* Farm nav link — same as base .nl for visual consistency */
 .nav-actions{display:flex;align-items:center;gap:8px;margin-right:auto}
 .nav-icon-btn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--line);color:var(--slate);font-size:17px;transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);background:var(--card);position:relative;overflow:hidden;cursor:pointer;}
 .nav-icon-btn::before{content:'';position:absolute;inset:0;background:var(--brand);opacity:0;transition:opacity .2s;border-radius:50%;}
@@ -314,6 +295,12 @@ img{display:block;max-width:100%}
   .ham{display:flex}
   .btn-nav-o{padding:6px 12px !important;font-size:11px !important;}
   .nav-actions{gap:4px;}
+}
+@media(min-width:769px) and (max-width:1100px){
+  .nav-links{gap:0;margin-right:10px}
+  .nl{padding:5px 9px;font-size:13px}
+  .btn-nav-o{padding:6px 14px !important;font-size:12px !important}
+  .nav-inner{gap:6px;padding:0 16px}
 }
 
 /* ═══════════════════════════════════════════
@@ -6155,8 +6142,8 @@ body.modal-open { overflow: hidden; }
       <a href="#" class="nl active" id="nl-home" onclick="showPage('home');return false">الرئيسية</a>
       <!-- تم إزالة خضروات، فاكهة، زينة، طبية، أمراض، وأضيف أهداف المنصة -->
       <a href="#" class="nl" id="nl-goals" onclick="showPage('goals');return false">🎯 أهداف المنصة</a>
-      <a href="#" class="nl nl-farm" id="nl-farm" onclick="showPage('farm');return false">🌾 مزرعتي</a>
-      <a href="#" class="nl nl-market" id="nl-market" onclick="showPage('market');return false"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:middle;margin-left:5px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> السوق الزراعي</a>
+      <a href="#" class="nl" id="nl-farm" onclick="showPage('farm');return false">🌾 مزرعتي</a>
+      <a href="#" class="nl" id="nl-market" onclick="showPage('market');return false">🛒 السوق الزراعي</a>
     </div>
     <div class="nav-actions" id="nav-actions">
       <button class="nav-icon-btn" id="thm-btn" title="تبديل المظهر" aria-label="تبديل المظهر">
