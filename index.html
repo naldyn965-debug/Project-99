@@ -705,7 +705,7 @@ mark.hl{background:rgba(212,160,23,.28);border-radius:2px;padding:0 2px;color:in
 .page-back-btn--light:hover{background:rgba(255,255,255,.24);border-color:rgba(255,255,255,.45);color:#fff;transform:translateX(4px)}
 .page-back-bar{padding:16px 0 0}
 [data-dark] .page-back-btn{background:var(--card);border-color:var(--line)}
-/* Farm back button inside topbar */
+/* Farm back bar — above topbar, standalone */
 .farm-home-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px 7px 9px;border-radius:var(--rpill);background:var(--brand-pale);border:1.5px solid rgba(27,107,58,.2);color:var(--brand);font-size:12px;font-weight:700;cursor:pointer;transition:all .22s var(--ease-spring);font-family:var(--f-ui);flex-shrink:0;white-space:nowrap}
 .farm-home-btn:hover{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:0 4px 12px rgba(27,107,58,.3)}
 [data-dark] .farm-home-btn{background:rgba(27,107,58,.1);border-color:rgba(27,107,58,.25);color:var(--brand-xl,#5fc97e)}
@@ -22184,9 +22184,9 @@ document.addEventListener('click', e => {
       var farmName = farmState.currentFarm ? farmState.currentFarm.name : 'مزرعتي';
 
       return '<div class="farm-shell">' +
+        '<div class="farm-back-bar"><button class="farm-home-btn" onclick="goBack()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>رجوع</button></div>' +
         /* ══ PREMIUM TOPBAR ══ */
         '<div class="farm-topbar">' +
-          '<button class="farm-home-btn" onclick="goBack()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>رجوع</button>' +
           '<nav class="farm-top-nav">' + navHtml + '</nav>' +
         '</div>' +
         /* ══ CONTENT ══ */
@@ -24882,6 +24882,10 @@ document.addEventListener('click', e => {
     min-height: 100vh;
     background: var(--bg);
   }
+
+  /* ── Farm Back Bar ───────────────────────────────── */
+  .farm-back-bar{padding:10px 20px 0;background:var(--bg)}
+  [data-dark] .farm-back-bar{background:var(--bg)}
 
   /* ── Premium Topbar ─────────────────────────────── */
   .farm-topbar {
