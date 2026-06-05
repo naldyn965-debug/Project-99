@@ -43,7 +43,10 @@
      PWA — MANIFEST (external file: manifest.json)
 ═══════════════════════════════════════════════════════ -->
 <link rel="manifest" href="manifest.json">
-<link rel="preload" href="manifest.json" as="fetch" crossorigin="anonymous">
+<!-- Preload LCP hero image so browser fetches it immediately -->
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1800&q=85" fetchpriority="high">
+<!-- fonts.googleapis.com needs preconnect for CSS fetch -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
 <!-- ═══════════════════════════════════════════════════════
      PWA — THEME & STATUS BAR
@@ -105,19 +108,12 @@
 <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
 
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<!-- Firebase SDKs moved to body — see just before Firebase initialization -->
 
-<!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet"></noscript>
+<!-- fonts preconnects already defined above -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"></noscript>
 
 <style>
 /* ═══════════════════════════════════════════
@@ -7809,6 +7805,12 @@ body.modal-open { overflow: hidden; }
 
 <div id="tw"></div>
 <button id="stk" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- Firebase SDKs — loaded here so browser renders loader screen first -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <script>
 // ======================== FIREBASE CONFIG ========================
@@ -27378,6 +27380,6 @@ document.addEventListener('DOMContentLoaded',function(){
 </script>
 
 <!-- SOCIAL MODULE -->
-<script src="social.js"></script>
+<script defer src="social.js"></script>
 </body>
 </html>
