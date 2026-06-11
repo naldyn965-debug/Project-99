@@ -17482,7 +17482,7 @@ const App = {
     _afterPaint(function() {
       self._buildHome();
       document.getElementById('cat-pill-diseases').textContent = DiseasesDB.length+' أمراض';
-      requestAnimationFrame(_observeReveals);
+      requestAnimationFrame(()=>_observeReveals());
     });
   },
 
