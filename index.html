@@ -44,7 +44,7 @@
 ═══════════════════════════════════════════════════════ -->
 <link rel="manifest" href="manifest.json">
 <!-- Preload LCP hero image so browser fetches it immediately -->
-<link rel="preload" as="image" href="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1800&q=85" fetchpriority="high">
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=70&auto=format&fit=crop" fetchpriority="high">
 
 <!-- ═══════════════════════════════════════════════════════
      PERFORMANCE — PRELOAD CRITICAL SCRIPTS
@@ -337,7 +337,7 @@ button,a,[onclick]{touch-action:manipulation}
    HOME — HERO  (CINEMATIC FULL-SCREEN)
 ═══════════════════════════════════════════ */
 .hero{position:relative;min-height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.hero-bg-img{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1800&q=85');background-size:cover;background-position:center 40%;transform:scale(1.08);animation:hKen 22s ease-in-out infinite alternate;filter:brightness(.28) saturate(.7)}
+.hero-bg-img{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=70&auto=format&fit=crop');background-size:cover;background-position:center 40%;transform:scale(1.08);animation:hKen 22s ease-in-out infinite alternate;filter:brightness(.28) saturate(.7)}
 @keyframes hKen{from{transform:scale(1.08) translateX(1%)}to{transform:scale(1) translateX(-1%)}}
 .hero-noise{position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
 .hero-canvas{position:absolute;inset:0;z-index:1}
@@ -6230,10 +6230,10 @@ body.modal-open { overflow: hidden; }
     <div class="hero-veil-t"></div>
     <div class="hero-veil-b"></div>
     <div class="hero-plants">
-      <div class="hp hp1"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1558818498-28c1e002b655?w=400&q=80" alt="طماطم"></div>
-      <div class="hp hp2"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=400&q=80" alt="مانجو"></div>
-      <div class="hp hp3"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1548460519-c0d3d2eb0f37?w=400&q=80" alt="ورد"></div>
-      <div class="hp hp4"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&q=80" alt="فراولة"></div>
+      <div class="hp hp1"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1558818498-28c1e002b655?w=400&q=75&auto=format&fit=crop" alt="طماطم"></div>
+      <div class="hp hp2"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=400&q=75&auto=format&fit=crop" alt="مانجو"></div>
+      <div class="hp hp3"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1548460519-c0d3d2eb0f37?w=400&q=75&auto=format&fit=crop" alt="ورد"></div>
+      <div class="hp hp4"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&q=75&auto=format&fit=crop" alt="فراولة"></div>
     </div>
     <div class="hero-content">
       <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>الموسوعة الزراعية الأولى عربياً</div>
