@@ -45,16 +45,6 @@
 <link rel="manifest" href="manifest.json">
 <!-- Preload LCP hero image so browser fetches it immediately -->
 <link rel="preload" as="image" href="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=70&auto=format&fit=crop" fetchpriority="high">
-
-<!-- ═══════════════════════════════════════════════════════
-     PERFORMANCE — PRELOAD CRITICAL SCRIPTS
-     يبدأ المتصفح تحميلها أثناء parsing الـ HTML بالتوازي
-═══════════════════════════════════════════════════════ -->
-<link rel="preload" as="script" href="db.js">
-<link rel="preload" as="script" href="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" crossorigin>
-<link rel="preload" as="script" href="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js" crossorigin>
-<link rel="preload" as="script" href="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js" crossorigin>
-<link rel="preload" as="script" href="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js" crossorigin>
 <!-- fonts.googleapis.com needs preconnect for CSS fetch -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
