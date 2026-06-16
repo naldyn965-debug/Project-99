@@ -17,8 +17,31 @@ service cloud.firestore {
     }
 
     // ── FARMS ──────────────────────────────────────────────
+    // ملاحظة أمان: كانت تسمح لأي مستخدم مسجّل بقراءة/تعديل مزارع
+    // الآخرين. تم تقييدها بحقل userId الموجود فعلياً في بيانات المزرعة.
     match /farms/{docId} {
-      allow read, write: if isAuth();
+      allow read, update, delete: if isAuth() && resource.data.userId == request.auth.uid;
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // ── FIELDS (حقول المزرعة) ────────────────────────────────
+    // لم يكن لها قواعد من قبل، فكانت تُرفض بالكامل بواسطة قاعدة
+    // "رفض كل شيء" في آخر الملف — مما يعني عطل فعلي في حفظ الحقول.
+    match /fields/{docId} {
+      allow read, update, delete: if isAuth() && resource.data.userId == request.auth.uid;
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // ── CROPS (بيانات المحصول) ───────────────────────────────
+    match /crops/{docId} {
+      allow read, update, delete: if isAuth() && resource.data.userId == request.auth.uid;
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // ── OPERATIONS (التسجيل اليومي/الأرشيف الشهري) ───────────
+    match /operations/{docId} {
+      allow read, update, delete: if isAuth() && resource.data.userId == request.auth.uid;
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
     }
 
     // ── PLANTS / DISEASES ──────────────────────────────────
@@ -27,7 +50,16 @@ service cloud.firestore {
 
     // ── GOALS ──────────────────────────────────────────────
     match /goals/{docId} {
-      allow read, write: if isAuth();
+      allow read, update, delete: if isAuth() && resource.data.userId == request.auth.uid;
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // ── EXPENSES (نظام المصروفات: users/{uid}/workers|fertilizers|
+    //    pesticides|seeds|irrigation|otherExpenses) ───────────
+    // لم يكن لها قواعد من قبل، فكانت تُرفض بالكامل — عطل فعلي في
+    // حفظ كل بيانات المصروفات. مقيّدة هنا بمالك الحساب فقط.
+    match /users/{uid}/{subcollection}/{docId} {
+      allow read, write: if isSelf(uid);
     }
 
     // ── MARKETPLACE ────────────────────────────────────────
@@ -38,7 +70,12 @@ service cloud.firestore {
                     && request.resource.data.title is string
                     && request.resource.data.title.size() > 0
                     && request.resource.data.price is number;
-      allow update: if owns(resource) || isAuth();
+      // ملاحظة أمان: كانت "|| isAuth()" تسمح لأي مستخدم مسجّل بتعديل
+      // أي منتج. الآن: المالك يعدّل أي حقل، وأي زائر يزيد عدّاد
+      // المشاهدات فقط، وأي مستخدم مسجّل يحدّث التقييم فقط (بعد تقييم).
+      allow update: if owns(resource)
+                    || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['views'])
+                    || (isAuth() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['avgRating','reviewCount']));
       allow delete: if owns(resource);
     }
     match /marketplace_orders/{orderId} {
