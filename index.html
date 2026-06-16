@@ -330,25 +330,7 @@
         <button class="hpill" onclick="showPage('search');setTimeout(()=>doFullSearch('نبات داخلي'),50)">🏠 نباتات داخلية</button>
         <button class="hpill" onclick="showPage('search');setTimeout(()=>doFullSearch('للتصدير'),50)">✈️ للتصدير</button>
       </div>
-      <div class="search-card" id="hero-sc">
-        <div class="sc-label">ابحث في الموسوعة</div>
-        <div style="position:relative">
-          <div class="sc-bar">
-            <i id="sc-ico" style="font-style:normal;padding:0 14px;color:rgba(255,255,255,.45);font-size:17px;flex-shrink:0">🔍</i>
-            <input class="sc-inp" id="sc-inp" type="text" placeholder="تسميد، أمراض، ري، حصاد..." autocomplete="off">
-            <button class="sc-go" onclick="heroSearch()">بحث</button>
-          </div>
-          <div class="sc-dd" id="sc-dd"></div>
-        </div>
-        <div class="sc-qtags">
-          <button class="sc-qt" onclick="heroQS('ري تنقيط')">💧 ري تنقيط</button>
-          <button class="sc-qt" onclick="heroQS('بياض دقيقي')">🦠 بياض دقيقي</button>
-          <button class="sc-qt" onclick="heroQS('للتصدير')">✈️ للتصدير</button>
-          <button class="sc-qt" onclick="heroQS('سهل')">⭐ سهل الزراعة</button>
-          <button class="sc-qt" onclick="heroQS('داخلي')">🏠 داخلي</button>
-        </div>
-        <div class="sc-stats" id="sc-stats"></div>
-      </div>
+
     </div>
     <div class="hero-scroll">
       <div class="hero-scroll-line"></div>
@@ -420,75 +402,7 @@
   </section>
   <!-- ═══ END FARM ENTRY CARD ═══ -->
 
-  <!-- ═══════════════════════════════════════════════════
-       CITRUS CALCULATOR ENTRY CARD
-       بطاقة حاسبة الموالح
-  ═════════════════════════════════════════════════════ -->
-  <section class="citrus-entry-section" id="citrus-entry-section">
-    <div class="W">
-      <div class="citrus-entry-card reveal" onclick="showPage('citrus')">
-        <div class="cec-grain"></div>
-        <div class="cec-accent-strip"></div>
-        <div class="cec-bg-orb cec-bg-orb-1"></div>
-        <div class="cec-bg-orb cec-bg-orb-2"></div>
-        <div class="cec-inner">
-          <div class="cec-header-row">
-            <div class="cec-pill"><span class="cec-pill-dot"></span><span>Citrus Calc — حاسبة الموالح</span></div>
-            <div class="cec-version">v 1.0</div>
-          </div>
-          <div class="cec-grid">
-            <div class="cec-left">
-              <div class="cec-icon-box">🍊</div>
-              <h3 class="cec-title">حاسبة تسميد الموالح</h3>
-              <p class="cec-sub">احسب احتياجات التسميد الدقيقة للبرتقال واليوسفي — نتائج فورية مبنية على نوع التربة وعمر الأشجار</p>
-              <div class="cec-features">
-                <div class="cec-feat-item"><div class="cec-feat-dot cec-fd-orange"></div><span>احتياجات النيتروجين والفوسفور والبوتاسيوم</span></div>
-                <div class="cec-feat-item"><div class="cec-feat-dot cec-fd-yellow"></div><span>حسب نوع التربة: رملية أو طينية</span></div>
-                <div class="cec-feat-item"><div class="cec-feat-dot cec-fd-green"></div><span>جدول تسميد موسمي متكامل للمحصول</span></div>
-              </div>
-              <button class="cec-cta" onclick="showPage('citrus');event.stopPropagation()">
-                <span>احسب الآن</span>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </button>
-            </div>
-            <div class="cec-right">
-              <div class="cec-metrics">
-                <div class="cec-metric">
-                  <div class="cec-metric-icon" style="background:rgba(249,115,22,0.10)">🍊</div>
-                  <div><div class="cec-metric-label">البرتقال</div><div class="cec-metric-val">N·P·K</div></div>
-                </div>
-                <div class="cec-metric">
-                  <div class="cec-metric-icon" style="background:rgba(234,179,8,0.10)">🍊</div>
-                  <div><div class="cec-metric-label">اليوسفي</div><div class="cec-metric-val">N·P·K</div></div>
-                </div>
-                <div class="cec-metric">
-                  <div class="cec-metric-icon" style="background:rgba(34,197,94,0.10)">🌱</div>
-                  <div><div class="cec-metric-label">التربة</div><div class="cec-metric-val">رملي/طيني</div></div>
-                </div>
-                <div class="cec-metric">
-                  <div class="cec-metric-icon" style="background:rgba(59,130,246,0.10)">📅</div>
-                  <div><div class="cec-metric-label">الجدول</div><div class="cec-metric-val">موسمي</div></div>
-                </div>
-              </div>
-              <div class="cec-chart-box">
-                <div class="cec-chart-label">توزيع التسميد الموسمي</div>
-                <div class="cec-season-bars">
-                  <div class="cec-season-wrap"><div class="cec-season-bar" style="height:38%"></div></div>
-                  <div class="cec-season-wrap"><div class="cec-season-bar" style="height:55%"></div></div>
-                  <div class="cec-season-wrap"><div class="cec-season-bar cec-season-bar-active" style="height:90%"></div></div>
-                  <div class="cec-season-wrap"><div class="cec-season-bar cec-season-bar-active" style="height:100%"></div></div>
-                  <div class="cec-season-wrap"><div class="cec-season-bar" style="height:72%"></div></div>
-                  <div class="cec-season-wrap"><div class="cec-season-bar" style="height:48%"></div></div>
-                  <div class="cec-season-wrap"><div class="cec-season-bar" style="height:30%"></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- ═══ END CITRUS ENTRY CARD ═══ -->
+
 
   <section class="cats-section">
     <div class="W">
