@@ -191,6 +191,46 @@
 
 </style>
 
+<style>
+/* ── Hero Stats Strip ── */
+.hero-sc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid rgba(255,255,255,.15);border-radius:14px;margin-top:24px;overflow:hidden;background:rgba(0,0,0,.25);backdrop-filter:blur(10px);opacity:0;animation:fadeUp .7s 1.35s var(--ease-out) forwards}
+.hero-sc-stats .sc-stat{padding:14px 10px;text-align:center;border-left:1px solid rgba(255,255,255,.1)}
+.hero-sc-stats .sc-stat:last-child{border-left:none}
+.hero-sc-stats .sc-stat-n{font-family:var(--f-display);font-size:1.7rem;color:#fff;line-height:1}
+.hero-sc-stats .sc-stat-l{font-size:10px;color:rgba(255,255,255,.6);margin-top:3px;letter-spacing:.05em}
+
+/* ── Tools Section ── */
+.tools-section{padding:60px 0 40px;background:var(--bg)}
+.tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tool-tile{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r3);padding:24px 16px;text-align:center;cursor:pointer;transition:all .28s var(--ease-spring);box-shadow:var(--s1)}
+.tool-tile:hover{transform:translateY(-6px);box-shadow:var(--s3);border-color:rgba(27,107,58,.3);background:var(--brand-pale)}
+.tool-tile-ico{font-size:2.2rem;display:block;margin-bottom:10px}
+.tool-tile-name{font-weight:800;font-size:.95rem;color:var(--ink);margin-bottom:4px}
+.tool-tile-sub{font-size:.78rem;color:var(--muted)}
+@media(max-width:768px){.tools-grid{grid-template-columns:repeat(2,1fr);gap:12px}.tool-tile{padding:18px 12px}}
+@media(max-width:400px){.tools-grid{grid-template-columns:repeat(2,1fr);gap:10px}.tool-tile{padding:14px 10px}}
+
+/* ── Home Disease Preview ── */
+.home-dis-section{padding:40px 0 60px;background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.dis-preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.dis-preview-card{background:var(--card);border-radius:var(--r3);overflow:hidden;cursor:pointer;transition:all .3s var(--ease-spring);box-shadow:var(--s1);border:1px solid var(--line)}
+.dis-preview-card:hover{transform:translateY(-5px);box-shadow:var(--s3);border-color:rgba(192,57,43,.2)}
+.dis-preview-img{height:130px;overflow:hidden;position:relative}
+.dis-preview-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.dis-preview-card:hover .dis-preview-img img{transform:scale(1.07)}
+.dis-preview-badge{position:absolute;top:10px;right:10px;padding:3px 10px;border-radius:30px;font-size:10px;font-weight:800;backdrop-filter:blur(6px);background:rgba(0,0,0,.6);color:#fff}
+.dis-preview-body{padding:14px 16px}
+.dis-preview-name{font-weight:800;font-size:.95rem;color:var(--ink);margin-bottom:3px}
+.dis-preview-sci{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:8px}
+.dis-preview-sev{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:30px;font-size:10px;font-weight:700}
+.dis-sev-danger{background:rgba(192,57,43,.1);color:var(--red)}
+.dis-sev-mid{background:rgba(230,126,34,.1);color:var(--orange)}
+.dis-preview-more{display:flex;justify-content:center;margin-top:28px}
+.dis-preview-more button{padding:12px 32px;border-radius:var(--rpill);border:1.5px solid var(--line2);background:var(--card);color:var(--brand);font-size:13px;font-weight:700;cursor:pointer;transition:all .22s var(--ease-spring)}
+.dis-preview-more button:hover{background:var(--brand);color:#fff;border-color:var(--brand);transform:translateY(-2px);box-shadow:0 6px 20px rgba(27,107,58,.3)}
+@media(max-width:768px){.dis-preview-grid{grid-template-columns:1fr;gap:12px}.dis-preview-img{height:160px}}
+</style>
+
   <!-- CURSOR -->
 <div id="cur"></div>
 <div id="cur-r"></div>
@@ -330,6 +370,7 @@
         <button class="hpill" onclick="showPage('search');setTimeout(()=>doFullSearch('نبات داخلي'),50)">🏠 نباتات داخلية</button>
         <button class="hpill" onclick="showPage('search');setTimeout(()=>doFullSearch('للتصدير'),50)">✈️ للتصدير</button>
       </div>
+      <div class="hero-sc-stats sc-stats" id="sc-stats"></div>
 
     </div>
     <div class="hero-scroll">
@@ -344,63 +385,41 @@
 
   <!-- ═══ FERTILIZER CALCULATOR MOVED TO pg-citrus ═══ -->
 
-  <!-- ═══════════════════════════════════════════════════
-       FARM SYSTEM ENTRY CARD
-       نظام إدارة المزرعة — بعد حاسبة الموالح مباشرة
-  ═════════════════════════════════════════════════════ -->
-  <section class="farm-entry-section" id="farm-entry-section">
+  <!-- ═══ TOOLS SECTION ═══ -->
+  <section class="tools-section">
     <div class="W">
-      <div class="farm-entry-card reveal" onclick="showPage('farm')">
-        <div class="fec-grain"></div>
-        <div class="fec-accent-strip"></div>
-        <div class="fec-inner">
-          <div class="fec-header-row">
-            <div class="fec-pill"><span class="fec-pill-dot"></span><span>Farm OS — نظام إدارة المزرعة</span></div>
-            <div class="fec-version">v 2.0</div>
-          </div>
-          <div class="fec-grid">
-            <div class="fec-left">
-              <div class="fec-icon-box">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 22V12"/><path d="M20 7c0 4.4-3.6 8-8 9.9C7.6 15 4 11.4 4 7a8 8 0 0 1 16 0z"/></svg>
-              </div>
-              <h3 class="fec-title">نظام إدارة مزرعتك</h3>
-              <p class="fec-sub">سجّل كل عملية، تابع الأداء، واتخذ قرارات مبنية على بيانات حقيقية</p>
-              <div class="fec-features">
-                <div class="fec-feat-item"><div class="fec-feat-dot fec-fd-blue"></div><span>تسجيل يومي للري والتسميد والرش</span></div>
-                <div class="fec-feat-item"><div class="fec-feat-dot fec-fd-green"></div><span>تقارير أسبوعية وشهرية تفصيلية</span></div>
-                <div class="fec-feat-item"><div class="fec-feat-dot fec-fd-gold"></div><span>أرشيف كامل لكل موسم زراعي</span></div>
-              </div>
-              <button class="fec-cta" onclick="showPage('farm');event.stopPropagation()">
-                <span>ابدأ الآن</span>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </button>
-            </div>
-            <div class="fec-right">
-              <div class="fec-metrics">
-                <div class="fec-metric"><div class="fec-metric-icon" style="background:rgba(27,107,58,.12);color:#16a34a"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div><div><div class="fec-metric-label">الري</div><div class="fec-metric-val">يومي</div></div></div>
-                <div class="fec-metric"><div class="fec-metric-icon" style="background:rgba(217,119,6,.1);color:#d97706"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18"/></svg></div><div><div class="fec-metric-label">التسميد</div><div class="fec-metric-val">N·P·K</div></div></div>
-                <div class="fec-metric"><div class="fec-metric-icon" style="background:rgba(168,85,247,.1);color:#9333ea"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="6"/><path d="M12 14v8m-4 0h8"/></svg></div><div><div class="fec-metric-label">الرش</div><div class="fec-metric-val">مبيدات</div></div></div>
-                <div class="fec-metric"><div class="fec-metric-icon" style="background:rgba(59,130,246,.1);color:#2563eb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div><div class="fec-metric-label">التحليلات</div><div class="fec-metric-val">تقارير</div></div></div>
-              </div>
-              <div class="fec-chart-box">
-                <div class="fec-chart-label">آخر 7 أيام من النشاط</div>
-                <div class="fec-bars">
-                  <div class="fec-bar-wrap"><div class="fec-bar" style="height:42%"></div></div>
-                  <div class="fec-bar-wrap"><div class="fec-bar" style="height:68%"></div></div>
-                  <div class="fec-bar-wrap"><div class="fec-bar" style="height:51%"></div></div>
-                  <div class="fec-bar-wrap"><div class="fec-bar" style="height:83%"></div></div>
-                  <div class="fec-bar-wrap"><div class="fec-bar" style="height:57%"></div></div>
-                  <div class="fec-bar-wrap"><div class="fec-bar fec-bar-active" style="height:95%"></div></div>
-                  <div class="fec-bar-wrap"><div class="fec-bar" style="height:72%"></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="sec-head reveal">
+        <div class="sh-titles">
+          <div class="sh-kicker">خدماتنا</div>
+          <h2 class="sh-title">ما يقدمه الموقع</h2>
+        </div>
+        <button class="sec-link" onclick="showPage('goals')">اعرف أكثر ←</button>
+      </div>
+      <div class="tools-grid reveal reveal-delay-1">
+        <div class="tool-tile" onclick="showPage('search')">
+          <span class="tool-tile-ico">🔍</span>
+          <div class="tool-tile-name">الموسوعة الزراعية</div>
+          <div class="tool-tile-sub">+444 نبات موثق</div>
+        </div>
+        <div class="tool-tile" onclick="showPage('market')">
+          <span class="tool-tile-ico">🛒</span>
+          <div class="tool-tile-name">السوق الزراعي</div>
+          <div class="tool-tile-sub">بيع وشراء مباشر</div>
+        </div>
+        <div class="tool-tile" onclick="showPage('farm')">
+          <span class="tool-tile-ico">🚜</span>
+          <div class="tool-tile-name">إدارة المزرعة</div>
+          <div class="tool-tile-sub">تتبع العمليات اليومية</div>
+        </div>
+        <div class="tool-tile" onclick="showPage('citrus')">
+          <span class="tool-tile-ico">🍊</span>
+          <div class="tool-tile-name">حاسبة الموالح</div>
+          <div class="tool-tile-sub">احتياجات N · P · K</div>
         </div>
       </div>
     </div>
   </section>
-  <!-- ═══ END FARM ENTRY CARD ═══ -->
+  <!-- ═══ END TOOLS SECTION ═══ -->
 
 
 
@@ -517,6 +536,58 @@
       <div class="plants-grid reveal reveal-delay-1" id="home-featured"></div>
     </div>
   </section>
+
+  <!-- ═══ HOME DISEASES PREVIEW ═══ -->
+  <section class="home-dis-section">
+    <div class="W">
+      <div class="sec-head reveal">
+        <div class="sh-titles">
+          <div class="sh-kicker">أمراض موثقة</div>
+          <h2 class="sh-title">أبرز أمراض النبات</h2>
+        </div>
+        <button class="sec-link" onclick="showDiseasesPage()">عرض الكل (525) ←</button>
+      </div>
+      <div class="dis-preview-grid reveal reveal-delay-1">
+        <div class="dis-preview-card" onclick="openDiseaseModal('d1')">
+          <div class="dis-preview-img">
+            <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Powdery_mildew_on_a_grape_leaf.jpg/640px-Powdery_mildew_on_a_grape_leaf.jpg" alt="البياض الدقيقي">
+            <div class="dis-preview-badge">فطري</div>
+          </div>
+          <div class="dis-preview-body">
+            <div class="dis-preview-name">البياض الدقيقي</div>
+            <div class="dis-preview-sci">Erysiphe cichoracearum</div>
+            <span class="dis-preview-sev dis-sev-danger">🔴 خطير</span>
+          </div>
+        </div>
+        <div class="dis-preview-card" onclick="openDiseaseModal('d2')">
+          <div class="dis-preview-img">
+            <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Phytophthora_infestans_on_tomato_2.jpg/640px-Phytophthora_infestans_on_tomato_2.jpg" alt="لفحة المتأخرة">
+            <div class="dis-preview-badge">فطري</div>
+          </div>
+          <div class="dis-preview-body">
+            <div class="dis-preview-name">اللفحة المتأخرة</div>
+            <div class="dis-preview-sci">Phytophthora infestans</div>
+            <span class="dis-preview-sev dis-sev-danger">🔴 خطير</span>
+          </div>
+        </div>
+        <div class="dis-preview-card" onclick="openDiseaseModal('d10')">
+          <div class="dis-preview-img">
+            <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Thrips_tabaci.jpg/640px-Thrips_tabaci.jpg" alt="التربس">
+            <div class="dis-preview-badge">حشري</div>
+          </div>
+          <div class="dis-preview-body">
+            <div class="dis-preview-name">التربس</div>
+            <div class="dis-preview-sci">Thrips tabaci</div>
+            <span class="dis-preview-sev dis-sev-mid">🟡 متوسط</span>
+          </div>
+        </div>
+      </div>
+      <div class="dis-preview-more">
+        <button onclick="showDiseasesPage()">🦠 تصفح جميع الأمراض الموثقة</button>
+      </div>
+    </div>
+  </section>
+  <!-- ═══ END HOME DISEASES PREVIEW ═══ -->
 
   <section class="stats-section">
     <div class="W">
