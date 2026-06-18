@@ -383,6 +383,42 @@
     </div>
   </section>
 
+  <!-- ═══ TOOLS SECTION ═══ -->
+  <section class="tools-section">
+    <div class="W">
+      <div class="sec-head reveal">
+        <div class="sh-titles">
+          <div class="sh-kicker">خدماتنا</div>
+          <h2 class="sh-title">ما يقدمه الموقع</h2>
+        </div>
+        <button class="sec-link" onclick="showPage('goals')">اعرف أكثر ←</button>
+      </div>
+      <div class="tools-grid reveal reveal-delay-1">
+        <div class="tool-tile" onclick="showPage('search')">
+          <span class="tool-tile-ico">🔍</span>
+          <div class="tool-tile-name">الموسوعة الزراعية</div>
+          <div class="tool-tile-sub">+444 نبات موثق</div>
+        </div>
+        <div class="tool-tile" onclick="showPage('market')">
+          <span class="tool-tile-ico">🛒</span>
+          <div class="tool-tile-name">السوق الزراعي</div>
+          <div class="tool-tile-sub">بيع وشراء مباشر</div>
+        </div>
+        <div class="tool-tile" onclick="showPage('farm')">
+          <span class="tool-tile-ico">🚜</span>
+          <div class="tool-tile-name">إدارة المزرعة</div>
+          <div class="tool-tile-sub">تتبع العمليات اليومية</div>
+        </div>
+        <div class="tool-tile" onclick="showPage('citrus')">
+          <span class="tool-tile-ico">🍊</span>
+          <div class="tool-tile-name">حاسبة الموالح</div>
+          <div class="tool-tile-sub">احتياجات N · P · K</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ═══ END TOOLS SECTION ═══ -->
+
   <!-- ═══ FERTILIZER CALCULATOR MOVED TO pg-citrus ═══ -->
 
   <section class="cats-section">
@@ -498,94 +534,6 @@
       <div class="plants-grid reveal reveal-delay-1" id="home-featured"></div>
     </div>
   </section>
-
-  <!-- ═══ TOOLS SECTION ═══ -->
-  <section class="tools-section">
-    <div class="W">
-      <div class="sec-head reveal">
-        <div class="sh-titles">
-          <div class="sh-kicker">خدماتنا</div>
-          <h2 class="sh-title">ما يقدمه الموقع</h2>
-        </div>
-        <button class="sec-link" onclick="showPage('goals')">اعرف أكثر ←</button>
-      </div>
-      <div class="tools-grid reveal reveal-delay-1">
-        <div class="tool-tile" onclick="showPage('search')">
-          <span class="tool-tile-ico">🔍</span>
-          <div class="tool-tile-name">الموسوعة الزراعية</div>
-          <div class="tool-tile-sub">+444 نبات موثق</div>
-        </div>
-        <div class="tool-tile" onclick="showPage('market')">
-          <span class="tool-tile-ico">🛒</span>
-          <div class="tool-tile-name">السوق الزراعي</div>
-          <div class="tool-tile-sub">بيع وشراء مباشر</div>
-        </div>
-        <div class="tool-tile" onclick="showPage('farm')">
-          <span class="tool-tile-ico">🚜</span>
-          <div class="tool-tile-name">إدارة المزرعة</div>
-          <div class="tool-tile-sub">تتبع العمليات اليومية</div>
-        </div>
-        <div class="tool-tile" onclick="showPage('citrus')">
-          <span class="tool-tile-ico">🍊</span>
-          <div class="tool-tile-name">حاسبة الموالح</div>
-          <div class="tool-tile-sub">احتياجات N · P · K</div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- ═══ END TOOLS SECTION ═══ -->
-
-  <!-- ═══ HOME DISEASES PREVIEW ═══ -->
-  <section class="home-dis-section">
-    <div class="W">
-      <div class="sec-head reveal">
-        <div class="sh-titles">
-          <div class="sh-kicker">أمراض موثقة</div>
-          <h2 class="sh-title">أبرز أمراض النبات</h2>
-        </div>
-        <button class="sec-link" onclick="showDiseasesPage()">عرض الكل (525) ←</button>
-      </div>
-      <div class="dis-preview-grid reveal reveal-delay-1">
-        <div class="dis-preview-card" onclick="openDiseaseModal('d1')">
-          <div class="dis-preview-img">
-            <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Powdery_mildew_on_a_grape_leaf.jpg/640px-Powdery_mildew_on_a_grape_leaf.jpg" alt="البياض الدقيقي">
-            <div class="dis-preview-badge">فطري</div>
-          </div>
-          <div class="dis-preview-body">
-            <div class="dis-preview-name">البياض الدقيقي</div>
-            <div class="dis-preview-sci">Erysiphe cichoracearum</div>
-            <span class="dis-preview-sev dis-sev-danger">🔴 خطير</span>
-          </div>
-        </div>
-        <div class="dis-preview-card" onclick="openDiseaseModal('d2')">
-          <div class="dis-preview-img">
-            <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Phytophthora_infestans_on_tomato_2.jpg/640px-Phytophthora_infestans_on_tomato_2.jpg" alt="لفحة المتأخرة">
-            <div class="dis-preview-badge">فطري</div>
-          </div>
-          <div class="dis-preview-body">
-            <div class="dis-preview-name">اللفحة المتأخرة</div>
-            <div class="dis-preview-sci">Phytophthora infestans</div>
-            <span class="dis-preview-sev dis-sev-danger">🔴 خطير</span>
-          </div>
-        </div>
-        <div class="dis-preview-card" onclick="openDiseaseModal('d10')">
-          <div class="dis-preview-img">
-            <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Thrips_tabaci.jpg/640px-Thrips_tabaci.jpg" alt="التربس">
-            <div class="dis-preview-badge">حشري</div>
-          </div>
-          <div class="dis-preview-body">
-            <div class="dis-preview-name">التربس</div>
-            <div class="dis-preview-sci">Thrips tabaci</div>
-            <span class="dis-preview-sev dis-sev-mid">🟡 متوسط</span>
-          </div>
-        </div>
-      </div>
-      <div class="dis-preview-more">
-        <button onclick="showDiseasesPage()">🦠 تصفح جميع الأمراض الموثقة</button>
-      </div>
-    </div>
-  </section>
-  <!-- ═══ END HOME DISEASES PREVIEW ═══ -->
 
   <section class="stats-section">
     <div class="W">
