@@ -268,6 +268,7 @@
       <a href="#" class="nl" id="nl-goals" onclick="showPage('goals');return false">🎯 أهداف المنصة</a>
       <a href="#" class="nl" id="nl-farm" onclick="showPage('farm');return false">🌾 مزرعتي</a>
       <a href="#" class="nl" id="nl-market" onclick="showPage('market');return false">🛒 السوق الزراعي</a>
+      <a href="#" class="nl" id="nl-academy" onclick="showPage('academy');return false">🎓 الأكاديمية</a>
     </div>
     <div class="nav-actions" id="nav-actions">
       <button class="nav-icon-btn" id="thm-btn" title="تبديل المظهر" aria-label="تبديل المظهر">
@@ -326,6 +327,7 @@
     <a href="#" class="nl" onclick="showPage('goals');closeMob();return false">🎯 أهداف المنصة</a>
     <a href="#" class="nl" onclick="showPage('farm');closeMob();return false">🌾 مزرعتي</a>
     <a href="#" class="nl" onclick="showPage('market');closeMob();return false">🛒 السوق الزراعي</a>
+    <a href="#" class="nl" onclick="showPage('academy');closeMob();return false">🎓 الأكاديمية</a>
     <a href="#" class="nl" id="mobLogin" onclick="openAuth('login');closeMob();return false">تسجيل الدخول</a>
     <a href="#" class="nl" id="mobRegister" onclick="openAuth('reg');closeMob();return false">إنشاء حساب</a>
     <a href="#" class="nl" id="mobLogout" style="display:none;" onclick="logoutUser();closeMob();return false">تسجيل الخروج</a>
@@ -383,6 +385,122 @@
     </div>
   </section>
 
+  <!-- ═══ FERTILIZER CALCULATOR MOVED TO pg-citrus ═══ -->
+
+  <section class="cats-section">
+    <div class="W">
+      <div class="sec-head reveal">
+        <div class="sh-titles">
+          <div class="sh-kicker">تصفح</div>
+          <h2 class="sh-title">اختر القسم</h2>
+        </div>
+      </div>
+      <div class="cat-cards reveal reveal-delay-1">
+        <div class="cat-card" onclick="showCatPage('vegetables')">
+          <div class="cat-card-bg" style="background-image:url('https://images.unsplash.com/photo-1540420773420-3366772f4999?w=900&q=80')"></div>
+          <div class="cat-card-veil"></div>
+          <div class="cat-card-body">
+            <span class="cat-card-icon">🥦</span>
+            <div class="cat-card-name">الخضروات</div>
+            <div class="cat-card-meta">
+              <span class="cat-card-pill" id="cat-pill-veg">... نبات</span>
+              <div class="cat-card-arr">←</div>
+            </div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="showCatPage('fruits')">
+          <div class="cat-card-bg" style="background-image:url('https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=900&q=80')"></div>
+          <div class="cat-card-veil"></div>
+          <div class="cat-card-body">
+            <span class="cat-card-icon">🍎</span>
+            <div class="cat-card-name">الفاكهة</div>
+            <div class="cat-card-meta">
+              <span class="cat-card-pill" id="cat-pill-fr">... نبات</span>
+              <div class="cat-card-arr">←</div>
+            </div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="showCatPage('ornamental')">
+          <div class="cat-card-bg" style="background-image:url('https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=900&q=80')"></div>
+          <div class="cat-card-veil"></div>
+          <div class="cat-card-body">
+            <span class="cat-card-icon">🌸</span>
+            <div class="cat-card-name">نباتات الزينة</div>
+            <div class="cat-card-meta">
+              <span class="cat-card-pill" id="cat-pill-or">... نبات</span>
+              <div class="cat-card-arr">←</div>
+            </div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="showCatPage('medicinal')">
+          <!-- تم تغيير رابط الصورة لقسم النباتات الطبية والعطرية -->
+          <div class="cat-card-bg" style="background-image:url('https://images.alborsaanews.com/2013/01/1461454279_296444_886_246274_.gif')"></div>
+          <div class="cat-card-veil"></div>
+          <div class="cat-card-body">
+            <span class="cat-card-icon">🌿</span>
+            <div class="cat-card-name">طبية وعطرية</div>
+            <div class="cat-card-meta">
+              <span class="cat-card-pill" id="cat-pill-med">... نبات</span>
+              <div class="cat-card-arr">←</div>
+            </div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="showCatPage('fieldcrops')">
+          <!-- تم تغيير رابط الصورة لقسم المحاصيل الحقلية -->
+          <div class="cat-card-bg" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ53IQSD2Z-euhxHZoNgOs0x6bcC1-CYrDfzy6MtBV9xA&s=10')"></div>
+          <div class="cat-card-veil"></div>
+          <div class="cat-card-body">
+            <span class="cat-card-icon">🌾</span>
+            <div class="cat-card-name">محاصيل حقلية</div>
+            <div class="cat-card-meta">
+              <span class="cat-card-pill" id="cat-pill-field">... نبات</span>
+              <div class="cat-card-arr">←</div>
+            </div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="showCatPage('citrus')">
+          <div class="cat-card-bg" style="background-image:url('https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?w=900&q=80')"></div>
+          <div class="cat-card-veil"></div>
+          <div class="cat-card-body">
+            <span class="cat-card-icon">🍊</span>
+            <div class="cat-card-name">موالح</div>
+            <div class="cat-card-meta">
+              <span class="cat-card-pill" id="cat-pill-cit">... نبات</span>
+              <div class="cat-card-arr">←</div>
+            </div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="showDiseasesPage()">
+          <!-- تم تغيير رابط الصورة لقسم أمراض النبات -->
+          <div class="cat-card-bg" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdnXOSqt-FpzKstDgpq_Evo3ql2uMcAasiwzFyUDW3ia49KA82Qlm9kMT&s=10')"></div>
+          <div class="cat-card-veil"></div>
+          <div class="cat-card-body">
+            <span class="cat-card-icon">🦠</span>
+            <div class="cat-card-name">أمراض النبات</div>
+            <div class="cat-card-meta">
+              <span class="cat-card-pill" id="cat-pill-diseases">3 أمراض</span>
+              <div class="cat-card-arr">←</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="featured-section">
+    <div class="W">
+      <div class="sec-head reveal">
+        <div class="sh-titles">
+          <!-- تم تغيير النص من "الأكثر طلباً" إلى "الأكثر تميزا" -->
+          <div class="sh-kicker">الأكثر تميزا</div>
+          <h2 class="sh-title">نباتات مميزة</h2>
+        </div>
+        <button class="sec-link" onclick="showPage('search')">عرض الكل ←</button>
+      </div>
+      <div class="plants-grid reveal reveal-delay-1" id="home-featured"></div>
+    </div>
+  </section>
+
   <!-- ═══ TOOLS SECTION ═══ -->
   <section class="tools-section">
     <div class="W">
@@ -419,121 +537,57 @@
   </section>
   <!-- ═══ END TOOLS SECTION ═══ -->
 
-  <!-- ═══ FERTILIZER CALCULATOR MOVED TO pg-citrus ═══ -->
-
-  <section class="cats-section">
+  <!-- ═══ HOME DISEASES PREVIEW ═══ -->
+  <section class="home-dis-section">
     <div class="W">
       <div class="sec-head reveal">
         <div class="sh-titles">
-          <div class="sh-kicker">تصفح</div>
-          <h2 class="sh-title">اختر القسم</h2>
+          <div class="sh-kicker">أمراض موثقة</div>
+          <h2 class="sh-title">أبرز أمراض النبات</h2>
+        </div>
+        <button class="sec-link" onclick="showDiseasesPage()">عرض الكل (525) ←</button>
+      </div>
+      <div class="dis-preview-grid reveal reveal-delay-1">
+        <div class="dis-preview-card" onclick="openDiseaseModal('d1')">
+          <div class="dis-preview-img">
+            <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Powdery_mildew_on_a_grape_leaf.jpg/640px-Powdery_mildew_on_a_grape_leaf.jpg" alt="البياض الدقيقي">
+            <div class="dis-preview-badge">فطري</div>
+          </div>
+          <div class="dis-preview-body">
+            <div class="dis-preview-name">البياض الدقيقي</div>
+            <div class="dis-preview-sci">Erysiphe cichoracearum</div>
+            <span class="dis-preview-sev dis-sev-danger">🔴 خطير</span>
+          </div>
+        </div>
+        <div class="dis-preview-card" onclick="openDiseaseModal('d2')">
+          <div class="dis-preview-img">
+            <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Phytophthora_infestans_on_tomato_2.jpg/640px-Phytophthora_infestans_on_tomato_2.jpg" alt="لفحة المتأخرة">
+            <div class="dis-preview-badge">فطري</div>
+          </div>
+          <div class="dis-preview-body">
+            <div class="dis-preview-name">اللفحة المتأخرة</div>
+            <div class="dis-preview-sci">Phytophthora infestans</div>
+            <span class="dis-preview-sev dis-sev-danger">🔴 خطير</span>
+          </div>
+        </div>
+        <div class="dis-preview-card" onclick="openDiseaseModal('d10')">
+          <div class="dis-preview-img">
+            <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Thrips_tabaci.jpg/640px-Thrips_tabaci.jpg" alt="التربس">
+            <div class="dis-preview-badge">حشري</div>
+          </div>
+          <div class="dis-preview-body">
+            <div class="dis-preview-name">التربس</div>
+            <div class="dis-preview-sci">Thrips tabaci</div>
+            <span class="dis-preview-sev dis-sev-mid">🟡 متوسط</span>
+          </div>
         </div>
       </div>
-      <div class="cat-cards reveal reveal-delay-1">
-        <div class="cat-card" onclick="showCatPage('citrus')">
-          <div class="cat-card-bg" style="background-image:url('https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?w=900&q=80')"></div>
-          <div class="cat-card-veil"></div>
-          <div class="cat-card-body">
-            <span class="cat-card-icon">🍊</span>
-            <div class="cat-card-name">موالح</div>
-            <div class="cat-card-meta">
-              <span class="cat-card-pill" id="cat-pill-cit">... نبات</span>
-              <div class="cat-card-arr">←</div>
-            </div>
-          </div>
-        </div>
-        <div class="cat-card" onclick="showCatPage('fruits')">
-          <div class="cat-card-bg" style="background-image:url('https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=900&q=80')"></div>
-          <div class="cat-card-veil"></div>
-          <div class="cat-card-body">
-            <span class="cat-card-icon">🍎</span>
-            <div class="cat-card-name">الفاكهة</div>
-            <div class="cat-card-meta">
-              <span class="cat-card-pill" id="cat-pill-fr">... نبات</span>
-              <div class="cat-card-arr">←</div>
-            </div>
-          </div>
-        </div>
-        <div class="cat-card" onclick="showCatPage('vegetables')">
-          <div class="cat-card-bg" style="background-image:url('https://images.unsplash.com/photo-1540420773420-3366772f4999?w=900&q=80')"></div>
-          <div class="cat-card-veil"></div>
-          <div class="cat-card-body">
-            <span class="cat-card-icon">🥦</span>
-            <div class="cat-card-name">الخضروات</div>
-            <div class="cat-card-meta">
-              <span class="cat-card-pill" id="cat-pill-veg">... نبات</span>
-              <div class="cat-card-arr">←</div>
-            </div>
-          </div>
-        </div>
-        <div class="cat-card" onclick="showCatPage('fieldcrops')">
-          <!-- تم تغيير رابط الصورة لقسم المحاصيل الحقلية -->
-          <div class="cat-card-bg" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ53IQSD2Z-euhxHZoNgOs0x6bcC1-CYrDfzy6MtBV9xA&s=10')"></div>
-          <div class="cat-card-veil"></div>
-          <div class="cat-card-body">
-            <span class="cat-card-icon">🌾</span>
-            <div class="cat-card-name">محاصيل حقلية</div>
-            <div class="cat-card-meta">
-              <span class="cat-card-pill" id="cat-pill-field">... نبات</span>
-              <div class="cat-card-arr">←</div>
-            </div>
-          </div>
-        </div>
-        <div class="cat-card" onclick="showCatPage('medicinal')">
-          <!-- تم تغيير رابط الصورة لقسم النباتات الطبية والعطرية -->
-          <div class="cat-card-bg" style="background-image:url('https://images.alborsaanews.com/2013/01/1461454279_296444_886_246274_.gif')"></div>
-          <div class="cat-card-veil"></div>
-          <div class="cat-card-body">
-            <span class="cat-card-icon">🌿</span>
-            <div class="cat-card-name">طبية وعطرية</div>
-            <div class="cat-card-meta">
-              <span class="cat-card-pill" id="cat-pill-med">... نبات</span>
-              <div class="cat-card-arr">←</div>
-            </div>
-          </div>
-        </div>
-        <div class="cat-card" onclick="showCatPage('ornamental')">
-          <div class="cat-card-bg" style="background-image:url('https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=900&q=80')"></div>
-          <div class="cat-card-veil"></div>
-          <div class="cat-card-body">
-            <span class="cat-card-icon">🌸</span>
-            <div class="cat-card-name">نباتات الزينة</div>
-            <div class="cat-card-meta">
-              <span class="cat-card-pill" id="cat-pill-or">... نبات</span>
-              <div class="cat-card-arr">←</div>
-            </div>
-          </div>
-        </div>
-        <div class="cat-card" onclick="showDiseasesPage()">
-          <!-- تم تغيير رابط الصورة لقسم أمراض النبات -->
-          <div class="cat-card-bg" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdnXOSqt-FpzKstDgpq_Evo3ql2uMcAasiwzFyUDW3ia49KA82Qlm9kMT&s=10')"></div>
-          <div class="cat-card-veil"></div>
-          <div class="cat-card-body">
-            <span class="cat-card-icon">🦠</span>
-            <div class="cat-card-name">أمراض النبات</div>
-            <div class="cat-card-meta">
-              <span class="cat-card-pill" id="cat-pill-diseases">3 أمراض</span>
-              <div class="cat-card-arr">←</div>
-            </div>
-          </div>
-        </div>
+      <div class="dis-preview-more">
+        <button onclick="showDiseasesPage()">🦠 تصفح جميع الأمراض الموثقة</button>
       </div>
     </div>
   </section>
-
-  <section class="featured-section">
-    <div class="W">
-      <div class="sec-head reveal">
-        <div class="sh-titles">
-          <!-- تم تغيير النص من "الأكثر طلباً" إلى "الأكثر تميزا" -->
-          <div class="sh-kicker">الأكثر تميزا</div>
-          <h2 class="sh-title">نباتات مميزة</h2>
-        </div>
-        <button class="sec-link" onclick="showPage('search')">عرض الكل ←</button>
-      </div>
-      <div class="plants-grid reveal reveal-delay-1" id="home-featured"></div>
-    </div>
-  </section>
+  <!-- ═══ END HOME DISEASES PREVIEW ═══ -->
 
   <section class="stats-section">
     <div class="W">
@@ -1785,6 +1839,757 @@
 
 <!-- Toast Container -->
 <div class="mkt-toast-container" id="mkt-toast-container"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     NABTEX ACADEMY — مكافحة الآفات الزراعية المتكاملة
+     قسم مستقل | لا يمس أي وظيفة قائمة
+══════════════════════════════════════════════════════════ -->
+<style>
+/* ── Layout ── */
+#pg-academy{background:var(--bg);min-height:100svh}
+#acad-root{min-height:100svh}
+.acad-wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+
+/* ── Hero ── */
+.acad-hero{background:linear-gradient(150deg,#061610 0%,#0b2e1c 40%,#0f3d25 70%,#081a10 100%);padding:64px 0 56px;color:#fff;position:relative;overflow:hidden}
+.acad-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 18% 35%,rgba(46,170,92,.18) 0,transparent 55%),radial-gradient(ellipse 45% 55% at 82% 72%,rgba(27,107,58,.14) 0,transparent 50%);pointer-events:none}
+.acad-hero-inner{position:relative;z-index:1;max-width:700px;margin:0 auto;padding:0 24px;text-align:center}
+.acad-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:40px;background:rgba(46,170,92,.12);border:1px solid rgba(46,170,92,.3);color:#7de89e;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;backdrop-filter:blur(8px)}
+.acad-hero-badge i{width:6px;height:6px;border-radius:50%;background:#7de89e;animation:pulse 2s ease-in-out infinite;display:inline-block}
+.acad-hero-title{font-family:var(--f-display);font-size:clamp(2rem,5.5vw,3.8rem);color:#fff;margin-bottom:14px;line-height:1.1;letter-spacing:-.02em}
+.acad-hero-sub{font-size:clamp(13px,1.8vw,15px);color:rgba(255,255,255,.55);margin-bottom:32px;line-height:1.85;max-width:520px;margin-left:auto;margin-right:auto}
+.acad-hero-stats{display:inline-flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:14px 28px;gap:0}
+.acad-hs{flex:1;text-align:center;min-width:80px}
+.acad-hs-n{font-family:var(--f-display);font-size:1.8rem;color:#fff;font-weight:700;line-height:1}
+.acad-hs-l{font-size:10px;color:rgba(255,255,255,.4);margin-top:4px;letter-spacing:.05em}
+.acad-hs-div{width:1px;background:rgba(255,255,255,.1);margin:0 8px}
+
+/* ── Course Card ── */
+.acad-course-section{padding:52px 0 72px}
+.acad-section-label{font-size:11px;font-weight:800;color:var(--brand);letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+.acad-section-title{font-family:var(--f-display);font-size:clamp(1.7rem,3.8vw,2.6rem);color:var(--ink);margin-bottom:8px;letter-spacing:-.02em}
+.acad-section-sub{font-size:14px;color:var(--muted);margin-bottom:36px;line-height:1.75}
+
+.acad-card{background:var(--card);border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--s3)}
+.acad-card-top{height:180px;background:linear-gradient(140deg,#061610,#0f3d25,#1B6B3A);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.acad-card-top::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 60%,rgba(46,170,92,.2) 0,transparent 65%)}
+.acad-card-icon{font-size:72px;filter:drop-shadow(0 6px 20px rgba(0,0,0,.4));position:relative;z-index:1}
+.acad-card-body{padding:28px 32px}
+.acad-card-kicker{font-size:10px;font-weight:800;color:var(--brand);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+.acad-card-title{font-family:var(--f-display);font-size:1.7rem;color:var(--ink);margin-bottom:8px;line-height:1.2}
+.acad-card-desc{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:22px}
+.acad-card-chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+.acad-chip{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:40px;background:var(--bg2);border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--slate)}
+.acad-chip-cert{color:var(--gold);background:rgba(201,135,26,.08);border-color:rgba(201,135,26,.2)}
+.acad-progress-wrap{margin-bottom:20px}
+.acad-prog-label{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.acad-prog-track{height:5px;background:var(--line2);border-radius:5px;overflow:hidden}
+.acad-prog-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--brand),#2eaa5c);transition:width .7s cubic-bezier(.16,1,.3,1)}
+.acad-start-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:var(--rpill);background:var(--brand);color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:var(--f-ui);box-shadow:0 4px 16px rgba(27,107,58,.3);transition:all .25s var(--ease-spring)}
+.acad-start-btn:hover{background:#1e7a42;transform:translateY(-3px);box-shadow:0 10px 28px rgba(27,107,58,.4)}
+
+/* ── Modules List on Home ── */
+.acad-modules-preview{margin-top:40px}
+.acad-mp-title{font-size:13px;font-weight:800;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.acad-module-block{margin-bottom:20px}
+.acad-module-name{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.acad-module-num{width:22px;height:22px;border-radius:50%;background:var(--brand-pale);color:var(--brand);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.acad-lesson-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--r2);cursor:pointer;transition:all .18s;border:1px solid transparent}
+.acad-lesson-row:hover{background:var(--bg2);border-color:var(--line)}
+.acad-lesson-row.done{background:rgba(27,107,58,.04)}
+.acad-lesson-check{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .2s}
+.acad-lesson-row.done .acad-lesson-check{background:var(--brand);border-color:var(--brand);color:#fff}
+.acad-lesson-info{flex:1}
+.acad-lesson-name{font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.acad-lesson-dur{font-size:11px;color:var(--muted);font-weight:600}
+.acad-lesson-arr{font-size:13px;color:var(--muted);transition:transform .15s}
+.acad-lesson-row:hover .acad-lesson-arr{transform:translateX(-3px)}
+
+/* ── Lesson Page ── */
+.acad-lesson-pg{max-width:780px;margin:0 auto;padding:36px 24px 80px}
+.acad-breadcrumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:28px;flex-wrap:wrap}
+.acad-breadcrumb span[role=button]{cursor:pointer;transition:color .15s}
+.acad-breadcrumb span[role=button]:hover{color:var(--brand)}
+.acad-breadcrumb .sep{color:var(--line2);font-size:10px}
+.acad-lesson-hdr{margin-bottom:36px;padding-bottom:24px;border-bottom:2px solid var(--line)}
+.acad-lesson-kicker{font-size:11px;font-weight:800;color:var(--brand);letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+.acad-lesson-h1{font-family:var(--f-display);font-size:clamp(1.55rem,4vw,2.2rem);color:var(--ink);line-height:1.2;margin-bottom:10px}
+.acad-lesson-intro-text{font-size:15px;color:var(--muted);line-height:1.8}
+.acad-body{font-size:14.5px;line-height:1.9;color:var(--slate)}
+.acad-body h2{font-family:var(--f-display);font-size:1.35rem;color:var(--ink);margin:36px 0 14px;padding-bottom:10px;border-bottom:2px solid var(--brand-pale);display:flex;align-items:center;gap:10px}
+.acad-body h3{font-size:1.05rem;font-weight:800;color:var(--ink);margin:22px 0 10px}
+.acad-body p{margin-bottom:16px}
+.acad-body ul{padding-right:22px;margin-bottom:16px}
+.acad-body li{margin-bottom:8px;line-height:1.75}
+.acad-body strong{color:var(--ink);font-weight:800}
+
+/* info cards */
+.acad-igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin:18px 0 26px}
+.acad-icard{padding:16px 14px;background:var(--bg2);border:1px solid var(--line);border-radius:16px;text-align:center;transition:all .2s}
+.acad-icard:hover{transform:translateY(-2px);box-shadow:var(--s1)}
+.acad-icard-ico{font-size:26px;display:block;margin-bottom:8px}
+.acad-icard-lbl{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.acad-icard-val{font-size:.95rem;font-weight:700;color:var(--ink);line-height:1.35}
+
+/* table */
+.acad-twrap{overflow-x:auto;margin:18px 0 26px;border-radius:16px;border:1px solid var(--line)}
+.acad-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.acad-tbl thead th{padding:11px 14px;text-align:right;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg2);border-bottom:2px solid var(--line)}
+.acad-tbl tbody td{padding:10px 14px;border-bottom:1px solid var(--line);color:var(--ink);line-height:1.55;vertical-align:top}
+.acad-tbl tbody tr:last-child td{border-bottom:none}
+.acad-tbl tbody tr:hover td{background:var(--bg2)}
+
+/* tip / error / case boxes */
+.acad-tip{background:linear-gradient(135deg,rgba(27,107,58,.06),rgba(27,107,58,.02));border:1.5px solid rgba(27,107,58,.2);border-right:4px solid var(--brand);border-radius:18px;padding:22px 24px;margin:28px 0}
+.acad-tip h3,.acad-err h3,.acad-case h3{font-size:.95rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.acad-tip h3{color:var(--brand)}
+.acad-tip ul,.acad-err ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:9px}
+.acad-tip li,.acad-err li{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;color:var(--slate);line-height:1.6}
+.acad-tip li::before{content:"✓";color:var(--brand);font-weight:900;flex-shrink:0;margin-top:1px}
+.acad-err{background:rgba(192,57,43,.04);border:1.5px solid rgba(192,57,43,.2);border-right:4px solid var(--red);border-radius:18px;padding:22px 24px;margin:28px 0}
+.acad-err h3{color:var(--red)}
+.acad-err li::before{content:"✗";color:var(--red);font-weight:900;flex-shrink:0}
+.acad-case{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:24px;margin:28px 0}
+.acad-case h3{color:var(--ink)}
+.acad-case-row{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.acad-case-lbl{font-size:11px;font-weight:800;color:var(--muted);min-width:90px;flex-shrink:0;padding-top:2px;text-transform:uppercase;letter-spacing:.05em}
+.acad-case-val{font-size:13.5px;color:var(--ink);line-height:1.6}
+.acad-refs{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.acad-refs h3{font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+.acad-ref{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--slate);line-height:1.55}
+.acad-ref:last-child{border-bottom:none}
+.acad-ref-n{font-size:10px;font-weight:800;color:var(--brand);background:var(--brand-pale);border-radius:50%;width:19px;height:19px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* lesson nav */
+.acad-lnav{display:flex;gap:12px;justify-content:space-between;margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.acad-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:var(--rpill);font-size:14px;font-weight:700;border:none;cursor:pointer;font-family:var(--f-ui);transition:all .22s var(--ease-spring)}
+.acad-btn-primary{background:var(--brand);color:#fff;box-shadow:0 4px 14px rgba(27,107,58,.28)}
+.acad-btn-primary:hover{background:#1e7a42;transform:translateY(-2px);box-shadow:0 8px 22px rgba(27,107,58,.38)}
+.acad-btn-ghost{background:var(--bg2);color:var(--ink);border:1.5px solid var(--line)}
+.acad-btn-ghost:hover{background:var(--bg3)}
+
+/* coming soon */
+.acad-coming{background:var(--bg2);border:1px dashed var(--line2);border-radius:18px;padding:32px 24px;text-align:center;margin:16px 0}
+.acad-coming-ico{font-size:36px;margin-bottom:12px}
+.acad-coming h4{font-weight:800;color:var(--ink);margin-bottom:6px;font-size:1rem}
+.acad-coming p{font-size:13px;color:var(--muted);line-height:1.7}
+
+/* ── Quiz ── */
+.acad-quiz-pg{max-width:660px;margin:0 auto;padding:36px 24px 80px}
+.acad-quiz-hdr{text-align:center;margin-bottom:32px}
+.acad-quiz-title{font-family:var(--f-display);font-size:1.7rem;color:var(--ink);margin-bottom:6px}
+.acad-quiz-sub{font-size:13px;color:var(--muted)}
+.acad-steps{display:flex;gap:4px;justify-content:center;margin:18px 0 28px}
+.acad-step{height:4px;width:36px;border-radius:3px;background:var(--line2);transition:all .3s}
+.acad-step.done{background:var(--brand)}
+.acad-step.cur{background:var(--brand-l)}
+.acad-qcard{background:var(--card);border-radius:22px;border:1px solid var(--line);padding:26px;box-shadow:var(--s2);margin-bottom:16px}
+.acad-qnum{font-size:11px;font-weight:800;color:var(--brand);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.acad-qtext{font-size:15px;font-weight:700;color:var(--ink);line-height:1.65;margin-bottom:22px}
+.acad-opts{display:flex;flex-direction:column;gap:9px}
+.acad-opt{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border-radius:var(--r2);border:1.5px solid var(--line2);cursor:pointer;font-size:13.5px;color:var(--ink);font-weight:600;line-height:1.5;background:var(--bg2);font-family:var(--f-ui);text-align:right;width:100%;transition:all .18s}
+.acad-opt:hover:not([disabled]){border-color:var(--brand);background:var(--brand-pale);color:var(--brand)}
+.acad-opt.sel{border-color:var(--brand);background:rgba(27,107,58,.09);color:var(--brand)}
+.acad-opt.ok{border-color:var(--green);background:rgba(39,174,96,.09);color:var(--green)}
+.acad-opt.bad{border-color:var(--red);background:rgba(192,57,43,.07);color:var(--red)}
+.acad-opt-lt{width:24px;height:24px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+.acad-exp{background:var(--brand-pale);border:1px solid rgba(27,107,58,.2);border-radius:var(--r2);padding:13px 15px;margin-top:14px;font-size:13px;color:var(--brand);line-height:1.7;display:none;animation:fadeSlideUp .28s ease}
+.acad-exp.show{display:block}
+.acad-quiz-next{display:none;margin:14px auto 0;padding:11px 26px;border-radius:var(--rpill);background:var(--brand);color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;font-family:var(--f-ui);transition:all .22s}
+.acad-quiz-next.show{display:flex;align-items:center;gap:8px}
+.acad-quiz-next:hover{background:#1e7a42;transform:translateY(-2px)}
+
+/* result */
+.acad-result{text-align:center;padding:44px 24px;background:var(--card);border-radius:24px;border:1px solid var(--line);box-shadow:var(--s3)}
+.acad-result-score{font-family:var(--f-display);font-size:5rem;color:var(--brand);line-height:1;margin-bottom:6px}
+.acad-result-lbl{font-size:13px;color:var(--muted);margin-bottom:20px}
+.acad-result-msg{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:24px;line-height:1.6}
+.acad-result-acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* ── Certificate ── */
+.acad-cert-pg{max-width:700px;margin:0 auto;padding:36px 24px 80px}
+.acad-cert-card{background:linear-gradient(150deg,#061610 0%,#0b2e1c 50%,#061610 100%);border-radius:28px;padding:48px 40px;text-align:center;position:relative;overflow:hidden;border:2px solid rgba(201,135,26,.38);box-shadow:0 24px 80px rgba(0,0,0,.25)}
+.acad-cert-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 40%,rgba(201,135,26,.1) 0,transparent 60%);pointer-events:none}
+.acad-cert-logo{font-family:var(--f-display);font-size:1.8rem;color:rgba(255,255,255,.8);margin-bottom:6px;position:relative;z-index:1}
+.acad-cert-div{height:1px;background:linear-gradient(90deg,transparent,rgba(201,135,26,.45),transparent);margin:14px 0;position:relative;z-index:1}
+.acad-cert-presents{font-size:11px;color:rgba(255,255,255,.38);letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px;position:relative;z-index:1}
+.acad-cert-name{font-family:var(--f-display);font-size:2.2rem;color:#fff;margin-bottom:14px;position:relative;z-index:1}
+.acad-cert-txt{font-size:13px;color:rgba(255,255,255,.55);line-height:1.8;margin-bottom:18px;position:relative;z-index:1}
+.acad-cert-course{font-family:var(--f-display);font-size:1.5rem;color:#f0b535;margin-bottom:22px;text-shadow:0 0 28px rgba(240,181,53,.3);position:relative;z-index:1}
+.acad-cert-seal{font-size:48px;margin-bottom:10px;position:relative;z-index:1}
+.acad-cert-date{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.1em;position:relative;z-index:1}
+.acad-cert-acts{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+
+@media(max-width:600px){
+.acad-lesson-pg,.acad-quiz-pg,.acad-cert-pg{padding:20px 14px 60px}
+.acad-igrid{grid-template-columns:1fr 1fr}
+.acad-lnav{flex-direction:column}
+.acad-card-body{padding:20px}
+}
+</style>
+
+<div class="page" id="pg-academy">
+  <div id="acad-root"></div>
+</div>
+
+<script>
+!function(){
+'use strict';
+
+/* ── Course Data ──────────────────────────────────────────── */
+
+var AC_COURSE={
+id:'pest',title:'مكافحة الآفات الزراعية المتكاملة',
+subtitle:'من التشخيص الصحيح إلى القرار الأمثل',icon:'🛡️',
+level:'مبتدئ إلى متقدم',duration:'18 ساعة',cert:true,
+instructor:'فريق نبتيكس الأكاديمي',
+description:'الدورة الأشمل باللغة العربية في مكافحة الآفات. ستتعلم كيف تشخّص أي إصابة بدقة، وتختار أسلوب المكافحة الصحيح، وتحمي محصولك من الخسائر الاقتصادية.',
+modules:[
+{id:'m1',title:'مدخل إلى علم الآفات',lessons:[
+ {id:'p1',title:'ما هي الآفات الزراعية؟ التعريف والتصنيف',dur:'35 دقيقة',ready:true},
+ {id:'p2',title:'عتبة الضرر الاقتصادي - متى تكافح؟',dur:'30 دقيقة',ready:true}
+]},
+{id:'m2',title:'الحشرات الضارة',lessons:[
+ {id:'p3',title:'الحشرات الماصة: المن والتربس والذبابة البيضاء',dur:'40 دقيقة',ready:true},
+ {id:'p4',title:'الحشرات القارضة: الدودة الحارقة ودودة القطن',dur:'35 دقيقة',ready:false},
+ {id:'p5',title:'الأكاروسات والنيماتودا',dur:'30 دقيقة',ready:false}
+]},
+{id:'m3',title:'الأمراض الفطرية والبكتيرية',lessons:[
+ {id:'p6',title:'البياض الدقيقي والزغبي: التشخيص والعلاج',dur:'40 دقيقة',ready:false},
+ {id:'p7',title:'أمراض عفن الجذور وذبول النبات',dur:'35 دقيقة',ready:false},
+ {id:'p8',title:'الأمراض البكتيرية والفيروسية',dur:'35 دقيقة',ready:false}
+]},
+{id:'m4',title:'استراتيجيات المكافحة المتكاملة',lessons:[
+ {id:'p9',title:'المكافحة المتكاملة للآفات (IPM)',dur:'45 دقيقة',ready:false},
+ {id:'p10',title:'المبيدات الكيميائية: الاختيار والاستخدام الآمن',dur:'40 دقيقة',ready:false},
+ {id:'p11',title:'المكافحة البيولوجية والوسائل الطبيعية',dur:'35 دقيقة',ready:false},
+ {id:'p12',title:'التشخيص الميداني وكتابة تقرير الآفة',dur:'40 دقيقة',ready:false}
+]}
+]};
+
+/* ── Progress ─────────────────────────────────────────────── */
+
+function acProg(){try{return JSON.parse(localStorage.getItem('nb-pest-p')||'{}')}catch(e){return{}}}
+function acSave(p){try{localStorage.setItem('nb-pest-p',JSON.stringify(p))}catch(e){}}
+function acDone(id){return(acProg().d||[]).includes(id)}
+function acMark(id){var p=acProg();p.d=p.d||[];if(!p.d.includes(id))p.d.push(id);acSave(p)}
+function acPct(){
+var total=AC_COURSE.modules.reduce(function(s,m){return s+m.lessons.length},0);
+var done=(acProg().d||[]).length;
+return total?Math.round(done/total*100):0}
+
+/* ── State ────────────────────────────────────────────────── */
+
+var AC={view:'home',lid:null,qState:null};
+
+function acGo(view,lid){
+AC.view=view;AC.lid=lid||null;
+if(view==='quiz')AC.qState={step:0,answers:[],revealed:false};
+acR();window.scrollTo(0,0)}
+
+/* ── Root Render ──────────────────────────────────────────── */
+
+function acR(){
+var root=document.getElementById('acad-root');
+if(!root)return;
+if(AC.view==='home')root.innerHTML=acRenderHome();
+else if(AC.view==='lesson')root.innerHTML=acRenderLesson();
+else if(AC.view==='quiz'){root.innerHTML=acRenderQuiz();acBindQuiz()}
+else if(AC.view==='cert')root.innerHTML=acRenderCert();
+}
+
+/* ── HOME ─────────────────────────────────────────────────── */
+
+function acRenderHome(){
+var pct=acPct();
+var allLessons=AC_COURSE.modules.reduce(function(s,m){return s+m.lessons.length},0);
+var doneLessons=(acProg().d||[]).length;
+
+var modulesHTML=AC_COURSE.modules.map(function(mod,mi){
+ var rows=mod.lessons.map(function(ls){
+  var done=acDone(ls.id);
+  var doneClass=done?' done':'';
+  var checkContent=done?'✓':'';
+  return '<div class="acad-lesson-row'+doneClass+'" onclick="NAcademy.openLesson(\''+ls.id+'\')" role="button">'+
+   '<div class="acad-lesson-check">'+checkContent+'</div>'+
+   '<div class="acad-lesson-info">'+
+    '<div class="acad-lesson-name">'+ls.title+'</div>'+
+    '<div class="acad-lesson-dur">⏱ '+ls.dur+(done?' &nbsp;·&nbsp; <span style="color:var(--brand);font-weight:800">مكتمل ✓</span>':'')+'</div>'+
+   '</div>'+
+   '<span class="acad-lesson-arr">‹</span>'+
+  '</div>'}).join('');
+ return '<div class="acad-module-block">'+
+  '<div class="acad-module-name"><span class="acad-module-num">'+(mi+1)+'</span>'+mod.title+'</div>'+
+  rows+'</div>'}).join('');
+
+var btnLabel=doneLessons===0?'🚀 ابدأ الدورة الآن':
+             acPct()===100?'🎓 عرض الشهادة':
+             '▶ متابعة من حيث توقفت';
+var btnAction=acPct()===100?"NAcademy.goCert()":"NAcademy.openFirst()";
+
+return '<div class="acad-hero"><div class="acad-hero-inner">'+
+'<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
+'<div class="acad-hero-title">مكافحة الآفات الزراعية</div>'+
+'<div class="acad-hero-sub">الدورة الأشمل عربياً في مكافحة الآفات. تشخيص دقيق، قرارات صحيحة، حماية حقيقية لمحصولك.</div>'+
+'<div class="acad-hero-stats">'+
+ '<div class="acad-hs"><div class="acad-hs-n">12</div><div class="acad-hs-l">درساً</div></div>'+
+ '<div class="acad-hs-div"></div>'+
+ '<div class="acad-hs"><div class="acad-hs-n">4</div><div class="acad-hs-l">وحدات</div></div>'+
+ '<div class="acad-hs-div"></div>'+
+ '<div class="acad-hs"><div class="acad-hs-n">18h</div><div class="acad-hs-l">مدة الدورة</div></div>'+
+'</div></div></div>'+
+'<div class="acad-course-section"><div class="acad-wrap">'+
+'<div class="acad-card">'+
+'<div class="acad-card-top"><div class="acad-card-icon">🛡️</div></div>'+
+'<div class="acad-card-body">'+
+'<div class="acad-card-kicker">مكافحة الآفات</div>'+
+'<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
+'<div class="acad-card-desc">'+AC_COURSE.description+'</div>'+
+'<div class="acad-card-chips">'+
+'<span class="acad-chip">📚 '+allLessons+' درساً</span>'+
+'<span class="acad-chip">⏱ '+AC_COURSE.duration+'</span>'+
+'<span class="acad-chip">📊 '+AC_COURSE.level+'</span>'+
+'<span class="acad-chip acad-chip-cert">🏅 شهادة إتمام</span>'+
+'</div>'+
+(doneLessons>0?'<div class="acad-progress-wrap">'+
+'<div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+pct+'%</span></div>'+
+'<div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+pct+'%"></div></div>'+
+'</div>':'')+
+'<button class="acad-start-btn" onclick="'+btnAction+'">'+btnLabel+'</button>'+
+'</div>'+
+'<div class="acad-card-body" style="padding-top:0">'+
+'<div class="acad-modules-preview">'+
+'<div class="acad-mp-title">محتوى الدورة</div>'+
+modulesHTML+
+'</div></div></div>'+
+'</div></div>'}
+
+/* ── LESSON ───────────────────────────────────────────────── */
+
+function acRenderLesson(){
+var ls=null,modTitle='';
+for(var i=0;i<AC_COURSE.modules.length;i++){
+ for(var j=0;j<AC_COURSE.modules[i].lessons.length;j++){
+  if(AC_COURSE.modules[i].lessons[j].id===AC.lid){ls=AC_COURSE.modules[i].lessons[j];modTitle=AC_COURSE.modules[i].title;break}
+ }
+}
+if(!ls)return '<div class="acad-wrap" style="padding:40px 20px"><p>الدرس غير موجود.</p></div>';
+
+var content=acGetContent(AC.lid);
+if(!content){
+return '<div class="acad-lesson-pg">'+
+'<div class="acad-breadcrumb">'+
+'<span role="button" onclick="NAcademy.goHome()">الأكاديمية</span>'+
+'<span class="sep">›</span><span>'+ls.title+'</span></div>'+
+'<div class="acad-coming">'+
+'<div class="acad-coming-ico">🔧</div>'+
+'<h4>قيد الإعداد</h4>'+
+'<p>هذا الدرس قيد التحرير حالياً وسيكون متاحاً قريباً.<br>يمكنك الاطلاع على الدروس المتاحة في الوقت الحالي.</p>'+
+'</div>'+
+'<div class="acad-lnav">'+
+'<button class="acad-btn acad-btn-ghost" onclick="NAcademy.goHome()">‹ العودة للدورة</button>'+
+'</div></div>'}
+
+var done=acDone(ls.id);
+return '<div class="acad-lesson-pg">'+
+'<div class="acad-breadcrumb">'+
+'<span role="button" onclick="NAcademy.goHome()">الأكاديمية</span>'+
+'<span class="sep">›</span>'+
+'<span role="button" onclick="NAcademy.goHome()">'+modTitle+'</span>'+
+'<span class="sep">›</span>'+
+'<span>'+ls.title+'</span></div>'+
+'<div class="acad-lesson-hdr">'+
+'<div class="acad-lesson-kicker">⏱ '+ls.dur+' &nbsp;·&nbsp; قراءة وتطبيق</div>'+
+'<div class="acad-lesson-h1">'+ls.title+'</div>'+
+'</div>'+
+content+
+'<div class="acad-lnav">'+
+'<button class="acad-btn acad-btn-ghost" onclick="NAcademy.goHome()">‹ العودة للدورة</button>'+
+'<button class="acad-btn acad-btn-primary" onclick="NAcademy.goQuiz(\''+ls.id+'\')">'+
+(done?'إعادة الاختبار 🔄':'الاختبار ←')+'</button>'+
+'</div></div>'}
+
+/* ── QUIZ ENGINE ──────────────────────────────────────────── */
+
+var AC_QUIZZES={
+p1:{title:'اختبار: مفاهيم الآفات الزراعية',questions:[
+{q:'مزارع يجد أعداداً كبيرة من حشرة ما على محصوله، لكن الإنتاج لم يتأثر حتى الآن. ما القرار الأصح بناءً على مبدأ عتبة الضرر؟',
+opts:['رش فوري وقائي لمنع أي ضرر مستقبلي','مراقبة يومية دقيقة دون تدخل الآن','إزالة النباتات المصابة','حرث الأرض وإعادة الزراعة'],
+cor:1,exp:'إذا لم تبلغ الكثافة الحشرية عتبة الضرر الاقتصادي، فالتدخل غير مبرر مالياً وبيئياً. المراقبة المنتظمة هي الإجراء الصحيح حتى تُرصد التغيرات في الكثافة.'},
+{q:'أيّ من هذه الكائنات لا يُعدّ آفة زراعية بالتعريف العلمي الدقيق؟',
+opts:['المن (Aphids)','دعسوقة سبع النقاط','دودة الحشد الخريفية','ذبابة الثمار'],
+cor:1,exp:'دعسوقة سبع النقاط مفترس طبيعي يتغذى على المن ويُعدّ عدوّاً حيوياً مفيداً. الآفة بالتعريف هي الكائن الذي يُلحق ضرراً اقتصادياً بالمحصول، وهذا لا ينطبق على الدعسوقة.'},
+{q:'شخّص الحالة: مزارع طماطم يلاحظ اصفرار أوراق الذروة وتجعّدها مع إفرازات لزجة. ما الآفة الأرجح؟',
+opts:['دودة الحشد','المن','ذبابة الفاكهة','الدودة الحارقة'],
+cor:1,exp:'تجعّد أوراق الذروة + الإفرازات اللزجة (العسل الندي) = علامتان مميزتان للمن. المن يمتص عصارة البراعم والأوراق الحديثة مما يتسبب في تشوّهها، ويفرز مادة سكرية تُشجع على نمو العفن الأسود.'},
+{q:'ما الفرق الجوهري بين مفهوم "المكافحة" ومفهوم "الإبادة" في علم الآفات؟',
+opts:['لا فرق بينهما، المصطلحان مترادفان','المكافحة تُبقي الآفة دون العتبة الاقتصادية، الإبادة تستهدف القضاء الكامل','الإبادة أرخص وأسرع من المكافحة','المكافحة تستخدم مبيدات أكثر تركيزاً'],
+cor:1,exp:'الإبادة الكاملة للآفات مستحيلة عملياً ومكلفة ومضرة بيئياً. الهدف العلمي الصحيح هو الإبقاء على كثافة الآفة أقل من العتبة الاقتصادية لحماية المحصول دون الإخلال بالتوازن البيئي.'},
+{q:'ما أكثر عوامل انتشار الآفات تأثيراً في ظروف الزراعة المصرية الحديثة؟',
+opts:['استخدام التسميد العضوي','زراعة محصول واحد على مساحات واسعة (monoculture)','الري بالغمر','استخدام البذور المحلية'],
+cor:1,exp:'زراعة محصول واحد على مساحات شاسعة توفر مصدراً غذائياً متواصلاً للآفات وتُغيب التنوع البيولوجي الضروري لوجود الأعداء الطبيعية. هذا هو المسبب الأساسي لانفجارات الآفات في الزراعة التجارية الحديثة.'}
+]},
+p2:{title:'اختبار: عتبة الضرر الاقتصادي',questions:[
+{q:'حقل قطن به 4 حشرات من لكل نبتة والعتبة الاقتصادية المحددة 10 حشرات/نبتة. ما القرار الأمثل؟',
+opts:['رش فوري لأن الإصابة بدأت','مراقبة مكثفة كل يومين مع تسجيل أعداد الحشرات','إزالة النباتات المصابة','لا شيء، الإصابة بعيدة جداً'],
+cor:1,exp:'الكثافة الحالية (4 حشرات) أقل من نصف العتبة الاقتصادية (10 حشرات). لكنها ليست صفراً، لذا المراقبة المنتظمة ضرورية لرصد الزيادة. الرش غير مبرر الآن ويُكلّف المزارع بدون ضرورة ويقتل الأعداء الطبيعية.'},
+{q:'أيّ من هذه العوامل يرفع عتبة الضرر الاقتصادي؟',
+opts:['ارتفاع سعر المبيد في السوق','انخفاض سعر المحصول عند البيع','كلاهما يرفع العتبة','لا علاقة لأيّ منهما بالعتبة'],
+cor:2,exp:'معادلة العتبة = تكلفة المكافحة ÷ (قيمة المحصول × نسبة إنقاذه). عندما ترتفع تكلفة المكافحة أو ينخفض سعر المحصول، ترتفع العتبة: تصبح المكافحة مربحة فقط عند مستويات إصابة أعلى.'},
+{q:'مهندس زراعي يُقرر الرش الوقائي قبل ظهور أي إصابة. ما أكبر مشكلة في هذا القرار؟',
+opts:['لا مشكلة، الوقاية أفضل من العلاج دائماً','تكلفة غير مبررة وقتل الأعداء الطبيعية وتطوير مقاومة للمبيدات','الجرعة الوقائية غالباً أعلى من العلاجية','الرش الوقائي ممنوع قانونياً في مصر'],
+cor:1,exp:'الرش غير المبرر يُهدر الأموال، يقضي على الأعداء الطبيعية للآفات، يُسرّع ظهور مقاومة كيميائية، ويُبقي بقايا كيميائية زائدة في المحصول. المبدأ العلمي الصحيح: لا تتدخل إلا عند بلوغ العتبة الاقتصادية.'},
+{q:'لماذا تختلف عتبة الضرر الاقتصادي من مرحلة نمو لأخرى في نفس المحصول؟',
+opts:['لأن أنواع الآفات تتغير في كل مرحلة','لأن حساسية النبات للضرر ومردوده الاقتصادي يتغيران بحسب المرحلة','لأن المبيدات تتغير فاعليتها بحسب درجة الحرارة','لا تختلف العتبة طوال موسم النمو'],
+cor:1,exp:'الضرر في مرحلة الإزهار والعقد أخطر بكثير مما هو عليه في مرحلة النضج. النبات في مرحلة الإزهار أكثر حساسية وفقدان الأزهار يعني فقدان مباشر في الإنتاج، مما يخفّض عتبة الضرر ويستوجب تدخلاً أبكر.'},
+{q:'ما المقصود بـ "المستوى الحرج" (Action Threshold) وكيف يختلف عن عتبة الضرر الاقتصادي؟',
+opts:['هما نفس الشيء ومترادفان','المستوى الحرج أقل قليلاً من العتبة الاقتصادية ليتيح وقتاً للتخطيط والتدخل','المستوى الحرج أعلى من العتبة الاقتصادية','المستوى الحرج يُحدد نقطة انقراض الآفة'],
+cor:1,exp:'المستوى الحرج هو الكثافة التي يجب عندها اتخاذ قرار المكافحة الفعلية، وهو أقل بقليل من عتبة الضرر الاقتصادي. الهدف: إتاحة وقت كافٍ للتخطيط وشراء المبيدات وتنفيذ المكافحة قبل أن تصل الإصابة إلى مستوى الضرر الفعلي.'}
+]},
+p3:{title:'اختبار: الحشرات الماصة',questions:[
+{q:'تجد في حقل فلفل أوراقاً ملتفة للأسفل مع مسحوق فضي على أسطح الأوراق. ما الآفة الأرجح؟',
+opts:['المن','التربس (Thrips)','الذبابة البيضاء','دودة الحشد'],
+cor:1,exp:'المسحوق الفضي على أسطح الأوراق هو علامة مميزة جداً للتربس. التربس يكشط خلايا البشرة ويمتص محتوياتها، مخلّفاً مناطق فضية اللون. التفاف الأوراق قد ينتج عن أي حشرة ماصة، لكن المسحوق الفضي مميز للتربس.'},
+{q:'ما الخطر الثانوي الأشد ضرراً للمن بعد الامتصاص المباشر للعصارة؟',
+opts:['إتلاف جهاز الجذور','نقل الفيروسات النباتية من نبات لآخر','حجب الضوء عن الأوراق','تسميم التربة بالإفرازات'],
+cor:1,exp:'المن ناقل ممتاز للفيروسات النباتية. لعابه يحمل جزيئات الفيروس وينقلها إلى النبات السليم خلال ثوانٍ من الوخز. بعض الفيروسات التي ينقلها المن - كفيروسات الموزاييك - تسبب أضراراً في الإنتاج أشد من الامتصاص المباشر.'},
+{q:'في بيت محمي مزروع بالطماطم، ما أفضل توقيت لرش المبيد ضد الذبابة البيضاء؟',
+opts:['منتصف النهار عند الحرارة القصوى','الصباح الباكر أو بعد الغروب','لا يهم الوقت في البيت المحمي','عند ظهور أولى الحشرات البالغة فقط'],
+cor:1,exp:'الرش صباحاً أو مساءً يضمن: تبخّراً أقل للمبيد، فاعلية أعلى لأن درجات الحرارة المنخفضة تُبطئ استقلاب الحشرة للمبيد، وتقليل الضرر على الحشرات الملقحة النافعة التي تكون نشطة وقت الذروة الحرارية.'},
+{q:'مزارع رش مبيداً كيميائياً ضد الذبابة البيضاء فتحسّن الوضع ثم عادت الإصابة أشد. ما السبب العلمي لهذه الظاهرة؟',
+opts:['جرعة المبيد كانت منخفضة جداً','المبيد قتل الأعداء الطبيعية فأُتيح للذبابة البيضاء التكاثر دون قيود','نوع المبيد غير مناسب للذبابة البيضاء','الإصابة جاءت من حقل مجاور بعد الرش'],
+cor:1,exp:'هذه ظاهرة "تفجّر الآفة بعد الرش" (Post-Pesticide Resurgence). المبيد أبادت الأعداء الطبيعية كنبات الحشرات والطفيليات الصغيرة. الذبابة البيضاء تتعافى في أسبوع لكن أعداءها الطبيعية تحتاج أسابيع للعودة، فيجد الآفة مجالاً مفتوحاً.'},
+{q:'أيّ ظرف بيئي يُهيئ أكثر لانفجار أعداد التربس في البيوت المحمية؟',
+opts:['رطوبة نسبية عالية وحرارة منخفضة','جفاف وحرارة مرتفعة وضعف مائي على النبات','تهوية جيدة ودرجة حرارة معتدلة','كثرة المطر وبرودة الجو'],
+cor:1,exp:'التربس يتكاثر بسرعة هائلة في الحرارة العالية والجفاف. الرطوبة العالية (فوق 75%) تُشجع الفطريات الممرضة للتربس مثل Beauveria bassiana وتُعيق تطور البيض. النباتات المجهدة مائياً تُقلل دفاعاتها وتُسهّل الإصابة.'}
+]}};
+
+function acRenderQuiz(){
+var q=AC_QUIZZES[AC.lid];
+if(!q){return '<div class="acad-quiz-pg"><div class="acad-breadcrumb"><span role="button" onclick="NAcademy.goHome()">الأكاديمية</span></div><div class="acad-coming"><div class="acad-coming-ico">🔧</div><h4>الاختبار قيد الإعداد</h4><p>سيكون متاحاً قريباً.</p></div><button class="acad-btn acad-btn-ghost" onclick="NAcademy.goHome()" style="margin-top:20px">‹ العودة</button></div>'}
+var st=AC.qState;var qs=q.questions;
+if(st.step>=qs.length){
+var score=Math.round(st.answers.filter(function(a,i){return a===qs[i].cor}).length/qs.length*100);
+var msg=score>=80?'ممتاز! أتقنت هذا الدرس بجدارة.':score>=60?'جيد! راجع الأسئلة التي أخطأت فيها وكرر الدرس.':'تحتاج لمراجعة الدرس مجدداً قبل الانتقال للتالي.';
+return '<div class="acad-quiz-pg"><div class="acad-result">'+
+'<div class="acad-result-score">'+score+'%</div>'+
+'<div class="acad-result-lbl">نتيجتك في الاختبار</div>'+
+'<div class="acad-result-msg">'+msg+'</div>'+
+'<div class="acad-result-acts">'+
+'<button class="acad-btn acad-btn-ghost" onclick="NAcademy.openLesson(\''+AC.lid+'\')">إعادة قراءة الدرس</button>'+
+'<button class="acad-btn acad-btn-primary" onclick="NAcademy._finishQuiz(\''+AC.lid+'\','+score+')">'+
+(score>=60?'متابعة الدورة ←':'حسناً، عدت للمراجعة')+'</button>'+
+'</div></div></div>'}
+var cur=qs[st.step];
+var letters=['أ','ب','ج','د'];
+var stepsHTML=qs.map(function(_,i){var cl=i<st.step?'done':i===st.step?'cur':'';return '<div class="acad-step '+cl+'"></div>'}).join('');
+var optsHTML=cur.opts.map(function(o,i){return '<button class="acad-opt" data-idx="'+i+'" onclick="NAcademy._pickOpt(this,'+i+')">'+
+'<span class="acad-opt-lt">'+letters[i]+'</span>'+o+'</button>'}).join('');
+return '<div class="acad-quiz-pg">'+
+'<div class="acad-breadcrumb"><span role="button" onclick="NAcademy.goHome()">الأكاديمية</span><span class="sep">›</span><span>'+q.title+'</span></div>'+
+'<div class="acad-quiz-hdr"><div class="acad-quiz-title">'+q.title+'</div><div class="acad-quiz-sub">'+qs.length+' أسئلة تقيس الفهم والتطبيق</div></div>'+
+'<div class="acad-steps">'+stepsHTML+'</div>'+
+'<div class="acad-qcard">'+
+'<div class="acad-qnum">السؤال '+(st.step+1)+' من '+qs.length+'</div>'+
+'<div class="acad-qtext">'+cur.q+'</div>'+
+'<div class="acad-opts" id="acad-opts">'+optsHTML+'</div>'+
+'<div class="acad-exp" id="acad-exp"></div>'+
+'</div>'+
+'<div style="display:flex;justify-content:center">'+
+'<button class="acad-quiz-next" id="acad-qnext" onclick="NAcademy._nextQ()">'+
+(st.step===qs.length-1?'عرض النتيجة':'السؤال التالي ←')+'</button></div></div>'}
+
+function acBindQuiz(){}
+
+function acRenderCert(){
+var pct=acPct();var now=new Date();
+var dateStr=now.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
+var userName=typeof Auth!=='undefined'&&Auth.user&&Auth.user.displayName?Auth.user.displayName:'المتدرب';
+return '<div class="acad-cert-pg">'+
+'<div class="acad-breadcrumb"><span role="button" onclick="NAcademy.goHome()">الأكاديمية</span><span class="sep">›</span><span>الشهادة</span></div>'+
+(pct<100?'<div class="acad-coming" style="margin-bottom:24px"><div class="acad-coming-ico">🏅</div><h4>أكمل الدورة للحصول على الشهادة</h4><p>لقد أكملت '+pct+'% من الدروس. أكمل باقي الدروس واجتز اختباراتها للحصول على شهادة الإتمام.</p></div>':'')+
+'<div class="acad-cert-card">'+
+'<div class="acad-cert-logo">🌿 نبتيكس أكاديمي</div>'+
+'<div class="acad-cert-div"></div>'+
+'<div class="acad-cert-presents">تُشهد بأن</div>'+
+'<div class="acad-cert-name">'+userName+'</div>'+
+'<div class="acad-cert-txt">قد أتمّ بنجاح دراسة دورة</div>'+
+'<div class="acad-cert-course">مكافحة الآفات الزراعية المتكاملة</div>'+
+'<div class="acad-cert-seal">🏅</div>'+
+'<div class="acad-cert-div"></div>'+
+'<div class="acad-cert-date">'+dateStr+' &nbsp;|&nbsp; نبتيكس أكاديمي</div>'+
+'</div>'+
+'<div class="acad-cert-acts">'+
+'<button class="acad-btn acad-btn-ghost" onclick="NAcademy.goHome()">‹ العودة للدورة</button>'+
+'<button class="acad-btn acad-btn-primary" onclick="window.print()">🖨️ طباعة الشهادة</button>'+
+'</div></div>'}
+
+/* ── Lesson Content ───────────────────────────────────────── */
+
+function acGetContent(id){
+var c={};
+
+c['p1']='<div class="acad-body">'+
+'<p>قبل أن تفتح قنينة المبيد، عليك أن تفهم ما تُكافحه أولاً. كثير من المهندسين الزراعيين يُخطئون لأنهم يبدأون من نقطة "كيف أُبيد هذه الحشرة؟" بدلاً من "هل هذه الحشرة خطر فعلاً؟ وما طبيعتها؟". هذا الدرس يُؤسّس لطريقة تفكير علمية صحيحة.</p>'+
+
+'<h2>أولاً: تعريف الآفة الزراعية</h2>'+
+'<p>الآفة الزراعية هي <strong>أي كائن حي يُلحق ضرراً اقتصادياً بالمحاصيل الزراعية أو المنتجات النباتية أو بالإنسان والحيوان</strong>. الكلمة الجوهرية هنا هي "اقتصادي" - لأن الكائن لا يُعدّ آفة إلا إذا كان الضرر الذي يُسببه يتجاوز تكلفة مكافحته.</p>'+
+'<p>بمعنى آخر: نبات الحشرات الموجود في حقلك ليس آفة حتى لو كانت أعداده كبيرة ما دام لا يُسبب خسارة اقتصادية. والذبابة البيضاء قد تكون آفة في محصول الطماطم لكنها غير ذات أهمية في محصول القمح.</p>'+
+
+'<h2>ثانياً: تصنيف الآفات الزراعية</h2>'+
+'<p>تنقسم الآفات إلى مجموعات رئيسية تختلف في طريقة إلحاق الضرر وأساليب مكافحتها:</p>'+
+'<div class="acad-igrid">'+
+'<div class="acad-icard"><span class="acad-icard-ico">🦟</span><div class="acad-icard-lbl">حشرات ضارة</div><div class="acad-icard-val">ماصة وقارضة وحافرة</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🕷️</span><div class="acad-icard-lbl">أكاروسات</div><div class="acad-icard-val">عناكب دقيقة ماصة</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🪱</span><div class="acad-icard-lbl">نيماتودا</div><div class="acad-icard-val">ديدان الجذور المجهرية</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🌿</span><div class="acad-icard-lbl">حشائش</div><div class="acad-icard-val">منافسة للغذاء والضوء</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🐭</span><div class="acad-icard-lbl">قوارض</div><div class="acad-icard-val">فئران وجرذان الحقل</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🍄</span><div class="acad-icard-lbl">أمراض فطرية</div><div class="acad-icard-val">تُدمّر الأنسجة النباتية</div></div>'+
+'</div>'+
+
+'<h2>ثالثاً: الخسائر الاقتصادية - لماذا يجب أن تهتم؟</h2>'+
+'<p>وفق تقديرات منظمة الأغذية والزراعة (الفاو)، تُسبب الآفات خسارة ما بين <strong>20 و40%</strong> من الإنتاج الغذائي العالمي سنوياً قبل وبعد الحصاد. في مصر، تُقدّر الخسائر السنوية في بعض المحاصيل كالقطن والطماطم والبطاطس بأكثر من <strong>30%</strong> من الإنتاج الكلي في المواسم السيئة.</p>'+
+
+'<h2>رابعاً: أهم الآفات في المحاصيل المصرية</h2>'+
+'<div class="acad-twrap"><table class="acad-tbl">'+
+'<thead><tr><th>الآفة</th><th>المحاصيل المتضررة</th><th>طريقة الضرر</th><th>نسبة الخسارة</th></tr></thead>'+
+'<tbody>'+
+'<tr><td>المن (Aphids)</td><td>الطماطم، الفلفل، القطن، الخيار</td><td>امتصاص العصارة + نقل الفيروسات</td><td>10-40%</td></tr>'+
+'<tr><td>التربس (Thrips)</td><td>الخضروات، المانجو، البصل</td><td>كشط البشرة وامتصاص الخلايا</td><td>15-35%</td></tr>'+
+'<tr><td>الذبابة البيضاء</td><td>الطماطم، الخيار، الفراولة</td><td>امتصاص + إفراز + نقل فيروسات</td><td>20-50%</td></tr>'+
+'<tr><td>دودة الحشد الخريفية</td><td>الذرة، الأعلاف</td><td>قضم كامل للأوراق والسنابل</td><td>30-70%</td></tr>'+
+'<tr><td>البياض الدقيقي</td><td>الخيار، الكوسة، العنب</td><td>تدمير الكلوروفيل وتوقف التمثيل الضوئي</td><td>20-60%</td></tr>'+
+'<tr><td>النيماتودا</td><td>الطماطم، البطاطا، الفراولة</td><td>تدمير الجذور وإعاقة امتصاص الماء</td><td>10-80%</td></tr>'+
+'</tbody></table></div>'+
+
+'<h2>خامساً: العوامل التي تُفاقم انتشار الآفات</h2>'+
+'<p>الآفة لا تظهر فجأة من فراغ. هناك أسباب تجعل بعض المزارع أكثر عرضة من غيرها:</p>'+
+'<ul>'+
+'<li><strong>زراعة محصول واحد على مساحات واسعة:</strong> تُهيّئ مصدراً غذائياً لا ينضب للآفة وتُقضي على التنوع البيولوجي.</li>'+
+'<li><strong>الإفراط في استخدام الأسمدة النيتروجينية:</strong> يُنتج أنسجة طرية وغنية بالنيتروجين - وهو الغذاء المفضّل لحشرات المص.</li>'+
+'<li><strong>ضعف التهوية في البيوت المحمية:</strong> يرفع الرطوبة وتُهيئ الظروف المثالية للفطريات والحشرات.</li>'+
+'<li><strong>استخدام شتلات ملوّثة:</strong> مصدر رئيسي لنقل نيماتودا الجذور وبعض الفيروسات.</li>'+
+'<li><strong>قتل الأعداء الطبيعية بالمبيدات:</strong> يُزيل الضابط البيولوجي ويُفتح الطريق أمام انفجارات الآفات.</li>'+
+'</ul>'+
+
+'<div class="acad-tip"><h3>💡 نصائح من واقع العمل</h3><ul>'+
+'<li>لا تبدأ أي رش قبل التأكد من هوية الآفة. أحياناً ما يبدو حشرة ضارة هو في الحقيقة مفترس نافع.</li>'+
+'<li>سجّل مشاهداتك في الحقل يومياً خلال مواسم الخطر. الرصد المنتظم يُنقذك من الكوارث.</li>'+
+'<li>المزارع الذي يعرف تاريخ آفاته السابقة يستطيع التنبؤ بوقت ظهورها والاستعداد مسبقاً.</li>'+
+'<li>التقويم الزراعي مهم: كثير من الآفات تظهر في توقيتات متكررة كل موسم.</li>'+
+'</ul></div>'+
+
+'<div class="acad-err"><h3>⚠️ أخطاء شائعة في التعامل مع الآفات</h3><ul>'+
+'<li>تشخيص الإصابة بالعين المجردة دون أدوات تكبير - يُؤدي لخلط بين الآفات وعلاج خاطئ.</li>'+
+'<li>الرش الوقائي الدوري دون رصد حقيقي - مكلف وضار بالتوازن البيئي.</li>'+
+'<li>تجاهل الوجه السفلي للأوراق عند الفحص - أكثر من 70% من الآفات الماصة تتواجد هناك.</li>'+
+'<li>الاعتماد على توقيت ثابت للرش بدلاً من الاعتماد على رصد الكثافة الحشرية الفعلية.</li>'+
+'</ul></div>'+
+
+'<div class="acad-case"><h3>📋 دراسة حالة: إصابة غامضة في بيت محمي بالبحيرة</h3>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">المشكلة</div><div class="acad-case-val">مزارع في منطقة كفر الدوار لاحظ تقزّماً في نباتات الطماطم وتلوّن الأوراق باللون البرونزي مع انخفاض ملحوظ في الإنتاج.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">التشخيص</div><div class="acad-case-val">أجرى المهندس فحصاً بعدسة مكبّرة × 10 فوجد تربساً بأعداد كبيرة على الأوراق الشابة والأزهار. اللون البرونزي كان نتيجة الكشط المتكرر للبشرة.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الخطأ الأول</div><div class="acad-case-val">المزارع ظنّ في البداية أن المشكلة نقص في التسميد فأضاف كميات إضافية من الأسمدة النيتروجينية - ممّا زاد من تكاثر التربس.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الحل</div><div class="acad-case-val">تخفيض الرطوبة بالتهوية الجيدة، رش مستحضر Spinosad مرتين بفارق 5 أيام، وإزالة الأزهار المصابة وإتلافها خارج البيت.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الدرس</div><div class="acad-case-val">التشخيص الصحيح أولاً، ثم العلاج. التسرّع في العلاج دون تشخيص دقيق يُضيّع الوقت والمال ويُفاقم المشكلة.</div></div>'+
+'</div>'+
+
+'<div class="acad-refs"><h3>المراجع العلمية</h3>'+
+'<div class="acad-ref"><span class="acad-ref-n">1</span>Pedigo, L.P. &amp; Rice, M.E. (2009). Entomology and Pest Management, 6th ed. Prentice Hall. Chapter 1: Pest Status.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">2</span>منظمة الأغذية والزراعة (FAO). (2021). The State of Food and Agriculture: Making Agrifood Systems More Resilient. روما.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">3</span>مركز البحوث الزراعية المصري. (2019). دليل مكافحة الآفات الرئيسية في الخضروات المحمية. وزارة الزراعة واستصلاح الأراضي.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">4</span>Flint, M.L. (2012). IPM in Practice: Principles and Methods of Integrated Pest Management. UCANR Publications. Chapter 2.</div>'+
+'</div></div>';
+
+c['p2']='<div class="acad-body">'+
+'<p>السؤال الذي يُحدد نجاح أي مهندس زراعي ليس "كيف أُكافح الآفة؟" بل "هل يجب أن أُكافح الآن أصلاً؟". مفهوم عتبة الضرر الاقتصادي هو الأداة التي تُحوّل قراراتك من ردود فعل انفعالية إلى إدارة علمية مدروسة.</p>'+
+
+'<h2>أولاً: المستويات التدريجية من الإصابة إلى الضرر</h2>'+
+'<div class="acad-igrid">'+
+'<div class="acad-icard"><span class="acad-icard-ico">🔵</span><div class="acad-icard-lbl">مستوى التوازن</div><div class="acad-icard-val">كثافة عادية لا تُشكّل خطراً</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🟡</span><div class="acad-icard-lbl">المستوى الحرج</div><div class="acad-icard-val">ابدأ التخطيط للمكافحة الآن</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🟠</span><div class="acad-icard-lbl">عتبة الضرر</div><div class="acad-icard-val">الكثافة التي تستوجب التدخل فوراً</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🔴</span><div class="acad-icard-lbl">ضرر اقتصادي</div><div class="acad-icard-val">خسارة مالية حقيقية تفوق تكلفة المكافحة</div></div>'+
+'</div>'+
+
+'<h2>ثانياً: تعريف عتبة الضرر الاقتصادي</h2>'+
+'<p><strong>عتبة الضرر الاقتصادي (Economic Threshold)</strong> هي الكثافة الحشرية التي عندها تُساوي تكلفة المكافحة قيمة المحصول الذي سيُنقذ. بمعنى أدق: هي النقطة التي يُصبح عندها التدخل مُبرَّراً مالياً.</p>'+
+'<p><strong>المعادلة الأساسية:</strong> عتبة الضرر = تكلفة المكافحة ÷ (قيمة المحصول × فاعلية المكافحة)</p>'+
+
+'<h2>ثالثاً: لماذا تختلف العتبة من محصول لآخر ومن موسم لآخر؟</h2>'+
+'<p>العتبة الاقتصادية ليست رقماً ثابتاً محفوراً في الحجر. إنها تتغير تبعاً لعوامل عدة:</p>'+
+'<ul>'+
+'<li><strong>قيمة المحصول:</strong> طماطم في موسم الشتاء تُباع بسعر مرتفع = عتبة أخفض (تُبرّر التدخل المبكر).</li>'+
+'<li><strong>تكلفة المبيد والتطبيق:</strong> كلما زادت التكلفة، ارتفعت العتبة.</li>'+
+'<li><strong>مرحلة نمو النبات:</strong> الضرر في مرحلة الإزهار أخطر بكثير من مرحلة النضج.</li>'+
+'<li><strong>الوجهة التسويقية:</strong> محصول للتصدير له متطلبات جودة أعلى = عتبة أخفض من محصول للسوق المحلي.</li>'+
+'</ul>'+
+
+'<h2>رابعاً: تطبيق عملي - كيف تحسب العتبة في الحقل</h2>'+
+'<div class="acad-twrap"><table class="acad-tbl">'+
+'<thead><tr><th>المحصول</th><th>الآفة</th><th>عتبة التدخل</th><th>طريقة الرصد</th></tr></thead>'+
+'<tbody>'+
+'<tr><td>الطماطم</td><td>المن</td><td>20 حشرة/نبتة أو 10% إصابة</td><td>فحص 25 نبتة عشوائياً</td></tr>'+
+'<tr><td>القطن</td><td>المن</td><td>10 حشرة/ورقة</td><td>الفحص الأسبوعي للأوراق الوسطى</td></tr>'+
+'<tr><td>الخيار</td><td>العنكبوت الأحمر</td><td>5 حشرات/ورقة + علامات</td><td>فحص الوجه السفلي بعدسة × 10</td></tr>'+
+'<tr><td>الذرة</td><td>دودة الحشد</td><td>يرقة واحدة/نبتة في مرحلة الإنبات</td><td>فحص يومي في الصباح الباكر</td></tr>'+
+'<tr><td>الفراولة</td><td>التربس</td><td>5 حشرات/زهرة</td><td>فحص الأزهار بعدسة مكبّرة</td></tr>'+
+'</tbody></table></div>'+
+
+'<div class="acad-tip"><h3>💡 نصائح من الخبرة الميدانية</h3><ul>'+
+'<li>استخدم ورقة رصد لتسجيل أعداد الآفات أسبوعياً. الاتجاه الصاعد في الرصم هو المؤشر الحقيقي للخطر.</li>'+
+'<li>الرصد المنتظم يُوفّر 40-60% من تكلفة المبيدات في المتوسط. التدخل في الوقت الصحيح أكثر فاعلية من الإفراط.</li>'+
+'<li>انتبه لدرجات الحرارة: كثير من الآفات تتضاعف في سرعة تكاثرها مع ارتفاع الحرارة 5 درجات فقط.</li>'+
+'</ul></div>'+
+
+'<div class="acad-err"><h3>⚠️ أخطاء في تطبيق مفهوم العتبة</h3><ul>'+
+'<li>اعتبار العتبة رقماً ثابتاً لكل المواسم والمناطق دون مراعاة السياق الاقتصادي والبيئي.</li>'+
+'<li>قياس الكثافة الحشرية في مكان واحد فقط من الحقل - الآفات غير موزّعة بالتساوي دائماً.</li>'+
+'<li>إهمال التأثير التراكمي: إصابة خفيفة مستمرة لثلاثة أسابيع قد تفوق ضرر إصابة شديدة لأسبوع واحد.</li>'+
+'</ul></div>'+
+
+'<div class="acad-case"><h3>📋 دراسة حالة: قرار المكافحة في مزرعة فراولة</h3>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الموقف</div><div class="acad-case-val">مهندسة زراعية في مزرعة فراولة بالإسماعيلية لاحظت وجود 3 حشرات من التربس لكل زهرة خلال موسم التزهير المبكر.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">العتبة المحددة</div><div class="acad-case-val">5 حشرات/زهرة. الكثافة الحالية 3 حشرات = دون العتبة.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">القرار الصحيح</div><div class="acad-case-val">مراقبة يومية دقيقة مع تسجيل الأعداد. في اليوم الرابع وصلت الكثافة 6 حشرات/زهرة فبدأت الرش فوراً.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">النتيجة</div><div class="acad-case-val">وفّرت المهندسة رشّتين وقائيتين غير ضروريتين، حافظت على الأعداء الطبيعية، وحققت نفس مستوى الحماية.</div></div>'+
+'</div>'+
+
+'<div class="acad-refs"><h3>المراجع العلمية</h3>'+
+'<div class="acad-ref"><span class="acad-ref-n">1</span>Stern, V.M. et al. (1959). The Integrated Control Concept. Hilgardia 29(2):81-101. المرجع الأصلي لمفهوم عتبة الضرر الاقتصادي.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">2</span>Pedigo, L.P. (1996). Entomology and Pest Management. 2nd ed. Prentice Hall. Chapter 11: Economic Thresholds.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">3</span>معهد بحوث وقاية النباتات، مصر. (2020). دليل العتبات الاقتصادية لآفات المحاصيل الرئيسية.</div>'+
+'</div></div>';
+
+c['p3']='<div class="acad-body">'+
+'<p>الحشرات الماصة هي الفئة الأوسع والأكثر انتشاراً بين آفات الخضروات في مصر. تشترك جميعها في طريقة إلحاق الضرر: أجهزة فم لاثقة ماصة تخترق أنسجة النبات وتسحب عصارته. لكن رغم هذا التشابه، لكل منها خصائص تجعلها تختلف في أسلوب التشخيص والمكافحة.</p>'+
+
+'<h2>أولاً: المن (Aphids) — الأكثر انتشاراً والأخطر</h2>'+
+'<p>المن حشرة صغيرة جداً لا يتجاوز طولها 3 مم، لكن خطرها يكمن في تكاثرها اللامحدود - أنثى واحدة تُنتج مئات اليرقات بدون تلقيح (تكاثر بكري) في ظروف مواتية.</p>'+
+'<h3>كيف تتعرف على إصابة المن؟</h3>'+
+'<ul>'+
+'<li>تجمّعات من الحشرات الصغيرة الخضراء أو الصفراء أو السوداء على الأوراق الحديثة والبراعم.</li>'+
+'<li><strong>تجعّد وتلتواء الأوراق</strong> للأسفل حول مستعمرات المن.</li>'+
+'<li>إفرازات لزجة شفافة تُعرف بـ"العسل الندي" تُشجّع نمو العفن الأسود.</li>'+
+'<li>وجود النمل بكثرة على النبات - النمل "يرعى" المن ويحميه مقابل العسل.</li>'+
+'</ul>'+
+'<h3>لماذا المن خطير بعيداً عن الامتصاص المباشر؟</h3>'+
+'<p>المن <strong>ناقل ممتاز للفيروسات النباتية</strong>. أكثر من 300 فيروس نباتي يُنقلها المن. عند انتقاله من نبات مريض لسليم، يحقن اللعاب الملوّث بالفيروس خلال ثوانٍ. أمراض مثل فيروس الموزاييك وفيروس تجعّد الأوراق تُسبب خسائر أشد بكثير من الامتصاص المباشر.</p>'+
+
+'<h2>ثانياً: التربس (Thrips) — الخطر الخفي</h2>'+
+'<p>التربس حشرة شبه مجهرية (0.5-2 مم) تُصعب رؤيتها بالعين المجردة. تعيش داخل الأزهار والبراعم حيث تكون محمية من معظم المبيدات.</p>'+
+'<h3>الأعراض المميزة للتربس</h3>'+
+'<ul>'+
+'<li><strong>مناطق فضية أو برونزية</strong> على سطح الأوراق - نتيجة كشط البشرة وامتصاص خلاياها.</li>'+
+'<li>تشوّه في البراعم الزهرية وسقوط الأزهار المبكر.</li>'+
+'<li>إفرازات سوداء صغيرة (براز) مرئية على الأوراق عند الفحص الدقيق.</li>'+
+'<li>في الإصابات الشديدة: تحوّل لون الثمار الصغيرة وتشوّهها.</li>'+
+'</ul>'+
+'<div class="acad-twrap"><table class="acad-tbl">'+
+'<thead><tr><th>الصفة</th><th>المن</th><th>التربس</th><th>الذبابة البيضاء</th></tr></thead>'+
+'<tbody>'+
+'<tr><td>الحجم</td><td>1-3 مم</td><td>0.5-2 مم</td><td>1-2 مم</td></tr>'+
+'<tr><td>مكان التواجد</td><td>الأوراق الحديثة والبراعم</td><td>داخل الأزهار</td><td>الوجه السفلي للأوراق</td></tr>'+
+'<tr><td>الأعراض المميزة</td><td>تجعّد الأوراق + عسل ندي</td><td>مناطق فضية + براز أسود</td><td>طيران أبيض عند التحريك</td></tr>'+
+'<tr><td>الخطر الثانوي</td><td>نقل فيروسات</td><td>نقل فيروس TSWV</td><td>نقل فيروسات + عفن أسود</td></tr>'+
+'<tr><td>صعوبة المكافحة</td><td>متوسطة</td><td>عالية (داخل الأزهار)</td><td>عالية (تطوّر مقاومة سريع)</td></tr>'+
+'</tbody></table></div>'+
+
+'<h2>ثالثاً: الذبابة البيضاء (Whitefly)</h2>'+
+'<p>الذبابة البيضاء أصغر من المظهر العام لذباب، وأقرب لمستعمرات بيضاء دقيقة تعيش على الوجه السفلي للأوراق. عند تحريك النبات تطير كسحابة بيضاء صغيرة.</p>'+
+'<h3>لماذا صعبة المكافحة بالمبيدات؟</h3>'+
+'<p>للذبابة البيضاء أربعة أطوار حياتية (بيضة، أول حورة، ثانية، ثالثة، بالغة). <strong>الأطوار الأولى ثابتة لا تتحرك</strong> وتمتلك طبقة شمعية تحميها من بعض المبيدات. المبيدات الجهازية الفعّالة ضد البالغين قد لا تؤثر في الأطوار الثابتة، لذا تحتاج لرشّتين متتاليتين بفارق 7-10 أيام.</p>'+
+
+'<div class="acad-tip"><h3>💡 أسرار المكافحة الناجحة للحشرات الماصة</h3><ul>'+
+'<li>دوّر المبيدات بين مجموعات كيميائية مختلفة لمنع تطوّر المقاومة. لا تستخدم نفس المبيد أكثر من مرتين متتاليتين.</li>'+
+'<li>الرش صباحاً أو مساءً يزيد الفاعلية ويُقلّل التبخّر والضرر على الملقّحات.</li>'+
+'<li>أضف ناشراً لاصقاً للمبيد حتى يُغطّي الوجه السفلي للأوراق حيث تتواجد معظم الآفات الماصة.</li>'+
+'<li>الأعداء الطبيعية (دعسوقة، أبو العيد، الدبور الطفيلي) هم حلفاؤك. احمهم بتقليل الرش الكيميائي.</li>'+
+'</ul></div>'+
+
+'<div class="acad-err"><h3>⚠️ أخطاء شائعة في مكافحة الحشرات الماصة</h3><ul>'+
+'<li>رش المبيد من الأعلى فقط دون تغطية الوجه السفلي للأوراق حيث تعيش الآفة.</li>'+
+'<li>استخدام نفس المبيد لكل موسم حتى تتطوّر المقاومة كاملاً.</li>'+
+'<li>إهمال دورة حياة الآفة - رشّة واحدة لن تكفي إذا كانت الأطوار الثابتة موجودة.</li>'+
+'<li>الاعتماد على المظهر العام دون الفحص الدقيق بعدسة مكبّرة - الخلط بين الآفات يُؤدي لعلاج خاطئ تماماً.</li>'+
+'</ul></div>'+
+
+'<div class="acad-case"><h3>📋 دراسة حالة: انفجار ذبابة بيضاء في صوبة خيار</h3>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">المشكلة</div><div class="acad-case-val">مزرعة خيار في بيت محمي بالشرقية، المساحة 2000 م². ظهرت إصابة شديدة بالذبابة البيضاء في الأسبوع الثالث من الزراعة.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">التشخيص</div><div class="acad-case-val">فحص عشوائي لـ 20 ورقة أظهر متوسط 35-40 حشرة بالغة + مستعمرات من الأطوار الثابتة. تتجاوز عتبة التدخل بكثير.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الخطأ السابق</div><div class="acad-case-val">المزارع رش مبيد Cypermethrin مرة واحدة وظنّ أن المشكلة انتهت. المبيد قتل البالغين لكن ترك الأطوار الثابتة، وقتل أيضاً الأعداء الطبيعية.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الحل الصحيح</div><div class="acad-case-val">رشّتان من Imidacloprid بفارق 8 أيام + رش بزيت معدني لتغطية الأطوار الثابتة + تهوية لتقليل الرطوبة + لاصقات صفراء لرصد الكثافة.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">النتيجة</div><div class="acad-case-val">انخفاض الإصابة 90% خلال أسبوعين. الإنتاج انتعش وتم تجنّب الخسارة الكاملة للموسم.</div></div>'+
+'</div>'+
+
+'<div class="acad-refs"><h3>المراجع العلمية</h3>'+
+'<div class="acad-ref"><span class="acad-ref-n">1</span>Blackman, R.L. &amp; Eastop, V.F. (2006). Aphids on the World\'s Herbaceous Plants and Shrubs. Wiley-Blackwell. Vol. 1 &amp; 2.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">2</span>Kirk, W.D.J. &amp; Terry, L.I. (2003). The spread of the western flower thrips Frankliniella occidentalis. Agricultural and Forest Entomology 5(4):301-310.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">3</span>مركز البحوث الزراعية المصري. (2022). الذبابة البيضاء: بيولوجيتها وأساليب مكافحتها في البيوت المحمية. نشرة فنية رقم 47.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">4</span>Horowitz, A.R. et al. (2011). Insecticide resistance management of Bemisia tabaci. Pest Management Science 67(11):1307-1315.</div>'+
+'</div></div>';
+
+return c[id]||null}
+
+/* ── Public API ───────────────────────────────────────────── */
+
+window.NAcademy={
+render:acR,
+goHome:function(){acGo('home',null)},
+openFirst:function(){
+var firstReady=null;
+for(var i=0;i<AC_COURSE.modules.length&&!firstReady;i++)
+ for(var j=0;j<AC_COURSE.modules[i].lessons.length&&!firstReady;j++)
+  if(!acDone(AC_COURSE.modules[i].lessons[j].id))firstReady=AC_COURSE.modules[i].lessons[j].id;
+if(firstReady)acGo('lesson',firstReady);else acGo('cert',null)},
+openLesson:function(id){acGo('lesson',id)},
+goQuiz:function(id){acGo('quiz',id)},
+goCert:function(){acGo('cert',null)},
+_pickOpt:function(btn,idx){
+var st=AC.qState;if(!st||st.revealed)return;
+var q=AC_QUIZZES[AC.lid];if(!q)return;
+var cur=q.questions[st.step];
+st.answers.push(idx);st.revealed=true;
+var opts=document.querySelectorAll('.acad-opt');
+opts.forEach(function(o,i){
+ o.disabled=true;
+ if(i===cur.cor)o.classList.add('ok');
+ else if(i===idx&&idx!==cur.cor)o.classList.add('bad')});
+var exp=document.getElementById('acad-exp');
+if(exp){exp.textContent=cur.exp;exp.classList.add('show')}
+var nxt=document.getElementById('acad-qnext');
+if(nxt)nxt.classList.add('show')},
+_nextQ:function(){
+var st=AC.qState;if(!st)return;
+st.step++;st.revealed=false;
+acR();acBindQuiz()},
+_finishQuiz:function(lid,score){
+if(score>=60)acMark(lid);
+acGo('home',null);
+if(typeof showToast==='function')showToast(score>=60?'✅ اجتزت الاختبار! '+score+'%':'📝 راجع الدرس ثم أعد المحاولة','ok')
+}};
+
+/* ── showPage Hook ────────────────────────────────────────── */
+
+var _sp=window.showPage;
+window.showPage=function(e,t){
+_sp&&_sp.apply(this,arguments);
+if(e==='academy'){
+ document.getElementById('nl-academy')&&document.getElementById('nl-academy').classList.add('active');
+ var r=document.getElementById('acad-root');
+ if(r&&!r.firstChild)acR()}};
+var _ap=document.getElementById('pg-academy');
+if(_ap)new MutationObserver(function(ms){
+ms.forEach(function(m){
+ if(m.attributeName==='class'&&_ap.classList.contains('active')){
+  document.getElementById('nl-academy')&&document.getElementById('nl-academy').classList.add('active');
+  var r=document.getElementById('acad-root');
+  if(r&&!r.firstChild)acR()}})
+}).observe(_ap,{attributes:true});
+
+}();
+</script>
+
 
 <div id="tw"></div>
 <button id="stk" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
