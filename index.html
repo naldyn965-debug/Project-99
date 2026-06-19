@@ -2007,18 +2007,37 @@
 .acad-result-acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
 /* ── Certificate ── */
-.acad-cert-pg{max-width:700px;margin:0 auto;padding:36px 24px 80px}
-.acad-cert-card{background:linear-gradient(150deg,#061610 0%,#0b2e1c 50%,#061610 100%);border-radius:28px;padding:48px 40px;text-align:center;position:relative;overflow:hidden;border:2px solid rgba(201,135,26,.38);box-shadow:0 24px 80px rgba(0,0,0,.25)}
-.acad-cert-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 40%,rgba(201,135,26,.1) 0,transparent 60%);pointer-events:none}
-.acad-cert-logo{font-family:var(--f-display);font-size:1.8rem;color:rgba(255,255,255,.8);margin-bottom:6px;position:relative;z-index:1}
-.acad-cert-div{height:1px;background:linear-gradient(90deg,transparent,rgba(201,135,26,.45),transparent);margin:14px 0;position:relative;z-index:1}
-.acad-cert-presents{font-size:11px;color:rgba(255,255,255,.38);letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px;position:relative;z-index:1}
-.acad-cert-name{font-family:var(--f-display);font-size:2.2rem;color:#fff;margin-bottom:14px;position:relative;z-index:1}
-.acad-cert-txt{font-size:13px;color:rgba(255,255,255,.55);line-height:1.8;margin-bottom:18px;position:relative;z-index:1}
-.acad-cert-course{font-family:var(--f-display);font-size:1.5rem;color:#f0b535;margin-bottom:22px;text-shadow:0 0 28px rgba(240,181,53,.3);position:relative;z-index:1}
-.acad-cert-seal{font-size:48px;margin-bottom:10px;position:relative;z-index:1}
-.acad-cert-date{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.1em;position:relative;z-index:1}
-.acad-cert-acts{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+.acad-cert-pg{max-width:880px;margin:0 auto;padding:36px 16px 80px}
+.acad-cert-frame{background:#dbe4dd;padding:clamp(10px,2.6vw,34px);border-radius:8px;box-shadow:0 14px 44px rgba(20,40,30,.12)}
+.acad-cert-card{position:relative;background:#fff;border:1.5px solid #84958d;padding:clamp(26px,5vw,58px) clamp(20px,5.5vw,68px);overflow:hidden;direction:ltr;font-family:'Cormorant Garamond',serif;isolation:isolate}
+.acad-cert-watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;pointer-events:none;z-index:0;overflow:hidden}
+.acad-cert-watermark span{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:min(58vw,560px);color:#1f5c39;opacity:.05;line-height:1;transform:translateX(12%)}
+.acad-cert-row{position:relative;z-index:1;display:flex;align-items:flex-start;gap:clamp(14px,3.4vw,40px)}
+.acad-cert-ribbon{flex-shrink:0;width:clamp(56px,8.4vw,104px);margin-top:4px}
+.acad-cert-ribbon svg{width:100%;height:auto;display:block}
+.acad-cert-main{flex:1;min-width:0}
+.acad-cert-titles div{font-size:clamp(1.3rem,3.7vw,2.5rem);font-weight:600;line-height:1.16;letter-spacing:.01em;color:#33453f}
+.acad-cert-presented{font-family:'Cairo',sans-serif;font-size:clamp(11.5px,1.15vw,15px);color:#5e6f69;margin:18px 0 10px}
+.acad-cert-name{font-family:'Mrs Saint Delafield','Cormorant Garamond',cursive;font-size:clamp(2.1rem,5.6vw,3.5rem);color:#1f5c39;line-height:1.2;outline:none;min-height:1.25em;padding:2px 6px 6px;cursor:text;border-bottom:1.5px solid #c6d2cb;display:block;width:fit-content;max-width:100%}
+.acad-cert-name:empty:before{content:attr(data-placeholder);color:#a8bcb4}
+.acad-cert-name:focus{border-bottom-color:#1f5c39}
+.acad-cert-completed{font-family:'Cairo',sans-serif;font-weight:700;font-size:clamp(12.5px,1.3vw,16px);color:#28352f;line-height:1.65;margin:18px 0 0;max-width:600px}
+.acad-cert-recognition{font-family:'Cairo',sans-serif;font-weight:700;font-size:clamp(10.5px,1.08vw,13.5px);color:#1f5c39;line-height:1.75;margin:18px 0 0;max-width:620px}
+.acad-cert-footer{position:relative;z-index:1;display:flex;gap:clamp(28px,7vw,90px);margin-top:clamp(24px,4.4vw,46px)}
+.acad-cert-footer-col{flex-shrink:0}
+.acad-cert-footer-line{border-top:1px solid #84958d;width:clamp(120px,17vw,200px);margin-bottom:8px}
+.acad-cert-footer-label{font-family:'Cairo',sans-serif;font-weight:800;font-size:clamp(11.5px,1.15vw,14px);color:#28352f}
+.acad-cert-footer-value{font-family:'Cairo',sans-serif;font-size:clamp(10.5px,1.05vw,12.5px);color:#5e6f69;margin-top:3px;letter-spacing:.03em}
+.acad-cert-edit-hint{font-family:var(--f-ui);font-size:11.5px;color:var(--muted);text-align:center;margin-top:12px}
+.acad-cert-acts{display:flex;gap:10px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+@media(max-width:560px){
+.acad-cert-row{flex-direction:column;align-items:center;text-align:center}
+.acad-cert-ribbon{width:64px;margin:0 auto}
+.acad-cert-presented,.acad-cert-completed,.acad-cert-recognition{margin-left:auto;margin-right:auto;text-align:center}
+.acad-cert-name{margin:0 auto}
+.acad-cert-footer{justify-content:center;text-align:center}
+.acad-cert-footer-line{margin-left:auto;margin-right:auto}
+}
 
 @media(max-width:600px){
 .acad-lesson-pg,.acad-quiz-pg,.acad-cert-pg{padding:20px 14px 60px}
@@ -2565,10 +2584,83 @@ return '<div class="acad-quiz-pg">'+
 '<button class="acad-quiz-next" id="acad-qnext" onclick="NAcademy._nextFEQ()">'+
 (st.step===qs.length-1?'عرض النتيجة':'السؤال التالي ←')+'</button></div></div>'}
 
+/* ── Certificate: helpers ─────────────────────────────────── */
+
+function acEnsureCertFont(){
+if(!document.getElementById('acad-cert-font')){
+var l=document.createElement('link');
+l.id='acad-cert-font';l.rel='stylesheet';
+l.href='https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap';
+document.head.appendChild(l)}}
+
+function acEsc(s){
+return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function acCertDate(){
+var d=new Date();function pad(n){return n<10?'0'+n:''+n}
+return pad(d.getDate())+' / '+pad(d.getMonth()+1)+' / '+d.getFullYear()}
+
+var ACAD_CERT_RIBBON_SVG='<svg viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
+'<defs><linearGradient id="acadGoldG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6d98a"/><stop offset="1" stop-color="#c9971f"/></linearGradient>'+
+'<linearGradient id="acadGreenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d8a52"/><stop offset="1" stop-color="#143d26"/></linearGradient></defs>'+
+'<polygon points="78,150 100,156 95,266 75,238 56,244 67,170" fill="#143d26" stroke="#c9971f" stroke-width="1.5"/>'+
+'<polygon points="122,150 100,156 105,266 125,238 144,244 133,170" fill="#1e5c39" stroke="#c9971f" stroke-width="1.5"/>'+
+'<polygon points="100,15 115,39 140,25.7 141,54 169.3,55 156,80 180,95 156,110 169.3,135 141,136 140,164.3 115,151 100,175 85,151 60,164.3 59,136 30.7,135 44,110 20,95 44,80 30.7,55 59,54 60,25.7 85,39" fill="url(#acadGoldG)"/>'+
+'<circle cx="100" cy="95" r="54" fill="url(#acadGreenG)"/>'+
+'<circle cx="100" cy="95" r="54" fill="none" stroke="#fff" stroke-width="1" opacity=".22"/>'+
+'<g stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none"><path d="M100,118 L100,76"/><path d="M100,98 C86,94 80,80 90,68"/><path d="M100,108 C114,104 120,90 110,78"/></g>'+
+'</svg>';
+
+function acLoadH2C(cb){
+if(window.html2canvas){cb();return}
+if(window._acH2CQueue){window._acH2CQueue.push(cb);return}
+window._acH2CQueue=[cb];
+var s=document.createElement('script');
+s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+s.onload=function(){var q=window._acH2CQueue||[];window._acH2CQueue=null;q.forEach(function(f){f()})};
+s.onerror=function(){window._acH2CQueue=null;if(typeof showToast==='function')showToast('تعذر تحميل أداة التصدير، تحقق من الاتصال','err')};
+document.head.appendChild(s)}
+
+function acExportCert(mode,btn){
+var nameEl=document.getElementById('acad-cert-name');
+if(nameEl&&!nameEl.textContent.trim()){
+if(typeof showToast==='function')showToast('✍️ برجاء كتابة الاسم على الشهادة أولاً','inf');
+nameEl.focus();return}
+var target=document.getElementById('acad-cert-capture');
+if(!target)return;
+var origHTML=btn?btn.innerHTML:null;
+if(btn){btn.disabled=true;btn.innerHTML='⏳ ...'}
+function restore(){if(btn){btn.disabled=false;btn.innerHTML=origHTML}}
+acLoadH2C(function(){
+var ready=(document.fonts&&document.fonts.ready)?document.fonts.ready:Promise.resolve();
+ready.then(function(){
+html2canvas(target,{scale:2,backgroundColor:'#ffffff',useCORS:true}).then(function(canvas){
+canvas.toBlob(function(blob){
+restore();
+if(!blob)return;
+var fileName='Nabtex-IPM-Certificate.png';
+var file=null;
+try{file=new File([blob],fileName,{type:'image/png'})}catch(e){}
+if(mode==='share'&&file&&navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+navigator.share({files:[file],title:'شهادة نبتيكس أكاديمي',text:'شهادة إتمام دورة مكافحة الآفات الزراعية المتكاملة - نبتيكس أكاديمي'}).catch(function(){})
+}else{
+var url=URL.createObjectURL(blob);
+var a=document.createElement('a');
+a.href=url;a.download=fileName;document.body.appendChild(a);a.click();
+setTimeout(function(){a.parentNode&&document.body.removeChild(a);URL.revokeObjectURL(url)},1200);
+if(typeof showToast==='function')showToast(mode==='share'?'📥 تم تنزيل الشهادة (المشاركة المباشرة غير مدعومة هنا)':'✅ تم تنزيل الشهادة بنجاح','ok')
+}
+},'image/png')
+}).catch(function(){restore();if(typeof showToast==='function')showToast('⚠️ تعذر إنشاء صورة الشهادة','err')})
+})
+})}
+
+/* ── Certificate: render ──────────────────────────────────── */
+
 function acRenderCert(){
-var pct=acPct();var feScore=acFEScore();var now=new Date();
-var dateStr=now.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
-var userName=typeof Auth!=='undefined'&&Auth.user&&Auth.user.displayName?Auth.user.displayName:'المتدرب';
+acEnsureCertFont();
+var pct=acPct();var feScore=acFEScore();
+var userName=(typeof currentUser!=='undefined'&&currentUser&&currentUser.displayName)?currentUser.displayName:'';
 var eligible=pct===100&&feScore>=70;
 var bannerHTML='';
 if(pct<100){
@@ -2581,20 +2673,31 @@ return '<div class="acad-cert-pg">'+
 '<div class="acad-breadcrumb"><span role="button" onclick="NAcademy.goHome()">الأكاديمية</span><span class="sep">›</span><span>الشهادة</span></div>'+
 bannerHTML+
 (eligible?
+'<div class="acad-cert-frame" id="acad-cert-capture">'+
 '<div class="acad-cert-card">'+
-'<div class="acad-cert-logo">🌿 نبتيكس أكاديمي</div>'+
-'<div class="acad-cert-div"></div>'+
-'<div class="acad-cert-presents">تُشهد بأن</div>'+
-'<div class="acad-cert-name">'+userName+'</div>'+
-'<div class="acad-cert-txt">قد أتمّ بنجاح دراسة دورة</div>'+
-'<div class="acad-cert-course">مكافحة الآفات الزراعية المتكاملة</div>'+
-'<div class="acad-cert-seal">🏅</div>'+
-'<div class="acad-cert-div"></div>'+
-'<div class="acad-cert-date">'+dateStr+' &nbsp;|&nbsp; نبتيكس أكاديمي</div>'+
+'<div class="acad-cert-watermark"><span>N</span></div>'+
+'<div class="acad-cert-row">'+
+'<div class="acad-cert-ribbon">'+ACAD_CERT_RIBBON_SVG+'</div>'+
+'<div class="acad-cert-main">'+
+'<div class="acad-cert-titles"><div>CERTIFICATE OF</div><div>ACHIEVEMENT</div><div>NABTEX PLATFORM</div></div>'+
+'<div class="acad-cert-presented">This certificate is proudly presented to</div>'+
+'<div class="acad-cert-name" id="acad-cert-name" contenteditable="true" spellcheck="false" data-placeholder="Your Name" onpaste="event.preventDefault();document.execCommand(\'insertText\',false,(event.clipboardData||window.clipboardData).getData(\'text\'))" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" onblur="if(!this.textContent.trim())this.innerHTML=\'\'">'+(userName?acEsc(userName):'')+'</div>'+
+'<div class="acad-cert-completed">has successfully completed the Integrated Pest Management (IPM) Course offered by Nabtex Platform.</div>'+
+'<div class="acad-cert-recognition">This certificate is awarded in recognition of the recipient\'s successful completion of the course and final examination, as well as their commitment to professional development in the field of agriculture.</div>'+
+'<div class="acad-cert-footer">'+
+'<div class="acad-cert-footer-col"><div class="acad-cert-footer-line"></div><div class="acad-cert-footer-label">Authorized Signature</div><div class="acad-cert-footer-value">Nabtex Platform</div></div>'+
+'<div class="acad-cert-footer-col"><div class="acad-cert-footer-line"></div><div class="acad-cert-footer-label">Date of Issue</div><div class="acad-cert-footer-value">'+acCertDate()+'</div></div>'+
 '</div>'+
+'</div>'+
+'</div>'+
+'</div>'+
+'</div>'+
+'<div class="acad-cert-edit-hint">✏️ اضغط على الاسم في الشهادة لتعديله، ثم نزّلها أو شاركها</div>'+
 '<div class="acad-cert-acts">'+
 '<button class="acad-btn acad-btn-ghost" onclick="NAcademy.goHome()">‹ العودة للدورة</button>'+
-'<button class="acad-btn acad-btn-primary" onclick="window.print()">🖨️ طباعة الشهادة</button>'+
+'<button class="acad-btn acad-btn-ghost" onclick="window.print()">🖨️ طباعة</button>'+
+'<button class="acad-btn acad-btn-primary" onclick="NAcademy.downloadCert(this)">⬇️ تنزيل الشهادة</button>'+
+'<button class="acad-btn acad-btn-primary" onclick="NAcademy.shareCert(this)">📤 مشاركة</button>'+
 '</div>':'')+
 '</div>'}
 
@@ -3505,6 +3608,8 @@ openLesson:function(id){acGo('lesson',id)},
 goQuiz:function(id){acGo('quiz',id)},
 goFinalExam:function(){acGo('final-exam',null)},
 goCert:function(){acGo('cert',null)},
+downloadCert:function(btn){acExportCert('download',btn)},
+shareCert:function(btn){acExportCert('share',btn)},
 _pickOpt:function(btn,idx){
 var st=AC.qState;if(!st||st.revealed)return;
 var q=AC_QUIZZES[AC.lid];if(!q)return;
