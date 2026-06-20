@@ -3234,6 +3234,7 @@ y+=50;
 ctx.font="700 34px 'Cairo', sans-serif";ctx.fillStyle='#1f5c39';
 var recogLines=acWrapLines(ctx,"This certificate is awarded in recognition of the recipient's successful completion of the course and final examination, as well as their commitment to professional development in the field of agriculture.",textWidth*0.95);
 recogLines.forEach(function(line){y+=52;ctx.fillText(line,textLeft,y)});
+var textBlockBottom=y;
 y+=90;ctx.textAlign='left';
 var colW=340,col1X=textLeft,col2X=textLeft+colW+110;
 ctx.strokeStyle='#84958d';ctx.lineWidth=2;
@@ -3245,7 +3246,7 @@ ctx.fillText('Authorized Signature',col1X,y);ctx.fillText('Date of Issue',col2X,
 y+=40;ctx.font="400 32px 'Cairo', sans-serif";ctx.fillStyle='#5e6f69';
 ctx.fillText('Nabtex Platform',col1X,y);ctx.fillText(dateStr,col2X,y);
 var qrSize=170;
-var qrX=textRight-qrSize,qrY=footerLineY-qrSize+18;
+var qrX=textRight-qrSize,qrY=Math.max(footerLineY-qrSize+18,textBlockBottom+24);
 nbqrDrawOnCanvas(ctx,nbCertVerifyUrl(safeName,dateStr),'M',qrX,qrY,qrSize);
 ctx.strokeStyle='#c6d2cb';ctx.lineWidth=1.5;ctx.strokeRect(qrX,qrY,qrSize,qrSize);
 ctx.font="700 20px 'Cairo', sans-serif";ctx.fillStyle='#5e6f69';ctx.textAlign='center';
