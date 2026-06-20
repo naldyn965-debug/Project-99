@@ -1970,8 +1970,7 @@
 .acad-btn[disabled]{opacity:.6;cursor:default;pointer-events:none}
 
 /* lesson PDF export (rendered off-screen, never shown to the user) */
-.acad-pdf-export-host{position:fixed;top:0;left:0;width:0;height:0;overflow:hidden;z-index:-1}
-.acad-pdf-export-wrap{width:780px;box-sizing:border-box;background:#fff;padding:42px 38px}
+.acad-pdf-export-wrap{position:fixed;top:0;left:0;width:780px;box-sizing:border-box;background:#fff;padding:42px 38px;z-index:-1}
 .acad-pdf-head{margin-bottom:6px;padding-bottom:22px;border-bottom:2px solid var(--brand-pale)}
 .acad-pdf-brand{font-size:12px;font-weight:800;color:var(--brand);letter-spacing:.1em;margin-bottom:14px}
 .acad-pdf-mod{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:8px}
@@ -2531,6 +2530,7 @@ function generateQRMatrix(text, ecLevel, minVersion){
 /* ── Logo asset ───────────────────────────────────────────── */
 var ACAD_LOGO_DATAURI="data:image/jpeg;base64,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";
 var _acadLogoImg=null;
+var _acadPdfLibLoading=false,_acadPdfLibCbs=[];
 function acLoadLogoImg(cb){
 if(_acadLogoImg&&_acadLogoImg.complete){cb(_acadLogoImg);return}
 var img=new Image();
@@ -4261,16 +4261,22 @@ c['p12']='<div class=\"acad-body\">'+
 return c[id]||null}
 
 /* ── Lesson PDF Export ────────────────────────────────────── */
-/* Uses the browser's native print pipeline (the same approach already
-   used for the certificate's "print" mode) instead of the old
-   html2canvas/html2pdf CDN combo. This removes the slow external
-   library fetch entirely, and fixes the corrupted output: html2canvas
-   rasterizes the DOM itself and does not reproduce Arabic letter
-   shaping/joining correctly, while the native print pipeline renders
-   Arabic exactly as the browser already does on screen. The lesson is
-   opened in a fresh print-ready window with the site's real stylesheet
-   cloned in, then the OS print dialog opens so the user can pick
-   "Save as PDF". */
+
+var ACAD_PDF_LIB_URL='https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+var ACAD_PDF_LIB_SRI='sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==';
+
+function acLoadHtml2Pdf(cb){
+if(typeof window.html2pdf!=='undefined'){cb(true);return}
+if(_acadPdfLibLoading){_acadPdfLibCbs.push(cb);return}
+_acadPdfLibLoading=true;_acadPdfLibCbs=[cb];
+var s=document.createElement('script');
+s.src=ACAD_PDF_LIB_URL;
+s.integrity=ACAD_PDF_LIB_SRI;
+s.crossOrigin='anonymous';
+s.referrerPolicy='no-referrer';
+s.onload=function(){_acadPdfLibLoading=false;var cbs=_acadPdfLibCbs;_acadPdfLibCbs=[];cbs.forEach(function(f){f(true)})};
+s.onerror=function(){_acadPdfLibLoading=false;var cbs=_acadPdfLibCbs;_acadPdfLibCbs=[];cbs.forEach(function(f){f(false)})};
+document.head.appendChild(s)}
 
 function acDownloadLessonPDF(id,btn){
 var ls=null,modTitle='';
@@ -4284,52 +4290,53 @@ var content=acGetContent(id);
 if(!content){if(typeof showToast==='function')showToast('⚠️ هذا الدرس قيد الإعداد، لا يمكن تحميله بعد','err');return}
 var origHTML=btn?btn.innerHTML:null;
 if(btn){btn.disabled=true;btn.innerHTML='⏳ جارٍ التحضير...'}
+
 function restore(){if(btn){btn.disabled=false;btn.innerHTML=origHTML}}
 
-var w=window.open('','_blank');
-if(!w){restore();if(typeof showToast==='function')showToast('⚠️ يرجى السماح بالنوافذ المنبثقة لتحميل الدرس بصيغة PDF','err');return}
+acLoadHtml2Pdf(function(ok){
+if(!ok){restore();if(typeof showToast==='function')showToast('⚠️ تعذر تحميل أداة الحفظ، تحقق من اتصالك بالإنترنت','err');return}
 
-var styles='';
-document.querySelectorAll('style').forEach(function(s){styles+=s.outerHTML});
-
-var safeFileName=(ls.title||'lesson').replace(/[\\\/:*?"<>|]+/g,'-').trim();
-
-var html='<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8">'+
-'<meta name="viewport" content="width=device-width,initial-scale=1">'+
-'<title>'+acEsc(safeFileName)+' - نبتيكس أكاديمي</title>'+
-styles+
-'<style>@page{size:A4;margin:16mm 14mm}'+
-'html,body{background:#fff!important;margin:0;padding:0}'+
-'body{max-width:780px;margin:0 auto}'+
-'.acad-pdf-export-wrap{width:100%!important;max-width:100%!important;padding:0!important;background:#fff!important}'+
-'.acad-igrid,.acad-icard,.acad-tip,.acad-err,.acad-case,.acad-twrap,.acad-ref,table{break-inside:avoid;page-break-inside:avoid}'+
-'h2,h3{break-after:avoid-page}'+
-'img{max-width:100%}</style>'+
-'</head><body>'+
-'<div class="acad-pdf-export-wrap">'+
-'<div class="acad-pdf-head">'+
+var wrap=document.createElement('div');
+wrap.className='acad-pdf-export-wrap';
+wrap.innerHTML='<div class="acad-pdf-head">'+
 '<div class="acad-pdf-brand">🛡️ نبتيكس أكاديمي — '+acEsc(AC_COURSE.title)+'</div>'+
 '<div class="acad-pdf-mod">'+acEsc(modTitle)+'</div>'+
 '<div class="acad-pdf-title">'+acEsc(ls.title)+'</div>'+
 '<div class="acad-pdf-dur">⏱ '+acEsc(ls.dur)+'</div>'+
 '</div>'+
 content+
-'<div class="acad-pdf-foot">© نبتيكس Nabtex — من دورة '+acEsc(AC_COURSE.title)+'، نبتيكس أكاديمي</div>'+
-'</div>'+
-'<script>(function(){'+
-'function go(){window.focus();setTimeout(function(){window.print()},200)}'+
-'if(document.fonts&&document.fonts.ready){document.fonts.ready.then(go,go)}else{setTimeout(go,300)}'+
-'window.onafterprint=function(){setTimeout(function(){window.close()},250)}'+
-'})()<\/script>'+
-'</body></html>';
+'<div class="acad-pdf-foot">© نبتيكس Nabtex — من دورة '+acEsc(AC_COURSE.title)+'، نبتيكس أكاديمي</div>';
+document.body.appendChild(wrap);
 
-w.document.open();
-w.document.write(html);
-w.document.close();
+if(btn)btn.innerHTML='⏳ جارٍ الحفظ...';
 
-restore();
-if(typeof showToast==='function')showToast('🖨️ افتحنا نافذة الطباعة — اختر "حفظ كـ PDF" لتنزيل الدرس','inf')
+var safeFileName=(ls.title||'lesson').replace(/[\\\/:*?"<>|]+/g,'-').trim();
+var opt={
+margin:[14,12,16,12],
+filename:safeFileName+' - نبتيكس أكاديمي.pdf',
+image:{type:'jpeg',quality:0.95},
+html2canvas:{scale:1.5,useCORS:true,backgroundColor:'#ffffff',windowWidth:900,scrollX:0,scrollY:-window.scrollY},
+jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+pagebreak:{mode:['css','legacy']}
+};
+
+var cleanedUp=false;
+function cleanup(){if(cleanedUp)return;cleanedUp=true;wrap.parentNode&&wrap.parentNode.removeChild(wrap);restore()}
+var safetyTimer=setTimeout(function(){cleanup();if(typeof showToast==='function')showToast('⚠️ استغرق الحفظ وقتاً طويلاً وتم إلغاؤه، حاول مرة أخرى','err')},20000);
+
+try{
+window.html2pdf().set(opt).from(wrap).save().then(function(){
+clearTimeout(safetyTimer);cleanup();
+if(typeof showToast==='function')showToast('✅ تم حفظ الدرس بصيغة PDF','ok')
+}).catch(function(){
+clearTimeout(safetyTimer);cleanup();
+if(typeof showToast==='function')showToast('⚠️ حدث خطأ أثناء حفظ الملف','err')
+})
+}catch(e){
+clearTimeout(safetyTimer);cleanup();
+if(typeof showToast==='function')showToast('⚠️ حدث خطأ أثناء حفظ الملف','err')
 }
+})}
 
 /* ── Public API ───────────────────────────────────────────── */
 
