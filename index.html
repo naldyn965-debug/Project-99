@@ -2697,7 +2697,7 @@ function acGo(view,lid){
 if((view==='lesson'||view==='quiz')&&lid&&!acIsUnlocked(lid)){
  if(typeof showToast==='function'){
   var gateRem=acUnitGateRemaining(lid);
-  showToast(gateRem>0?'🕒 أحسنت إنهاء الوحدة! الوحدة التالية تُفتح بعد '+acFormatRemaining(gateRem):'🔒 أكمل الدرس السابق واجتز اختباره أولاً','err')
+  showToast(gateRem>0?'🕒 أحسنت! الوحدة التالية تفتح غدًا':'🔒 أكمل الدرس السابق واجتز اختباره أولاً','err')
  }
  view='home';lid=null;
 }
@@ -2738,7 +2738,7 @@ var modulesHTML=AC_COURSE.modules.map(function(mod,mi){
   var checkContent=done?'✓':(unlocked?'':(gateRem>0?'⏳':'🔒'));
   var clickAttr=unlocked?' onclick="NAcademy.openLesson(\''+ls.id+'\')"':' onclick="NAcademy.lockedNotice(\''+ls.id+'\')"';
   var statusNote=done?' &nbsp;·&nbsp; <span style="color:var(--brand);font-weight:800">مكتمل ✓</span>':
-   (unlocked?'':(gateRem>0?' &nbsp;·&nbsp; <span style="color:var(--muted)">🕒 يُفتح بعد '+acFormatRemaining(gateRem)+'</span>':' &nbsp;·&nbsp; <span style="color:var(--muted)">مغلق — أكمل الدرس السابق أولاً</span>'));
+   (unlocked?'':(gateRem>0?' &nbsp;·&nbsp; <span style="color:var(--muted)">🕒 يُفتح غدًا</span>':' &nbsp;·&nbsp; <span style="color:var(--muted)">مغلق — أكمل الدرس السابق أولاً</span>'));
   return '<div class="acad-lesson-row'+doneClass+'"'+clickAttr+' role="button">'+
    '<div class="acad-lesson-check">'+checkContent+'</div>'+
    '<div class="acad-lesson-info">'+
@@ -4424,7 +4424,7 @@ openLesson:function(id){acGo('lesson',id)},
 lockedNotice:function(id){
 if(typeof showToast!=='function')return;
 var gateRem=id?acUnitGateRemaining(id):0;
-showToast(gateRem>0?'🕒 أحسنت! أنهيت هذه الوحدة — الوحدة التالية تُفتح بعد '+acFormatRemaining(gateRem):'🔒 أكمل الدرس السابق واجتز اختباره أولاً','err')},
+showToast(gateRem>0?'🕒 أحسنت! الوحدة التالية تفتح غدًا':'🔒 أكمل الدرس السابق واجتز اختباره أولاً','err')},
 downloadLessonPDF:function(id,btn){acDownloadLessonPDF(id,btn)},
 goQuiz:function(id){acGo('quiz',id)},
 goFinalExam:function(){acGo('final-exam',null)},
@@ -4477,7 +4477,7 @@ var nextId=passed?acNextLessonId(lid):null;
 var gateRem=nextId?acUnitGateRemaining(nextId):0;
 if(passed&&nextId&&gateRem<=0)acGo('lesson',nextId);
 else acGo('home',null);
-var msg=passed?(nextId?(gateRem>0?'🎉 أحسنت! أنهيت هذه الوحدة بنجاح ('+score+'%) — الوحدة التالية تُفتح بعد '+acFormatRemaining(gateRem):'✅ اجتزت الاختبار بنجاح ('+score+'%) — ننتقل للدرس التالي'):'🎉 اجتزت اختبار آخر درس! يمكنك الآن دخول الاختبار النهائي'):'📝 لم تجتز الاختبار ('+score+'%) — راجع الدرس وأعد المحاولة';
+var msg=passed?(nextId?(gateRem>0?'🎉 أحسنت! أنهيت هذه الوحدة بنجاح ('+score+'%) — الوحدة التالية تفتح غدًا':'✅ اجتزت الاختبار بنجاح ('+score+'%) — ننتقل للدرس التالي'):'🎉 اجتزت اختبار آخر درس! يمكنك الآن دخول الاختبار النهائي'):'📝 لم تجتز الاختبار ('+score+'%) — راجع الدرس وأعد المحاولة';
 if(typeof showToast==='function')showToast(msg,'ok')
 }};
 
