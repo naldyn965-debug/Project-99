@@ -1970,7 +1970,8 @@
 .acad-btn[disabled]{opacity:.6;cursor:default;pointer-events:none}
 
 /* lesson PDF export (rendered off-screen, never shown to the user) */
-.acad-pdf-export-wrap{position:fixed;top:0;left:-10000px;width:780px;background:#fff;padding:42px 38px;z-index:-1}
+.acad-pdf-export-host{position:fixed;top:0;left:0;width:0;height:0;overflow:hidden;z-index:-1}
+.acad-pdf-export-wrap{width:780px;box-sizing:border-box;background:#fff;padding:42px 38px}
 .acad-pdf-head{margin-bottom:6px;padding-bottom:22px;border-bottom:2px solid var(--brand-pale)}
 .acad-pdf-brand{font-size:12px;font-weight:800;color:var(--brand);letter-spacing:.1em;margin-bottom:14px}
 .acad-pdf-mod{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:8px}
@@ -4296,6 +4297,8 @@ function restore(){if(btn){btn.disabled=false;btn.innerHTML=origHTML}}
 acLoadHtml2Pdf(function(ok){
 if(!ok){restore();if(typeof showToast==='function')showToast('⚠️ تعذر تحميل أداة الحفظ، تحقق من اتصالك بالإنترنت','err');return}
 
+var host=document.createElement('div');
+host.className='acad-pdf-export-host';
 var wrap=document.createElement('div');
 wrap.className='acad-pdf-export-wrap';
 wrap.innerHTML='<div class="acad-pdf-head">'+
@@ -4306,7 +4309,8 @@ wrap.innerHTML='<div class="acad-pdf-head">'+
 '</div>'+
 content+
 '<div class="acad-pdf-foot">© نبتيكس Nabtex — من دورة '+acEsc(AC_COURSE.title)+'، نبتيكس أكاديمي</div>';
-document.body.appendChild(wrap);
+host.appendChild(wrap);
+document.body.appendChild(host);
 
 if(btn)btn.innerHTML='⏳ جارٍ الحفظ...';
 
@@ -4315,14 +4319,14 @@ var opt={
 margin:[14,12,16,12],
 filename:safeFileName+' - نبتيكس أكاديمي.pdf',
 image:{type:'jpeg',quality:0.95},
-html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff'},
+html2canvas:{scale:1.5,useCORS:true,backgroundColor:'#ffffff',windowWidth:900,scrollX:0,scrollY:-window.scrollY},
 jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-pagebreak:{mode:['avoid-all','css','legacy']}
+pagebreak:{mode:['css','legacy']}
 };
 
 var cleanedUp=false;
-function cleanup(){if(cleanedUp)return;cleanedUp=true;wrap.parentNode&&wrap.parentNode.removeChild(wrap);restore()}
-var safetyTimer=setTimeout(function(){cleanup()},25000);
+function cleanup(){if(cleanedUp)return;cleanedUp=true;host.parentNode&&host.parentNode.removeChild(host);restore()}
+var safetyTimer=setTimeout(function(){cleanup();if(typeof showToast==='function')showToast('⚠️ استغرق الحفظ وقتاً طويلاً وتم إلغاؤه، حاول مرة أخرى','err')},20000);
 
 try{
 window.html2pdf().set(opt).from(wrap).save().then(function(){
