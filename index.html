@@ -2626,16 +2626,43 @@ if(idx===-1||idx>=flat.length-1)return null;
 return flat[idx+1]}
 function acSaveFE(score){var p=acProg();p.fe=score;acSave(p)}
 
-/* ── Answer-order randomization (prevents a fixed correct-option pattern) ── */
+/* ── Answer-order randomization (balanced: even spread of the correct
+   position within EACH quiz attempt, not just over many attempts) ── */
 
-function acShuffleOpts(q){
-var idxs=q.opts.map(function(_,i){return i});
-for(var i=idxs.length-1;i>0;i--){
+function acFisherShuffleArr(arr){
+var a=arr.slice();
+for(var i=a.length-1;i>0;i--){
  var j=Math.floor(Math.random()*(i+1));
- var t=idxs[i];idxs[i]=idxs[j];idxs[j]=t;
+ var t=a[i];a[i]=a[j];a[j]=t;
 }
-return{q:q.q,opts:idxs.map(function(i){return q.opts[i]}),cor:idxs.indexOf(q.cor),exp:q.exp}}
-function acShuffleQuestions(questions){return questions.map(acShuffleOpts)}
+return a}
+function acBalancedPositions(n,slots){
+var base=Math.floor(n/slots),rem=n%slots;
+var slotOrder=acFisherShuffleArr([0,1,2,3].slice(0,slots));
+var counts={};
+slotOrder.forEach(function(s,i){counts[s]=base+(i<rem?1:0)});
+var arr=[];
+for(var p=0;p<slots;p++)for(var c=0;c<counts[p];c++)arr.push(p);
+return acFisherShuffleArr(arr)}
+function acShuffleOptsToPosition(q,targetPos){
+var n=q.opts.length;
+var others=[];
+for(var i=0;i<n;i++)if(i!==q.cor)others.push(i);
+others=acFisherShuffleArr(others);
+var idxs=new Array(n);
+idxs[targetPos]=q.cor;
+var oi=0;
+for(var p=0;p<n;p++){
+ if(p===targetPos)continue;
+ idxs[p]=others[oi++];
+}
+return{q:q.q,opts:idxs.map(function(i){return q.opts[i]}),cor:targetPos,exp:q.exp}}
+function acShuffleQuestions(questions){
+var n=questions.length;
+if(!n)return[];
+var slots=questions[0].opts.length;
+var positions=acBalancedPositions(n,slots);
+return questions.map(function(q,i){return acShuffleOptsToPosition(q,positions[i])})}
 
 /* ── State ────────────────────────────────────────────────── */
 
