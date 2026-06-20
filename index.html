@@ -2601,7 +2601,7 @@ nbCheckCertVerify();
 function acProg(){try{return JSON.parse(localStorage.getItem('nb-pest-p')||'{}')}catch(e){return{}}}
 function acSave(p){try{localStorage.setItem('nb-pest-p',JSON.stringify(p))}catch(e){}}
 function acDone(id){return(acProg().d||[]).includes(id)}
-function acMark(id){var p=acProg();p.d=p.d||[];if(!p.d.includes(id))p.d.push(id);acSave(p)}
+function acMark(id){var p=acProg();p.d=p.d||[];if(!p.d.includes(id))p.d.push(id);p.dt=p.dt||{};p.dt[id]=Date.now();acSave(p)}
 function acPct(){
 var total=AC_COURSE.modules.reduce(function(s,m){return s+m.lessons.length},0);
 var done=(acProg().d||[]).length;
@@ -2614,11 +2614,36 @@ function acFlatLessons(){
 var arr=[];
 AC_COURSE.modules.forEach(function(m){m.lessons.forEach(function(ls){arr.push(ls.id)})});
 return arr}
+/* Unit (module) day-gate: once the last lesson of a module is completed,
+   the next module's first lesson stays locked for 24 hours. */
+var AC_UNIT_GATE_MS=24*60*60*1000;
+function acModuleGateMap(){
+var map={};
+for(var i=1;i<AC_COURSE.modules.length;i++){
+ var prevLessons=AC_COURSE.modules[i-1].lessons;
+ var curLessons=AC_COURSE.modules[i].lessons;
+ if(prevLessons.length&&curLessons.length)
+  map[curLessons[0].id]=prevLessons[prevLessons.length-1].id}
+return map}
+function acUnitGateRemaining(id){
+var gateLessonId=acModuleGateMap()[id];
+if(!gateLessonId)return 0;
+var dt=(acProg().dt||{})[gateLessonId];
+if(!dt)return 0;
+var remain=AC_UNIT_GATE_MS-(Date.now()-dt);
+return remain>0?remain:0}
+function acFormatRemaining(ms){
+var totalMin=Math.max(1,Math.ceil(ms/60000));
+var h=Math.floor(totalMin/60),m=totalMin%60;
+if(h<=0)return m+' دقيقة';
+if(m<=0)return h+' ساعة';
+return h+' ساعة و'+m+' دقيقة'}
 function acIsUnlocked(id){
 var flat=acFlatLessons();
 var idx=flat.indexOf(id);
 if(idx<=0)return true;
-return acDone(flat[idx-1])}
+if(!acDone(flat[idx-1]))return false;
+return acUnitGateRemaining(id)<=0}
 function acNextLessonId(id){
 var flat=acFlatLessons();
 var idx=flat.indexOf(id);
@@ -2670,7 +2695,10 @@ var AC={view:'home',lid:null,qState:null};
 
 function acGo(view,lid){
 if((view==='lesson'||view==='quiz')&&lid&&!acIsUnlocked(lid)){
- if(typeof showToast==='function')showToast('🔒 أكمل الدرس السابق واجتز اختباره أولاً','err');
+ if(typeof showToast==='function'){
+  var gateRem=acUnitGateRemaining(lid);
+  showToast(gateRem>0?'🕒 أحسنت إنهاء الوحدة! الوحدة التالية تُفتح بعد '+acFormatRemaining(gateRem):'🔒 أكمل الدرس السابق واجتز اختباره أولاً','err')
+ }
  view='home';lid=null;
 }
 AC.view=view;AC.lid=lid||null;
@@ -2705,11 +2733,12 @@ var modulesHTML=AC_COURSE.modules.map(function(mod,mi){
  var rows=mod.lessons.map(function(ls){
   var done=acDone(ls.id);
   var unlocked=acIsUnlocked(ls.id);
+  var gateRem=unlocked?0:acUnitGateRemaining(ls.id);
   var doneClass=done?' done':(unlocked?'':' locked');
-  var checkContent=done?'✓':(unlocked?'':'🔒');
-  var clickAttr=unlocked?' onclick="NAcademy.openLesson(\''+ls.id+'\')"':' onclick="NAcademy.lockedNotice()"';
+  var checkContent=done?'✓':(unlocked?'':(gateRem>0?'⏳':'🔒'));
+  var clickAttr=unlocked?' onclick="NAcademy.openLesson(\''+ls.id+'\')"':' onclick="NAcademy.lockedNotice(\''+ls.id+'\')"';
   var statusNote=done?' &nbsp;·&nbsp; <span style="color:var(--brand);font-weight:800">مكتمل ✓</span>':
-   (unlocked?'':' &nbsp;·&nbsp; <span style="color:var(--muted)">مغلق — أكمل الدرس السابق أولاً</span>');
+   (unlocked?'':(gateRem>0?' &nbsp;·&nbsp; <span style="color:var(--muted)">🕒 يُفتح بعد '+acFormatRemaining(gateRem)+'</span>':' &nbsp;·&nbsp; <span style="color:var(--muted)">مغلق — أكمل الدرس السابق أولاً</span>'));
   return '<div class="acad-lesson-row'+doneClass+'"'+clickAttr+' role="button">'+
    '<div class="acad-lesson-check">'+checkContent+'</div>'+
    '<div class="acad-lesson-info">'+
@@ -4392,7 +4421,10 @@ for(var i=0;i<AC_COURSE.modules.length&&!firstReady;i++)
   if(!acDone(AC_COURSE.modules[i].lessons[j].id))firstReady=AC_COURSE.modules[i].lessons[j].id;
 if(firstReady)acGo('lesson',firstReady);else acGo('cert',null)},
 openLesson:function(id){acGo('lesson',id)},
-lockedNotice:function(){if(typeof showToast==='function')showToast('🔒 أكمل الدرس السابق واجتز اختباره أولاً','err')},
+lockedNotice:function(id){
+if(typeof showToast!=='function')return;
+var gateRem=id?acUnitGateRemaining(id):0;
+showToast(gateRem>0?'🕒 أحسنت! أنهيت هذه الوحدة — الوحدة التالية تُفتح بعد '+acFormatRemaining(gateRem):'🔒 أكمل الدرس السابق واجتز اختباره أولاً','err')},
 downloadLessonPDF:function(id,btn){acDownloadLessonPDF(id,btn)},
 goQuiz:function(id){acGo('quiz',id)},
 goFinalExam:function(){acGo('final-exam',null)},
@@ -4442,9 +4474,10 @@ _finishQuiz:function(lid,score){
 var passed=score>=60;
 if(passed)acMark(lid);
 var nextId=passed?acNextLessonId(lid):null;
-if(passed&&nextId)acGo('lesson',nextId);
+var gateRem=nextId?acUnitGateRemaining(nextId):0;
+if(passed&&nextId&&gateRem<=0)acGo('lesson',nextId);
 else acGo('home',null);
-var msg=passed?(nextId?'✅ اجتزت الاختبار بنجاح ('+score+'%) — ننتقل للدرس التالي':'🎉 اجتزت اختبار آخر درس! يمكنك الآن دخول الاختبار النهائي'):'📝 لم تجتز الاختبار ('+score+'%) — راجع الدرس وأعد المحاولة';
+var msg=passed?(nextId?(gateRem>0?'🎉 أحسنت! أنهيت هذه الوحدة بنجاح ('+score+'%) — الوحدة التالية تُفتح بعد '+acFormatRemaining(gateRem):'✅ اجتزت الاختبار بنجاح ('+score+'%) — ننتقل للدرس التالي'):'🎉 اجتزت اختبار آخر درس! يمكنك الآن دخول الاختبار النهائي'):'📝 لم تجتز الاختبار ('+score+'%) — راجع الدرس وأعد المحاولة';
 if(typeof showToast==='function')showToast(msg,'ok')
 }};
 
