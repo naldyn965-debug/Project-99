@@ -1897,6 +1897,9 @@
 .acad-lesson-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--r2);cursor:pointer;transition:all .18s;border:1px solid transparent}
 .acad-lesson-row:hover{background:var(--bg2);border-color:var(--line)}
 .acad-lesson-row.done{background:rgba(27,107,58,.04)}
+.acad-lesson-row.locked{cursor:not-allowed;opacity:.55}
+.acad-lesson-row.locked:hover{background:transparent;border-color:transparent}
+.acad-lesson-row.locked .acad-lesson-check{background:var(--bg2);color:var(--muted);border-color:var(--line)}
 .acad-lesson-check{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .2s}
 .acad-lesson-row.done .acad-lesson-check{background:var(--brand);border-color:var(--brand);color:#fff}
 .acad-lesson-info{flex:1}
@@ -2604,6 +2607,23 @@ var total=AC_COURSE.modules.reduce(function(s,m){return s+m.lessons.length},0);
 var done=(acProg().d||[]).length;
 return total?Math.round(done/total*100):0}
 function acFEScore(){var v=acProg().fe;return v!==undefined?v:-1}
+
+/* ── Sequential Lesson Order/Lock ─────────────────────────── */
+
+function acFlatLessons(){
+var arr=[];
+AC_COURSE.modules.forEach(function(m){m.lessons.forEach(function(ls){arr.push(ls.id)})});
+return arr}
+function acIsUnlocked(id){
+var flat=acFlatLessons();
+var idx=flat.indexOf(id);
+if(idx<=0)return true;
+return acDone(flat[idx-1])}
+function acNextLessonId(id){
+var flat=acFlatLessons();
+var idx=flat.indexOf(id);
+if(idx===-1||idx>=flat.length-1)return null;
+return flat[idx+1]}
 function acSaveFE(score){var p=acProg();p.fe=score;acSave(p)}
 
 /* ── State ────────────────────────────────────────────────── */
@@ -2611,6 +2631,10 @@ function acSaveFE(score){var p=acProg();p.fe=score;acSave(p)}
 var AC={view:'home',lid:null,qState:null};
 
 function acGo(view,lid){
+if((view==='lesson'||view==='quiz')&&lid&&!acIsUnlocked(lid)){
+ if(typeof showToast==='function')showToast('🔒 أكمل الدرس السابق واجتز اختباره أولاً','err');
+ view='home';lid=null;
+}
 AC.view=view;AC.lid=lid||null;
 if(view==='quiz'||view==='final-exam')AC.qState={step:0,answers:[],revealed:false};
 acR();window.scrollTo(0,0)}
@@ -2637,15 +2661,19 @@ var doneLessons=(acProg().d||[]).length;
 var modulesHTML=AC_COURSE.modules.map(function(mod,mi){
  var rows=mod.lessons.map(function(ls){
   var done=acDone(ls.id);
-  var doneClass=done?' done':'';
-  var checkContent=done?'✓':'';
-  return '<div class="acad-lesson-row'+doneClass+'" onclick="NAcademy.openLesson(\''+ls.id+'\')" role="button">'+
+  var unlocked=acIsUnlocked(ls.id);
+  var doneClass=done?' done':(unlocked?'':' locked');
+  var checkContent=done?'✓':(unlocked?'':'🔒');
+  var clickAttr=unlocked?' onclick="NAcademy.openLesson(\''+ls.id+'\')"':' onclick="NAcademy.lockedNotice()"';
+  var statusNote=done?' &nbsp;·&nbsp; <span style="color:var(--brand);font-weight:800">مكتمل ✓</span>':
+   (unlocked?'':' &nbsp;·&nbsp; <span style="color:var(--muted)">مغلق — أكمل الدرس السابق أولاً</span>');
+  return '<div class="acad-lesson-row'+doneClass+'"'+clickAttr+' role="button">'+
    '<div class="acad-lesson-check">'+checkContent+'</div>'+
    '<div class="acad-lesson-info">'+
     '<div class="acad-lesson-name">'+ls.title+'</div>'+
-    '<div class="acad-lesson-dur">⏱ '+ls.dur+(done?' &nbsp;·&nbsp; <span style="color:var(--brand);font-weight:800">مكتمل ✓</span>':'')+'</div>'+
+    '<div class="acad-lesson-dur">⏱ '+ls.dur+statusNote+'</div>'+
    '</div>'+
-   '<span class="acad-lesson-arr">‹</span>'+
+   '<span class="acad-lesson-arr">'+(unlocked?'‹':'')+'</span>'+
   '</div>'}).join('');
  return '<div class="acad-module-block">'+
   '<div class="acad-module-name"><span class="acad-module-num">'+(mi+1)+'</span>'+mod.title+'</div>'+
@@ -4321,6 +4349,7 @@ for(var i=0;i<AC_COURSE.modules.length&&!firstReady;i++)
   if(!acDone(AC_COURSE.modules[i].lessons[j].id))firstReady=AC_COURSE.modules[i].lessons[j].id;
 if(firstReady)acGo('lesson',firstReady);else acGo('cert',null)},
 openLesson:function(id){acGo('lesson',id)},
+lockedNotice:function(){if(typeof showToast==='function')showToast('🔒 أكمل الدرس السابق واجتز اختباره أولاً','err')},
 downloadLessonPDF:function(id,btn){acDownloadLessonPDF(id,btn)},
 goQuiz:function(id){acGo('quiz',id)},
 goFinalExam:function(){acGo('final-exam',null)},
@@ -4365,9 +4394,13 @@ var st=AC.qState;if(!st)return;
 st.step++;st.revealed=false;
 acR()},
 _finishQuiz:function(lid,score){
-if(score>=60)acMark(lid);
-acGo('home',null);
-if(typeof showToast==='function')showToast(score>=60?'✅ اجتزت الاختبار! '+score+'%':'📝 راجع الدرس ثم أعد المحاولة','ok')
+var passed=score>=60;
+if(passed)acMark(lid);
+var nextId=passed?acNextLessonId(lid):null;
+if(passed&&nextId)acGo('lesson',nextId);
+else acGo('home',null);
+var msg=passed?(nextId?'✅ اجتزت الاختبار بنجاح ('+score+'%) — ننتقل للدرس التالي':'🎉 اجتزت اختبار آخر درس! يمكنك الآن دخول الاختبار النهائي'):'📝 لم تجتز الاختبار ('+score+'%) — راجع الدرس وأعد المحاولة';
+if(typeof showToast==='function')showToast(msg,'ok')
 }};
 
 /* ── showPage Hook ────────────────────────────────────────── */
