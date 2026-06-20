@@ -2023,11 +2023,15 @@
 .acad-cert-name:focus{border-bottom-color:#1f5c39}
 .acad-cert-completed{font-family:'Cairo',sans-serif;font-weight:700;font-size:clamp(12.5px,1.3vw,16px);color:#28352f;line-height:1.65;margin:18px 0 0;max-width:600px}
 .acad-cert-recognition{font-family:'Cairo',sans-serif;font-weight:700;font-size:clamp(10.5px,1.08vw,13.5px);color:#1f5c39;line-height:1.75;margin:18px 0 0;max-width:620px}
-.acad-cert-footer{position:relative;z-index:1;display:flex;gap:clamp(28px,7vw,90px);margin-top:clamp(24px,4.4vw,46px)}
+.acad-cert-footer{position:relative;z-index:1;display:flex;align-items:flex-end;gap:clamp(20px,5vw,60px);margin-top:clamp(24px,4.4vw,46px)}
 .acad-cert-footer-col{flex-shrink:0}
-.acad-cert-footer-line{border-top:1px solid #84958d;width:clamp(120px,17vw,200px);margin-bottom:8px}
+.acad-cert-footer-line{border-top:1px solid #84958d;width:clamp(110px,15vw,180px);margin-bottom:8px}
 .acad-cert-footer-label{font-family:'Cairo',sans-serif;font-weight:800;font-size:clamp(11.5px,1.15vw,14px);color:#28352f}
 .acad-cert-footer-value{font-family:'Cairo',sans-serif;font-size:clamp(10.5px,1.05vw,12.5px);color:#5e6f69;margin-top:3px;letter-spacing:.03em}
+.acad-cert-footer-qr{margin-inline-start:auto;display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0}
+.acad-cert-qr-box{width:clamp(58px,8vw,96px);height:clamp(58px,8vw,96px);border:1.5px solid #c6d2cb;background:#fff;overflow:hidden}
+.acad-cert-qr-box svg{width:100%;height:100%;display:block}
+.acad-cert-qr-cap{font-family:'Cairo',sans-serif;font-size:10px;color:#5e6f69;white-space:nowrap}
 .acad-cert-edit-hint{font-family:var(--f-ui);font-size:11.5px;color:var(--muted);text-align:center;margin-top:12px}
 .acad-cert-acts{display:flex;gap:10px;justify-content:center;margin-top:26px;flex-wrap:wrap}
 @media(max-width:560px){
@@ -2035,8 +2039,9 @@
 .acad-cert-ribbon{width:64px;margin:0 auto}
 .acad-cert-presented,.acad-cert-completed,.acad-cert-recognition{margin-left:auto;margin-right:auto;text-align:center}
 .acad-cert-name{margin:0 auto}
-.acad-cert-footer{justify-content:center;text-align:center}
+.acad-cert-footer{justify-content:center;text-align:center;flex-wrap:wrap;row-gap:16px}
 .acad-cert-footer-line{margin-left:auto;margin-right:auto}
+.acad-cert-footer-qr{margin-inline-start:0;flex-basis:100%}
 }
 
 @media(max-width:600px){
@@ -2085,6 +2090,508 @@ modules:[
  {id:'p12',title:'التشخيص الميداني وكتابة تقرير الآفة',dur:'40 دقيقة',ready:true}
 ]}
 ]};
+
+/* ── QR Code Engine (self-contained, no external dependency) ── */
+
+/* Minimal self-contained QR Code encoder (Byte mode only), no dependencies.
+   Algorithm follows ISO/IEC 18004. */
+var QRMath = (function(){
+  var EXP=new Array(256), LOG=new Array(256);
+  for(var i=0;i<8;i++) EXP[i]=1<<i;
+  for(var i=8;i<256;i++) EXP[i]=EXP[i-4]^EXP[i-5]^EXP[i-6]^EXP[i-8];
+  for(var i=0;i<255;i++) LOG[EXP[i]]=i;
+  return {
+    glog:function(n){ if(n<1) throw new Error('glog('+n+')'); return LOG[n]; },
+    gexp:function(n){ while(n<0) n+=255; while(n>=256) n-=255; return EXP[n]; }
+  };
+})();
+
+function QRPolynomial(num, shift){
+  var offset=0;
+  while(offset<num.length && num[offset]===0) offset++;
+  this.num = new Array(num.length-offset+shift);
+  for(var i=0;i<num.length-offset;i++) this.num[i]=num[i+offset];
+  for(var i=0;i<shift;i++) this.num[num.length-offset+i]=0;
+}
+QRPolynomial.prototype.get=function(i){return this.num[i]};
+QRPolynomial.prototype.getLength=function(){return this.num.length};
+QRPolynomial.prototype.multiply=function(e){
+  var num=new Array(this.getLength()+e.getLength()-1);
+  for(var i=0;i<num.length;i++) num[i]=0;
+  for(var i=0;i<this.getLength();i++){
+    for(var j=0;j<e.getLength();j++){
+      num[i+j]^=QRMath.gexp(QRMath.glog(this.get(i))+QRMath.glog(e.get(j)));
+    }
+  }
+  return new QRPolynomial(num,0);
+};
+QRPolynomial.prototype.mod=function(e){
+  if(this.getLength()-e.getLength()<0) return this;
+  var ratio=QRMath.glog(this.get(0))-QRMath.glog(e.get(0));
+  var num=new Array(this.getLength());
+  for(var i=0;i<this.getLength();i++) num[i]=this.get(i);
+  for(var i=0;i<e.getLength();i++) num[i]^=QRMath.gexp(QRMath.glog(e.get(i))+ratio);
+  return new QRPolynomial(num,0).mod(e);
+};
+
+function getErrorCorrectPolynomial(ecLength){
+  var a=new QRPolynomial([1],0);
+  for(var i=0;i<ecLength;i++) a=a.multiply(new QRPolynomial([1,QRMath.gexp(i)],0));
+  return a;
+}
+
+/* RS block table: [version][ecLevel] -> array of [count, totalCount, dataCount]
+   ecLevel index: 0=L 1=M 2=Q 3=H. Only versions 1..20 included (sufficient for our payloads). */
+var RS_BLOCK_TABLE = {
+1:{L:[[1,26,19]],M:[[1,26,16]],Q:[[1,26,13]],H:[[1,26,9]]},
+2:{L:[[1,44,34]],M:[[1,44,28]],Q:[[1,44,22]],H:[[1,44,16]]},
+3:{L:[[1,70,55]],M:[[1,70,44]],Q:[[2,35,17]],H:[[2,35,13]]},
+4:{L:[[1,100,80]],M:[[2,50,32]],Q:[[2,50,24]],H:[[4,25,9]]},
+5:{L:[[1,134,108]],M:[[2,67,43]],Q:[[2,33,15],[2,34,16]],H:[[2,33,11],[2,34,12]]},
+6:{L:[[2,86,68]],M:[[4,43,27]],Q:[[4,43,19]],H:[[4,43,15]]},
+7:{L:[[2,98,78]],M:[[4,49,31]],Q:[[2,32,14],[4,33,15]],H:[[4,39,13],[1,40,14]]},
+8:{L:[[2,121,97]],M:[[2,60,38],[2,61,39]],Q:[[4,40,18],[2,41,19]],H:[[4,40,14],[2,41,15]]},
+9:{L:[[2,146,116]],M:[[3,58,36],[2,59,37]],Q:[[4,36,16],[4,37,17]],H:[[4,36,12],[4,37,13]]},
+10:{L:[[2,86,68],[2,87,69]],M:[[4,69,43],[1,70,44]],Q:[[6,43,19],[2,44,20]],H:[[6,43,15],[2,44,16]]},
+11:{L:[[4,101,81]],M:[[1,80,50],[4,81,51]],Q:[[4,50,22],[4,51,23]],H:[[3,36,12],[8,37,13]]},
+12:{L:[[2,116,92],[2,117,93]],M:[[6,58,36],[2,59,37]],Q:[[4,46,20],[6,47,21]],H:[[7,42,14],[4,43,15]]},
+13:{L:[[4,133,107]],M:[[8,59,37],[1,60,38]],Q:[[8,44,20],[4,45,21]],H:[[12,33,11],[4,34,12]]},
+14:{L:[[3,145,115],[1,146,116]],M:[[4,64,40],[5,65,41]],Q:[[11,36,16],[5,37,17]],H:[[11,36,12],[5,37,13]]},
+15:{L:[[5,109,87],[1,110,88]],M:[[5,65,41],[5,66,42]],Q:[[5,54,24],[7,55,25]],H:[[11,36,12],[7,37,13]]},
+16:{L:[[5,122,98],[1,123,99]],M:[[7,73,45],[3,74,46]],Q:[[15,43,19],[2,44,20]],H:[[3,45,15],[13,46,16]]},
+17:{L:[[1,135,107],[5,136,108]],M:[[10,74,46],[1,75,47]],Q:[[1,50,22],[15,51,23]],H:[[2,42,14],[17,43,15]]},
+18:{L:[[5,150,120],[1,151,121]],M:[[9,69,43],[4,70,44]],Q:[[17,50,22],[1,51,23]],H:[[2,42,14],[19,43,15]]},
+19:{L:[[3,141,113],[4,142,114]],M:[[3,70,44],[11,71,45]],Q:[[17,47,21],[4,48,22]],H:[[9,39,13],[16,40,14]]},
+20:{L:[[3,135,107],[5,136,108]],M:[[3,67,41],[13,68,42]],Q:[[15,54,24],[5,55,25]],H:[[15,43,15],[10,44,16]]}
+};
+
+function getRSBlocks(typeNumber, ecLevel){
+  var t = RS_BLOCK_TABLE[typeNumber];
+  if(!t) throw new Error('bad version '+typeNumber);
+  var rows = t[ecLevel];
+  var list=[];
+  rows.forEach(function(r){
+    var count=r[0], total=r[1], data=r[2];
+    for(var i=0;i<count;i++) list.push({totalCount:total, dataCount:data});
+  });
+  return list;
+}
+
+function QRBitBuffer(){ this.buffer=[]; this.length=0; }
+QRBitBuffer.prototype.get=function(index){
+  var bufIndex=Math.floor(index/8);
+  return ((this.buffer[bufIndex]>>>(7-index%8))&1)===1;
+};
+QRBitBuffer.prototype.put=function(num,length){
+  for(var i=0;i<length;i++) this.putBit(((num>>>(length-i-1))&1)===1);
+};
+QRBitBuffer.prototype.putBit=function(bit){
+  var bufIndex=Math.floor(this.length/8);
+  if(this.buffer.length<=bufIndex) this.buffer.push(0);
+  if(bit) this.buffer[bufIndex] |= (0x80>>>(this.length%8));
+  this.length++;
+};
+
+var PATTERN_POSITION_TABLE=[
+[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],
+[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90]
+];
+
+var G15=(1<<10)|(1<<8)|(1<<5)|(1<<4)|(1<<2)|(1<<1)|(1<<0);
+var G18=(1<<12)|(1<<11)|(1<<10)|(1<<9)|(1<<8)|(1<<5)|(1<<2)|(1<<0);
+var G15_MASK=(1<<14)|(1<<12)|(1<<10)|(1<<4)|(1<<1);
+
+function getBCHDigit(data){var digit=0; while(data!==0){digit++; data>>>=1;} return digit;}
+function getBCHTypeInfo(data){
+  var d=data<<10;
+  while(getBCHDigit(d)-getBCHDigit(G15)>=0) d ^= (G15 << (getBCHDigit(d)-getBCHDigit(G15)));
+  return ((data<<10)|d) ^ G15_MASK;
+}
+function getBCHTypeNumber(data){
+  var d=data<<12;
+  while(getBCHDigit(d)-getBCHDigit(G18)>=0) d ^= (G18 << (getBCHDigit(d)-getBCHDigit(G18)));
+  return (data<<12)|d;
+}
+
+var MASK_FUNCS=[
+function(i,j){return (i+j)%2===0},
+function(i,j){return i%2===0},
+function(i,j){return j%3===0},
+function(i,j){return (i+j)%3===0},
+function(i,j){return (Math.floor(i/2)+Math.floor(j/3))%2===0},
+function(i,j){return (i*j)%2+(i*j)%3===0},
+function(i,j){return ((i*j)%2+(i*j)%3)%2===0},
+function(i,j){return ((i*j)%3+(i+j)%2)%2===0}
+];
+
+function QRCodeModel(typeNumber, ecLevel){
+  this.typeNumber=typeNumber;
+  this.ecLevel=ecLevel;
+  this.modules=null;
+  this.moduleCount=0;
+  this.dataList=[];
+}
+QRCodeModel.prototype.addData=function(bytes){ this.dataList.push(bytes); };
+QRCodeModel.prototype.isDark=function(row,col){
+  if(row<0||this.moduleCount<=row||col<0||this.moduleCount<=col) throw new Error(row+','+col);
+  return this.modules[row][col];
+};
+QRCodeModel.prototype.getModuleCount=function(){return this.moduleCount};
+
+QRCodeModel.prototype.make=function(){
+  this.moduleCount = this.typeNumber*4+17;
+  this.modules=new Array(this.moduleCount);
+  for(var row=0;row<this.moduleCount;row++){
+    this.modules[row]=new Array(this.moduleCount);
+    for(var col=0;col<this.moduleCount;col++) this.modules[row][col]=null;
+  }
+  this.setupPositionProbePattern(0,0);
+  this.setupPositionProbePattern(this.moduleCount-7,0);
+  this.setupPositionProbePattern(0,this.moduleCount-7);
+  this.setupPositionAdjustPattern();
+  this.setupTimingPattern();
+  this.setupTypeInfo(true,0); // temp, real mask chosen later
+
+  if(this.typeNumber>=7) this.setupTypeNumber(true);
+
+  var dataBits = this.createData();
+  this.mapData(dataBits, 0); // temp pass not used; we do final below
+
+  // Try all masks, score, pick best
+  var bestMask=0, bestLost=Infinity, bestModules=null;
+  for(var m=0;m<8;m++){
+    // reset modules (keep function patterns, clear data area)
+    this.resetDataModules();
+    this.setupTypeInfo(false,m);
+    if(this.typeNumber>=7) this.setupTypeNumber(false);
+    this.mapData(dataBits, m);
+    var lost=this.getLostPoint();
+    if(lost<bestLost){ bestLost=lost; bestMask=m; bestModules=this.cloneModules(); }
+  }
+  this.modules=bestModules;
+  this.maskPattern=bestMask;
+};
+
+QRCodeModel.prototype.cloneModules=function(){
+  var c=new Array(this.moduleCount);
+  for(var r=0;r<this.moduleCount;r++) c[r]=this.modules[r].slice();
+  return c;
+};
+
+QRCodeModel.prototype.resetDataModules=function(){
+  // null out everything, then redraw function patterns (probe, timing, adjust)
+  for(var row=0;row<this.moduleCount;row++)
+    for(var col=0;col<this.moduleCount;col++) this.modules[row][col]=null;
+  this.setupPositionProbePattern(0,0);
+  this.setupPositionProbePattern(this.moduleCount-7,0);
+  this.setupPositionProbePattern(0,this.moduleCount-7);
+  this.setupPositionAdjustPattern();
+  this.setupTimingPattern();
+};
+
+QRCodeModel.prototype.setupPositionProbePattern=function(row,col){
+  for(var r=-1;r<=7;r++){
+    if(row+r<=-1||this.moduleCount<=row+r) continue;
+    for(var c=-1;c<=7;c++){
+      if(col+c<=-1||this.moduleCount<=col+c) continue;
+      if((0<=r&&r<=6&&(c===0||c===6)) || (0<=c&&c<=6&&(r===0||r===6)) || (2<=r&&r<=4&&2<=c&&c<=4))
+        this.modules[row+r][col+c]=true;
+      else this.modules[row+r][col+c]=false;
+    }
+  }
+};
+
+QRCodeModel.prototype.setupTimingPattern=function(){
+  for(var r=8;r<this.moduleCount-8;r++){
+    if(this.modules[r][6]!==null) continue;
+    this.modules[r][6]=(r%2===0);
+  }
+  for(var c=8;c<this.moduleCount-8;c++){
+    if(this.modules[6][c]!==null) continue;
+    this.modules[6][c]=(c%2===0);
+  }
+};
+
+QRCodeModel.prototype.setupPositionAdjustPattern=function(){
+  var pos=PATTERN_POSITION_TABLE[this.typeNumber-1];
+  if(!pos) return;
+  for(var i=0;i<pos.length;i++){
+    for(var j=0;j<pos.length;j++){
+      var row=pos[i], col=pos[j];
+      if(this.modules[row][col]!==null) continue;
+      for(var r=-2;r<=2;r++){
+        for(var c=-2;c<=2;c++){
+          if(r===-2||r===2||c===-2||c===2||(r===0&&c===0)) this.modules[row+r][col+c]=true;
+          else this.modules[row+r][col+c]=false;
+        }
+      }
+    }
+  }
+};
+
+QRCodeModel.prototype.setupTypeNumber=function(test){
+  var bits=getBCHTypeNumber(this.typeNumber);
+  for(var i=0;i<18;i++){
+    var mod=(!test && ((bits>>i)&1)===1);
+    this.modules[Math.floor(i/3)][i%3+this.moduleCount-8-3]=mod;
+  }
+  for(var i=0;i<18;i++){
+    var mod=(!test && ((bits>>i)&1)===1);
+    this.modules[i%3+this.moduleCount-8-3][Math.floor(i/3)]=mod;
+  }
+};
+
+var EC_LEVEL_BITS={L:1,M:0,Q:3,H:2};
+QRCodeModel.prototype.setupTypeInfo=function(test,maskPattern){
+  var data=(EC_LEVEL_BITS[this.ecLevel]<<3)|maskPattern;
+  var bits=getBCHTypeInfo(data);
+  for(var i=0;i<15;i++){
+    var mod=(!test && ((bits>>i)&1)===1);
+    if(i<6) this.modules[i][8]=mod;
+    else if(i<8) this.modules[i+1][8]=mod;
+    else this.modules[this.moduleCount-15+i][8]=mod;
+  }
+  for(var i=0;i<15;i++){
+    var mod=(!test && ((bits>>i)&1)===1);
+    if(i<8) this.modules[8][this.moduleCount-i-1]=mod;
+    else if(i<9) this.modules[8][15-i-1+1]=mod;
+    else this.modules[8][15-i-1]=mod;
+  }
+  this.modules[this.moduleCount-8][8]=(!test);
+};
+
+QRCodeModel.prototype.createData=function(){
+  var rsBlocks=getRSBlocks(this.typeNumber, this.ecLevel);
+  var buffer=new QRBitBuffer();
+  for(var i=0;i<this.dataList.length;i++){
+    var bytes=this.dataList[i];
+    buffer.put(4,4); // byte mode indicator 0100
+    var lenBits = this.typeNumber<10?8:16;
+    buffer.put(bytes.length, lenBits);
+    for(var j=0;j<bytes.length;j++) buffer.put(bytes[j],8);
+  }
+  var totalDataCount=0;
+  for(var i=0;i<rsBlocks.length;i++) totalDataCount+=rsBlocks[i].dataCount;
+  if(buffer.length > totalDataCount*8) throw new Error('data overflow for this QR version');
+  if(buffer.length + 4 <= totalDataCount*8) buffer.put(0,4);
+  while(buffer.length%8!==0) buffer.putBit(false);
+  var PAD0=0xEC, PAD1=0x11;
+  while(true){
+    if(buffer.length>=totalDataCount*8) break;
+    buffer.put(PAD0,8);
+    if(buffer.length>=totalDataCount*8) break;
+    buffer.put(PAD1,8);
+  }
+  return this.createBytes(buffer, rsBlocks);
+};
+
+QRCodeModel.prototype.createBytes=function(buffer, rsBlocks){
+  var offset=0;
+  var maxDcCount=0, maxEcCount=0;
+  var dcdata=new Array(rsBlocks.length), ecdata=new Array(rsBlocks.length);
+  for(var r=0;r<rsBlocks.length;r++){
+    var dcCount=rsBlocks[r].dataCount, ecCount=rsBlocks[r].totalCount-dcCount;
+    maxDcCount=Math.max(maxDcCount,dcCount);
+    maxEcCount=Math.max(maxEcCount,ecCount);
+    dcdata[r]=new Array(dcCount);
+    for(var i=0;i<dcdata[r].length;i++) dcdata[r][i]=0xff & buffer.buffer[i+offset];
+    offset+=dcCount;
+    var rsPoly=getErrorCorrectPolynomial(ecCount);
+    var rawPoly=new QRPolynomial(dcdata[r], rsPoly.getLength()-1);
+    var modPoly=rawPoly.mod(rsPoly);
+    ecdata[r]=new Array(rsPoly.getLength()-1);
+    for(var i=0;i<ecdata[r].length;i++){
+      var modIndex=i+modPoly.getLength()-ecdata[r].length;
+      ecdata[r][i]=(modIndex>=0)?modPoly.get(modIndex):0;
+    }
+  }
+  var totalCodeCount=0;
+  for(var i=0;i<rsBlocks.length;i++) totalCodeCount+=rsBlocks[i].totalCount;
+  var data=new Array(totalCodeCount);
+  var index=0;
+  for(var i=0;i<maxDcCount;i++) for(var r=0;r<rsBlocks.length;r++) if(i<dcdata[r].length) data[index++]=dcdata[r][i];
+  for(var i=0;i<maxEcCount;i++) for(var r=0;r<rsBlocks.length;r++) if(i<ecdata[r].length) data[index++]=ecdata[r][i];
+  return data;
+};
+
+QRCodeModel.prototype.mapData=function(data, maskPattern){
+  var inc=-1, row=this.moduleCount-1, bitIndex=7, byteIndex=0;
+  var maskFunc=MASK_FUNCS[maskPattern];
+  for(var col=this.moduleCount-1; col>0; col-=2){
+    if(col===6) col--;
+    while(true){
+      for(var c=0;c<2;c++){
+        if(this.modules[row][col-c]===null){
+          var dark=false;
+          if(byteIndex<data.length) dark=(((data[byteIndex]>>>bitIndex)&1)===1);
+          var mask=maskFunc(row,col-c);
+          if(mask) dark=!dark;
+          this.modules[row][col-c]=dark;
+          bitIndex--;
+          if(bitIndex===-1){byteIndex++;bitIndex=7;}
+        }
+      }
+      row+=inc;
+      if(row<0||this.moduleCount<=row){row-=inc;inc=-inc;break;}
+    }
+  }
+};
+
+QRCodeModel.prototype.getLostPoint=function(){
+  var moduleCount=this.moduleCount, lostPoint=0;
+  // rule 1: consecutive same-color in row/col
+  for(var row=0;row<moduleCount;row++){
+    for(var col=0;col<moduleCount;col++){
+      var sameCount=0; var dark=this.modules[row][col];
+      for(var r=-1;r<=1;r++){
+        if(row+r<0||moduleCount<=row+r) continue;
+        for(var c=-1;c<=1;c++){
+          if(col+c<0||moduleCount<=col+c) continue;
+          if(r===0&&c===0) continue;
+          if(dark===this.modules[row+r][col+c]) sameCount++;
+        }
+      }
+      if(sameCount>5) lostPoint += (3+sameCount-5);
+    }
+  }
+  // rule 2: 2x2 blocks same color
+  for(var row=0;row<moduleCount-1;row++){
+    for(var col=0;col<moduleCount-1;col++){
+      var count=0;
+      if(this.modules[row][col]) count++;
+      if(this.modules[row+1][col]) count++;
+      if(this.modules[row][col+1]) count++;
+      if(this.modules[row+1][col+1]) count++;
+      if(count===0||count===4) lostPoint+=3;
+    }
+  }
+  // rule 3: specific patterns 1011101 with 4 light before/after
+  for(var row=0;row<moduleCount;row++){
+    for(var col=0;col<moduleCount-6;col++){
+      if(this.modules[row][col] && !this.modules[row][col+1] && this.modules[row][col+2] && this.modules[row][col+3] && this.modules[row][col+4] && !this.modules[row][col+5] && this.modules[row][col+6])
+        lostPoint+=40;
+    }
+  }
+  for(var col=0;col<moduleCount;col++){
+    for(var row=0;row<moduleCount-6;row++){
+      if(this.modules[row][col] && !this.modules[row+1][col] && this.modules[row+2][col] && this.modules[row+3][col] && this.modules[row+4][col] && !this.modules[row+5][col] && this.modules[row+6][col])
+        lostPoint+=40;
+    }
+  }
+  // rule 4: dark module ratio
+  var darkCount=0;
+  for(var row=0;row<moduleCount;row++) for(var col=0;col<moduleCount;col++) if(this.modules[row][col]) darkCount++;
+  var ratio=Math.abs(100*darkCount/moduleCount/moduleCount-50)/5;
+  lostPoint+=ratio*10;
+  return lostPoint;
+};
+
+function utf8Bytes(str){
+  var bytes=[];
+  for(var i=0;i<str.length;i++){
+    var c=str.codePointAt(i);
+    if(c>0xFFFF) i++;
+    if(c<0x80) bytes.push(c);
+    else if(c<0x800){ bytes.push(0xc0|(c>>6), 0x80|(c&0x3f)); }
+    else if(c<0x10000){ bytes.push(0xe0|(c>>12), 0x80|((c>>6)&0x3f), 0x80|(c&0x3f)); }
+    else { bytes.push(0xf0|(c>>18), 0x80|((c>>12)&0x3f), 0x80|((c>>6)&0x3f), 0x80|(c&0x3f)); }
+  }
+  return bytes;
+}
+
+function generateQRMatrix(text, ecLevel, minVersion){
+  ecLevel = ecLevel || 'M';
+  var bytes = utf8Bytes(text);
+  for(var v=(minVersion||1); v<=20; v++){
+    try{
+      var qr = new QRCodeModel(v, ecLevel);
+      qr.addData(bytes);
+      qr.make();
+      return qr;
+    }catch(e){
+      if(v===20) throw e;
+      continue;
+    }
+  }
+}
+
+
+
+/* ── Logo asset ───────────────────────────────────────────── */
+var ACAD_LOGO_DATAURI="data:image/jpeg;base64,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";
+var _acadLogoImg=null;
+function acLoadLogoImg(cb){
+if(_acadLogoImg&&_acadLogoImg.complete){cb(_acadLogoImg);return}
+var img=new Image();
+img.onload=function(){_acadLogoImg=img;cb(img)};
+img.onerror=function(){cb(null)};
+img.src=ACAD_LOGO_DATAURI;
+}
+
+/* ── QR rendering helpers ─────────────────────────────────── */
+function nbqrSvgString(text,ecLevel){
+var qr=generateQRMatrix(text,ecLevel||'M');
+var n=qr.getModuleCount(),quiet=2,view=n+quiet*2,rects='';
+for(var r=0;r<n;r++)for(var c=0;c<n;c++)if(qr.isDark(r,c))rects+='<rect x="'+(c+quiet)+'" y="'+(r+quiet)+'" width="1" height="1"/>';
+return '<svg viewBox="0 0 '+view+' '+view+'" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="'+view+'" height="'+view+'" fill="#fff"/><g fill="#1f2a26">'+rects+'</g></svg>';
+}
+function nbqrDrawOnCanvas(ctx,text,ecLevel,x,y,sizePx){
+var qr=generateQRMatrix(text,ecLevel||'M');
+var n=qr.getModuleCount(),quiet=2,totalModules=n+quiet*2,modulePx=sizePx/totalModules;
+ctx.fillStyle='#ffffff';ctx.fillRect(x,y,sizePx,sizePx);
+ctx.fillStyle='#1f2a26';
+for(var r=0;r<n;r++)for(var c=0;c<n;c++)if(qr.isDark(r,c))ctx.fillRect(x+(c+quiet)*modulePx,y+(r+quiet)*modulePx,modulePx+0.6,modulePx+0.6);
+}
+
+/* ── Certificate verification ────────────────────────────── */
+var NB_CERT_BASE_URL='https://nabtex.netlify.app/';
+var NB_CERT_SALT='NBX-IPM-2026';
+function nbCertSign(name,date){
+var str='ipm|'+name+'|'+date+'|'+NB_CERT_SALT,h=5381;
+for(var i=0;i<str.length;i++){h=((h*33)^str.charCodeAt(i))>>>0}
+var hex=(h>>>0).toString(16);
+while(hex.length<8)hex='0'+hex;
+return hex;
+}
+function nbCertVerifyUrl(name,date){
+return NB_CERT_BASE_URL+'?nbcert=ipm&n='+encodeURIComponent(name)+'&d='+encodeURIComponent(date)+'&s='+nbCertSign(name,date);
+}
+function nbCheckCertVerify(){
+var params;
+try{params=new URLSearchParams(location.search)}catch(e){return}
+if(!params.has('nbcert'))return;
+var name=params.get('n')||'',date=params.get('d')||'',sig=params.get('s')||'';
+var validSig=name&&date&&nbCertSign(name,date)===sig;
+if(!document.getElementById('nb-verify-style')){
+var st=document.createElement('style');st.id='nb-verify-style';
+st.textContent='#nb-verify-overlay{position:fixed;inset:0;z-index:99999;background:#dbe4dd;display:flex;align-items:center;justify-content:center;padding:24px;font-family:Cairo,sans-serif}.nbv-card{background:#fff;border:1.5px solid #84958d;border-radius:12px;padding:40px 32px;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(20,40,30,.25)}.nbv-logo{width:64px;height:64px;border-radius:50%;object-fit:cover;margin-bottom:16px}.nbv-badge{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;margin:0 auto 14px;color:#fff}.nbv-badge.nbv-ok{background:#1f6e42}.nbv-badge.nbv-warn{background:#c0392b}.nbv-title{font-family:"Cormorant Garamond",serif;font-size:1.6rem;color:#28352f;margin:0 0 4px}.nbv-sub{font-size:13px;color:#5e6f69;margin:0 0 22px}.nbv-rows{text-align:right;border-top:1px solid #e2e8e4;padding-top:16px;margin-bottom:24px}.nbv-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;font-size:13px;border-bottom:1px dashed #e2e8e4}.nbv-k{color:#5e6f69;flex-shrink:0}.nbv-v{color:#28352f;font-weight:700;text-align:left;word-break:break-word}.nbv-btn{width:100%;padding:13px;border-radius:9999px;border:none;background:#1B6B3A;color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:Cairo,sans-serif}';
+document.head.appendChild(st);
+var meta=document.createElement('meta');meta.name='robots';meta.content='noindex,nofollow';document.head.appendChild(meta);
+}
+var overlay=document.createElement('div');
+overlay.id='nb-verify-overlay';
+overlay.innerHTML=
+'<div class="nbv-card">'+
+'<img class="nbv-logo" src="'+ACAD_LOGO_DATAURI+'" alt="Nabtex">'+
+(validSig?
+'<div class="nbv-badge nbv-ok">✓</div><h2 class="nbv-title">Certificate Verified</h2><p class="nbv-sub">شهادة موثقة من نبتيكس أكاديمي</p>'
+:
+'<div class="nbv-badge nbv-warn">!</div><h2 class="nbv-title">Could Not Verify</h2><p class="nbv-sub">تعذر التحقق من صحة بيانات هذه الشهادة</p>'
+)+
+'<div class="nbv-rows">'+
+'<div class="nbv-row"><span class="nbv-k">Name / الاسم</span><span class="nbv-v">'+acEsc(name||'—')+'</span></div>'+
+'<div class="nbv-row"><span class="nbv-k">Course / الدورة</span><span class="nbv-v">Integrated Pest Management (IPM)</span></div>'+
+'<div class="nbv-row"><span class="nbv-k">Date / التاريخ</span><span class="nbv-v">'+acEsc(date||'—')+'</span></div>'+
+'</div>'+
+'<button class="nbv-btn" id="nb-verify-close">Visit Nabtex — زيارة نبتيكس</button>'+
+'</div>';
+document.body.appendChild(overlay);
+document.getElementById('nb-verify-close').addEventListener('click',function(){
+overlay.remove();
+history.replaceState(null,'',location.pathname);
+});
+}
+nbCheckCertVerify();
 
 /* ── Progress ─────────────────────────────────────────────── */
 
@@ -2623,13 +3130,12 @@ return pad(d.getDate())+' / '+pad(d.getMonth()+1)+' / '+d.getFullYear()}
 
 var ACAD_CERT_RIBBON_SVG='<svg viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
 '<defs><linearGradient id="acadGoldG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6d98a"/><stop offset="1" stop-color="#c9971f"/></linearGradient>'+
-'<radialGradient id="acadGreenG" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#3fa869"/><stop offset="55%" stop-color="#1f6e42"/><stop offset="100%" stop-color="#123b25"/></radialGradient></defs>'+
+'<clipPath id="acadLogoClip"><circle cx="100" cy="95" r="54"/></clipPath></defs>'+
 '<polygon points="78,150 100,156 95,266 75,238 56,244 67,170" fill="#143d26" stroke="#c9971f" stroke-width="1.5"/>'+
 '<polygon points="122,150 100,156 105,266 125,238 144,244 133,170" fill="#1e5c39" stroke="#c9971f" stroke-width="1.5"/>'+
 '<polygon points="100,15 115,39 140,25.7 141,54 169.3,55 156,80 180,95 156,110 169.3,135 141,136 140,164.3 115,151 100,175 85,151 60,164.3 59,136 30.7,135 44,110 20,95 44,80 30.7,55 59,54 60,25.7 85,39" fill="url(#acadGoldG)"/>'+
-'<circle cx="100" cy="95" r="54" fill="url(#acadGreenG)"/>'+
-'<circle cx="100" cy="95" r="54" fill="none" stroke="#fff" stroke-width="1" opacity=".22"/>'+
-'<g stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M100,132 L100,98"/><path d="M100,98 L76,65"/><path d="M100,98 L124,65"/></g>'+
+'<image href="'+ACAD_LOGO_DATAURI+'" x="46" y="41" width="108" height="108" clip-path="url(#acadLogoClip)" preserveAspectRatio="xMidYMid slice"/>'+
+'<circle cx="100" cy="95" r="54" fill="none" stroke="#fff" stroke-width="2" opacity=".4"/>'+
 '</svg>';
 
 /* Self-contained Canvas2D certificate renderer — no external library, no CDN, can't be blocked by CSP/network */
@@ -2643,7 +3149,7 @@ else{cur=test}}
 if(cur)lines.push(cur);
 return lines}
 
-function acDrawRibbonOnCanvas(ctx,ox,oy,size){
+function acDrawRibbonOnCanvas(ctx,ox,oy,size,logoImg){
 var s=size/200;
 function px(x){return ox+x*s}
 function py(y){return oy+y*s}
@@ -2663,20 +3169,22 @@ ctx.fillStyle=starGrad;
 ctx.beginPath();
 starPts.forEach(function(p,i){i===0?ctx.moveTo(px(p[0]),py(p[1])):ctx.lineTo(px(p[0]),py(p[1]))});
 ctx.closePath();ctx.fill();
+var r=54*s,cx=px(100),cy=py(95);
+ctx.save();
+ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();
+if(logoImg){
+ctx.drawImage(logoImg,cx-r,cy-r,r*2,r*2);
+}else{
 var circGrad=ctx.createRadialGradient(px(81),py(75),5*s,px(100),py(95),54*s);
 circGrad.addColorStop(0,'#3fa869');circGrad.addColorStop(.55,'#1f6e42');circGrad.addColorStop(1,'#123b25');
-ctx.fillStyle=circGrad;
-ctx.beginPath();ctx.arc(px(100),py(95),54*s,0,Math.PI*2);ctx.fill();
-ctx.strokeStyle='rgba(255,255,255,.22)';ctx.lineWidth=1*s;ctx.stroke();
-ctx.strokeStyle='#ffffff';ctx.lineWidth=10*s;ctx.lineCap='round';ctx.lineJoin='round';
-ctx.beginPath();
-ctx.moveTo(px(100),py(132));ctx.lineTo(px(100),py(98));
-ctx.moveTo(px(100),py(98));ctx.lineTo(px(76),py(65));
-ctx.moveTo(px(100),py(98));ctx.lineTo(px(124),py(65));
-ctx.stroke();
+ctx.fillStyle=circGrad;ctx.fillRect(cx-r,cy-r,r*2,r*2);
+}
+ctx.restore();
+ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+ctx.strokeStyle='rgba(255,255,255,.4)';ctx.lineWidth=2*s;ctx.stroke();
 ctx.restore()}
 
-function acDrawCertCanvas(name,dateStr){
+function acDrawCertCanvas(name,dateStr,logoImg){
 var W=2200,H=1460,M=82;
 var c=document.createElement('canvas');
 c.width=W;c.height=H;
@@ -2693,7 +3201,7 @@ ctx.fillText('N',cx0+cw*0.78,cy0+ch*0.52);
 ctx.restore();
 var padX=128,padTop=118;
 var contentLeft=cx0+padX,contentRight=cx0+cw-padX,contentTop=cy0+padTop;
-acDrawRibbonOnCanvas(ctx,contentLeft,contentTop,210);
+acDrawRibbonOnCanvas(ctx,contentLeft,contentTop,210,logoImg);
 var textLeft=contentLeft+210+80,textRight=contentRight;
 var textCenterX=(textLeft+textRight)/2,textWidth=textRight-textLeft;
 var y=contentTop+10;
@@ -2727,14 +3235,21 @@ ctx.font="700 34px 'Cairo', sans-serif";ctx.fillStyle='#1f5c39';
 var recogLines=acWrapLines(ctx,"This certificate is awarded in recognition of the recipient's successful completion of the course and final examination, as well as their commitment to professional development in the field of agriculture.",textWidth*0.95);
 recogLines.forEach(function(line){y+=52;ctx.fillText(line,textCenterX,y)});
 y+=90;ctx.textAlign='left';
-var colW=360,col1X=textLeft,col2X=textLeft+colW+160;
+var colW=340,col1X=textLeft,col2X=textLeft+colW+110;
 ctx.strokeStyle='#84958d';ctx.lineWidth=2;
 ctx.beginPath();ctx.moveTo(col1X,y);ctx.lineTo(col1X+colW,y);ctx.stroke();
 ctx.beginPath();ctx.moveTo(col2X,y);ctx.lineTo(col2X+colW,y);ctx.stroke();
+var footerLineY=y;
 y+=46;ctx.font="800 38px 'Cairo', sans-serif";ctx.fillStyle='#28352f';
 ctx.fillText('Authorized Signature',col1X,y);ctx.fillText('Date of Issue',col2X,y);
 y+=40;ctx.font="400 32px 'Cairo', sans-serif";ctx.fillStyle='#5e6f69';
 ctx.fillText('Nabtex Platform',col1X,y);ctx.fillText(dateStr,col2X,y);
+var qrSize=170;
+var qrX=textRight-qrSize,qrY=footerLineY-qrSize+18;
+nbqrDrawOnCanvas(ctx,nbCertVerifyUrl(safeName,dateStr),'M',qrX,qrY,qrSize);
+ctx.strokeStyle='#c6d2cb';ctx.lineWidth=1.5;ctx.strokeRect(qrX,qrY,qrSize,qrSize);
+ctx.font="700 20px 'Cairo', sans-serif";ctx.fillStyle='#5e6f69';ctx.textAlign='center';
+ctx.fillText('Scan to verify',qrX+qrSize/2,qrY+qrSize+30);
 ctx.restore();
 return c}
 
@@ -2746,10 +3261,16 @@ nameEl.focus();return}
 var origHTML=btn?btn.innerHTML:null;
 if(btn){btn.disabled=true;btn.innerHTML='⏳ ...'}
 function restore(){if(btn){btn.disabled=false;btn.innerHTML=origHTML}}
-acFontsReady(function(){
+var fontDone=false,logoImg=null,logoDone=false;
+function proceedIfReady(){
+if(!fontDone||!logoDone)return;
 var canvas;
-try{canvas=acDrawCertCanvas(nameEl?nameEl.textContent:'',acCertDate())}
+try{canvas=acDrawCertCanvas(nameEl?nameEl.textContent:'',acCertDate(),logoImg)}
 catch(e){restore();if(typeof showToast==='function')showToast('⚠️ تعذر إنشاء صورة الشهادة','err');return}
+finishExport(canvas)}
+acFontsReady(function(){fontDone=true;proceedIfReady()});
+acLoadLogoImg(function(img){logoImg=img;logoDone=true;proceedIfReady()});
+function finishExport(canvas){
 if(mode==='print'){
 var dataUrl=canvas.toDataURL('image/png');
 restore();
@@ -2776,7 +3297,7 @@ setTimeout(function(){a.parentNode&&document.body.removeChild(a);URL.revokeObjec
 if(typeof showToast==='function')showToast(mode==='share'?'📥 تم تنزيل الشهادة (المشاركة المباشرة غير مدعومة هنا)':'✅ تم تنزيل الشهادة بنجاح','ok')
 }
 },'image/png')
-})}
+}}
 
 /* ── Certificate: render ──────────────────────────────────── */
 
@@ -2785,6 +3306,7 @@ acEnsureCertFont();
 var pct=acPct();var feScore=acFEScore();
 var userName=(typeof currentUser!=='undefined'&&currentUser&&currentUser.displayName)?currentUser.displayName:'';
 var eligible=pct===100&&feScore>=70;
+var certDate=acCertDate();
 var bannerHTML='';
 if(pct<100){
 bannerHTML='<div class="acad-coming" style="margin-bottom:24px"><div class="acad-coming-ico">🏅</div><h4>أكمل الدورة للحصول على الشهادة</h4><p>لقد أكملت '+pct+'% من الدروس. أكمل باقي الدروس واجتز اختباراتها، ثم اجتز الاختبار النهائي الشامل للحصول على شهادة الإتمام.</p></div>'
@@ -2804,12 +3326,13 @@ bannerHTML+
 '<div class="acad-cert-main">'+
 '<div class="acad-cert-titles"><div>CERTIFICATE OF</div><div>ACHIEVEMENT</div><div>NABTEX PLATFORM</div></div>'+
 '<div class="acad-cert-presented">This certificate is proudly presented to</div>'+
-'<div class="acad-cert-name" id="acad-cert-name" contenteditable="true" spellcheck="false" data-placeholder="Your Name" onpaste="event.preventDefault();document.execCommand(\'insertText\',false,(event.clipboardData||window.clipboardData).getData(\'text\'))" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" onblur="if(!this.textContent.trim())this.innerHTML=\'\'">'+(userName?acEsc(userName):'')+'</div>'+
+'<div class="acad-cert-name" id="acad-cert-name" contenteditable="true" spellcheck="false" data-placeholder="Your Name" oninput="NAcademy.refreshCertQR()" onpaste="event.preventDefault();document.execCommand(\'insertText\',false,(event.clipboardData||window.clipboardData).getData(\'text\'))" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" onblur="if(!this.textContent.trim())this.innerHTML=\'\'">'+(userName?acEsc(userName):'')+'</div>'+
 '<div class="acad-cert-completed">has successfully completed the Integrated Pest Management (IPM) Course offered by Nabtex Platform.</div>'+
 '<div class="acad-cert-recognition">This certificate is awarded in recognition of the recipient\'s successful completion of the course and final examination, as well as their commitment to professional development in the field of agriculture.</div>'+
 '<div class="acad-cert-footer">'+
 '<div class="acad-cert-footer-col"><div class="acad-cert-footer-line"></div><div class="acad-cert-footer-label">Authorized Signature</div><div class="acad-cert-footer-value">Nabtex Platform</div></div>'+
-'<div class="acad-cert-footer-col"><div class="acad-cert-footer-line"></div><div class="acad-cert-footer-label">Date of Issue</div><div class="acad-cert-footer-value">'+acCertDate()+'</div></div>'+
+'<div class="acad-cert-footer-col"><div class="acad-cert-footer-line"></div><div class="acad-cert-footer-label">Date of Issue</div><div class="acad-cert-footer-value">'+certDate+'</div></div>'+
+'<div class="acad-cert-footer-qr" data-date="'+acEsc(certDate)+'"><div class="acad-cert-qr-box" id="acad-cert-qr">'+nbqrSvgString(nbCertVerifyUrl(userName||'Your Name',certDate))+'</div><div class="acad-cert-qr-cap">Scan to verify</div></div>'+
 '</div>'+
 '</div>'+
 '</div>'+
@@ -2823,6 +3346,16 @@ bannerHTML+
 '<button class="acad-btn acad-btn-primary" onclick="NAcademy.shareCert(this)">📤 مشاركة</button>'+
 '</div>':'')+
 '</div>'}
+
+function acRefreshCertQR(){
+var nameEl=document.getElementById('acad-cert-name');
+var qrEl=document.getElementById('acad-cert-qr');
+if(!nameEl||!qrEl)return;
+var wrap=qrEl.closest('.acad-cert-footer-qr');
+var dt=wrap?wrap.getAttribute('data-date'):acCertDate();
+var nm=nameEl.textContent.trim()||'Your Name';
+try{qrEl.innerHTML=nbqrSvgString(nbCertVerifyUrl(nm,dt))}catch(e){}
+}
 
 /* ── Lesson Content ───────────────────────────────────────── */
 
@@ -3734,6 +4267,7 @@ goCert:function(){acGo('cert',null)},
 downloadCert:function(btn){acExportCert('download',btn)},
 shareCert:function(btn){acExportCert('share',btn)},
 printCert:function(btn){acExportCert('print',btn)},
+refreshCertQR:function(){acRefreshCertQR()},
 _pickOpt:function(btn,idx){
 var st=AC.qState;if(!st||st.revealed)return;
 var q=AC_QUIZZES[AC.lid];if(!q)return;
