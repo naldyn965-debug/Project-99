@@ -7807,7 +7807,7 @@ body.modal-open { overflow: hidden; }
 .acad-hero{background:linear-gradient(150deg,#061610 0%,#0b2e1c 40%,#0f3d25 70%,#081a10 100%);padding:64px 0 56px;color:#fff;position:relative;overflow:hidden}
 .acad-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 18% 35%,rgba(46,170,92,.18) 0,transparent 55%),radial-gradient(ellipse 45% 55% at 82% 72%,rgba(27,107,58,.14) 0,transparent 50%);pointer-events:none}
 .acad-hero-inner{position:relative;z-index:1;max-width:700px;margin:0 auto;padding:0 24px;text-align:center}
-.acad-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:40px;background:rgba(46,170,92,.12);border:1px solid rgba(46,170,92,.3);color:#7de89e;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;backdrop-filter:blur(8px)}
+.acad-hero-badge{display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 18px;border-radius:40px;background:rgba(46,170,92,.12);border:1px solid rgba(46,170,92,.3);color:#7de89e;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;width:fit-content;margin:0 auto 20px;backdrop-filter:blur(8px)}
 .acad-hero-badge i{width:6px;height:6px;border-radius:50%;background:#7de89e;animation:pulse 2s ease-in-out infinite;display:inline-block}
 .acad-hero-title{font-family:var(--f-display);font-size:clamp(2rem,5.5vw,3.8rem);color:#fff;margin-bottom:14px;line-height:1.1;letter-spacing:-.02em}
 .acad-hero-sub{font-size:clamp(13px,1.8vw,15px);color:rgba(255,255,255,.55);margin-bottom:32px;line-height:1.85;max-width:520px;margin-left:auto;margin-right:auto}
@@ -7816,7 +7816,7 @@ body.modal-open { overflow: hidden; }
 .acad-hs-n{font-family:var(--f-display);font-size:1.8rem;color:#fff;font-weight:700;line-height:1}
 .acad-hs-l{font-size:10px;color:rgba(255,255,255,.4);margin-top:4px;letter-spacing:.05em}
 .acad-hs-div{width:1px;background:rgba(255,255,255,.1);margin:0 8px}
-.acad-hero-back{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:rgba(255,255,255,.55);cursor:pointer;margin-bottom:18px;transition:color .15s}
+.acad-hero-back{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;color:rgba(255,255,255,.55);cursor:pointer;width:fit-content;margin:0 auto 18px;transition:color .15s}
 .acad-hero-back:hover{color:#fff}
 
 /* ── Catalog Grid ── */
@@ -8854,7 +8854,7 @@ var btnLabel=doneLessons===0?acIco('rocket',16)+' ابدأ الدورة الآن
              feScore>=0?acIco('refresh',16)+' إعادة الاختبار النهائي':acIco('pencil',16)+' ابدأ الاختبار النهائي';
 var btnAction=!allDone?'NAcademy.openFirst()':feScore>=70?'NAcademy.goCert()':'NAcademy.goFinalExam()';
 var finalExamHTML='<div class="acad-module-block" style="border:2px solid rgba(201,135,26,.38);background:rgba(201,135,26,.03);margin-top:8px">'+
-'<div class="acad-module-name" style="color:#c9871a"><span class="acad-module-num" style="background:linear-gradient(135deg,#c9871a,#e6a020);color:#fff">'+acIco('star',12)+'</span>الاختبار النهائي الشامل</div>'+
+'<div class="acad-module-name" style="color:#c9871a;padding:16px 18px 0"><span class="acad-module-num" style="background:linear-gradient(135deg,#c9871a,#e6a020);color:#fff">'+acIco('star',12)+'</span>الاختبار النهائي الشامل</div>'+
 (allDone?
 '<div class="acad-lesson-row'+(feScore>=70?' done':'')+' " onclick="NAcademy.goFinalExam()" role="button" style="cursor:pointer">'+
 '<div class="acad-lesson-check">'+(feScore>=70?acIco('check',14):feScore>=0?acIco('x',14):'')+'</div>'+
