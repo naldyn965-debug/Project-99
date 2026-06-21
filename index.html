@@ -8865,7 +8865,14 @@ var finalExamHTML='<div class="acad-module-block" style="border:2px solid rgba(2
 '</div>'+
 '<span class="acad-lesson-arr">‹</span>'+
 '</div>':
-'<div style="padding:14px 16px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px">'+acIco('lock',13)+' أكمل جميع الدروس الـ12 أولاً للوصول إلى الاختبار النهائي</div>'
+'<div style="padding:26px 20px;text-align:center">'+
+'<div style="width:46px;height:46px;border-radius:50%;background:rgba(201,135,26,.12);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:#c9871a">'+acIco('lock',19)+'</div>'+
+'<div style="font-size:14px;font-weight:800;color:var(--ink);margin-bottom:6px">أكمل جميع الدروس أولاً</div>'+
+'<div style="font-size:12.5px;color:var(--muted);line-height:1.7;max-width:280px;margin:0 auto 16px">'+
+(doneLessons===0?'أكمل الدروس الـ12 واجتز اختباراتها لفتح الاختبار النهائي الشامل':'تبقّى لك '+(allLessons-doneLessons)+' من أصل '+allLessons+' درساً لفتح الاختبار النهائي الشامل')+
+'</div>'+
+'<div style="max-width:200px;margin:0 auto"><div class="acad-prog-track" style="background:rgba(201,135,26,.15)"><div class="acad-prog-fill" style="width:'+pct+'%;background:linear-gradient(90deg,#c9871a,#e6a020)"></div></div></div>'+
+'</div>'
 )+'</div>';
 
 return '<div class="acad-hero"><div class="acad-hero-inner">'+
