@@ -8716,6 +8716,11 @@ return questions.map(function(q,i){return acShuffleOptsToPosition(q,positions[i]
 var AC={view:'catalog',lid:null,qState:null};
 
 function acGo(view,lid){
+if(view!=='catalog'&&!(typeof currentUser!=='undefined'&&currentUser)){
+ if(typeof showToast==='function')showToast('سجّل الدخول أو أنشئ حساباً جديداً للبدء في الدورة','inf');
+ if(typeof openAuth==='function')openAuth('login');
+ view='catalog';lid=null;
+}
 if((view==='lesson'||view==='quiz')&&lid&&!acIsUnlocked(lid)){
  if(typeof showToast==='function'){
   var gateRem=acUnitGateRemaining(lid);
