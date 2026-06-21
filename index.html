@@ -7870,8 +7870,8 @@ body.modal-open { overflow: hidden; }
 .acad-section-sub{font-size:14px;color:var(--muted);margin-bottom:36px;line-height:1.75}
 
 .acad-card{background:var(--card);border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--s3)}
-.acad-card-top{height:180px;background:linear-gradient(140deg,#061610,#0f3d25,#1B6B3A);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.acad-card-top::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 60%,rgba(46,170,92,.2) 0,transparent 65%)}
+.acad-card-top{height:180px;background:#0c3a23 url('https://images.unsplash.com/photo-1711900177627-1182b446bc8f?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat;position:relative;overflow:hidden}
+.acad-card-top::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,18,12,.12) 0%,rgba(4,18,12,.04) 45%,rgba(4,18,12,.5) 100%)}
 .acad-card-icon{font-size:72px;color:#fff;filter:drop-shadow(0 6px 20px rgba(0,0,0,.4));position:relative;z-index:1}
 .acad-card-body{padding:28px 32px}
 .acad-card-kicker{font-size:10px;font-weight:800;color:var(--brand);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
@@ -8784,8 +8784,6 @@ var doneLessons=(acProg().d||[]).length;
 var liveCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pest\')" role="button">'+
 '<div class="acad-cat-card-top">'+
 '<span class="acad-pop-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.2H22l-6.1 4.4 2.3 7.2-6.2-4.5-6.2 4.5 2.3-7.2L2 9.2h7.6z"/></svg>Free</span>'+
-'<span class="acad-cert-ribbon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/><path d="M8.5 13.5 7 21l5-2.5 5 2.5-1.5-7.5"/></svg></span>'+
-'<div class="acad-icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5.2 3.4 9 8 11 4.6-2 8-5.8 8-11V5l-8-3Z"/><path d="m9.5 12 2 2 4-4.2"/></svg></div>'+
 '</div>'+
 '<div class="acad-cat-card-body">'+
 '<div class="acad-cat-card-kicker">مكافحة الآفات</div>'+
@@ -8884,7 +8882,7 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
-'<div class="acad-card-top"><div class="acad-card-icon">'+acIco('shield',64)+'</div></div>'+
+'<div class="acad-card-top"></div>'+
 '<div class="acad-card-body">'+
 '<div class="acad-card-kicker">مكافحة الآفات</div>'+
 '<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
