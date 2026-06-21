@@ -8797,24 +8797,13 @@ var liveCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'
 (doneLessons>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+pct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+pct+'%"></div></div></div>':
 '<div class="acad-cat-card-cta">ابدأ الدورة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>')+
 '</div></div>';
-var soon=[
-{icon:'🌱',title:'إدارة المزرعة الذكية',desc:'من التخطيط إلى الحصاد — دليل شامل لإدارة مزرعة احترافية خطوة بخطوة'},
-{icon:'💧',title:'أساسيات الري والتسميد',desc:'احسب احتياجات محصولك بدقة، ووفّر في التكاليف دون التأثير على الإنتاجية'},
-{icon:'🍊',title:'دورة الموالح المتقدمة',desc:'كل ما يخص زراعة ورعاية أشجار الموالح بمعايير التصدير'}
-].map(function(c){
-return '<div class="acad-cat-card soon" onclick="NAcademy.comingSoon()" role="button">'+
-'<div class="acad-cat-card-top"><div class="acad-cat-card-icon">'+c.icon+'</div><span class="acad-soon-badge">قريباً</span></div>'+
-'<div class="acad-cat-card-body">'+
-'<div class="acad-cat-card-title">'+c.title+'</div>'+
-'<div class="acad-cat-card-desc">'+c.desc+'</div>'+
-'</div></div>'}).join('');
 return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
 '<div class="acad-hero-title">دوراتنا التعليمية</div>'+
 '<div class="acad-hero-sub">محتوى علمي موثّق باللغة العربية من فريق نبتيكس. اختر دورة لتبدأ رحلة التعلّم.</div>'+
 '</div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
-'<div class="acad-cat-grid">'+liveCard+soon+'</div>'+
+'<div class="acad-cat-grid">'+liveCard+'</div>'+
 '</div></div>'}
 
 /* ── HOME ─────────────────────────────────────────────────── */
