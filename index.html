@@ -8598,8 +8598,30 @@ nbCheckCertVerify();
 
 /* ── Progress ─────────────────────────────────────────────── */
 
-function acProg(){try{return JSON.parse(localStorage.getItem('nb-pest-p')||'{}')}catch(e){return{}}}
-function acSave(p){try{localStorage.setItem('nb-pest-p',JSON.stringify(p))}catch(e){}}
+/* ── User-scoped progress key: prevents data cross-contamination between accounts ── */
+function acProgKey(){
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+return u?('nb-pest-p__'+u):'nb-pest-p__guest';
+}
+function acProg(){
+try{
+var key=acProgKey();
+var raw=localStorage.getItem(key);
+if(raw===null){
+/* One-time migration from legacy shared key (pre multi-account support) */
+var legacy=localStorage.getItem('nb-pest-p');
+if(legacy){raw=legacy;try{localStorage.setItem(key,legacy);localStorage.removeItem('nb-pest-p')}catch(e){}}
+}
+return JSON.parse(raw||'{}')
+}catch(e){return{}}
+}
+function acSave(p){try{localStorage.setItem(acProgKey(),JSON.stringify(p))}catch(e){}}
+/* Clears a specific user's local academy progress (called on logout / account switch) */
+function acClearLocalProgress(targetUid){
+var key=targetUid?('nb-pest-p__'+targetUid):acProgKey();
+try{localStorage.removeItem(key)}catch(e){}
+}
+window._acClearLocalProgress=acClearLocalProgress;
 function acDone(id){return(acProg().d||[]).includes(id)}
 function acMark(id){var p=acProg();p.d=p.d||[];if(!p.d.includes(id))p.d.push(id);p.dt=p.dt||{};p.dt[id]=Date.now();acSave(p)}
 function acPct(){
@@ -21015,6 +21037,9 @@ auth.onAuthStateChanged(async (user) => {
   if (_prevAuthUid && _prevAuthUid !== newUid) {
     if (typeof window._farmClearLocalCache === 'function') {
       window._farmClearLocalCache(_prevAuthUid);
+    }
+    if (typeof window._acClearLocalProgress === 'function') {
+      window._acClearLocalProgress(_prevAuthUid);
     }
   }
   _prevAuthUid = newUid;
