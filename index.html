@@ -7873,7 +7873,7 @@ body.modal-open { overflow: hidden; }
 .acad-card{background:var(--card);border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--s3)}
 .acad-card-top{height:180px;background:linear-gradient(140deg,#061610,#0f3d25,#1B6B3A);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .acad-card-top::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 60%,rgba(46,170,92,.2) 0,transparent 65%)}
-.acad-card-icon{font-size:72px;filter:drop-shadow(0 6px 20px rgba(0,0,0,.4));position:relative;z-index:1}
+.acad-card-icon{font-size:72px;color:#fff;filter:drop-shadow(0 6px 20px rgba(0,0,0,.4));position:relative;z-index:1}
 .acad-card-body{padding:28px 32px}
 .acad-card-kicker{font-size:10px;font-weight:800;color:var(--brand);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
 .acad-card-title{font-family:var(--f-display);font-size:1.7rem;color:var(--ink);margin-bottom:8px;line-height:1.2}
@@ -8719,7 +8719,7 @@ function acGo(view,lid){
 if((view==='lesson'||view==='quiz')&&lid&&!acIsUnlocked(lid)){
  if(typeof showToast==='function'){
   var gateRem=acUnitGateRemaining(lid);
-  showToast(gateRem>0?'🕒 أحسنت! الوحدة التالية تفتح غدًا':'🔒 أكمل الدرس السابق واجتز اختباره أولاً','err')
+  showToast(gateRem>0?'أحسنت! الوحدة التالية تفتح غدًا':'أكمل الدرس السابق واجتز اختباره أولاً',gateRem>0?'inf':'err')
  }
  view='home';lid=null;
 }
@@ -8743,6 +8743,33 @@ else if(AC.view==='lesson')root.innerHTML=acRenderLesson();
 else if(AC.view==='quiz'){root.innerHTML=acRenderQuiz();acBindQuiz()}
 else if(AC.view==='final-exam'){root.innerHTML=acRenderFinalExam();}
 else if(AC.view==='cert')root.innerHTML=acRenderCert();
+}
+
+/* ── Icon library (replaces emoji with consistent line-style SVG) ── */
+var AC_ICO={
+lock:'<path d="M6 11V8a6 6 0 1 1 12 0v3"/><rect x="4" y="11" width="16" height="10" rx="2"/>',
+check:'<path d="M5 13l4 4L19 7"/>',
+hourglass:'<path d="M6 2.5h12M6 21.5h12M7 2.5c0 5 5 6 5 9.5s-5 4.5-5 9.5M17 2.5c0 5-5 6-5 9.5s5 4.5 5 9.5"/>',
+clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.3 1.9"/>',
+book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/>',
+bars:'<path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/>',
+medal:'<path d="M12 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/><path d="M8.5 13.5 7 21l5-2.5 5 2.5-1.5-7.5"/>',
+shield:'<path d="M12 2 4 5v6c0 5.2 3.4 9 8 11 4.6-2 8-5.8 8-11V5l-8-3Z"/>',
+rocket:'<path d="M4.5 16.5c-1.4 1.2-1.9 4.6-1.9 4.6s3.4-.5 4.6-1.9c.7-.8.7-2-.1-2.8a1.95 1.95 0 0 0-2.6.1Z"/><path d="m11.5 14.5-2.7-2.7c.6-1.5 1.4-2.9 2.4-4.2C13.3 4.8 16.7 3.3 19.5 3c.3 2.8-1.2 6.2-3.8 8.3a17 17 0 0 1-4.2 2.4Z"/><path d="M8.8 11.2H4.5s.5-2.7 1.8-3.6c1.4-1 4 0 4 0"/><path d="M11.5 14.5v4.3s2.7-.5 3.6-1.8c1-1.4 0-4 0-4"/>',
+play:'<path d="M6.5 4.2v15.6l13-7.8-13-7.8Z"/>',
+cap:'<path d="M2 9 12 4l10 5-10 5L2 9Z"/><path d="M6 11.3v3.8c0 1.5 2.8 3 6 3s6-1.5 6-3v-3.8"/><path d="M22 9v6"/>',
+refresh:'<path d="M21 12a9 9 0 0 1-15.3 6.4M3 12a9 9 0 0 1 15.3-6.4"/><path d="M3 6.5V12h5.5M21 17.5V12h-5.5"/>',
+pencil:'<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/>',
+target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.8"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>',
+x:'<path d="M18 6 6 18M6 6l12 12"/>',
+star:'<path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3 1.1-6.4-4.7-4.7 6.5-.9Z"/>',
+wrench:'<path d="M14.7 6.3a4 4 0 1 1-5.4 5.4L4.5 16.5l3 3 4.8-4.8a4 4 0 0 1 5.4-5.4l-2.7 2.7-2-2 2.7-2.7Z"/>',
+printer:'<path d="M6.5 9V3.5h11V9"/><rect x="4" y="9" width="16" height="8" rx="1.6"/><path d="M6.5 17h11v4h-11Z"/>',
+download:'<path d="M12 3.5v11.5"/><path d="m7.2 11 4.8 4.8L16.8 11"/><path d="M5 20.5h14"/>',
+share:'<circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="18" cy="18" r="2.6"/><path d="m8.3 10.6 7.4-4.2M8.3 13.4l7.4 4.2"/>'
+};
+function acIco(name,size,extra){
+return '<svg viewBox="0 0 24 24" width="'+(size||16)+'" height="'+(size||16)+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-3px'+(extra?';'+extra:'')+'">'+(AC_ICO[name]||'')+'</svg>'
 }
 
 /* ── CATALOG ──────────────────────────────────────────────── */
@@ -8801,15 +8828,15 @@ var modulesHTML=AC_COURSE.modules.map(function(mod,mi){
   var unlocked=acIsUnlocked(ls.id);
   var gateRem=unlocked?0:acUnitGateRemaining(ls.id);
   var doneClass=done?' done':(unlocked?'':' locked');
-  var checkContent=done?'✓':(unlocked?'':(gateRem>0?'⏳':'🔒'));
+  var checkContent=done?acIco('check',14):(unlocked?'':(gateRem>0?acIco('hourglass',14):acIco('lock',14)));
   var clickAttr=unlocked?' onclick="NAcademy.openLesson(\''+ls.id+'\')"':' onclick="NAcademy.lockedNotice(\''+ls.id+'\')"';
-  var statusNote=done?' &nbsp;·&nbsp; <span style="color:var(--brand);font-weight:800">مكتمل ✓</span>':
-   (unlocked?'':(gateRem>0?' &nbsp;·&nbsp; <span style="color:var(--muted)">🕒 يُفتح غدًا</span>':' &nbsp;·&nbsp; <span style="color:var(--muted)">مغلق — أكمل الدرس السابق أولاً</span>'));
+  var statusNote=done?' &nbsp;·&nbsp; <span style="color:var(--brand);font-weight:800;display:inline-flex;align-items:center;gap:3px">مكتمل '+acIco('check',12)+'</span>':
+   (unlocked?'':(gateRem>0?' &nbsp;·&nbsp; <span style="color:var(--muted);display:inline-flex;align-items:center;gap:3px">'+acIco('clock',12)+' يُفتح غدًا</span>':' &nbsp;·&nbsp; <span style="color:var(--muted)">مغلق — أكمل الدرس السابق أولاً</span>'));
   return '<div class="acad-lesson-row'+doneClass+'"'+clickAttr+' role="button">'+
    '<div class="acad-lesson-check">'+checkContent+'</div>'+
    '<div class="acad-lesson-info">'+
     '<div class="acad-lesson-name">'+ls.title+'</div>'+
-    '<div class="acad-lesson-dur">⏱ '+ls.dur+statusNote+'</div>'+
+    '<div class="acad-lesson-dur">'+acIco('clock',12)+' '+ls.dur+statusNote+'</div>'+
    '</div>'+
    '<span class="acad-lesson-arr">'+(unlocked?'‹':'')+'</span>'+
   '</div>'}).join('');
@@ -8819,24 +8846,24 @@ var modulesHTML=AC_COURSE.modules.map(function(mod,mi){
 
 var feScore=acFEScore();
 var allDone=pct===100;
-var btnLabel=doneLessons===0?'🚀 ابدأ الدورة الآن':
-             !allDone?'▶ متابعة من حيث توقفت':
-             feScore>=70?'🎓 عرض الشهادة':
-             feScore>=0?'🔄 إعادة الاختبار النهائي':'📝 ابدأ الاختبار النهائي';
+var btnLabel=doneLessons===0?acIco('rocket',16)+' ابدأ الدورة الآن':
+             !allDone?acIco('play',15)+' متابعة من حيث توقفت':
+             feScore>=70?acIco('cap',16)+' عرض الشهادة':
+             feScore>=0?acIco('refresh',16)+' إعادة الاختبار النهائي':acIco('pencil',16)+' ابدأ الاختبار النهائي';
 var btnAction=!allDone?'NAcademy.openFirst()':feScore>=70?'NAcademy.goCert()':'NAcademy.goFinalExam()';
 var finalExamHTML='<div class="acad-module-block" style="border:2px solid rgba(201,135,26,.38);background:rgba(201,135,26,.03);margin-top:8px">'+
-'<div class="acad-module-name" style="color:#c9871a"><span class="acad-module-num" style="background:linear-gradient(135deg,#c9871a,#e6a020)">★</span>الاختبار النهائي الشامل</div>'+
+'<div class="acad-module-name" style="color:#c9871a"><span class="acad-module-num" style="background:linear-gradient(135deg,#c9871a,#e6a020);color:#fff">'+acIco('star',12)+'</span>الاختبار النهائي الشامل</div>'+
 (allDone?
 '<div class="acad-lesson-row'+(feScore>=70?' done':'')+' " onclick="NAcademy.goFinalExam()" role="button" style="cursor:pointer">'+
-'<div class="acad-lesson-check">'+(feScore>=70?'✓':feScore>=0?'✗':'')+'</div>'+
+'<div class="acad-lesson-check">'+(feScore>=70?acIco('check',14):feScore>=0?acIco('x',14):'')+'</div>'+
 '<div class="acad-lesson-info">'+
 '<div class="acad-lesson-name">الاختبار النهائي الشامل — 50 سؤالاً من جميع الدروس</div>'+
-'<div class="acad-lesson-dur">🎯 النجاح 70% · شرط الحصول على الشهادة '+
-(feScore>=70?' &nbsp;·&nbsp; <span style="color:var(--brand);font-weight:800">اجتزت ✓ '+feScore+'%</span>':feScore>=0?' &nbsp;·&nbsp; <span style="color:#e05a00;font-weight:800">لم تجتز — '+feScore+'%</span>':'')+'</div>'+
+'<div class="acad-lesson-dur">'+acIco('target',12)+' النجاح 70% · شرط الحصول على الشهادة '+
+(feScore>=70?' &nbsp;·&nbsp; <span style="color:var(--brand);font-weight:800;display:inline-flex;align-items:center;gap:3px">اجتزت '+acIco('check',12)+' '+feScore+'%</span>':feScore>=0?' &nbsp;·&nbsp; <span style="color:#e05a00;font-weight:800">لم تجتز — '+feScore+'%</span>':'')+'</div>'+
 '</div>'+
 '<span class="acad-lesson-arr">‹</span>'+
 '</div>':
-'<div style="padding:14px 16px;font-size:13px;color:var(--muted)">🔒 أكمل جميع الدروس الـ12 أولاً للوصول إلى الاختبار النهائي</div>'
+'<div style="padding:14px 16px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px">'+acIco('lock',13)+' أكمل جميع الدروس الـ12 أولاً للوصول إلى الاختبار النهائي</div>'
 )+'</div>';
 
 return '<div class="acad-hero"><div class="acad-hero-inner">'+
@@ -8853,16 +8880,16 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
-'<div class="acad-card-top"><div class="acad-card-icon">🛡️</div></div>'+
+'<div class="acad-card-top"><div class="acad-card-icon">'+acIco('shield',64)+'</div></div>'+
 '<div class="acad-card-body">'+
 '<div class="acad-card-kicker">مكافحة الآفات</div>'+
 '<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
 '<div class="acad-card-desc">'+AC_COURSE.description+'</div>'+
 '<div class="acad-card-chips">'+
-'<span class="acad-chip">📚 '+allLessons+' درساً</span>'+
-'<span class="acad-chip">⏱ '+AC_COURSE.duration+'</span>'+
-'<span class="acad-chip">📊 '+AC_COURSE.level+'</span>'+
-'<span class="acad-chip acad-chip-cert">🏅 شهادة إتمام</span>'+
+'<span class="acad-chip">'+acIco('book',14)+' '+allLessons+' درساً</span>'+
+'<span class="acad-chip">'+acIco('clock',14)+' '+AC_COURSE.duration+'</span>'+
+'<span class="acad-chip">'+acIco('bars',14)+' '+AC_COURSE.level+'</span>'+
+'<span class="acad-chip acad-chip-cert">'+acIco('medal',14)+' شهادة إتمام</span>'+
 '</div>'+
 (doneLessons>0?'<div class="acad-progress-wrap">'+
 '<div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+pct+'%</span></div>'+
@@ -8877,6 +8904,7 @@ modulesHTML+
 finalExamHTML+
 '</div></div></div>'+
 '</div></div>'}
+
 
 /* ── LESSON ───────────────────────────────────────────────── */
 
@@ -8896,7 +8924,7 @@ return '<div class="acad-lesson-pg">'+
 '<span role="button" onclick="NAcademy.goHome()">الأكاديمية</span>'+
 '<span class="sep">›</span><span>'+ls.title+'</span></div>'+
 '<div class="acad-coming">'+
-'<div class="acad-coming-ico">🔧</div>'+
+'<div class="acad-coming-ico">'+acIco('wrench',30)+'</div>'+
 '<h4>قيد الإعداد</h4>'+
 '<p>هذا الدرس قيد التحرير حالياً وسيكون متاحاً قريباً.<br>يمكنك الاطلاع على الدروس المتاحة في الوقت الحالي.</p>'+
 '</div>'+
@@ -8913,15 +8941,15 @@ return '<div class="acad-lesson-pg">'+
 '<span class="sep">›</span>'+
 '<span>'+ls.title+'</span></div>'+
 '<div class="acad-lesson-hdr">'+
-'<div class="acad-lesson-kicker">⏱ '+ls.dur+' &nbsp;·&nbsp; قراءة وتطبيق</div>'+
+'<div class="acad-lesson-kicker">'+acIco('clock',13)+' '+ls.dur+' &nbsp;·&nbsp; قراءة وتطبيق</div>'+
 '<div class="acad-lesson-h1">'+ls.title+'</div>'+
 '</div>'+
 content+
 '<div class="acad-lnav">'+
 '<button class="acad-btn acad-btn-ghost" onclick="NAcademy.goHome()">‹ العودة للدورة</button>'+
-'<button class="acad-btn acad-btn-ghost" onclick="NAcademy.downloadLessonPDF(\''+ls.id+'\',this)">⬇️ تحميل PDF</button>'+
+'<button class="acad-btn acad-btn-ghost" onclick="NAcademy.downloadLessonPDF(\''+ls.id+'\',this)">'+acIco('download',14)+' تحميل PDF</button>'+
 '<button class="acad-btn acad-btn-primary" onclick="NAcademy.goQuiz(\''+ls.id+'\')">'+
-(done?'إعادة الاختبار 🔄':'الاختبار ←')+'</button>'+
+(done?'إعادة الاختبار '+acIco('refresh',13):'الاختبار ←')+'</button>'+
 '</div></div>'}
 
 /* ── QUIZ ENGINE ──────────────────────────────────────────── */
@@ -9134,7 +9162,7 @@ cor:1,exp:'التقرير الاحترافي يتضمن ستة عناصر: 1) و
 
 function acRenderQuiz(){
 var q=AC_QUIZZES[AC.lid];
-if(!q){return '<div class="acad-quiz-pg"><div class="acad-breadcrumb"><span role="button" onclick="NAcademy.goHome()">الأكاديمية</span></div><div class="acad-coming"><div class="acad-coming-ico">🔧</div><h4>الاختبار قيد الإعداد</h4><p>سيكون متاحاً قريباً.</p></div><button class="acad-btn acad-btn-ghost" onclick="NAcademy.goHome()" style="margin-top:20px">‹ العودة</button></div>'}
+if(!q){return '<div class="acad-quiz-pg"><div class="acad-breadcrumb"><span role="button" onclick="NAcademy.goHome()">الأكاديمية</span></div><div class="acad-coming"><div class="acad-coming-ico">'+acIco('wrench',30)+'</div><h4>الاختبار قيد الإعداد</h4><p>سيكون متاحاً قريباً.</p></div><button class="acad-btn acad-btn-ghost" onclick="NAcademy.goHome()" style="margin-top:20px">‹ العودة</button></div>'}
 var st=AC.qState;var qs=st.qs||q.questions;
 if(st.step>=qs.length){
 var score=Math.round(st.answers.filter(function(a,i){return a===qs[i].cor}).length/qs.length*100);
@@ -9237,8 +9265,8 @@ return '<div class="acad-quiz-pg"><div class="acad-result">'+
 '<div class="acad-result-msg">'+msg+'</div>'+
 '<div class="acad-result-acts">'+
 '<button class="acad-btn acad-btn-ghost" onclick="NAcademy.goHome()">‹ العودة للدورة</button>'+
-(passed?'<button class="acad-btn acad-btn-primary" onclick="NAcademy.goCert()">🎓 عرض الشهادة</button>':
-'<button class="acad-btn acad-btn-primary" onclick="NAcademy.goFinalExam()">🔄 إعادة المحاولة</button>')+
+(passed?'<button class="acad-btn acad-btn-primary" onclick="NAcademy.goCert()">'+acIco('cap',15)+' عرض الشهادة</button>':
+'<button class="acad-btn acad-btn-primary" onclick="NAcademy.goFinalExam()">'+acIco('refresh',15)+' إعادة المحاولة</button>')+
 '</div></div></div>'}
 var cur=qs[st.step];
 var letters=['أ','ب','ج','د'];
@@ -9478,10 +9506,10 @@ var eligible=pct===100&&feScore>=70;
 var certDate=acCertDate();
 var bannerHTML='';
 if(pct<100){
-bannerHTML='<div class="acad-coming" style="margin-bottom:24px"><div class="acad-coming-ico">🏅</div><h4>أكمل الدورة للحصول على الشهادة</h4><p>لقد أكملت '+pct+'% من الدروس. أكمل باقي الدروس واجتز اختباراتها، ثم اجتز الاختبار النهائي الشامل للحصول على شهادة الإتمام.</p></div>'
+bannerHTML='<div class="acad-coming" style="margin-bottom:24px"><div class="acad-coming-ico">'+acIco('medal',30)+'</div><h4>أكمل الدورة للحصول على الشهادة</h4><p>لقد أكملت '+pct+'% من الدروس. أكمل باقي الدروس واجتز اختباراتها، ثم اجتز الاختبار النهائي الشامل للحصول على شهادة الإتمام.</p></div>'
 }else if(feScore<70){
-bannerHTML='<div class="acad-coming" style="margin-bottom:24px"><div class="acad-coming-ico">📝</div><h4>اجتز الاختبار النهائي للحصول على الشهادة</h4><p>'+(feScore<0?'أكملت جميع الدروس! بقي فقط اجتياز الاختبار النهائي الشامل (50 سؤالاً) بنسبة 70% على الأقل.':'نتيجتك الحالية في الاختبار النهائي '+feScore+'%، وهي أقل من نسبة النجاح المطلوبة (70%). يمكنك إعادة المحاولة في أي وقت.')+'</p>'+
-'<button class="acad-btn acad-btn-primary" style="margin-top:14px" onclick="NAcademy.goFinalExam()">'+(feScore<0?'🎯 ابدأ الاختبار النهائي':'🔄 إعادة الاختبار النهائي')+'</button></div>'
+bannerHTML='<div class="acad-coming" style="margin-bottom:24px"><div class="acad-coming-ico">'+acIco('pencil',30)+'</div><h4>اجتز الاختبار النهائي للحصول على الشهادة</h4><p>'+(feScore<0?'أكملت جميع الدروس! بقي فقط اجتياز الاختبار النهائي الشامل (50 سؤالاً) بنسبة 70% على الأقل.':'نتيجتك الحالية في الاختبار النهائي '+feScore+'%، وهي أقل من نسبة النجاح المطلوبة (70%). يمكنك إعادة المحاولة في أي وقت.')+'</p>'+
+'<button class="acad-btn acad-btn-primary" style="margin-top:14px" onclick="NAcademy.goFinalExam()">'+(feScore<0?acIco('target',15)+' ابدأ الاختبار النهائي':acIco('refresh',15)+' إعادة الاختبار النهائي')+'</button></div>'
 }
 return '<div class="acad-cert-pg">'+
 '<div class="acad-breadcrumb"><span role="button" onclick="NAcademy.goHome()">الأكاديمية</span><span class="sep">›</span><span>الشهادة</span></div>'+
@@ -9507,12 +9535,12 @@ bannerHTML+
 '</div>'+
 '</div>'+
 '</div>'+
-'<div class="acad-cert-edit-hint">✏️ اضغط على الاسم في الشهادة لتعديله، ثم نزّلها أو شاركها</div>'+
+'<div class="acad-cert-edit-hint">'+acIco('pencil',13)+' اضغط على الاسم في الشهادة لتعديله، ثم نزّلها أو شاركها</div>'+
 '<div class="acad-cert-acts">'+
 '<button class="acad-btn acad-btn-ghost" onclick="NAcademy.goHome()">‹ العودة للدورة</button>'+
-'<button class="acad-btn acad-btn-ghost" onclick="NAcademy.printCert(this)">🖨️ طباعة</button>'+
-'<button class="acad-btn acad-btn-primary" onclick="NAcademy.downloadCert(this)">⬇️ تنزيل الشهادة</button>'+
-'<button class="acad-btn acad-btn-primary" onclick="NAcademy.shareCert(this)">📤 مشاركة</button>'+
+'<button class="acad-btn acad-btn-ghost" onclick="NAcademy.printCert(this)">'+acIco('printer',15)+' طباعة</button>'+
+'<button class="acad-btn acad-btn-primary" onclick="NAcademy.downloadCert(this)">'+acIco('download',15)+' تنزيل الشهادة</button>'+
+'<button class="acad-btn acad-btn-primary" onclick="NAcademy.shareCert(this)">'+acIco('share',15)+' مشاركة</button>'+
 '</div>':'')+
 '</div>'}
 
@@ -10508,7 +10536,7 @@ openLesson:function(id){acGo('lesson',id)},
 lockedNotice:function(id){
 if(typeof showToast!=='function')return;
 var gateRem=id?acUnitGateRemaining(id):0;
-showToast(gateRem>0?'🕒 أحسنت! الوحدة التالية تفتح غدًا':'🔒 أكمل الدرس السابق واجتز اختباره أولاً','err')},
+showToast(gateRem>0?'أحسنت! الوحدة التالية تفتح غدًا':'أكمل الدرس السابق واجتز اختباره أولاً',gateRem>0?'inf':'err')},
 downloadLessonPDF:function(id,btn){acDownloadLessonPDF(id,btn)},
 goQuiz:function(id){acGo('quiz',id)},
 goFinalExam:function(){acGo('final-exam',null)},
@@ -21111,8 +21139,8 @@ function showToast(msg, type = 'inf') {
     err: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
     inf: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:15px;height:15px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r=".5" fill="currentColor"/></svg>`
   };
-  // Strip emoji from msg (they're replaced by proper SVG icons)
-  const cleanMsg = msg.replace(/^[✅❌⚠️❤️🌙☀️]\s?/, '').replace(/^(✅|❌|⚠️)\s?/, '');
+  // Strip any leading emoji from msg (they're replaced by proper SVG icons)
+  const cleanMsg = msg.replace(/^[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{2300}-\u{23FF}\u{FE0F}]+\s?/u, '');
   el.innerHTML = `<span class="toast-icon-wrap">${icons[type] || icons.inf}</span><span>${cleanMsg}</span>`;
   w.appendChild(el);
   setTimeout(() => {
