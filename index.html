@@ -4405,8 +4405,15 @@ content+
 '<div class="acad-pdf-foot">© نبتيكس Nabtex — تم إصدار هذا الملف من دورة '+acEsc(AC_COURSE.title)+'، نبتيكس أكاديمي</div>'+
 '</div>'+
 '</body></html>';
+try{
+var pdfBlob=new Blob([html],{type:'text/html'});
+var pdfBlobUrl=URL.createObjectURL(pdfBlob);
+w.location.href=pdfBlobUrl;
+w.addEventListener&&w.addEventListener('unload',function(){try{URL.revokeObjectURL(pdfBlobUrl)}catch(e){}});
+}catch(e){
 w.document.write(html);
 w.document.close();
+}
 if(typeof showToast==='function')showToast('📄 جاري تجهيز الدرس للتحميل...','ok')}
 
 /* ── Public API ───────────────────────────────────────────── */
