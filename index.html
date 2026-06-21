@@ -1863,6 +1863,25 @@
 .acad-hs-n{font-family:var(--f-display);font-size:1.8rem;color:#fff;font-weight:700;line-height:1}
 .acad-hs-l{font-size:10px;color:rgba(255,255,255,.4);margin-top:4px;letter-spacing:.05em}
 .acad-hs-div{width:1px;background:rgba(255,255,255,.1);margin:0 8px}
+.acad-hero-back{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:rgba(255,255,255,.55);cursor:pointer;margin-bottom:18px;transition:color .15s}
+.acad-hero-back:hover{color:#fff}
+
+/* ── Catalog Grid ── */
+.acad-cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.acad-cat-card{background:var(--card);border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:var(--s3);cursor:pointer;transition:all .25s var(--ease-spring)}
+.acad-cat-card:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.1)}
+.acad-cat-card-top{height:120px;background:linear-gradient(140deg,#061610,#0f3d25,#1B6B3A);display:flex;align-items:center;justify-content:center;position:relative}
+.acad-cat-card-icon{font-size:48px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.4))}
+.acad-cat-card-body{padding:22px 24px}
+.acad-cat-card-kicker{font-size:10px;font-weight:800;color:var(--brand);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.acad-cat-card-title{font-family:var(--f-display);font-size:1.25rem;color:var(--ink);margin-bottom:8px;line-height:1.25}
+.acad-cat-card-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px}
+.acad-cat-card-meta{display:flex;flex-wrap:wrap;gap:8px}
+.acad-cat-card-cta{margin-top:16px;font-size:13px;font-weight:800;color:var(--brand)}
+.acad-soon-badge{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.92);color:var(--ink);font-size:10px;font-weight:800;padding:4px 10px;border-radius:40px;letter-spacing:.04em}
+.acad-cat-card.soon{cursor:pointer;opacity:.72}
+.acad-cat-card.soon:hover{opacity:.92;transform:translateY(-2px)}
+.acad-cat-card.soon .acad-cat-card-icon{filter:grayscale(.3) drop-shadow(0 6px 16px rgba(0,0,0,.4))}
 
 /* ── Course Card ── */
 .acad-course-section{padding:52px 0 72px}
@@ -2691,7 +2710,7 @@ return questions.map(function(q,i){return acShuffleOptsToPosition(q,positions[i]
 
 /* ── State ────────────────────────────────────────────────── */
 
-var AC={view:'home',lid:null,qState:null};
+var AC={view:'catalog',lid:null,qState:null};
 
 function acGo(view,lid){
 if((view==='lesson'||view==='quiz')&&lid&&!acIsUnlocked(lid)){
@@ -2715,12 +2734,52 @@ acR();window.scrollTo(0,0)}
 function acR(){
 var root=document.getElementById('acad-root');
 if(!root)return;
-if(AC.view==='home')root.innerHTML=acRenderHome();
+if(AC.view==='catalog')root.innerHTML=acRenderCatalog();
+else if(AC.view==='home')root.innerHTML=acRenderHome();
 else if(AC.view==='lesson')root.innerHTML=acRenderLesson();
 else if(AC.view==='quiz'){root.innerHTML=acRenderQuiz();acBindQuiz()}
 else if(AC.view==='final-exam'){root.innerHTML=acRenderFinalExam();}
 else if(AC.view==='cert')root.innerHTML=acRenderCert();
 }
+
+/* ── CATALOG ──────────────────────────────────────────────── */
+
+function acRenderCatalog(){
+var pct=acPct();
+var doneLessons=(acProg().d||[]).length;
+var liveCard='<div class="acad-cat-card" onclick="NAcademy.openCourse(\'pest\')" role="button">'+
+'<div class="acad-cat-card-top"><div class="acad-cat-card-icon">'+AC_COURSE.icon+'</div></div>'+
+'<div class="acad-cat-card-body">'+
+'<div class="acad-cat-card-kicker">مكافحة الآفات</div>'+
+'<div class="acad-cat-card-title">'+AC_COURSE.title+'</div>'+
+'<div class="acad-cat-card-desc">'+AC_COURSE.subtitle+'</div>'+
+'<div class="acad-cat-card-meta">'+
+'<span class="acad-chip">⏱ '+AC_COURSE.duration+'</span>'+
+'<span class="acad-chip">📊 '+AC_COURSE.level+'</span>'+
+'<span class="acad-chip acad-chip-cert">🏅 شهادة إتمام</span>'+
+'</div>'+
+(doneLessons>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+pct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+pct+'%"></div></div></div>':
+'<div class="acad-cat-card-cta">ابدأ الدورة ‹</div>')+
+'</div></div>';
+var soon=[
+{icon:'🌱',title:'إدارة المزرعة الذكية',desc:'من التخطيط إلى الحصاد — دليل شامل لإدارة مزرعة احترافية خطوة بخطوة'},
+{icon:'💧',title:'أساسيات الري والتسميد',desc:'احسب احتياجات محصولك بدقة، ووفّر في التكاليف دون التأثير على الإنتاجية'},
+{icon:'🍊',title:'دورة الموالح المتقدمة',desc:'كل ما يخص زراعة ورعاية أشجار الموالح بمعايير التصدير'}
+].map(function(c){
+return '<div class="acad-cat-card soon" onclick="NAcademy.comingSoon()" role="button">'+
+'<div class="acad-cat-card-top"><div class="acad-cat-card-icon">'+c.icon+'</div><span class="acad-soon-badge">قريباً</span></div>'+
+'<div class="acad-cat-card-body">'+
+'<div class="acad-cat-card-title">'+c.title+'</div>'+
+'<div class="acad-cat-card-desc">'+c.desc+'</div>'+
+'</div></div>'}).join('');
+return '<div class="acad-hero"><div class="acad-hero-inner">'+
+'<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
+'<div class="acad-hero-title">دوراتنا التعليمية</div>'+
+'<div class="acad-hero-sub">محتوى علمي موثّق باللغة العربية من فريق نبتيكس. اختر دورة لتبدأ رحلة التعلّم.</div>'+
+'</div></div>'+
+'<div class="acad-course-section"><div class="acad-wrap">'+
+'<div class="acad-cat-grid">'+liveCard+soon+'</div>'+
+'</div></div>'}
 
 /* ── HOME ─────────────────────────────────────────────────── */
 
@@ -2774,6 +2833,7 @@ var finalExamHTML='<div class="acad-module-block" style="border:2px solid rgba(2
 )+'</div>';
 
 return '<div class="acad-hero"><div class="acad-hero-inner">'+
+'<div class="acad-hero-back" role="button" onclick="NAcademy.goCatalog()">‹ كل الدورات</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
 '<div class="acad-hero-title">مكافحة الآفات الزراعية</div>'+
 '<div class="acad-hero-sub">الدورة الأشمل عربياً في مكافحة الآفات. تشخيص دقيق، قرارات صحيحة، حماية حقيقية لمحصولك.</div>'+
@@ -4428,6 +4488,9 @@ if(typeof showToast==='function')showToast('📄 جاري تجهيز الدرس 
 window.NAcademy={
 render:acR,
 goHome:function(){acGo('home',null)},
+goCatalog:function(){acGo('catalog',null)},
+openCourse:function(id){if(id==='pest')acGo('home',null)},
+comingSoon:function(){if(typeof showToast==='function')showToast('🔜 هذه الدورة قيد الإعداد — تابعونا قريبًا','inf')},
 openFirst:function(){
 var firstReady=null;
 for(var i=0;i<AC_COURSE.modules.length&&!firstReady;i++)
