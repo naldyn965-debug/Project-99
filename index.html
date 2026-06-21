@@ -7871,7 +7871,7 @@ body.modal-open { overflow: hidden; }
 
 .acad-card{background:var(--card);border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--s3)}
 .acad-card-top{height:180px;background:#0c3a23 url('https://images.unsplash.com/photo-1711900177627-1182b446bc8f?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat;position:relative;overflow:hidden}
-.acad-share-btn{position:absolute;top:14px;left:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(10,30,20,.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s}
+.acad-share-btn{position:absolute;top:14px;left:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(10,30,20,.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s;padding:0;appearance:none;-webkit-appearance:none;font:inherit;outline:none}
 .acad-share-btn:hover{background:rgba(10,30,20,.6);transform:translateY(-1px)}
 .acad-share-btn:active{transform:scale(.94)}
 .acad-card-top::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,18,12,.12) 0%,rgba(4,18,12,.04) 45%,rgba(4,18,12,.5) 100%)}
@@ -8717,19 +8717,28 @@ return questions.map(function(q,i){return acShuffleOptsToPosition(q,positions[i]
 
 var AC={view:'catalog',lid:null,qState:null};
 
-function acShareCourse(){
+function acShareCourse(e){
+if(e&&e.stopPropagation)e.stopPropagation();
 var url=location.href;
 var title='مكافحة الآفات الزراعية المتكاملة - نبتيكس أكاديمي';
 var text='دورة مجانية شاملة لتشخيص الآفات الزراعية ومكافحتها بطريقة علمية صحيحة — 12 درساً وشهادة إتمام.';
+function fallbackCopy(){
+ if(navigator.clipboard&&navigator.clipboard.writeText){
+  navigator.clipboard.writeText(url).then(function(){
+   if(typeof showToast==='function')showToast('تم نسخ رابط الدورة','ok')
+  }).catch(function(){
+   if(typeof showToast==='function')showToast('تعذر نسخ الرابط','err')
+  })
+ }else if(typeof showToast==='function')showToast('تعذر نسخ الرابط','err')
+}
 if(navigator.share){
- navigator.share({title:title,text:text,url:url}).catch(function(){})
-}else if(navigator.clipboard&&navigator.clipboard.writeText){
- navigator.clipboard.writeText(url).then(function(){
-  if(typeof showToast==='function')showToast('تم نسخ رابط الدورة','ok')
- }).catch(function(){
-  if(typeof showToast==='function')showToast('تعذر نسخ الرابط','err')
+ navigator.share({title:title,text:text,url:url}).catch(function(err){
+  if(err&&err.name==='AbortError')return;
+  fallbackCopy()
  })
-}else if(typeof showToast==='function')showToast('تعذر نسخ الرابط','err')
+}else{
+ fallbackCopy()
+}
 }
 
 function acGo(view,lid){
@@ -8896,7 +8905,7 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
-'<div class="acad-card-top"><button class="acad-share-btn" onclick="event.stopPropagation();acShareCourse()" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
+'<div class="acad-card-top"><button type="button" class="acad-share-btn" onclick="acShareCourse(event)" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
 '<div class="acad-card-body">'+
 '<div class="acad-card-kicker">مكافحة الآفات</div>'+
 '<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
