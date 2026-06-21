@@ -1882,6 +1882,34 @@
 .acad-cat-card.soon{cursor:pointer;opacity:.72}
 .acad-cat-card.soon:hover{opacity:.92;transform:translateY(-2px)}
 .acad-cat-card.soon .acad-cat-card-icon{filter:grayscale(.3) drop-shadow(0 6px 16px rgba(0,0,0,.4))}
+/* ── Premium Course Card (Pest Control) ───────────────────── */
+.acad-cat-card.premium{position:relative;border:1px solid rgba(201,135,26,.22);box-shadow:0 10px 32px rgba(27,107,58,.1),0 2px 8px rgba(0,0,0,.04);animation:acpEnter .6s var(--ease-out) both}
+@keyframes acpEnter{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+.acad-cat-card.premium::before{content:'';position:absolute;inset:0;border-radius:24px;padding:1.5px;background:linear-gradient(125deg,rgba(201,135,26,.55),rgba(27,107,58,.15) 35%,rgba(46,170,92,.5) 70%,rgba(201,135,26,.45));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.55;pointer-events:none;transition:opacity .3s;z-index:3}
+.acad-cat-card.premium:hover{transform:translateY(-7px);box-shadow:0 26px 56px rgba(27,107,58,.2),0 8px 20px rgba(201,135,26,.12)}
+.acad-cat-card.premium:hover::before{opacity:.95}
+.acad-cat-card.premium .acad-cat-card-top{height:140px;background:linear-gradient(140deg,#061610 0,#0c3a23 38%,#1B6B3A 72%,#2eaa5c 100%);overflow:hidden}
+.acad-cat-card.premium .acad-cat-card-top::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 25% 30%,rgba(46,170,92,.35) 0,transparent 60%),radial-gradient(ellipse 50% 50% at 85% 80%,rgba(201,135,26,.22) 0,transparent 55%)}
+.acad-cat-card.premium .acad-cat-card-top::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.12) 1px,transparent 1px);background-size:18px 18px;opacity:.4;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,#000 0,transparent 100%)}
+.acad-cat-card.premium .acad-icon-badge{position:relative;z-index:2;width:64px;height:64px;border-radius:18px;background:linear-gradient(150deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.28);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);box-shadow:0 8px 24px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.2);transition:transform .4s var(--ease-spring)}
+.acad-cat-card.premium:hover .acad-icon-badge{transform:scale(1.08) rotate(-4deg)}
+.acad-cat-card.premium .acad-icon-badge svg{width:30px;height:30px;color:#fff;filter:drop-shadow(0 2px 6px rgba(0,0,0,.3))}
+.acad-pop-badge{position:absolute;top:14px;left:14px;z-index:4;display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:40px;background:linear-gradient(135deg,#c9871a,#e8a020);color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.04em;box-shadow:0 4px 14px rgba(201,135,26,.45),inset 0 1px 0 rgba(255,255,255,.25)}
+.acad-pop-badge svg{width:11px;height:11px;flex-shrink:0}
+.acad-cert-ribbon{position:absolute;top:14px;right:14px;z-index:4;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.acad-cert-ribbon svg{width:18px;height:18px;color:#ffd980}
+.acad-cat-card.premium .acad-cat-card-meta{gap:7px}
+.acad-chip-pro{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:30px;background:var(--brand-mist);color:var(--brand);font-size:11.5px;font-weight:700;transition:all .25s var(--ease-spring)}
+.acad-chip-pro svg{width:13px;height:13px;flex-shrink:0;opacity:.85}
+.acad-cat-card.premium:hover .acad-chip-pro{background:var(--brand);color:#fff}
+.acad-cat-card.premium:hover .acad-chip-pro svg{opacity:1}
+.acad-chip-pro.gold{background:var(--gold-pale);color:var(--gold-d,#a06815)}
+.acad-cat-card.premium:hover .acad-chip-pro.gold{background:linear-gradient(135deg,#c9871a,#e8a020);color:#fff}
+.acad-cat-card.premium .acad-cat-card-cta{display:inline-flex;align-items:center;gap:6px;transition:gap .25s var(--ease-spring)}
+.acad-cat-card.premium .acad-cat-card-cta svg{width:13px;height:13px;transition:transform .25s var(--ease-spring)}
+.acad-cat-card.premium:hover .acad-cat-card-cta{gap:10px}
+.acad-cat-card.premium:hover .acad-cat-card-cta svg{transform:translateX(-3px)}
+@media(pointer:fine){.acad-cat-card.premium{overflow:hidden}.acad-cat-card.premium::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.05) 50%,transparent 60%);transform:translateX(-120%);transition:transform .7s ease;z-index:2;pointer-events:none}.acad-cat-card.premium:hover::after{transform:translateX(120%)}}
 
 /* ── Course Card ── */
 .acad-course-section{padding:52px 0 72px}
@@ -2747,19 +2775,23 @@ else if(AC.view==='cert')root.innerHTML=acRenderCert();
 function acRenderCatalog(){
 var pct=acPct();
 var doneLessons=(acProg().d||[]).length;
-var liveCard='<div class="acad-cat-card" onclick="NAcademy.openCourse(\'pest\')" role="button">'+
-'<div class="acad-cat-card-top"><div class="acad-cat-card-icon">'+AC_COURSE.icon+'</div></div>'+
+var liveCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pest\')" role="button">'+
+'<div class="acad-cat-card-top">'+
+'<span class="acad-pop-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.2H22l-6.1 4.4 2.3 7.2-6.2-4.5-6.2 4.5 2.3-7.2L2 9.2h7.6z"/></svg>الأكثر طلباً</span>'+
+'<span class="acad-cert-ribbon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/><path d="M8.5 13.5 7 21l5-2.5 5 2.5-1.5-7.5"/></svg></span>'+
+'<div class="acad-icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5.2 3.4 9 8 11 4.6-2 8-5.8 8-11V5l-8-3Z"/><path d="m9.5 12 2 2 4-4.2"/></svg></div>'+
+'</div>'+
 '<div class="acad-cat-card-body">'+
 '<div class="acad-cat-card-kicker">مكافحة الآفات</div>'+
 '<div class="acad-cat-card-title">'+AC_COURSE.title+'</div>'+
 '<div class="acad-cat-card-desc">'+AC_COURSE.subtitle+'</div>'+
 '<div class="acad-cat-card-meta">'+
-'<span class="acad-chip">⏱ '+AC_COURSE.duration+'</span>'+
-'<span class="acad-chip">📊 '+AC_COURSE.level+'</span>'+
-'<span class="acad-chip acad-chip-cert">🏅 شهادة إتمام</span>'+
+'<span class="acad-chip-pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>'+AC_COURSE.duration+'</span>'+
+'<span class="acad-chip-pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg>'+AC_COURSE.level+'</span>'+
+'<span class="acad-chip-pro gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/><path d="M8.5 13.5 7 21l5-2.5 5 2.5-1.5-7.5"/></svg>شهادة إتمام</span>'+
 '</div>'+
 (doneLessons>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+pct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+pct+'%"></div></div></div>':
-'<div class="acad-cat-card-cta">ابدأ الدورة ‹</div>')+
+'<div class="acad-cat-card-cta">ابدأ الدورة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>')+
 '</div></div>';
 var soon=[
 {icon:'🌱',title:'إدارة المزرعة الذكية',desc:'من التخطيط إلى الحصاد — دليل شامل لإدارة مزرعة احترافية خطوة بخطوة'},
