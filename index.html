@@ -7616,7 +7616,7 @@ body.modal-open { overflow: hidden; }
 <div class="mkt-share-modal-ov" id="mkt-share-modal-overlay" data-action="smo-overlay">
   <div class="mkt-share-modal-box" dir="rtl">
     <div class="mkt-smo-handle"></div>
-    <div class="mkt-smo-title">مشاركة المنتج</div>
+    <div class="mkt-smo-title" id="mkt-share-modal-title">مشاركة المنتج</div>
     <div class="mkt-smo-grid">
       <button class="mkt-smo-btn sp-wa" data-action="smo-wa">
         <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.555 4.122 1.524 5.855L0 24l6.335-1.513A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.88 9.88 0 0 1-5.031-1.375l-.36-.214-3.757.897.916-3.653-.235-.374A9.862 9.862 0 0 1 2.106 12C2.106 6.53 6.53 2.106 12 2.106c5.468 0 9.893 4.424 9.893 9.894 0 5.468-4.425 9.894-9.893 9.894z"/></svg>
@@ -8717,30 +8717,6 @@ return questions.map(function(q,i){return acShuffleOptsToPosition(q,positions[i]
 
 var AC={view:'catalog',lid:null,qState:null};
 
-function acShareCourse(e){
-if(e&&e.stopPropagation)e.stopPropagation();
-var url=location.href;
-var title='مكافحة الآفات الزراعية المتكاملة - نبتيكس أكاديمي';
-var text='دورة مجانية شاملة لتشخيص الآفات الزراعية ومكافحتها بطريقة علمية صحيحة — 12 درساً وشهادة إتمام.';
-function fallbackCopy(){
- if(navigator.clipboard&&navigator.clipboard.writeText){
-  navigator.clipboard.writeText(url).then(function(){
-   if(typeof showToast==='function')showToast('تم نسخ رابط الدورة','ok')
-  }).catch(function(){
-   if(typeof showToast==='function')showToast('تعذر نسخ الرابط','err')
-  })
- }else if(typeof showToast==='function')showToast('تعذر نسخ الرابط','err')
-}
-if(navigator.share){
- navigator.share({title:title,text:text,url:url}).catch(function(err){
-  if(err&&err.name==='AbortError')return;
-  fallbackCopy()
- })
-}else{
- fallbackCopy()
-}
-}
-
 function acGo(view,lid){
 if(view!=='catalog'&&!(typeof currentUser!=='undefined'&&currentUser)){
  if(typeof showToast==='function')showToast('سجّل الدخول أو أنشئ حساباً جديداً للبدء في الدورة','inf');
@@ -8905,7 +8881,7 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
-'<div class="acad-card-top"><button type="button" class="acad-share-btn" onclick="acShareCourse(event)" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
+'<div class="acad-card-top"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
 '<div class="acad-card-body">'+
 '<div class="acad-card-kicker">مكافحة الآفات</div>'+
 '<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
@@ -22390,6 +22366,9 @@ let mktState = {
    SOCIAL SHARE HELPERS  — مشاركة منتجات السوق
 ═══════════════════════════════════════════════════ */
 function _mktShareUrl(productId) {
+  if (window._mktShareModalMode === 'academy') {
+    return location.origin + location.pathname + '#pg:academy';
+  }
   return location.origin + location.pathname + '#pg:market:product:' + productId;
 }
 
@@ -22415,10 +22394,23 @@ function _mktCopyFallback(text) {
 }
 
 function _mktOpenShareModal(productId, title) {
+  window._mktShareModalMode  = 'product';
   window._mktShareModalId    = productId;
   window._mktShareModalTitle = title || 'منتج زراعي';
+  var titleEl = document.getElementById('mkt-share-modal-title');
+  if (titleEl) titleEl.textContent = 'مشاركة المنتج';
   var urlEl = document.getElementById('mkt-share-modal-url-txt');
   if (urlEl) urlEl.textContent = _mktShareUrl(productId);
+  document.getElementById('mkt-share-modal-overlay').classList.add('open');
+}
+
+function acOpenShareModal() {
+  window._mktShareModalMode  = 'academy';
+  window._mktShareModalTitle = 'دورة مكافحة الآفات الزراعية المتكاملة - نبتيكس أكاديمي';
+  var titleEl = document.getElementById('mkt-share-modal-title');
+  if (titleEl) titleEl.textContent = 'مشاركة الدورة';
+  var urlEl = document.getElementById('mkt-share-modal-url-txt');
+  if (urlEl) urlEl.textContent = _mktShareUrl();
   document.getElementById('mkt-share-modal-overlay').classList.add('open');
 }
 
@@ -23741,6 +23733,7 @@ document.addEventListener('click', function(e) {
   if (action === 'marksold')  { MKT.markSold(id);        return; }
   if (action === 'delete')    { MKT.deleteProduct(id);   return; }
   if (action === 'share')     { _mktOpenShareModal(id, btn.dataset.title || ''); return; }
+  if (action === 'share-academy') { acOpenShareModal(); return; }
   // Order actions
   if (action === 'accept')    { MKT.updateOrderStatus(id, 'accepted'); return; }
   if (action === 'reject')    { MKT.updateOrderStatus(id, 'rejected'); return; }
