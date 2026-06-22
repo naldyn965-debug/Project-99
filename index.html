@@ -22374,7 +22374,8 @@ function _mktShareUrl(productId) {
 
 function _mktCopyLink(productId) {
   const url = _mktShareUrl(productId);
-  const _ok = () => _toast('تم نسخ رابط المنتج 🔗', 'success');
+  const label = window._mktShareModalMode === 'academy' ? 'رابط الدورة' : 'رابط المنتج';
+  const _ok = () => _toast('تم نسخ ' + label + ' 🔗', 'success');
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(url).then(_ok).catch(() => _mktCopyFallback(url));
   } else {
@@ -22383,12 +22384,13 @@ function _mktCopyLink(productId) {
 }
 
 function _mktCopyFallback(text) {
+  const label = window._mktShareModalMode === 'academy' ? 'رابط الدورة' : 'رابط المنتج';
   const ta = document.createElement('textarea');
   ta.value = text;
   ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0;';
   document.body.appendChild(ta);
   ta.select();
-  try { document.execCommand('copy'); _toast('تم نسخ رابط المنتج 🔗', 'success'); }
+  try { document.execCommand('copy'); _toast('تم نسخ ' + label + ' 🔗', 'success'); }
   catch(e) { _toast('انسخ الرابط يدوياً', 'info'); }
   document.body.removeChild(ta);
 }
