@@ -29973,8 +29973,8 @@ document.addEventListener('DOMContentLoaded',function(){
           LOG('✅ Service Worker registered. Scope:', reg.scope);
           LOG('🔌 Offline Mode: ACTIVE after first load');
 
-          /* Check for waiting worker */
-          if (reg.waiting) {
+          /* Check for waiting worker — only auto-skip if already controlled (real update, not first install) */
+          if (reg.waiting && navigator.serviceWorker.controller) {
             LOG('⚡ New SW waiting — sending SKIP_WAITING');
             reg.waiting.postMessage({ type: 'SKIP_WAITING' });
           }
@@ -29985,6 +29985,7 @@ document.addEventListener('DOMContentLoaded',function(){
             if (!newWorker) return;
             LOG('🔄 New SW version installing...');
             newWorker.addEventListener('statechange', function () {
+              /* Only skip-wait on a real update (controller already present), not on first install */
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                 LOG('🆕 New SW installed — activating silently');
                 newWorker.postMessage({ type: 'SKIP_WAITING' });
@@ -30029,8 +30030,10 @@ document.addEventListener('DOMContentLoaded',function(){
         }
       });
 
-      /* Reload when new SW takes over — delayed to avoid interruption */
+      /* Reload when new SW takes over — only for real updates (not first install) */
+      var _hadController = !!navigator.serviceWorker.controller;
       navigator.serviceWorker.addEventListener('controllerchange', function () {
+        if (!_hadController) { _hadController = true; return; } /* first install — skip reload */
         if (window._nabtexSwReloading) return;
         window._nabtexSwReloading = true;
         LOG('🔄 SW updated — reloading in 2s...');
