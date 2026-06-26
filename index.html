@@ -7917,7 +7917,7 @@ body.modal-open { overflow: hidden; }
 .acad-card{background:var(--card);border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--s3)}
 .acad-card-top{height:180px;background:#0c3a23 url('https://images.unsplash.com/photo-1711900177627-1182b446bc8f?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat;position:relative;overflow:hidden}
 .acad-card-top.mb{background:#0a1c33 url('https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
-.acad-card-top.fs{background:#241405 url('https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+.acad-card-top.fq{background:#1a0f00 url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-share-btn{position:absolute;top:14px;left:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(10,30,20,.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s;padding:0;appearance:none;-webkit-appearance:none;font:inherit;outline:none}
 .acad-share-btn:hover{background:rgba(10,30,20,.6);transform:translateY(-1px)}
 .acad-share-btn:active{transform:scale(.94)}
@@ -8148,7 +8148,7 @@ modules:[
 ]};
 
 /* ── Course Registry ────────────────────────────────────────── */
-var AC_CID='pest'; // 'pest' | 'mol-bio' | 'food-safety'
+var AC_CID='pest'; // 'pest' | 'mol-bio'
 var PEST_COURSE=AC_COURSE;
 
 /* ── QR Code Engine (self-contained, no external dependency) ── */
@@ -8675,7 +8675,7 @@ return JSON.parse(raw||'{}')
 function acSave(p){try{localStorage.setItem(acProgKey(),JSON.stringify(p))}catch(e){}acPushCloud(AC_CID,p);}
 /* Clears a specific user's local academy progress (called on logout / account switch) */
 function acClearLocalProgress(targetUid){
-['pest','mol-bio','food-safety'].forEach(function(cid){
+['pest','mol-bio','food-quality'].forEach(function(cid){
 var pf='nb-'+cid+'-p';
 var key=targetUid?(pf+'__'+targetUid):(pf+'__guest');
 try{localStorage.removeItem(key)}catch(e){}});
@@ -8709,7 +8709,7 @@ return new Promise(function(resolve){
 try{
 var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
 if(!u||typeof db==='undefined'||!db){resolve();return;}
-var cids=['pest','mol-bio','food-safety'],pending=cids.length;
+var cids=['pest','mol-bio','food-quality'],pending=cids.length;
 function step(){pending--;if(pending<=0)resolve();}
 cids.forEach(function(cid){
 var key='nb-'+cid+'-p__'+u;
@@ -8908,7 +8908,7 @@ var STAR_ICO='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.
 var ARROW_ICO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
 var pestPct=_acPctFor('pest',PEST_COURSE);var pestDone=_acDoneFor('pest');
 var molPct=_acPctFor('mol-bio',MB_COURSE);var molDone=_acDoneFor('mol-bio');var mbStatus=acMbStatus();
-var fsPct=_acPctFor('food-safety',FS_COURSE);var fsDone=_acDoneFor('food-safety');var fsStatus=acFsStatus();
+var fqPct=_acPctFor('food-quality',FQ_COURSE);var fqDone=_acDoneFor('food-quality');
 var liveCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pest\')" role="button">'+
 '<div class="acad-cat-card-top"><span class="acad-pop-badge">'+STAR_ICO+'Free</span></div>'+
 '<div class="acad-cat-card-body">'+
@@ -8938,20 +8938,19 @@ var molBioCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(
 '</div>'+
 mbBottom+
 '</div></div>';
-var fsBadge=fsStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':fsStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 90%</span>';
-var fsBottom=fsStatus==='paid'?(fsDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+fsPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+fsPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):fsStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال 24 ساعة</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">25 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
-var foodSafetyCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'food-safety\')" role="button" style="border-color:rgba(217,119,6,.25)">'+
-'<div class="acad-cat-card-top" style="background:#241405 url(\'https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+fsBadge+'</div>'+
+var fqCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'food-quality\')" role="button" style="border-color:rgba(217,119,6,.25)">'+
+'<div class="acad-cat-card-top" style="background:#1a1200 url(\'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat"><span class="acad-pop-badge">'+STAR_ICO+'Free</span></div>'+
 '<div class="acad-cat-card-body">'+
-'<div class="acad-cat-card-kicker" style="color:#d97706">'+FS_COURSE.kicker+'</div>'+
-'<div class="acad-cat-card-title">'+FS_COURSE.title+'</div>'+
-'<div class="acad-cat-card-desc">'+FS_COURSE.subtitle+'</div>'+
+'<div class="acad-cat-card-kicker" style="color:#d97706">'+FQ_COURSE.kicker+'</div>'+
+'<div class="acad-cat-card-title">'+FQ_COURSE.title+'</div>'+
+'<div class="acad-cat-card-desc">'+FQ_COURSE.subtitle+'</div>'+
 '<div class="acad-cat-card-meta">'+
-'<span class="acad-chip-pro">'+CLOCK_ICO+FS_COURSE.duration+'</span>'+
-'<span class="acad-chip-pro">'+BARS_ICO+FS_COURSE.level+'</span>'+
+'<span class="acad-chip-pro">'+CLOCK_ICO+FQ_COURSE.duration+'</span>'+
+'<span class="acad-chip-pro">'+BARS_ICO+FQ_COURSE.level+'</span>'+
 '<span class="acad-chip-pro gold">'+CERT_ICO+'شهادة إتمام</span>'+
 '</div>'+
-fsBottom+
+(fqDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+fqPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+fqPct+'%"></div></div></div>':
+'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>')+
 '</div></div>';
 return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-back" role="button" onclick="showPage(\'home\')">‹ الرئيسية</div>'+
@@ -8960,7 +8959,7 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-sub">محتوى علمي موثّق باللغة العربية من فريق نبتيكس. اختر دورة لتبدأ رحلة التعلّم.</div>'+
 '</div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
-'<div class="acad-cat-grid">'+liveCard+molBioCard+foodSafetyCard+'</div>'+
+'<div class="acad-cat-grid">'+liveCard+molBioCard+fqCard+'</div>'+
 '</div></div>'}
 
 /* ── HOME ─────────────────────────────────────────────────── */
@@ -9035,7 +9034,7 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
-'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-safety'?' fs':'')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
+'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-quality'?' fq':'')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
 '<div class="acad-card-body">'+
 '<div class="acad-card-kicker">'+AC_COURSE.kicker+'</div>'+
 '<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
@@ -9502,69 +9501,58 @@ mb4:{title:'اختبار المحاضرة الرابعة — التعبير ال
 var MB_FINAL_EXAM={title:'الاختبار النهائي الشامل — تقنيات البيولوجيا الجزيئية',passScore:70,questions:[]};
 
 /* ══════════════════════════════════════════════════════════════════
-   FOOD SAFETY COURSE — سلامة الغذاء
+   FOOD QUALITY COURSE — جودة الغذاء وسلامته
    ══════════════════════════════════════════════════════════════════ */
 
-var FS_COURSE={
-id:'food-safety',title:'سلامة الغذاء',
-kicker:'سلامة الغذاء',
-heroSub:'الدورة الأشمل عربياً في سلامة الغذاء. من فهم الأخطار الغذائية إلى تطبيق نظام الهاسب الدولي، مُصمَّمة للعاملين في قطاع الأغذية وطلاب التغذية والصناعات الغذائية وكل مهتم بصحته الغذائية.',
-subtitle:'من فهم الخطر إلى تطبيق الهاسب الدولي',icon:'🍽️',
-level:'مبتدئ إلى متقدم',duration:'16 ساعة',cert:true,
+var FQ_COURSE={
+id:'food-quality',title:'جودة الغذاء وسلامته',
+kicker:'جودة الغذاء',
+heroSub:'الدورة الأشمل عربياً في علم جودة الغذاء وسلامته. من المفاهيم الأساسية إلى أنظمة الجودة العالمية، مُصمَّمة لطلاب وخريجي علوم الأغذية والصحة البيئية والصناعات الغذائية.',
+subtitle:'من المعايير الدولية إلى التطبيق الميداني',icon:'🥗',
+level:'مبتدئ إلى متقدم',duration:'20 ساعة',cert:true,
 instructor:'فريق نبتيكس الأكاديمي',
-description:'الدورة الأشمل باللغة العربية في سلامة الغذاء. ستتعرف على الأخطار الغذائية البيولوجية والكيميائية والفيزيائية، وتتقن قواعد التحكم في درجة الحرارة ومنع التلوث المتبادل، وتطبّق نظام الهاسب HACCP خطوة بخطوة، وصولاً إلى أحدث معايير الجودة العالمية كـ ISO 22000.',
+description:'الدورة الأشمل باللغة العربية في علم جودة الغذاء وسلامته. ستتعلم المفاهيم الأساسية والمعايير الدولية من Codex Alimentarius وISO، وتتقن تطبيق نظامَي HACCP وGMP، وأساليب التحليل الحسي والميكروبيولوجي والكيميائي، وصولاً إلى اتجاهات مستقبلية في ضمان الجودة وتتبع سلسلة الغذاء الرقمي.',
 modules:[
-{id:'fm1',title:'مبادئ سلامة الغذاء الأساسية',lessons:[
- {id:'fs1',title:'مقدمة شاملة إلى سلامة الغذاء وأهميتها للصحة العامة والاقتصاد',dur:'50 دقيقة'},
- {id:'fs2',title:'سلامة الغذاء وجودة الغذاء: الفرق الجوهري ومفهوم الخطر الغذائي',dur:'40 دقيقة'},
- {id:'fs3',title:'تصنيف الأخطار الغذائية: بيولوجية وكيميائية وفيزيائية',dur:'45 دقيقة'}
+{id:'fqm1',title:'مدخل إلى علم جودة الغذاء',lessons:[
+ {id:'fq1',title:'مقدمة شاملة إلى جودة الغذاء: المفاهيم، الأهمية، والتطور التاريخي',dur:'50 دقيقة'},
+ {id:'fq2',title:'التشريعات والمعايير الدولية: Codex Alimentarius وISO وGAP',dur:'45 دقيقة'},
+ {id:'fq3',title:'خصائص الغذاء ومؤشرات الجودة: الحسية والغذائية والميكروبيولوجية',dur:'40 دقيقة'}
 ]},
-{id:'fm2',title:'الأخطار البيولوجية والتسمم الغذائي',lessons:[
- {id:'fs4',title:'البكتيريا المسبِّبة للتسمم الغذائي: السالمونيلا والإشريكية القولونية والليستيريا',dur:'50 دقيقة'},
- {id:'fs5',title:'الفيروسات والطفيليات المنقولة بالغذاء',dur:'40 دقيقة'},
- {id:'fs6',title:'منحنى نمو الميكروبات ومنطقة الخطر الحرارية',dur:'45 دقيقة'}
+{id:'fqm2',title:'السلامة الغذائية والمخاطر',lessons:[
+ {id:'fq4',title:'المخاطر البيولوجية في الغذاء: البكتيريا والفطريات والفيروسات والطفيليات',dur:'50 دقيقة'},
+ {id:'fq5',title:'المخاطر الكيميائية والفيزيائية: الملوثات والمبيدات والمعادن الثقيلة',dur:'45 دقيقة'},
+ {id:'fq6',title:'الأمراض المنقولة بالغذاء: الأسباب والوقاية وأبرز حالات التسمم الغذائي',dur:'45 دقيقة'}
 ]},
-{id:'fm3',title:'التحكم في درجات الحرارة وممارسات التداول الآمن',lessons:[
- {id:'fs7',title:'التبريد والتجميد والطبخ الآمن: درجات الحرارة الحرجة',dur:'45 دقيقة'},
- {id:'fs8',title:'التلوث المتبادل: كيف ينتقل وكيف يُمنع',dur:'40 دقيقة'},
- {id:'fs9',title:'النظافة الشخصية وممارسات العاملين في قطاع الغذاء',dur:'35 دقيقة'}
+{id:'fqm3',title:'أنظمة ضمان جودة الغذاء',lessons:[
+ {id:'fq7',title:'نظام HACCP: المبادئ السبعة وخطوات التطبيق العملي',dur:'55 دقيقة'},
+ {id:'fq8',title:'معيار ISO 22000 ونظام FSMS: إطار متكامل لسلامة الغذاء',dur:'50 دقيقة'},
+ {id:'fq9',title:'ممارسات التصنيع الجيدة GMP وضوابط النظافة والصرف الصحي',dur:'45 دقيقة'},
+ {id:'fq10',title:'الرقابة على الجودة والتفتيش الغذائي: الأساليب والتوثيق والتدقيق',dur:'45 دقيقة'}
 ]},
-{id:'fm4',title:'نظام تحليل الأخطار ونقاط التحكم الحرجة HACCP',lessons:[
- {id:'fs10',title:'مقدمة إلى نظام الهاسب HACCP ومبادئه السبعة',dur:'55 دقيقة'},
- {id:'fs11',title:'تطبيق الهاسب عملياً: من تحليل الخطر إلى التحقق والمراجعة',dur:'50 دقيقة'}
-]},
-{id:'fm5',title:'المعايير الدولية والاتجاهات الحديثة',lessons:[
- {id:'fs12',title:'مواصفة ISO 22000 ونظم إدارة سلامة الغذاء العالمية',dur:'45 دقيقة'},
- {id:'fs13',title:'مستقبل سلامة الغذاء: التتبع الرقمي وتقنيات الكشف السريع عن التلوث',dur:'40 دقيقة'}
+{id:'fqm4',title:'التحليل والتطبيقات المستقبلية',lessons:[
+ {id:'fq11',title:'أساليب التحليل الحسي والكيميائي والميكروبيولوجي للغذاء',dur:'50 دقيقة'},
+ {id:'fq12',title:'جودة الغذاء في سلسلة التوريد: من المزرعة إلى المائدة',dur:'45 دقيقة'},
+ {id:'fq13',title:'الاتجاهات المستقبلية في جودة الغذاء: التقنيات الرقمية والتتبع الذكي',dur:'40 دقيقة'}
 ]}
 ]};
 
-var FS_QUIZZES={
-fs1:{title:'اختبار المحاضرة الأولى — مقدمة شاملة إلى سلامة الغذاء',questions:[
-{q:'اشترت أسرة دجاجاً مجمداً وأذابته على سطح المطبخ، ثم طبخته جيداً حتى تغيّر لونه بالكامل، واستخدمت السكين نفسها دون غسلها لتقطيع سلطة جاهزة للأكل. أُصيبت الأسرة بتسمم غذائي بعد ساعات قليلة. ما التفسير الأرجح علمياً؟',
-opts:['الطبخ الجيد للحم يكفي دائماً لقتل كل أنواع الميكروبات بصرف النظر عن أي عامل آخر','الميكروبات انتقلت على الأرجح بالتلوث المتبادل من سطح إذابة الدجاج النيء أو السكين إلى السلطة الجاهزة للأكل؛ فالطبخ يقتل ميكروبات اللحم نفسه، لكنه لا يُصلح تلوثاً وقع لطعام آخر بعد ذلك','لا بد أن اللحم كان فاسداً لأن رائحته كانت ستتغير حتماً لو كان ملوّثاً','التجميد يقتل كل الميكروبات الموجودة في اللحم بالفعل فلا يوجد تفسير منطقي لإصابتهم'],
-cor:1,exp:'هذا المثال يجمع بين خطأين شائعين: أولاً، طبخ اللحم جيداً يقتل الميكروبات الموجودة فيه فقط، ولا يحمي طعاماً آخر (كالسلطة) تلوّث بعد ذلك بالتلوث المتبادل عبر سطح أو سكين لمس اللحم النيء. ثانياً، كثير من ميكروبات التسمم الغذائي كالسالمونيلا لا تُغيّر رائحة أو طعم أو مظهر الطعام الملوّث، فلا يمكن الاعتماد على الحواس وحدها للحكم على السلامة. هذا تماماً ما تتعمّق فيه المحاضرات القادمة عن التلوث المتبادل والتحكم في درجات الحرارة.'},
-{q:'ما الفرق الجوهري بين "سلامة الغذاء" (Food Safety) و"الأمن الغذائي" (Food Security)؟',
-opts:['لا فرق؛ المصطلحان يصفان نفس الفكرة بكلمتين مختلفتين','سلامة الغذاء تتعلق بخلوّ الطعام من أي خطر صحي عند تناوله، بينما الأمن الغذائي يتعلق بتوفر كميات كافية من الغذاء لكل الناس في كل وقت','الأمن الغذائي يخص فقط الدول منخفضة الدخل، وسلامة الغذاء تخص فقط الدول مرتفعة الدخل','سلامة الغذاء تخص المصانع فقط، والأمن الغذائي يخص المزارعين فقط'],
-cor:1,exp:'سلامة الغذاء (Food Safety) تركّز على البُعد الصحي: هل هذا الطعام، بصرف النظر عن كميته، خالٍ من الميكروبات والسموم والأجسام الغريبة الضارة؟ أما الأمن الغذائي (Food Security) فيركّز على البُعد الكمي: هل تتوفر كميات كافية من الغذاء لجميع السكان باستمرار؟ دولة قد تحقق أمناً غذائياً جيداً (وفرة في الكميات) دون أن يكون غذاؤها بالضرورة آمناً صحياً، والعكس صحيح أيضاً. كلا المفهومين ضروريان ومتكاملان وليسا بديلين عن بعضهما.'},
-{q:'عامل في مصنع ألبان وجد أن إحدى عبوات الحليب تحتوي على شظية معدنية صغيرة ناتجة عن تلف في خط الإنتاج. إلى أي نوع من الأخطار الغذائية الثلاثة يُصنَّف هذا الخطر؟',
-opts:['خطر بيولوجي، لأنه يهدد صحة المستهلك بشكل مباشر','خطر كيميائي، لأن المعدن قد يتفاعل كيميائياً مع مكونات الحليب','خطر فيزيائي، لأنه جسم غريب صلب دخل الغذاء بسبب خلل في المعدات أو خط الإنتاج','لا يُعد خطراً ما دامت الكمية صغيرة جداً ولا تُلاحَظ بسهولة'],
-cor:2,exp:'الأخطار الغذائية تُصنَّف إلى ثلاث فئات حسب طبيعتها لا حسب حجم الضرر: الأخطار البيولوجية (بكتيريا، فيروسات، طفيليات، فطريات)، والأخطار الكيميائية (سموم طبيعية، متبقيات مبيدات، معادن ثقيلة، مواد تنظيف)، والأخطار الفيزيائية (أجسام غريبة صلبة كالزجاج والمعدن والشعر والحصى). الشظية المعدنية جسم غريب صلب دخل الغذاء بسبب عطل ميكانيكي، فهي خطر فيزيائي بحت، ولا يُشترط أن تكون الكمية كبيرة لتُصنَّف كخطر — فحتى شظية صغيرة قد تسبب جرحاً داخلياً خطيراً للمستهلك.'},
-{q:'أيّ من الأطعمة التالية يُصنَّف ضمن الأغذية "عالية الخطورة" (TCS/PHF) التي تحتاج تحكماً دقيقاً في درجة الحرارة والوقت؟',
-opts:['عسل نحل معبَّأ في إناء مغلق','أرز مطبوخ تُرك على طاولة المطبخ في درجة حرارة الغرفة لساعات طويلة','سكر أبيض محفوظ في وعاء جاف','بسكويت مُغلَّف صناعياً ومحفوظ في درجة حرارة الغرفة'],
-cor:1,exp:'الأرز المطبوخ غذاء رطب، حموضته قريبة من المتعادل، وغني بالنشويات، وهذه الخصائص (رطوبة عالية وحموضة معتدلة) تجعله بيئة مثالية لنمو الميكروبات بسرعة إذا تُرك في درجة حرارة الغرفة لفترة طويلة، خصوصاً بكتيريا Bacillus cereus التي تُكوّن أبواغاً تنشط بعد الطبخ وتُفرز سموماً معوية. أما العسل والسكر والبسكويت المُغلَّف فمحتواها المائي المتاح (Water Activity) منخفض جداً، وهو ما يمنع نمو أغلب الميكروبات فيها حتى في درجة حرارة الغرفة.'},
-{q:'وفق آخر تقديرات منظمة الصحة العالمية (إصدار 2026 الذي يغطي الفترة 2000–2021)، أيّ وصف أدق لحجم مشكلة الغذاء غير الآمن عالمياً؟',
-opts:['مشكلة محدودة تقتصر على الدول منخفضة الدخل فقط ولا تكاد تُذكر على المستوى العالمي','نحو 866 مليون حالة مرض و1.52 مليون حالة وفاة سنوياً عالمياً، مع عبء أكبر بوضوح على الأطفال دون الخامسة وعلى منطقتي أفريقيا وجنوب شرق آسيا','انخفضت المشكلة إلى الصفر تقريباً بعد تطبيق نظام الهاسب عالمياً','تنحصر المشكلة في الأخطار الكيميائية فقط دون البيولوجية'],
-cor:1,exp:'في الإصدار 2026 من تقديرات منظمة الصحة العالمية للعبء العالمي للأمراض المنقولة بالغذاء (يغطي الفترة 2000–2021 ويشمل 42 خطراً غذائياً)، قُدِّر أن الغذاء غير الآمن يسبب نحو 866 مليون حالة مرض و1.52 مليون حالة وفاة سنوياً، مع معدل إصابة بين الأطفال دون الخامسة أعلى بـ2.7 مرة من باقي الفئات العمرية، وتركّز أكبر للعبء في أفريقيا وجنوب شرق آسيا. ورغم أن الرقم في تراجع منذ عام 2000، إلا أن حجم المشكلة لا يزال يُقارَن بأمراض كبرى كالملاريا، وهو ما يفسّر الحاجة العالمية لأنظمة وقائية كالهاسب ومعايير كـISO 22000 التي يتناولها هذا الكورس.'}
-]}};
+var FQ_QUIZZES={
+fq1:{title:'اختبار المحاضرة الأولى — مقدمة إلى جودة الغذاء',questions:[
+{q:'ما الفرق الجوهري بين مفهومَي "جودة الغذاء" و"سلامة الغذاء"؟',opts:['مترادفان تماماً لا فرق بينهما','سلامة الغذاء شرط غير قابل للمساومة يتعلق بغياب الخطر على صحة المستهلك، بينما جودة الغذاء مفهوم أشمل يضم السلامة إضافةً إلى الخصائص الحسية والغذائية والاقتصادية','جودة الغذاء تخص المصانع فقط وسلامة الغذاء تخص المستهلك فقط','سلامة الغذاء تُقاس بالمختبر فقط وجودة الغذاء تُقاس بالذوق فحسب'],cor:1,exp:'السلامة الغذائية (Food Safety) هي شرط لا يقبل المساومة: خلوّ الغذاء من أي خطر يضر بالمستهلك — بيولوجي أو كيميائي أو فيزيائي. أما الجودة الغذائية (Food Quality) فمفهوم أشمل يتضمن السلامة كمكوّن جوهري، لكنه يمتد ليشمل الخصائص الحسية (طعم، رائحة، مظهر، قوام) والخصائص التغذوية والقيمة الاقتصادية ومطابقة المواصفات التسويقية.'},
+{q:'أيٌّ من التعريفات التالية يصف Codex Alimentarius بشكل أدق؟',opts:['شركة خاصة لتصنيع الغذاء','مجموعة معايير ومبادئ توجيهية دولية أعدّتها لجنة مشتركة بين FAO وWHO لحماية صحة المستهلك وضمان ممارسات تجارية عادلة في تجارة الغذاء','قاعدة بيانات وصفات طعام دولية','جهاز حكومي أمريكي للرقابة على الدواء والغذاء'],cor:1,exp:'Codex Alimentarius (كلمة لاتينية تعني "قانون الغذاء") هو مجموعة معايير ومبادئ توجيهية وأكواد تطبيق دولية أعدّتها لجنة Codex المشتركة بين منظمة الأغذية والزراعة FAO ومنظمة الصحة العالمية WHO منذ عام 1963. يُشكّل المرجع الدولي في النزاعات التجارية ضمن إطار منظمة التجارة العالمية WTO.'},
+{q:'مزارع يُنتج طماطم بمواصفات ممتازة من حيث الحجم واللون والطعم، لكن تحليل المختبر أظهر تجاوز حدود بقايا المبيدات المسموح بها. كيف تُصنّف هذا المنتج؟',opts:['منتج عالي الجودة لأن خصائصه الحسية ممتازة','منتج غير آمن وبالتالي لا يُعدّ عالي الجودة بأي معيار مهني، لأن السلامة شرط لا تتحقق الجودة بدونه','منتج جيد الجودة لكن ينقصه أسلوب تغليف مناسب فقط','يعتمد على سوق التصدير المستهدَف'],cor:1,exp:'السلامة الغذائية ركيزة أولى لا يمكن المساومة عليها: غذاء غير آمن لا يُعدّ عالي الجودة مهما بلغت مزاياه الحسية. تجاوز حدود بقايا المبيدات (MRLs) المحددة بـ Codex يُصنّف المنتج مرفوضاً في أسواق التصدير، ويُعرّض المستهلك لمخاطر صحية.'},
+{q:'أيٌّ من المفاهيم التالية يعبّر عن "سلسلة الحرارة الباردة" (Cold Chain) في سياق جودة الغذاء؟',opts:['عملية تجميد الغذاء بالكامل لدرجة الصفر المطلق','الحفاظ المستمر على درجات حرارة منخفضة محددة عبر جميع مراحل التوريد من الإنتاج حتى وصول المنتج للمستهلك','استخدام مواد تبريد كيميائية داخل التغليف فقط','درجة حرارة الغرفة الصحيحة لتخزين الغذاء المعلب'],cor:1,exp:'سلسلة التبريد (Cold Chain) تعني الحفاظ المستمر على نطاق درجة حرارة محدد (مثلاً 0-4°م للألبان، أو أقل من -18°م للمجمدات) عبر كل مراحل السلسلة: التصنيع، التخزين، النقل، التوزيع، نقطة البيع، وحتى منزل المستهلك. أي انقطاع في السلسلة قد يُؤدي إلى نمو ميكروبي سريع وفساد غذائي.'},
+{q:'ما المقصود بمصطلح "نقطة النهاية الحرجة" (Critical Control Point - CCP) في سياق سلامة الغذاء؟',opts:['نهاية خط الإنتاج قبل التعبئة مباشرةً','خطوة في عملية إنتاج الغذاء يمكن فيها تطبيق ضابط رقابي للوقاية من خطر أو القضاء عليه أو تخفيضه إلى مستويات مقبولة','أعلى درجة حرارة يتحملها الغذاء في التخزين','المرحلة التي يُختبر فيها الغذاء في المختبر نهائياً'],cor:1,exp:'نقطة التحكم الحرجة (CCP) هي خطوة في عملية الإنتاج أو المعالجة حيث يمكن تطبيق ضابط رقابي (كالحرارة أو الرقم الهيدروجيني pH أو نشاط الماء Aw) لمنع خطر غذائي أو إزالته أو تخفيضه لمستوى مقبول. المفهوم جوهري في نظام HACCP ويختلف عن نقطة التحكم العادية CP التي تؤثر في الجودة لا في السلامة.'}
+]}
+};
 
-var FS_FINAL_EXAM={title:'الاختبار النهائي الشامل — سلامة الغذاء',passScore:70,questions:[]};
+var FQ_FINAL_EXAM={title:'الاختبار النهائي الشامل — جودة الغذاء وسلامته',passScore:70,questions:[]};
 
 /* ── Course Switching Engine ──────────────────────────────────── */
 function acSwitchCourse(cid){
 AC_CID=cid;
 if(cid==='mol-bio'){AC_COURSE=MB_COURSE;AC_QUIZZES=MB_QUIZZES;AC_FINAL_EXAM=MB_FINAL_EXAM;}
-else if(cid==='food-safety'){AC_COURSE=FS_COURSE;AC_QUIZZES=FS_QUIZZES;AC_FINAL_EXAM=FS_FINAL_EXAM;}
+else if(cid==='food-quality'){AC_COURSE=FQ_COURSE;AC_QUIZZES=FQ_QUIZZES;AC_FINAL_EXAM=FQ_FINAL_EXAM;}
 else{AC_COURSE=PEST_COURSE;AC_QUIZZES=PEST_QUIZZES;AC_FINAL_EXAM=PEST_FINAL_EXAM;}
 }
 
@@ -9723,80 +9711,78 @@ window.acCloseMbPayModal=acCloseMbPayModal;
 window.acCopyVcashNum=acCopyVcashNum;
 window.acSubmitMbPayment=acSubmitMbPayment;
 
-/* ── Vodafone Cash Payment — Food Safety Course ──────────────────
-   رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
+/* ── Vodafone Cash Payment — Food Quality Course ────────────────
+   رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي              */
 
-var _FS_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
-var _FS_COURSE_PRICE=25;          /* ← السعر بالجنيه              */
+var _FQ_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
+var _FQ_COURSE_PRICE=25;          /* ← السعر بالجنيه              */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
-function acFsStatus(){
+function acFqStatus(){
 var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
 if(!u)return 'none';
 try{
-if(localStorage.getItem('nb-food-safety-access__'+u)==='paid')return 'paid';
-if(localStorage.getItem('nb-food-safety-pending__'+u)==='true')return 'pending';
+if(localStorage.getItem('nb-food-quality-access__'+u)==='paid')return 'paid';
+if(localStorage.getItem('nb-food-quality-pending__'+u)==='true')return 'pending';
 }catch(e){}
 return 'none';
 }
 
 /* Async check against Firestore, updates local cache */
-function acCheckFsAccess(cb){
+function acCheckFqAccess(cb){
 var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
 if(!u){cb('none');return;}
-var cacheKey='nb-food-safety-access__'+u;
+var cacheKey='nb-food-quality-access__'+u;
 try{if(localStorage.getItem(cacheKey)==='paid'){cb('paid');return;}}catch(e){}
-/* Check users/{uid}.paidCourses first */
 db.collection('users').doc(u).get().then(function(snap){
 var data=snap.exists?snap.data():{};
-if(data.paidCourses&&data.paidCourses.indexOf('food-safety')>-1){
+if(data.paidCourses&&data.paidCourses.indexOf('food-quality')>-1){
 try{localStorage.setItem(cacheKey,'paid');}catch(e){}
 cb('paid');return;
 }
-/* Check course_payments for pending/approved */
 db.collection('course_payments').where('uid','==',u).get().then(function(qs){
 if(qs.empty){cb('none');return;}
-var docs=qs.docs.filter(function(d){return d.data().courseId==='food-safety';});
+var docs=qs.docs.filter(function(d){return d.data().courseId==='food-quality';});
 if(!docs.length){cb('none');return;}
 var st=docs[0].data().status;
 if(st==='approved'){
 try{localStorage.setItem(cacheKey,'paid');}catch(e){}
 cb('paid');
 }else{
-try{localStorage.setItem('nb-food-safety-pending__'+u,'true');}catch(e){}
+try{localStorage.setItem('nb-food-quality-pending__'+u,'true');}catch(e){}
 cb('pending');
 }
 }).catch(function(){cb('none');});
 }).catch(function(){cb('none');});
 }
 
-function acShowFsPayModal(mode){
-var el=document.getElementById('vcash-overlay-fs');if(!el)return;
-var stepPay=document.getElementById('vcash-step-pay-fs');
-var stepPend=document.getElementById('vcash-step-pending-fs');
-document.getElementById('vcash-number-fs').textContent=_FS_VCASH_NUM;
-document.getElementById('vcash-price-display-fs').textContent=_FS_COURSE_PRICE+' جنيه';
+function acShowFqPayModal(mode){
+var el=document.getElementById('vcash2-overlay');if(!el)return;
+var stepPay=document.getElementById('vcash2-step-pay');
+var stepPend=document.getElementById('vcash2-step-pending');
+document.getElementById('vcash2-number').textContent=_FQ_VCASH_NUM;
+document.getElementById('vcash2-price-display').textContent=_FQ_COURSE_PRICE+' جنيه';
 if(mode==='pending'){
 stepPay.classList.remove('on');stepPend.classList.add('on');
 }else{
 stepPay.classList.add('on');stepPend.classList.remove('on');
-var ph=document.getElementById('vcash-phone-fs');var rf=document.getElementById('vcash-ref-fs');
+var ph=document.getElementById('vcash2-phone');var rf=document.getElementById('vcash2-ref');
 if(ph)ph.value='';if(rf)rf.value='';
-var btn=document.getElementById('vcash-submit-btn-fs');
+var btn=document.getElementById('vcash2-submit-btn');
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
 }
 el.classList.add('on');
 document.body.classList.add('modal-open');
 }
 
-function acCloseFsPayModal(){
-var el=document.getElementById('vcash-overlay-fs');
+function acCloseFqPayModal(){
+var el=document.getElementById('vcash2-overlay');
 if(el)el.classList.remove('on');
 document.body.classList.remove('modal-open');
 }
 
-function acCopyVcashNumFs(){
-var num=document.getElementById('vcash-number-fs');if(!num)return;
+function acCopyVcash2Num(){
+var num=document.getElementById('vcash2-number');if(!num)return;
 var val=num.textContent;
 if(navigator.clipboard){
 navigator.clipboard.writeText(val).then(function(){
@@ -9812,42 +9798,41 @@ if(typeof showToast==='function')showToast('تم نسخ الرقم','ok');
 }
 }
 
-function acSubmitFsPayment(){
+function acSubmitFqPayment(){
 var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
 if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أولاً','err');return;}
-var phone=(document.getElementById('vcash-phone-fs').value||'').trim();
-var ref=(document.getElementById('vcash-ref-fs').value||'').trim();
+var phone=(document.getElementById('vcash2-phone').value||'').trim();
+var ref=(document.getElementById('vcash2-ref').value||'').trim();
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
 }
 if(!ref||ref.length<3){
 if(typeof showToast==='function')showToast('برجاء إدخال الرقم المرجعي للمعاملة','err');return;
 }
-var btn=document.getElementById('vcash-submit-btn-fs');
+var btn=document.getElementById('vcash2-submit-btn');
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
 transactionRef:ref,
-courseId:'food-safety',
-amount:_FS_COURSE_PRICE,
+courseId:'food-quality',
+amount:_FQ_COURSE_PRICE,
 currency:'EGP',
 status:'pending',
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
 }).then(function(docRef){
-try{localStorage.setItem('nb-food-safety-pending__'+u,'true');}catch(e){}
-var stepPay=document.getElementById('vcash-step-pay-fs');
-var stepPend=document.getElementById('vcash-step-pending-fs');
-var refDisp=document.getElementById('vcash-pending-ref-display-fs');
+try{localStorage.setItem('nb-food-quality-pending__'+u,'true');}catch(e){}
+var stepPay=document.getElementById('vcash2-step-pay');
+var stepPend=document.getElementById('vcash2-step-pending');
+var refDisp=document.getElementById('vcash2-pending-ref-display');
 if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  مرجع التحويل: '+ref;
 if(stepPay)stepPay.classList.remove('on');
 if(stepPend)stepPend.classList.add('on');
 if(typeof showToast==='function')showToast('تم إرسال طلبك — سيُفعَّل الكورس خلال 24 ساعة','ok');
-/* Re-render catalog card if visible */
 if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
 }).catch(function(e){
-console.error('[VCash-FS] code:',e&&e.code,'|',e);
+console.error('[VCash2] code:',e&&e.code,'|',e);
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
 var _msg='خطأ في الإرسال — أعد المحاولة';
 if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'))
@@ -9858,9 +9843,9 @@ if(typeof showToast==='function')showToast(_msg,'err');
 });
 }
 
-window.acCloseFsPayModal=acCloseFsPayModal;
-window.acCopyVcashNumFs=acCopyVcashNumFs;
-window.acSubmitFsPayment=acSubmitFsPayment;
+window.acCloseFqPayModal=acCloseFqPayModal;
+window.acCopyVcash2Num=acCopyVcash2Num;
+window.acSubmitFqPayment=acSubmitFqPayment;
 
 /* ── Molecular Biology Lesson Content ─────────────────────────── */
 function mbGetContent(id){
@@ -10525,178 +10510,6 @@ c['mb4']='<div class="acad-body">'+
 
 return c[id]||null}
 
-/* ── Food Safety Lesson Content ───────────────────────────────── */
-function fsGetContent(id){
-var c={};
-
-c['fs1']='<div class="acad-body">'+
-'<div class="acad-igrid" style="margin-bottom:28px">'+
-'<div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">6 أهداف</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي — يصلح لأي مستوى</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">40 دقيقة</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">🍽️</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">ميداني وصناعي وتجاري</div></div>'+
-'</div>'+
-
-'<h2>أهداف التعلم</h2>'+
-'<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
-'<ul>'+
-'<li>تعريف سلامة الغذاء بدقة، والتمييز بينها وبين مفاهيم قريبة كجودة الغذاء والأمن الغذائي والنظافة الغذائية</li>'+
-'<li>التعرف على أهم المحطات التاريخية التي شكّلت علم سلامة الغذاء الحديث، من اكتشاف الميكروبات إلى نظام الهاسب ومعايير ISO</li>'+
-'<li>فهم سلسلة "من المزرعة إلى المائدة" وكيف يمكن أن يدخل التلوث في أي حلقة منها</li>'+
-'<li>تصنيف الأخطار الغذائية الثلاثة: البيولوجية والكيميائية والفيزيائية، مع أمثلة من كل نوع</li>'+
-'<li>فهم لماذا تُعدّ بعض الأغذية أكثر خطورة من غيرها (الأغذية عالية الخطورة)</li>'+
-'<li>تقدير الحجم الحقيقي لمشكلة سلامة الغذاء على الصحة العامة والاقتصاد العالمي</li>'+
-'</ul>'+
-
-'<h2>مقدمة: لماذا تستحق سلامة الغذاء كل هذا الاهتمام؟</h2>'+
-'<p>كل يوم، يتناول كل واحد منا غذاءً عدة مرات دون أن يفكر لحظة في الرحلة التي قطعها هذا الغذاء قبل أن يصل إلى طبقه: من الحقل أو المزرعة، إلى مصنع التعبئة، إلى وسيلة النقل، إلى رف المتجر أو مطبخ المطعم، وأخيراً إلى يده. في أي حلقة من هذه الحلقات قد يتسلل خطر غير مرئي — ميكروب، أو سم، أو شظية صلبة — يحوّل وجبة عادية إلى مصدر مرض أو حتى وفاة.</p>'+
-'<p>سلامة الغذاء هي العلم والممارسة التي تضمن ألا يحدث ذلك. وهي ليست ترفاً أو تفصيلاً بيروقراطياً، بل ركيزة أساسية من ركائز الصحة العامة، تقف جنباً إلى جنب مع نظافة المياه والتطعيمات في قائمة أكثر التدخلات الصحية تأثيراً في تاريخ الإنسانية.</p>'+
-
-'<h2>ما هي سلامة الغذاء؟</h2>'+
-'<p>سلامة الغذاء (Food Safety) هي <strong>مجموعة الممارسات والإجراءات والمعايير التي تضمن خلوّ الغذاء من أي خطر يهدد صحة الإنسان عند تحضيره أو تناوله</strong>. كثيرون يخلطون بينها وبين مفاهيم مجاورة، لكن كل مفهوم يركّز على زاوية مختلفة:</p>'+
-
-'<div class="acad-twrap"><table class="acad-tbl">'+
-'<thead><tr><th>المفهوم</th><th>ما الذي يركّز عليه</th></tr></thead>'+
-'<tbody>'+
-'<tr><td>سلامة الغذاء (Food Safety)</td><td>خلوّ الغذاء من أي خطر صحي عند الاستهلاك</td></tr>'+
-'<tr><td>جودة الغذاء (Food Quality)</td><td>الخصائص الحسية والتجارية: الطعم والشكل والقوام ومطابقة المواصفة</td></tr>'+
-'<tr><td>الأمن الغذائي (Food Security)</td><td>توفر كميات كافية من الغذاء لجميع الناس في كل وقت</td></tr>'+
-'<tr><td>النظافة الغذائية (Food Hygiene)</td><td>الممارسات اليومية كغسل الأيدي وتنظيف الأسطح التي تُحقِّق سلامة الغذاء عملياً</td></tr>'+
-'<tr><td>التغذية (Nutrition)</td><td>القيمة الغذائية للطعام وأثرها على صحة الجسم</td></tr>'+
-'</tbody></table></div>'+
-'<p>هذه المفاهيم متكاملة لا متطابقة: قد يكون الغذاء آمناً تماماً (لا يحتوي ميكروبات ضارة) لكنه رديء الجودة (طعمه غير مقبول)، أو قد يكون متوفراً بكثرة (أمن غذائي جيد) دون أن يكون آمناً للاستهلاك.</p>'+
-
-'<h2>كيف نشأ هذا العلم؟ أهم المحطات</h2>'+
-'<p>لم يظهر هذا العلم دفعة واحدة، بل تراكم عبر اكتشافات ومحطات تنظيمية كبرى غيّرت علاقتنا بالغذاء خطوة بخطوة:</p>'+
-
-'<div class="acad-case">'+
-'<div class="acad-case-row"><div class="acad-case-lbl">1860s — اكتشاف السبب الحقيقي</div><div class="acad-case-val">لويس باستير أثبت أن الكائنات الدقيقة، لا "الهواء الفاسد"، هي سبب تعفّن الأغذية، وطوّر تقنية البسترة التي لا تزال حجر الأساس في تصنيع الألبان والعصائر حتى اليوم.</div></div>'+
-'<div class="acad-case-row"><div class="acad-case-lbl">1906 — أول تشريع وطني حقيقي</div><div class="acad-case-val">أصدرت الولايات المتحدة قانون الغذاء والدواء النقي (Pure Food and Drug Act) بعد فضائح كبرى في صناعة اللحوم، فاتحاً عصر الرقابة الحكومية الحديثة على الغذاء.</div></div>'+
-'<div class="acad-case-row"><div class="acad-case-lbl">1959–1971 — ميلاد نظام الهاسب</div><div class="acad-case-val">شركة Pillsbury طوّرت بالتعاون مع وكالة ناسا نظام "تحليل الأخطار ونقاط التحكم الحرجة" (HACCP) لضمان غذاء آمن لرواد الفضاء، وقُدِّم للصناعة الغذائية عام 1971.</div></div>'+
-'<div class="acad-case-row"><div class="acad-case-lbl">1963 — معيار عالمي موحَّد</div><div class="acad-case-val">تأسست لجنة الدستور الغذائي (Codex Alimentarius) بالتعاون بين منظمتي الفاو والصحة العالمية، لوضع معايير غذائية موحَّدة لا تزال معتمدة دولياً حتى اليوم.</div></div>'+
-'<div class="acad-case-row"><div class="acad-case-lbl">1993 — درس قاسٍ غيّر صناعة كاملة</div><div class="acad-case-val">تفشٍّ خطير لبكتيريا الإشريكية القولونية في وجبات لحم غير مطبوخة جيداً غيّر تشريعات سلامة اللحوم الأمريكية بالكامل — التفاصيل الكاملة في دراسة الحالة أدناه.</div></div>'+
-'<div class="acad-case-row"><div class="acad-case-lbl">2005 — معيار إدارة دولي شامل</div><div class="acad-case-val">أصدرت المنظمة الدولية للمعايير (ISO) مواصفة ISO 22000 لأول مرة، موحِّدة مبادئ الهاسب مع نظام إدارة شامل لسلامة الغذاء، وحُدِّثت المواصفة عام 2018.</div></div>'+
-'<div class="acad-case-row"><div class="acad-case-lbl">2018–2019 — يوم عالمي لقضية عالمية</div><div class="acad-case-val">أعلنت الجمعية العامة للأمم المتحدة يوم 7 يونيو "اليوم العالمي لسلامة الغذاء"، واحتُفل به لأول مرة عام 2019 بقيادة منظمتي الصحة العالمية والفاو.</div></div>'+
-'<div class="acad-case-row"><div class="acad-case-lbl">2026 — أحدث صورة للمشكلة عالمياً</div><div class="acad-case-val">أصدرت منظمة الصحة العالمية أحدث تحديث لتقديراتها العالمية لعبء الأمراض المنقولة بالغذاء، مغطّياً الفترة 2000–2021 و42 خطراً غذائياً ميكروبياً وكيميائياً.</div></div>'+
-'</div>'+
-
-'<h2>المفهوم المركزي: سلسلة "من المزرعة إلى المائدة"</h2>'+
-'<p>الفكرة المحورية في سلامة الغذاء الحديثة أن الخطر لا يبدأ في المطبخ فقط، بل قد يدخل الغذاء في أي حلقة من سلسلة طويلة تبدأ من الإنتاج وتنتهي بالاستهلاك:</p>'+
-
-'<div class="acad-igrid">'+
-'<div class="acad-icard"><span class="acad-icard-ico">🌱</span><div class="acad-icard-lbl">الإنتاج</div><div class="acad-icard-val">المزرعة أو المصدر الأولي</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">🏭</span><div class="acad-icard-lbl">التصنيع</div><div class="acad-icard-val">المعالجة والتعبئة</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">🚚</span><div class="acad-icard-lbl">النقل والتخزين</div><div class="acad-icard-val">سلسلة التبريد والمناولة</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">🏬</span><div class="acad-icard-lbl">البيع</div><div class="acad-icard-val">المتجر أو السوق</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">🍳</span><div class="acad-icard-lbl">التحضير</div><div class="acad-icard-val">المطبخ أو المطعم</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">🍽️</span><div class="acad-icard-lbl">الاستهلاك</div><div class="acad-icard-val">المائدة النهائية</div></div>'+
-'</div>'+
-'<p>يُعرف هذا المبدأ عالمياً بـ"من المزرعة إلى المائدة" (Farm to Fork)، وهو الأساس الذي تُبنى عليه كل التشريعات والمعايير الحديثة لسلامة الغذاء، بما فيها نظام الهاسب الذي ستتعلمه في وحدة لاحقة.</p>'+
-
-'<h2>الأخطار الثلاثة التي تهدد سلامة الغذاء</h2>'+
-'<div class="acad-igrid">'+
-'<div class="acad-icard"><span class="acad-icard-ico">🦠</span><div class="acad-icard-lbl">خطر بيولوجي</div><div class="acad-icard-val">بكتيريا، فيروسات، طفيليات، فطريات</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">🧪</span><div class="acad-icard-lbl">خطر كيميائي</div><div class="acad-icard-val">سموم طبيعية، متبقيات مبيدات، معادن ثقيلة</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">🔧</span><div class="acad-icard-lbl">خطر فيزيائي</div><div class="acad-icard-val">زجاج، معدن، شعر، حصى، بلاستيك</div></div>'+
-'</div>'+
-'<div class="acad-twrap"><table class="acad-tbl">'+
-'<thead><tr><th>نوع الخطر</th><th>أمثلة شائعة</th><th>كيف يحدث عادةً</th></tr></thead>'+
-'<tbody>'+
-'<tr><td>بيولوجي</td><td>السالمونيلا، الإشريكية القولونية، النوروفيروس</td><td>تكاثر ميكروبي بسبب نقص في الطبخ أو التبريد</td></tr>'+
-'<tr><td>كيميائي</td><td>الأفلاتوكسين، الرصاص، متبقيات المبيدات</td><td>تلوث بيئي، أو سوء تخزين، أو استخدام مواد غير مصرَّح بها</td></tr>'+
-'<tr><td>فيزيائي</td><td>شظايا زجاج أو معدن، شعر، أجزاء حشرات</td><td>أخطاء في خطوط الإنتاج أو في التداول اليدوي</td></tr>'+
-'</tbody></table></div>'+
-
-'<h2>لماذا بعض الأغذية أخطر من غيرها؟</h2>'+
-'<p>تُصنَّف بعض الأطعمة كأغذية "عالية الخطورة" تحتاج تحكماً دقيقاً في الوقت ودرجة الحرارة، بسبب توفّر ثلاث خصائص فيها معاً: رطوبة عالية، وحموضة قريبة من المتعادل، ومحتوى بروتيني غني — وهي البيئة المثالية لنمو الميكروبات سريعاً. اللحوم والدواجن والألبان والبيض والأرز المطبوخ والسلطات الطازجة من أبرز أمثلتها. في المقابل، الأطعمة منخفضة الرطوبة أو شديدة الحموضة كالعسل والسكر والخبز الجاف والمعلَّبات الحامضية تُعدّ أقل خطورة نسبياً لأن بيئتها لا تسمح بنمو ميكروبي سريع.</p>'+
-
-'<h2>أهمية سلامة الغذاء في حياتنا</h2>'+
-
-'<h3>في الصحة العامة</h3>'+
-'<ul>'+
-'<li><strong>الحجم العالمي:</strong> وفق آخر تقديرات منظمة الصحة العالمية (إصدار 2026 الذي يغطي 2000–2021 و42 خطراً غذائياً)، يُسبب الغذاء غير الآمن نحو 866 مليون حالة مرض و1.52 مليون حالة وفاة سنوياً حول العالم.</li>'+
-'<li><strong>عبء غير متناسب على الأطفال:</strong> يتحمّل الأطفال دون الخامسة معدل إصابة أعلى بـ2.7 مرة من بقية الفئات العمرية.</li>'+
-'<li><strong>توزيع جغرافي متفاوت:</strong> أكبر عبء يقع على منطقتي أفريقيا وجنوب شرق آسيا، رغم أن المشكلة عالمية بطبيعتها.</li>'+
-'</ul>'+
-
-'<h3>في الاقتصاد والتجارة</h3>'+
-'<ul>'+
-'<li><strong>تكلفة اقتصادية ضخمة:</strong> تكلِّف الأغذية غير الآمنة الدول منخفضة ومتوسطة الدخل عشرات المليارات من الدولارات سنوياً في فقدان الإنتاجية والنفقات الطبية.</li>'+
-'<li><strong>شرط للتصدير:</strong> أغلب الدول المستوردة تشترط شهادات هاسب أو ISO 22000، فدولة لا تستوفي معايير سلامة الغذاء قد تفقد أسواق التصدير بالكامل.</li>'+
-'</ul>'+
-
-'<h3>في ثقة المستهلك</h3>'+
-'<ul>'+
-'<li><strong>سمعة تجارية على المحك:</strong> فضيحة سلامة غذاء واحدة قد تُلحِق ضرراً بعلامة تجارية عمرها عقود في أيام معدودة، كما سترى في دراسة الحالة أدناه.</li>'+
-'</ul>'+
-
-'<h2>نظرة سريعة على ما سنتعلمه في هذا الكورس</h2>'+
-'<p>قبل أن نتعمّق في كل موضوع على حدة في المحاضرات القادمة، إليك الصورة الكاملة لكيفية ترابطها:</p>'+
-'<div class="acad-igrid">'+
-'<div class="acad-icard"><span class="acad-icard-ico">🦠</span><div class="acad-icard-lbl">الأخطار البيولوجية</div><div class="acad-icard-val">السالمونيلا والإشريكية القولونية والليستيريا</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">🌡️</span><div class="acad-icard-lbl">التحكم بالحرارة</div><div class="acad-icard-val">منطقة الخطر الحرارية وقواعد التبريد والطبخ</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">🧼</span><div class="acad-icard-lbl">منع التلوث المتبادل</div><div class="acad-icard-val">فصل الغذاء الخام عن المطبوخ</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">📋</span><div class="acad-icard-lbl">نظام الهاسب HACCP</div><div class="acad-icard-val">من تحليل الخطر إلى التحقق</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">🌍</span><div class="acad-icard-lbl">ISO 22000</div><div class="acad-icard-val">المعيار الدولي لإدارة سلامة الغذاء</div></div>'+
-'</div>'+
-
-'<div class="acad-case">'+
-'<div class="acad-case-row"><div class="acad-case-lbl">مثال حقيقي</div><div class="acad-case-val">كيف غيّرت أزمة واحدة صناعة كاملة؟ تفشّي "جاك إن ذا بوكس" عام 1993</div></div>'+
-'<div class="acad-case-row"><div class="acad-case-lbl">التحدي</div><div class="acad-case-val">في أواخر 1992 وأوائل 1993، أُصيب أكثر من 700 شخص في أربع ولايات أمريكية (واشنطن وكاليفورنيا وأيداهو ونيفادا) ببكتيريا الإشريكية القولونية النزفية O157:H7 بعد تناول لحم بقري مفروم غير مطبوخ بدرجة كافية في مطاعم سلسلة "جاك إن ذا بوكس". توفي 4 أطفال وأصيب نحو 178 آخرين بمضاعفات دائمة، أبرزها فشل كلوي ناتج عن متلازمة انحلال الدم اليوريمي.</div></div>'+
-'<div class="acad-case-row"><div class="acad-case-lbl">السبب الجذري</div><div class="acad-case-val">طبخ شرائح اللحم على درجة حرارة داخلية أقل من الحد الآمن لقتل هذه البكتيريا، رغم أن إحدى الولايات كانت قد فرضت فعلياً درجة حرارة أعلى لطبخ اللحم المفروم.</div></div>'+
-'<div class="acad-case-row"><div class="acad-case-lbl">الأثر التنظيمي</div><div class="acad-case-val">أعلنت وزارة الزراعة الأمريكية اعتبار هذه البكتيريا "مادة ملوِّثة محرَّمة" في اللحم المفروم عام 1994، ثم فرضت عام 1996 تطبيق نظام الهاسب إلزامياً في كل منشآت اللحوم والدواجن الخاضعة للتفتيش الفيدرالي — أول تطبيق إلزامي واسع لهذا النظام في الصناعة الغذائية الأمريكية.</div></div>'+
-'<div class="acad-case-row"><div class="acad-case-lbl">الدرس</div><div class="acad-case-val">حادثة واحدة، ناتجة عن خطأ بسيط في درجة حرارة الطبخ، كانت كافية لتغيير تشريعات دولة كاملة وصناعة بأكملها. هذا بالضبط سبب بناء سلامة الغذاء على الوقاية المسبقة كنظام الهاسب، لا على انتظار وقوع الكارثة.</div></div>'+
-'</div>'+
-
-'<div class="acad-err">'+
-'<h3>أخطاء شائعة يقع فيها كثيرون</h3>'+
-'<ul>'+
-'<li><strong>"الطعام الذي يبدو ورائحته جيدة فهو آمن":</strong> أغلب البكتيريا المسبِّبة للتسمم الغذائي لا تُغيّر طعم الطعام أو رائحته أو مظهره على الإطلاق.</li>'+
-'<li><strong>"التجميد يقتل الميكروبات":</strong> التجميد يُوقف نمو أغلب الميكروبات ولا يقتلها؛ فور إذابة الطعام تستعيد البكتيريا نشاطها.</li>'+
-'<li><strong>"قاعدة الخمس ثوانٍ" عند سقوط الطعام:</strong> الميكروبات تنتقل إلى الطعام فور لمسه لأي سطح ملوَّث، بصرف النظر عن سرعة رفعه.</li>'+
-'<li><strong>"سلامة الغذاء مسؤولية المصانع والحكومة فقط":</strong> نسبة كبيرة من حالات التسمم الغذائي تنتج عن أخطاء تداول وتخزين داخل المنزل نفسه.</li>'+
-'<li><strong>"المنتج الطبيعي أو العضوي آمن دائماً":</strong> صفة "طبيعي" أو "عضوي" لا تعني خلوّ المنتج من الميكروبات أو السموم الطبيعية كالأفلاتوكسين.</li>'+
-'</ul>'+
-'</div>'+
-
-'<div class="acad-tip">'+
-'<h3>نصائح للدراسة</h3>'+
-'<ul>'+
-'<li><strong>اربط كل مفهوم بمثال من مطبخك:</strong> عندما تسمع "تلوث متبادل" فكّر في سكين قطّعت بها دجاجاً نيئاً ثم استخدمتها للخضروات دون غسلها.</li>'+
-'<li><strong>تذكّر العوامل الخمسة لنمو الميكروبات:</strong> الغذاء، الحموضة، درجة الحرارة، الوقت، والرطوبة — ستشرحها بالتفصيل المحاضرة السادسة عن منطقة الخطر الحرارية.</li>'+
-'<li><strong>تابع منشورات منظمة الصحة العالمية والفاو حول اليوم العالمي لسلامة الغذاء (7 يونيو):</strong> مصدر سنوي محدَّث بأحدث الأرقام والتوجهات.</li>'+
-'</ul>'+
-'</div>'+
-
-'<h2>ملخص المحاضرة</h2>'+
-'<div class="acad-igrid">'+
-'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">التعريف</div><div class="acad-icard-val">ممارسات تضمن خلوّ الغذاء من أي خطر صحي</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">السلسلة</div><div class="acad-icard-val">من المزرعة إلى المائدة؛ الخطر يدخل في أي حلقة</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">الأخطار الثلاثة</div><div class="acad-icard-val">بيولوجية، كيميائية، فيزيائية</div></div>'+
-'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">الحجم العالمي</div><div class="acad-icard-val">866 مليون مرض و1.52 مليون وفاة سنوياً (WHO 2026)</div></div>'+
-'</div>'+
-
-'<h2>أسئلة للمراجعة</h2>'+
-'<ul>'+
-'<li>ما الفرق بين سلامة الغذاء وجودة الغذاء؟ اذكر مثالاً يوضّح الفرق.</li>'+
-'<li>اشرح بكلماتك مفهوم "من المزرعة إلى المائدة" ولماذا هو محوري في سلامة الغذاء الحديثة.</li>'+
-'<li>اذكر مثالاً واحداً لكل نوع من الأخطار الثلاثة (بيولوجي، كيميائي، فيزيائي) غير الأمثلة المذكورة في المحاضرة.</li>'+
-'<li>لماذا تُعدّ اللحوم والألبان والبيض أغذية "عالية الخطورة" مقارنةً بالعسل أو الخبز الجاف؟</li>'+
-'<li>كيف غيّرت حادثة "جاك إن ذا بوكس" عام 1993 شكل الرقابة على صناعة اللحوم في أمريكا؟</li>'+
-'</ul>'+
-
-'<div class="acad-refs"><h3>المراجع العلمية</h3>'+
-'<div class="acad-ref"><span class="acad-ref-n">1</span>World Health Organization (2026). WHO estimates of the global, regional, and national burden of 42 foodborne infectious and chemical hazards, 2000–21. <em>The Lancet Global Health</em>.</div>'+
-'<div class="acad-ref"><span class="acad-ref-n">2</span>FAO/WHO Codex Alimentarius Commission. <em>Codex Alimentarius: International Food Standards</em>.</div>'+
-'<div class="acad-ref"><span class="acad-ref-n">3</span>International Organization for Standardization (2018). <em>ISO 22000:2018 — Food Safety Management Systems</em>.</div>'+
-'<div class="acad-ref"><span class="acad-ref-n">4</span>U.S. Food and Drug Administration. <em>FDA Food Code</em>.</div>'+
-'<div class="acad-ref"><span class="acad-ref-n">5</span>Forsythe, S.J. (2020). <em>The Microbiology of Safe Food</em>, 3rd ed. Wiley-Blackwell.</div>'+
-'<div class="acad-ref"><span class="acad-ref-n">6</span>USDA Food Safety and Inspection Service. <em>HACCP Systems: History and Implementation</em>.</div>'+
-'</div>'+
-'</div>';
-
-return c[id]||null}
-
 function acRenderFinalExam(){
 var q=AC_FINAL_EXAM;var st=AC.qState;var qs=st.qs||q.questions;
 if(st.step>=qs.length){
@@ -10999,11 +10812,160 @@ var nm=nameEl.textContent.trim()||'Your Name';
 try{qrEl.innerHTML=nbqrSvgString(nbCertVerifyUrl(nm,dt))}catch(e){}
 }
 
+/* ── Food Quality Lesson Content ───────────────────────────── */
+
+function fqGetContent(id){
+var c={};
+
+c['fq1']='<div class="acad-body">'+
+'<div class="acad-igrid" style="margin-bottom:28px">'+
+'<div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">6 أهداف</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي — يصلح لأي مستوى</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">35 دقيقة</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🔬</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">صناعي وميداني ومختبري</div></div>'+
+'</div>'+
+
+'<h2>أهداف التعلم</h2>'+
+'<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
+'<ul>'+
+'<li>تعريف جودة الغذاء وسلامته، ومعرفة الفرق الجوهري بينهما والعلاقة التي تربطهما</li>'+
+'<li>التعرف على أبعاد الجودة الغذائية الأربعة: الحسية والغذائية والميكروبيولوجية والاقتصادية</li>'+
+'<li>فهم التطور التاريخي لعلم جودة الغذاء من الرقابة البسيطة إلى الأنظمة الوقائية المتكاملة</li>'+
+'<li>إدراك الحجم الحقيقي لمشكلة الأمراض المنقولة بالغذاء على الصعيدين العالمي والمحلي</li>'+
+'<li>التمييز بين المخاطر الثلاثة الكبرى التي تهدد الغذاء: البيولوجية والكيميائية والفيزيائية</li>'+
+'<li>استيعاب سبب تحوّل الصناعة الغذائية من فلسفة "الكشف والاستبعاد" إلى "المنع والوقاية"</li>'+
+'</ul>'+
+
+'<h2>مقدمة: لماذا يُصبح الغذاء خطراً؟</h2>'+
+'<p>الغذاء هو الوقود الذي يُشغّل جسم الإنسان، لكنه في الوقت ذاته أحد أكثر الوسائط البيولوجية قابليةً لحمل الخطر. تُقدّر منظمة الصحة العالمية أن نحو 600 مليون شخص يُصابون بأمراض ناجمة عن الغذاء كل عام، ما يودي بحياة نحو 420,000 منهم، يقع معظمهم في البلدان النامية والأطفال دون سن الخامسة. هذه الأرقام لا تعكس مشكلة اجتماعية فحسب، بل تمثّل خسارة اقتصادية ضخمة: يُكلّف الغذاء غير الآمن الاقتصاد العالمي ما يزيد على 110 مليارات دولار سنوياً في خسائر الإنتاجية والتكاليف الطبية وفق تقديرات البنك الدولي.</p>'+
+'<p>علم جودة الغذاء وسلامته وُجد لمواجهة هذا التهديد بمنهجية علمية. ليس مجرد قواعد وقوائم تحقق، بل منظومة فكرية متكاملة تفهم كيف يُمكن أن يُصبح الغذاء ضاراً، ثم تبني حواجز وقائية قبل وقوع الضرر لا بعده.</p>'+
+
+'<h2>ما هو علم جودة الغذاء؟</h2>'+
+'<p>جودة الغذاء ليست مفهوماً واحداً بسيطاً — إنها منظومة من الأبعاد المترابطة. قد يرى المستهلك الجودةَ في لون الفاكهة وطعمها ورائحتها، بينما يقيسها فنيّ المختبر بعدد البكتيريا في الغرام، ويُحددها القانون بمطابقة حدود التلوث المسموح بها.</p>'+
+'<p>يمكن تعريف جودة الغذاء بأنها <strong>مجموع الخصائص والمميزات التي تجعل الغذاء مقبولاً لدى المستهلك ومطابقاً للمتطلبات المحددة</strong> — سواء أكانت صحية أم حسية أم تشريعية أم تسويقية.</p>'+
+
+'<div class="acad-twrap">'+
+'<table class="acad-tbl">'+
+'<thead><tr><th>بُعد الجودة</th><th>ما الذي يقيسه</th><th>مثال تطبيقي</th></tr></thead>'+
+'<tbody>'+
+'<tr><td><strong>السلامة الغذائية</strong></td><td>غياب المخاطر البيولوجية والكيميائية والفيزيائية</td><td>خلوّ اللحم من بكتيريا Salmonella وبقايا المضادات الحيوية</td></tr>'+
+'<tr><td><strong>الخصائص الحسية</strong></td><td>الطعم، الرائحة، اللون، القوام، المظهر</td><td>تفاحة حمراء لامعة بطعم حلو ومقرمش بلا عيوب ظاهرة</td></tr>'+
+'<tr><td><strong>القيمة الغذائية</strong></td><td>نسب البروتين والدهون والكربوهيدرات والفيتامينات والمعادن</td><td>حليب بنسبة دهون محددة وقيمة بروتينية مضمونة</td></tr>'+
+'<tr><td><strong>المطابقة التنظيمية</strong></td><td>الامتثال للمعايير والقوانين الوطنية والدولية</td><td>مطابقة بطاقة البيانات لمعيار Codex واشتراطات وزارة الصحة</td></tr>'+
+'</tbody></table></div>'+
+
+'<h2>الفرق بين الجودة والسلامة الغذائية</h2>'+
+'<p>هذا التمييز جوهري في كل قرار مهني في قطاع الغذاء:</p>'+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">السلامة الغذائية</div><div class="acad-case-val">شرط غير قابل للمساومة. غذاء غير آمن = مرفوض تماماً بصرف النظر عن أي مزايا أخرى. تُهدد الصحة أو الحياة مباشرةً.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">جودة الغذاء</div><div class="acad-case-val">مفهوم أشمل يتضمن السلامة كركيزة أولى، ثم يمتد لخصائص أخرى قد تقبل التفاوت والتدرّج وفق توقعات المستهلك والسوق.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">مثال توضيحي</div><div class="acad-case-val">خبز مُشوَّه الشكل (جودة حسية منخفضة) لكنه آمن تماماً للأكل — تتأثر قيمته السوقية لكنه غير محظور. أما خبز جميل المظهر لكنه ملوّث بسموم الأفلاتوكسين — فهو خطر يجب سحبه بصرف النظر عن مظهره.</div></div>'+
+'</div>'+
+
+'<h2>التطور التاريخي: كيف تطور هذا العلم؟</h2>'+
+'<p>لم يظهر علم جودة الغذاء دفعةً واحدة، بل تطور تدريجياً مدفوعاً بكوارث حقيقية وتطور علمي متراكم:</p>'+
+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">قبل القرن العشرين — الغش والرقابة البدائية</div><div class="acad-case-val">كان غش الغذاء شائعاً جداً: إضافة الطباشير للدقيق، والطين للقهوة، والرصاص للنبيذ. كانت الرقابة تعتمد على الفحص البصري وحكمة الخبراء.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">1906 — قانون الغذاء والدواء الأمريكي</div><div class="acad-case-val">أول تشريع رقابي منظّم في الولايات المتحدة جاء جزئياً استجابةً لرواية "الغابة" لأبتون سينكلير التي كشفت أوضاع مصانع اللحوم المروّعة. بداية الرقابة الرسمية.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">1959 — ولادة HACCP</div><div class="acad-case-val">طوّرت شركة Pillsbury بالتعاون مع وكالة ناسا منهجية HACCP لضمان سلامة غذاء رواد الفضاء. كانت ثورةً في التفكير: انتقال من "نختبر المنتج النهائي ونرفض الفاسد" إلى "نمنع الخطر قبل وقوعه".</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">1963 — إنشاء Codex Alimentarius</div><div class="acad-case-val">أنشأت منظمتا FAO وWHO لجنة مشتركة لصياغة معايير غذائية دولية موحّدة. نقطة تحوّل نحو التنسيق الدولي في تجارة وسلامة الغذاء.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">1993 — كارثة E. coli في جاك إن ذا بوكس</div><div class="acad-case-val">أدت شطائر البرغر الملوّثة بـ E. coli O157:H7 إلى وفاة 4 أطفال وإصابة 700 شخص. أشعلت ثورة في معايير سلامة اللحوم وفرضت HACCP على صناعة اللحوم الأمريكية.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">2005 — ISO 22000</div><div class="acad-case-val">صدر أول معيار دولي متكامل لأنظمة إدارة سلامة الغذاء، يدمج مبادئ HACCP مع اشتراطات نظام الإدارة، ليُصبح المرجع العالمي لشهادات سلامة الغذاء.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">2011 — قانون تحديث سلامة الغذاء FSMA</div><div class="acad-case-val">أكبر إصلاح لقوانين سلامة الغذاء في الولايات المتحدة منذ 70 عاماً. نقلة من الاستجابة للحوادث إلى الوقاية الاستباقية على مستوى سلسلة التوريد بالكامل.</div></div>'+
+'</div>'+
+
+'<h2>المخاطر الثلاثة الكبرى في الغذاء</h2>'+
+'<p>كل تهديد لسلامة الغذاء ينتمي لإحدى هذه الفئات الثلاث. فهمها هو أساس بناء أي نظام لضمان الجودة:</p>'+
+
+'<div class="acad-igrid">'+
+'<div class="acad-icard"><span class="acad-icard-ico">🦠</span><div class="acad-icard-lbl">المخاطر البيولوجية</div><div class="acad-icard-val">البكتيريا، الفيروسات، الفطريات، الطفيليات — المسبب الرئيسي لأمراض الغذاء عالمياً</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⚗️</span><div class="acad-icard-lbl">المخاطر الكيميائية</div><div class="acad-icard-val">المبيدات، المعادن الثقيلة، المضافات الغذائية غير المرخّصة، سموم الأفلاتوكسين، المخلّفات الدوائية</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🪨</span><div class="acad-icard-lbl">المخاطر الفيزيائية</div><div class="acad-icard-val">الزجاج، المعادن، العظام، الشعر، الحجارة — أجسام غريبة قد تسبب إصابات جسدية</div></div>'+
+'</div>'+
+
+'<div class="acad-tip">'+
+'<h3>أيها أخطر؟ ترتيب الأولويات في الواقع العملي</h3>'+
+'<ul>'+
+'<li><strong>البيولوجية أولاً:</strong> تسبب الغالبية العظمى من أمراض الغذاء لأن الكائنات الدقيقة تتكاثر بسرعة هائلة في الظروف الملائمة. بكتيريا Salmonella مثلاً تتضاعف كل 20 دقيقة في درجة الحرارة المناسبة.</li>'+
+'<li><strong>الكيميائية ثانياً من حيث التنوع والتأثير المزمن:</strong> سمومها قد تكون تراكمية ولا تُلاحَظ فوراً، وبعضها مسرطن كالأفلاتوكسين B1 الذي صنّفته الوكالة الدولية لبحوث السرطان IARC كمادة مسرطنة من الدرجة الأولى.</li>'+
+'<li><strong>الفيزيائية من حيث الوضوح والدعاوى القانونية:</strong> قد تكون أقل تأثيراً صحياً، لكنها أكثر ما يُثير شكاوى المستهلكين ودعاوى المسؤولية القانونية ضد الشركات.</li>'+
+'</ul>'+
+'</div>'+
+
+'<h2>ثورة التفكير: من الكشف إلى المنع</h2>'+
+'<p>الفلسفة التقليدية لضمان جودة الغذاء كانت تعتمد على الفحص النهائي للمنتج: تنتج كميات كبيرة ثم تختبر عيّنات منها وترفض الفاسد. هذا النهج يحمل عيبين جوهريين:</p>'+
+'<ul>'+
+'<li><strong>عيّنة صغيرة لا تعكس الكل:</strong> إذا اختُبر 1% من الدُّفعة فهذا يعني أن 99% دخلت السوق دون اختبار.</li>'+
+'<li><strong>اكتشاف الفشل بعد فوات الأوان:</strong> إيجاد مشكلة في المنتج النهائي يعني هدر الإنتاج كله وربما وصوله بالفعل لمستهلكين.</li>'+
+'</ul>'+
+'<p>الفلسفة الحديثة — التي يُجسّدها نظام HACCP ومعيار ISO 22000 — انقلبت رأساً على عقب: <strong>حدّد النقاط التي يمكن أن يحدث فيها الخطر، ضع ضوابط رقابية لمنعه قبل وقوعه، وتحقق من فاعلية هذه الضوابط باستمرار.</strong> هذا التحول نقل صناعة الغذاء من صناعة تُصلح الأخطاء إلى صناعة تمنعها.</p>'+
+
+'<h2>واقع جودة الغذاء في السياق العربي</h2>'+
+'<p>في منطقتنا العربية، تتزامن عدة تحديات تجعل علم جودة الغذاء ذا أهمية بالغة:</p>'+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الأمن الغذائي</div><div class="acad-case-val">تستورد كثير من الدول العربية نسباً كبيرة من احتياجاتها الغذائية، مما يجعل ضمان جودة ما يدخل الحدود أمراً بالغ الأهمية اقتصادياً وصحياً.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الظروف المناخية</div><div class="acad-case-val">درجات الحرارة المرتفعة في معظم الدول العربية تُسرّع نمو الكائنات الدقيقة في الغذاء، مما يجعل إدارة التبريد والتخزين تحدياً لوجستياً حقيقياً.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">التطور التشريعي</div><div class="acad-case-val">تشهد منطقتنا تطوراً ملحوظاً في التشريعات الغذائية، إذ اعتمدت دول خليجية وعربية معايير مبنية على Codex وISO 22000 وأصبحت شرطاً للتصدير والاستيراد.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">القطاع غير الرسمي</div><div class="acad-case-val">نسبة كبيرة من إنتاج الغذاء في المنطقة تأتي من منشآت صغيرة ومتوسطة، وتطبيق معايير جودة مُبسَّطة وعملية على هذا القطاع يظل أحد أكبر التحديات.</div></div>'+
+'</div>'+
+
+'<div class="acad-err">'+
+'<h3>أخطاء شائعة في فهم جودة الغذاء</h3>'+
+'<ul>'+
+'<li><strong>"الغذاء العضوي دائماً آمن":</strong> العضوي يعني خلواً من المبيدات الكيميائية الاصطناعية، لكنه ليس محصّناً ضد التلوث البيولوجي كالبكتيريا والفطريات — بل قد يكون أكثر عرضةً له في بعض الأحيان.</li>'+
+'<li><strong>"إذا بدا الطعام وشمّ جيداً فهو آمن":</strong> كثير من مسببات الأمراض الخطيرة لا تُغيّر طعم الغذاء أو رائحته أو مظهره. Listeria تنمو في الثلاجة دون أن تُغيّر أي خاصية حسية.</li>'+
+'<li><strong>"التعقيم الحراري يحل كل المشكلات":</strong> الحرارة تقضي على معظم الكائنات الحية لكنها لا تُتلف السموم الحرارية الثابتة كسموم Staphylococcus aureus التي قد تبقى فعّالة بعد البسترة.</li>'+
+'<li><strong>"الفحص النهائي كافٍ":</strong> لا يمكن فحص كل وحدة إنتاج، لذا فإن الاعتماد الكلي على الفحص النهائي وهمٌ — المنع الوقائي عبر نقاط التحكم هو الأساس.</li>'+
+'</ul>'+
+'</div>'+
+
+'<div class="acad-tip">'+
+'<h3>نظرة سريعة على ما سنتعلمه في هذا الكورس</h3>'+
+'<ul>'+
+'<li><strong>المحاضرة 2 — المعايير الدولية:</strong> Codex Alimentarius وISO 22000 وأنواع الشهادات وكيفية تطبيقها.</li>'+
+'<li><strong>المحاضرة 3 — مؤشرات الجودة:</strong> كيف نقيس الجودة حسياً وكيميائياً وميكروبيولوجياً؟</li>'+
+'<li><strong>المحاضرات 4-6 — المخاطر الثلاثة:</strong> تفصيل علمي لكل نوع من مخاطر الغذاء وأهم مسبباتها.</li>'+
+'<li><strong>المحاضرات 7-10 — أنظمة الجودة:</strong> HACCP وISO 22000 وGMP وأساليب الرقابة والتفتيش.</li>'+
+'<li><strong>المحاضرات 11-13 — التطبيق والمستقبل:</strong> أساليب التحليل، سلسلة التوريد، والتقنيات الرقمية.</li>'+
+'</ul>'+
+'</div>'+
+
+'<h2>ملخص المحاضرة</h2>'+
+'<div class="acad-igrid">'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">التعريف</div><div class="acad-icard-val">جودة الغذاء = السلامة + الخصائص الحسية + القيمة الغذائية + المطابقة التنظيمية</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">الأولوية القصوى</div><div class="acad-icard-val">السلامة الغذائية شرط لا تُقبل به التنازلات — غذاء غير آمن = غذاء مرفوض</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">المخاطر الثلاثة</div><div class="acad-icard-val">بيولوجية (الأشيع) + كيميائية (الأخطر تراكمياً) + فيزيائية (الأوضح للمستهلك)</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">الثورة الفكرية</div><div class="acad-icard-val">من الكشف والاستبعاد → إلى المنع الوقائي عبر نقاط التحكم الحرجة CCP</div></div>'+
+'</div>'+
+
+'<h2>أسئلة للمراجعة</h2>'+
+'<ul>'+
+'<li>اشرح بكلماتك الخاصة الفرق بين جودة الغذاء وسلامته، مع مثال واحد يوضح أن غذاءً قد يكون عالي الجودة الحسية لكن غير آمن.</li>'+
+'<li>اذكر المحطة التاريخية التي ولد فيها نظام HACCP، ولماذا كانت حاجة فضاء لا حاجة مطعم هي الدافع لابتكاره؟</li>'+
+'<li>لماذا لا يكفي الفحص النهائي للمنتج وحده لضمان سلامة الغذاء؟ فنّد هذه الفكرة بمثال عملي.</li>'+
+'<li>صنّف كلاً مما يلي ضمن نوع الخطر المناسب (بيولوجي/كيميائي/فيزيائي): أفلاتوكسين في الذرة — قطعة معدن في علبة تونة — فيروس التهاب الكبد A في المحار النيء.</li>'+
+'<li>لماذا يُشكّل المناخ الحار تحدياً خاصاً لمنظومة سلامة الغذاء في المنطقة العربية؟</li>'+
+'</ul>'+
+
+'<div class="acad-refs"><h3>المراجع العلمية</h3>'+
+'<div class="acad-ref"><span class="acad-ref-n">1</span>WHO (2015). <em>WHO estimates of the global burden of foodborne diseases</em>. World Health Organization, Geneva.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">2</span>FAO/WHO Codex Alimentarius Commission (2020). <em>Codex Alimentarius — Food Safety and Quality</em>. FAO, Rome.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">3</span>Motarjemi, Y. &amp; Lelieveld, H. (2014). <em>Food Safety Management: A Practical Guide for the Food Industry</em>. Academic Press.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">4</span>Mortimore, S. &amp; Wallace, C. (2013). <em>HACCP: A Practical Approach</em>, 3rd ed. Springer.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">5</span>ISO (2018). <em>ISO 22000:2018 — Food Safety Management Systems</em>. International Organization for Standardization, Geneva.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">6</span>Khetarpaul, N. (2014). <em>Food Quality and Safety</em>. Daya Publishing House.</div>'+
+'</div>'+
+'</div>';
+
+return c[id]||'<div class="acad-body"><p style="color:var(--muted);text-align:center;padding:40px 0">محتوى هذه المحاضرة قيد الإعداد — يُضاف قريباً.</p></div>';
+}
+
 /* ── Lesson Content ───────────────────────────────────────── */
 
 function acGetContent(id){
 if(AC_CID==='mol-bio')return mbGetContent(id);
-if(AC_CID==='food-safety')return fsGetContent(id);
+if(AC_CID==='food-quality')return fqGetContent(id);
 var c={};
 
 c['p1']='<div class="acad-body">'+
@@ -11984,17 +11946,8 @@ if(st==='paid'){acSwitchCourse('mol-bio');acGo('home',null);}
 else{acShowMbPayModal(st);}
 });
 }
-else if(id==='food-safety'){
-if(!(typeof currentUser!=='undefined'&&currentUser)){
-if(typeof showToast==='function')showToast('سجّل الدخول أولاً للاشتراك في الدورة','inf');
-if(typeof openAuth==='function')openAuth('login');
-return;
-}
-acCheckFsAccess(function(st){
-if(st==='paid'){acSwitchCourse('food-safety');acGo('home',null);}
-else{acShowFsPayModal(st);}
-});
-}},
+else if(id==='food-quality'){acSwitchCourse(id);acGo('home',null);}
+},
 comingSoon:function(){if(typeof showToast==='function')showToast('🔜 هذه الدورة قيد الإعداد — تابعونا قريبًا','inf')},
 openFirst:function(){
 var firstReady=null;
@@ -31748,29 +31701,31 @@ document.addEventListener('DOMContentLoaded',function(){
     </div>
   </div>
 </div>
+<!-- SOCIAL MODULE -->
+<script defer src="social.js"></script>
 
-<!-- ── Vodafone Cash Payment Modal — Food Safety Course ────────────── -->
-<div class="vcash-overlay" id="vcash-overlay-fs" onclick="if(event.target===this)acCloseFsPayModal()">
+<!-- ── Food Quality Payment Modal ─────────────────────────────────── -->
+<div class="vcash-overlay" id="vcash2-overlay" onclick="if(event.target===this)acCloseFqPayModal()">
   <div class="vcash-box">
     <div class="vcash-head">
-      <button class="vcash-close-btn" onclick="acCloseFsPayModal()" aria-label="إغلاق">✕</button>
-      <div class="vcash-head-logo">🍽️</div>
-      <div class="vcash-head-title">سلامة الغذاء</div>
+      <button class="vcash-close-btn" onclick="acCloseFqPayModal()" aria-label="إغلاق">✕</button>
+      <div class="vcash-head-logo">🥗</div>
+      <div class="vcash-head-title">جودة الغذاء وسلامته</div>
       <div class="vcash-head-sub">الدورة الأشمل عربياً — اشترك الآن وابدأ التعلم فوراً</div>
     </div>
     <div class="vcash-body">
       <!-- ── خطوة الدفع ── -->
-      <div class="vcash-steps on" id="vcash-step-pay-fs">
+      <div class="vcash-steps on" id="vcash2-step-pay">
         <div class="vcash-info-card">
           <div class="vcash-info-row">
             <span class="vcash-info-lbl">السعر بعد خصم 90%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash-price-display-fs">25 جنيه</span></div>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash2-price-display">25 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap">
             <div class="vcash-num-lbl">أرسل على محفظة فودافون كاش</div>
-            <div class="vcash-num" id="vcash-number-fs">01095282573</div>
-            <button class="vcash-copy-btn" onclick="acCopyVcashNumFs()">📋 نسخ الرقم</button>
+            <div class="vcash-num" id="vcash2-number">01095282573</div>
+            <button class="vcash-copy-btn" onclick="acCopyVcash2Num()">📋 نسخ الرقم</button>
           </div>
         </div>
         <div class="vcash-steps-list">
@@ -31788,26 +31743,24 @@ document.addEventListener('DOMContentLoaded',function(){
           </div>
         </div>
         <div class="vcash-field-lbl">رقم هاتفك المُرسِل (فودافون كاش)</div>
-        <input class="vcash-field" id="vcash-phone-fs" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <input class="vcash-field" id="vcash2-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">الرقم المرجعي للمعاملة</div>
-        <input class="vcash-field" id="vcash-ref-fs" type="text" placeholder="الرقم الذي وصلك في رسالة التأكيد">
-        <button class="vcash-btn-primary" id="vcash-submit-btn-fs" onclick="acSubmitFsPayment()">أرسل طلب التفعيل</button>
+        <input class="vcash-field" id="vcash2-ref" type="text" placeholder="الرقم الذي وصلك في رسالة التأكيد">
+        <button class="vcash-btn-primary" id="vcash2-submit-btn" onclick="acSubmitFqPayment()">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
       </div>
       <!-- ── خطوة الانتظار ── -->
-      <div class="vcash-steps" id="vcash-step-pending-fs">
+      <div class="vcash-steps" id="vcash2-step-pending">
         <div class="vcash-pending-state">
           <div class="vcash-pending-ico">⏳</div>
           <div class="vcash-pending-title">طلبك قيد المراجعة</div>
           <div class="vcash-pending-desc">تلقينا طلبك بنجاح وسيتم مراجعة التحويل وتفعيل الكورس خلال 24 ساعة. ستُفتح الدورة تلقائياً بعد التفعيل.</div>
-          <div class="vcash-pending-ref" id="vcash-pending-ref-display-fs"></div>
+          <div class="vcash-pending-ref" id="vcash2-pending-ref-display"></div>
           <div class="vcash-note">إذا مرّت 24 ساعة ولم يتم التفعيل، تواصل معنا عبر واتساب.</div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<!-- SOCIAL MODULE -->
-<script defer src="social.js"></script>
 </body>
 </html>
