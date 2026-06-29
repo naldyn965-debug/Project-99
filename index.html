@@ -7918,6 +7918,7 @@ body.modal-open { overflow: hidden; }
 .acad-card-top{height:180px;background:#0c3a23 url('https://images.unsplash.com/photo-1711900177627-1182b446bc8f?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat;position:relative;overflow:hidden}
 .acad-card-top.mb{background:#0a1c33 url('https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.fq{background:#1a0f00 url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+.acad-card-top.ag{background:#0a2010 url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-share-btn{position:absolute;top:14px;left:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(10,30,20,.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s;padding:0;appearance:none;-webkit-appearance:none;font:inherit;outline:none}
 .acad-share-btn:hover{background:rgba(10,30,20,.6);transform:translateY(-1px)}
 .acad-share-btn:active{transform:scale(.94)}
@@ -8610,7 +8611,8 @@ var NB_CERT_SALT='NBX-IPM-2026';
 var AC_CERT_TITLES={
 'pest':{en:'Integrated Pest Management',abbr:'IPM',ar:'مكافحة الآفات الزراعية المتكاملة'},
 'mol-bio':{en:'Molecular Biology Techniques',abbr:'',ar:'تقنيات البيولوجيا الجزيئية'},
-'food-quality':{en:'Food Quality and Safety',abbr:'',ar:'جودة الغذاء وسلامته'}
+'food-quality':{en:'Food Quality and Safety',abbr:'',ar:'جودة الغذاء وسلامته'},
+'ag-english':{en:'Agricultural English',abbr:'',ar:'اللغة الإنجليزية الزراعية'}
 };
 function acCertCourseInfo(cid){
 var info=AC_CERT_TITLES[cid]||AC_CERT_TITLES.pest;
@@ -8690,7 +8692,7 @@ return JSON.parse(raw||'{}')
 function acSave(p){try{localStorage.setItem(acProgKey(),JSON.stringify(p))}catch(e){}acPushCloud(AC_CID,p);}
 /* Clears a specific user's local academy progress (called on logout / account switch) */
 function acClearLocalProgress(targetUid){
-['pest','mol-bio','food-quality'].forEach(function(cid){
+['pest','mol-bio','food-quality','ag-english'].forEach(function(cid){
 var pf='nb-'+cid+'-p';
 var key=targetUid?(pf+'__'+targetUid):(pf+'__guest');
 try{localStorage.removeItem(key)}catch(e){}});
@@ -8724,7 +8726,7 @@ return new Promise(function(resolve){
 try{
 var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
 if(!u||typeof db==='undefined'||!db){resolve();return;}
-var cids=['pest','mol-bio','food-quality'],pending=cids.length;
+var cids=['pest','mol-bio','food-quality','ag-english'],pending=cids.length;
 function step(){pending--;if(pending<=0)resolve();}
 cids.forEach(function(cid){
 var key='nb-'+cid+'-p__'+u;
@@ -8924,6 +8926,7 @@ var ARROW_ICO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 var pestPct=_acPctFor('pest',PEST_COURSE);var pestDone=_acDoneFor('pest');
 var molPct=_acPctFor('mol-bio',MB_COURSE);var molDone=_acDoneFor('mol-bio');var mbStatus=acMbStatus();
 var fqPct=_acPctFor('food-quality',FQ_COURSE);var fqDone=_acDoneFor('food-quality');
+var agPct=_acPctFor('ag-english',AG_COURSE);var agDone=_acDoneFor('ag-english');var agStatus=acAgStatus();
 var liveCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pest\')" role="button">'+
 '<div class="acad-cat-card-top"><span class="acad-pop-badge">'+STAR_ICO+'Free</span></div>'+
 '<div class="acad-cat-card-body">'+
@@ -8967,6 +8970,21 @@ var fqCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'fo
 (fqDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+fqPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+fqPct+'%"></div></div></div>':
 '<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>')+
 '</div></div>';
+var agBadge=agStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':agStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 90%</span>';
+var agBottom=agStatus==='paid'?(agDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+agPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+agPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):agStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال 24 ساعة</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">25 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var agCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'ag-english\')" role="button" style="border-color:rgba(22,163,74,.25)">'+
+'<div class="acad-cat-card-top" style="background:#0a2010 url(\'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+agBadge+'</div>'+
+'<div class="acad-cat-card-body">'+
+'<div class="acad-cat-card-kicker" style="color:#16a34a">'+AG_COURSE.kicker+'</div>'+
+'<div class="acad-cat-card-title">'+AG_COURSE.title+'</div>'+
+'<div class="acad-cat-card-desc">'+AG_COURSE.subtitle+'</div>'+
+'<div class="acad-cat-card-meta">'+
+'<span class="acad-chip-pro">'+CLOCK_ICO+AG_COURSE.duration+'</span>'+
+'<span class="acad-chip-pro">'+BARS_ICO+AG_COURSE.level+'</span>'+
+'<span class="acad-chip-pro gold">'+CERT_ICO+'شهادة إتمام</span>'+
+'</div>'+
+agBottom+
+'</div></div>';
 return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-back" role="button" onclick="showPage(\'home\')">‹ الرئيسية</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
@@ -8974,7 +8992,7 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-sub">محتوى علمي موثّق باللغة العربية من فريق نبتيكس. اختر دورة لتبدأ رحلة التعلّم.</div>'+
 '</div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
-'<div class="acad-cat-grid">'+liveCard+molBioCard+fqCard+'</div>'+
+'<div class="acad-cat-grid">'+liveCard+molBioCard+fqCard+agCard+'</div>'+
 '</div></div>'}
 
 /* ── HOME ─────────────────────────────────────────────────── */
@@ -9049,7 +9067,7 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
-'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-quality'?' fq':'')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
+'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-quality'?' fq':AC_CID==='ag-english'?' ag':'')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
 '<div class="acad-card-body">'+
 '<div class="acad-card-kicker">'+AC_COURSE.kicker+'</div>'+
 '<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
@@ -9949,6 +9967,7 @@ function acSwitchCourse(cid){
 AC_CID=cid;
 if(cid==='mol-bio'){AC_COURSE=MB_COURSE;AC_QUIZZES=MB_QUIZZES;AC_FINAL_EXAM=MB_FINAL_EXAM;}
 else if(cid==='food-quality'){AC_COURSE=FQ_COURSE;AC_QUIZZES=FQ_QUIZZES;AC_FINAL_EXAM=FQ_FINAL_EXAM;}
+else if(cid==='ag-english'){AC_COURSE=AG_COURSE;AC_QUIZZES=AG_QUIZZES;AC_FINAL_EXAM=AG_FINAL_EXAM;}
 else{AC_COURSE=PEST_COURSE;AC_QUIZZES=PEST_QUIZZES;AC_FINAL_EXAM=PEST_FINAL_EXAM;}
 }
 
@@ -10243,6 +10262,481 @@ if(typeof showToast==='function')showToast(_msg,'err');
 window.acCloseFqPayModal=acCloseFqPayModal;
 window.acCopyVcash2Num=acCopyVcash2Num;
 window.acSubmitFqPayment=acSubmitFqPayment;
+/* ── AGRICULTURAL ENGLISH COURSE ──────────────────────────────
+   اللغة الإنجليزية الزراعية
+   ══════════════════════════════════════════════════════════════ */
+
+var AG_COURSE={
+id:'ag-english',title:'Agricultural English',
+kicker:'English for Agriculture',
+heroSub:'الدورة الأشمل عربياً لتعلم اللغة الإنجليزية الزراعية. من المصطلحات الأساسية إلى القراءة العلمية والتواصل المهني، مُصمَّمة لطلاب وخريجي الزراعة.',
+subtitle:'من المصطلحات الأساسية إلى التواصل المهني',icon:'🌾',
+level:'مبتدئ إلى متوسط',duration:'10 ساعات',cert:true,
+instructor:'فريق نبتيكس الأكاديمي',
+description:'كورس متكامل لتطوير اللغة الإنجليزية الزراعية تدريجياً. ستتعلم المصطلحات الأساسية، وتشريح النبات، وعلوم التربة، والإنتاج الزراعي، والري، وحماية النباتات، وصولاً إلى قراءة الأبحاث وكتابة التقارير العلمية والتواصل المهني.',
+modules:[
+{id:'agm1',title:'Agricultural English Foundations',lessons:[
+ {id:'ag1',title:'Introduction to Agricultural English and Essential Vocabulary',dur:'55 دقيقة'},
+ {id:'ag2',title:'Plant Anatomy and Botanical Terminology',dur:'50 دقيقة'},
+ {id:'ag3',title:'Soil Science Vocabulary and Land Management Terms',dur:'50 دقيقة'}
+]},
+{id:'agm2',title:'Crop & Field Operations',lessons:[
+ {id:'ag4',title:'Crop Production and Farming Operations',dur:'50 دقيقة'},
+ {id:'ag5',title:'Irrigation Systems and Water Management English',dur:'45 دقيقة'},
+ {id:'ag6',title:'Plant Protection and Pest Management Vocabulary',dur:'50 دقيقة'}
+]},
+{id:'agm3',title:'Post-Harvest & Professional Communication',lessons:[
+ {id:'ag7',title:'Food Production and Post-Harvest Terminology',dur:'45 دقيقة'},
+ {id:'ag8',title:'Reading Agricultural Research Papers',dur:'55 دقيقة'},
+ {id:'ag9',title:'Professional Communication in Agriculture',dur:'50 دقيقة'},
+ {id:'ag10',title:'Agricultural Presentations, Interviews and Scientific Writing',dur:'60 دقيقة'}
+]}
+]};
+
+var AG_QUIZZES={
+ag1:{title:'Quiz — Lecture 1: Introduction to Agricultural English',questions:[
+{q:'What does the term "photosynthesis" literally mean in agricultural science?',
+opts:['The process of absorbing water through roots','The process by which plants use sunlight, CO₂, and water to produce glucose and oxygen','The movement of nutrients from soil to leaves','The storage of starch in seeds during germination'],
+cor:1,exp:'Photosynthesis (photo = light, synthesis = making) is the fundamental process in plant biology where chlorophyll in plant cells captures solar energy and converts carbon dioxide and water into glucose (C₆H₁₂O₆) and oxygen. It is the primary energy source for nearly all life on Earth and the foundation of agricultural productivity.'},
+{q:'Which of the following best describes the role of "agronomy" in agriculture?',
+opts:['The study of animal husbandry and livestock management','The science and technology of producing and using plants for food, fuel, and land reclamation','The management of agricultural marketing and supply chains','The study of soil microorganisms only'],
+cor:1,exp:'Agronomy is a branch of agricultural science that deals with field crop production and soil management. An agronomist applies scientific knowledge to improve crop yields, soil health, and sustainable land use — making it a central discipline in modern agriculture.'},
+{q:'A farmer reads the instruction: "Apply 2 kg of N/feddan at tillering stage." What does "tillering" refer to?',
+opts:['The process of ploughing the soil before sowing','A growth stage in cereal crops when the plant produces side shoots (tillers) from the base','The harvesting of grain heads from mature plants','The drying stage after threshing'],
+cor:1,exp:'Tillering is a critical vegetative growth stage in cereal crops (wheat, rice, maize) during which the plant produces secondary shoots called tillers from nodes near the soil surface. Understanding growth stage terminology is essential for correct fertilizer and pesticide application timing.'},
+{q:'Which sentence uses the word "arid" correctly in an agricultural context?',
+opts:['The arid soil produced a record wheat harvest this year without any irrigation','Farmers in arid regions must rely on efficient irrigation systems and drought-tolerant varieties to sustain crop production','The arid climate is ideal for growing rice paddy because of high rainfall','Arid means extremely fertile, so arid soils are rich in organic matter'],
+cor:1,exp:'"Arid" describes regions or climates with very low rainfall (typically less than 250 mm/year), making rainfed agriculture difficult or impossible. Arid environments require specialized water management strategies and drought-tolerant crop varieties — the correct sentence accurately reflects this agricultural reality.'},
+{q:'In an English crop report, you read: "The yield gap between potential and actual productivity is approximately 40%." What does "yield gap" mean?',
+opts:['The physical distance between crop rows in the field','The difference between the maximum yield a crop could achieve under ideal conditions and what farmers actually achieve','The time gap between planting and harvesting','The space left empty after harvest before the next planting season'],
+cor:1,exp:'The yield gap is one of the most important concepts in agricultural development. It represents the difference between a crop\'s potential yield (achievable under optimal conditions with best management) and the actual yield farmers obtain. Closing the yield gap is a major goal of agricultural research worldwide.'}
+]},
+ag2:{title:'Quiz — Lecture 2: Plant Anatomy and Botanical Terminology',questions:[
+{q:'What is the primary function of the xylem in a plant?',opts:['Transport of sugars produced by photosynthesis from leaves to roots','Transport of water and dissolved minerals from roots upward to all plant parts','Storage of starch in the root system','Production of flowers and seeds during the reproductive stage'],cor:1,exp:'Xylem is the vascular tissue responsible for the one-way upward transport of water and dissolved minerals (absorbed by roots) to all aerial parts of the plant. This process is driven by transpiration pull. Understanding xylem function is essential for interpreting irrigation and fertilizer uptake terminology in English scientific texts.'},
+{q:'The term "mesophyll" refers to:',opts:['The outer protective layer of the leaf (epidermis)','The middle layer of leaf tissue containing chloroplasts where most photosynthesis occurs','The waxy coating on the leaf surface that reduces water loss','The network of vascular bundles running through the leaf'],cor:1,exp:'Mesophyll (from Greek: mesos = middle, phyllon = leaf) is the internal tissue of a leaf located between the upper and lower epidermis. It contains palisade and spongy parenchyma cells rich in chloroplasts. This is where the majority of photosynthesis occurs. Knowing this term is fundamental to reading plant physiology research papers.'}
+]},
+ag3:{title:'Quiz — Lecture 3: Soil Science Vocabulary',questions:[
+{q:'What does "soil pH" measure?',opts:['The percentage of clay in the soil','The acidity or alkalinity of the soil on a scale of 0–14','The speed of water drainage through the soil profile','The total nitrogen content available for plant uptake'],cor:1,exp:'Soil pH measures the concentration of hydrogen ions (H⁺) in the soil solution on a logarithmic scale from 0 (extremely acidic) to 14 (extremely alkaline), with 7 being neutral. Most crops grow best in slightly acidic to neutral soil (pH 6.0–7.0). pH affects nutrient availability, microbial activity, and crop selection.'}
+]}
+};
+
+var AG_FINAL_EXAM={title:'الاختبار النهائي الشامل — Agricultural English',passScore:70,questions:[
+{q:'A seed company label reads: "Germination rate: 92%." What does this indicate?',opts:['92% of the plants will produce seeds','92 out of 100 seeds are expected to germinate successfully under standard conditions','The seeds were harvested at 92% maturity','The seeds have 92 days until their expiry date'],cor:1,exp:'Germination rate (also called germination percentage) indicates the proportion of seeds that will successfully germinate under standard test conditions. A 92% rate means 92 out of 100 seeds are expected to sprout. This is a critical quality indicator on seed labels and in English procurement specifications.'},
+{q:'In an FAO report, you encounter: "The intercropping system significantly improved nitrogen fixation in the experimental plots." What is intercropping?',opts:['Growing a single high-value crop across the entire field for maximum efficiency','Growing two or more crops simultaneously in the same field to maximize land use and ecological benefits','The practice of rotating different crops in successive seasons on the same land','Applying nitrogen fertilizer between rows of established crops'],cor:1,exp:'Intercropping is an agricultural practice of cultivating two or more crops in proximity in the same field at the same time. It is widely used to improve resource use efficiency, enhance biodiversity, and in legume-cereal combinations, to exploit biological nitrogen fixation — a key concept in sustainable agriculture literature.'},
+{q:'Which sentence correctly uses "cultivar" in an agricultural context?',opts:['A cultivar is a wild plant species found naturally in the field environment','A cultivar is a plant variety that has been selectively bred and maintained for specific desirable agricultural traits','Cultivar refers to the chemical treatment used to protect crops from diseases','A cultivar is the instrument used to cultivate and loosen the soil before planting'],cor:1,exp:'A cultivar (cultivated variety) is a plant variety that has been produced by selective breeding to have specific, desirable characteristics such as yield, disease resistance, or quality. Cultivar names are written with initial capitals and placed in single quotation marks — e.g., Triticum aestivum \'Sids 12\'. This terminology is standard in all English plant science and breeding literature.'},
+{q:'Translate the agricultural instruction: "Apply the herbicide post-emergence at the 3–4 leaf stage of the weed."',opts:['Apply the herbicide before weed seeds germinate in the soil','Apply the herbicide after the weed has emerged from the soil when it has developed 3–4 true leaves','Apply the herbicide during the flowering stage of the main crop only','Apply the herbicide 3–4 weeks before planting the main crop'],cor:1,exp:'"Post-emergence" means after the target plant (here, the weed) has already emerged from the soil. The "3–4 leaf stage" specifies the developmental stage at which the herbicide is most effective. Understanding post- vs. pre-emergence application is fundamental for interpreting pesticide labels and crop protection research in English.'},
+{q:'An agricultural extension report states: "Deficit irrigation increased water productivity by 35% compared to full irrigation." What does "water productivity" mean here?',opts:['The total volume of water stored in the soil after irrigation events','The amount of crop yield produced per unit of water applied or consumed','The efficiency of the irrigation pump in delivering water to the field','The percentage of rainfall that enters the soil versus runoff'],cor:1,exp:'Water productivity (also called crop water use efficiency) is defined as the amount of yield (biomass, food, or cash value) produced per unit of water used. It is a key metric in water-scarce agriculture and appears frequently in irrigation management and sustainable agriculture research papers. Deficit irrigation deliberately applies less than full crop water requirements to improve water productivity.'}
+]};
+
+/* ── Vodafone Cash Payment — Agricultural English Course ──────────
+   رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي              */
+
+var _AG_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
+var _AG_COURSE_PRICE=25;          /* ← السعر بالجنيه              */
+
+function acAgStatus(){
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+if(!u)return 'none';
+try{
+if(localStorage.getItem('nb-ag-english-access__'+u)==='paid')return 'paid';
+if(localStorage.getItem('nb-ag-english-pending__'+u)==='true')return 'pending';
+}catch(e){}
+return 'none';
+}
+
+function acCheckAgAccess(cb){
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+if(!u){cb('none');return;}
+var cacheKey='nb-ag-english-access__'+u;
+try{if(localStorage.getItem(cacheKey)==='paid'){cb('paid');return;}}catch(e){}
+db.collection('users').doc(u).get().then(function(snap){
+var data=snap.exists?snap.data():{};
+if(data.paidCourses&&data.paidCourses.indexOf('ag-english')>-1){
+try{localStorage.setItem(cacheKey,'paid');}catch(e){}
+cb('paid');return;
+}
+db.collection('course_payments').where('uid','==',u).get().then(function(qs){
+if(qs.empty){cb('none');return;}
+var docs=qs.docs.filter(function(d){return d.data().courseId==='ag-english';});
+if(!docs.length){cb('none');return;}
+var st=docs[0].data().status;
+if(st==='approved'){
+try{localStorage.setItem(cacheKey,'paid');}catch(e){}
+cb('paid');
+}else{
+try{localStorage.setItem('nb-ag-english-pending__'+u,'true');}catch(e){}
+cb('pending');
+}
+}).catch(function(){cb('none');});
+}).catch(function(){cb('none');});
+}
+
+function acShowAgPayModal(mode){
+var el=document.getElementById('vcash3-overlay');if(!el)return;
+var stepPay=document.getElementById('vcash3-step-pay');
+var stepPend=document.getElementById('vcash3-step-pending');
+document.getElementById('vcash3-number').textContent=_AG_VCASH_NUM;
+document.getElementById('vcash3-price-display').textContent=_AG_COURSE_PRICE+' جنيه';
+if(mode==='pending'){
+stepPay.classList.remove('on');stepPend.classList.add('on');
+}else{
+stepPay.classList.add('on');stepPend.classList.remove('on');
+var ph=document.getElementById('vcash3-phone');var rf=document.getElementById('vcash3-ref');
+if(ph)ph.value='';if(rf)rf.value='';
+var btn=document.getElementById('vcash3-submit-btn');
+if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
+}
+el.classList.add('on');
+document.body.classList.add('modal-open');
+}
+
+function acCloseAgPayModal(){
+var el=document.getElementById('vcash3-overlay');
+if(el)el.classList.remove('on');
+document.body.classList.remove('modal-open');
+}
+
+function acCopyVcash3Num(){
+var num=document.getElementById('vcash3-number');if(!num)return;
+var val=num.textContent;
+if(navigator.clipboard){
+navigator.clipboard.writeText(val).then(function(){
+if(typeof showToast==='function')showToast('تم نسخ رقم فودافون كاش','ok');
+}).catch(function(){});
+}else{
+try{
+var ta=document.createElement('textarea');ta.value=val;
+document.body.appendChild(ta);ta.select();
+document.execCommand('copy');document.body.removeChild(ta);
+if(typeof showToast==='function')showToast('تم نسخ الرقم','ok');
+}catch(e){}
+}
+}
+
+function acSubmitAgPayment(){
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أولاً','err');return;}
+var phone=(document.getElementById('vcash3-phone').value||'').trim();
+var ref=(document.getElementById('vcash3-ref').value||'').trim();
+if(!phone||phone.length<10){
+if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
+}
+if(!ref||ref.length<3){
+if(typeof showToast==='function')showToast('برجاء إدخال الرقم المرجعي للمعاملة','err');return;
+}
+var btn=document.getElementById('vcash3-submit-btn');
+if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
+db.collection('course_payments').add({
+uid:u,
+email:(currentUser&&currentUser.email)||'',
+phone:phone,
+transactionRef:ref,
+courseId:'ag-english',
+amount:_AG_COURSE_PRICE,
+currency:'EGP',
+status:'pending',
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+}).then(function(docRef){
+try{localStorage.setItem('nb-ag-english-pending__'+u,'true');}catch(e){}
+var stepPay=document.getElementById('vcash3-step-pay');
+var stepPend=document.getElementById('vcash3-step-pending');
+var refDisp=document.getElementById('vcash3-pending-ref-display');
+if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  مرجع التحويل: '+ref;
+if(stepPay)stepPay.classList.remove('on');
+if(stepPend)stepPend.classList.add('on');
+if(typeof showToast==='function')showToast('تم إرسال طلبك — سيُفعَّل الكورس خلال 24 ساعة','ok');
+if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
+}).catch(function(e){
+console.error('[VCash3] code:',e&&e.code,'|',e);
+if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
+var _msg='خطأ في الإرسال — أعد المحاولة';
+if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'))
+  _msg='خطأ في الصلاحيات — تواصل مع الدعم';
+else if(e&&(e.code==='unavailable'||e.code==='deadline-exceeded'||e.code==='network-request-failed'))
+  _msg='خطأ في الاتصال — تحقق من الإنترنت وأعد المحاولة';
+if(typeof showToast==='function')showToast(_msg,'err');
+});
+}
+
+window.acCloseAgPayModal=acCloseAgPayModal;
+window.acCopyVcash3Num=acCopyVcash3Num;
+window.acSubmitAgPayment=acSubmitAgPayment;
+
+/* ── Agricultural English Lesson Content ────────────────────────── */
+function agGetContent(id){
+var c={};
+
+c['ag1']='<div class="acad-body">'+
+'<div class="acad-igrid" style="margin-bottom:28px">'+
+'<div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">Learning Objectives</div><div class="acad-icard-val">8 objectives</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">Level</div><div class="acad-icard-val">Beginner — Suitable for all</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">Reading Time</div><div class="acad-icard-val">55 minutes</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🌾</span><div class="acad-icard-lbl">Application</div><div class="acad-icard-val">Field & Academic</div></div>'+
+'</div>'+
+
+'<h2>Learning Objectives — أهداف التعلم</h2>'+
+'<p>By the end of this lecture, you will be able to / بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
+'<ul>'+
+'<li>Understand why Agricultural English is essential for modern farming professionals — فهم أهمية اللغة الإنجليزية الزراعية</li>'+
+'<li>Recognize and use 30+ core agricultural vocabulary items in correct context — التعرف على أكثر من 30 مصطلحاً زراعياً أساسياً</li>'+
+'<li>Distinguish between related scientific terms (e.g. crop vs. plant, soil vs. land, yield vs. production) — التمييز بين المصطلحات المتقاربة</li>'+
+'<li>Correctly read and interpret simple agricultural sentences and labels — قراءة وتفسير الجمل الزراعية البسيطة</li>'+
+'<li>Recognize correct word forms: noun, verb, adjective (e.g. fertilize / fertilizer / fertile) — التعرف على أشكال الكلمة الصحيحة</li>'+
+'<li>Apply pronunciation guidelines for key agricultural terms — تطبيق قواعد النطق الصحيح</li>'+
+'<li>Complete vocabulary exercises and fill-in-the-blank activities with confidence — إكمال التمارين التفاعلية بثقة</li>'+
+'<li>Connect English terms to real-world farming operations — ربط المصطلحات بالممارسات الزراعية الحقيقية</li>'+
+'</ul>'+
+
+'<h2>Introduction — لماذا نتعلم اللغة الإنجليزية الزراعية؟</h2>'+
+'<p>Imagine you receive a new seed variety from an international company. The instructions are written entirely in English. The fertilizer label uses terms like "NPK ratio," "slow-release formulation," and "chelated micronutrients." A researcher sends you a PDF study titled "Effect of deficit irrigation on wheat yield components." Can you understand it?</p>'+
+'<p>تخيّل أنك تلقّيت صنفاً جديداً من بذور من شركة دولية. التعليمات مكتوبة بالإنجليزية بالكامل. ملصق السماد يستخدم مصطلحات مثل "نسبة NPK" و"صيغة بطيئة الإطلاق" و"العناصر الصغرى المخلّبة". باحث أرسل لك دراسة بعنوان "تأثير الري الناقص على مكونات محصول القمح." هل تستطيع فهمها؟</p>'+
+'<p>Agricultural English is not just about learning the language — it is about accessing the global knowledge base of farming science. Every major agricultural database (FAO, USDA, CGIAR), every international research journal, and every modern seed or agrochemical label uses English as its primary language. A professional farmer or agricultural engineer who can read and write in English has access to knowledge that is simply unavailable in Arabic alone.</p>'+
+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Real Example</div><div class="acad-case-val">An Egyptian agricultural engineer was advising a client on tomato production. He found a new USDA bulletin describing a drought-tolerant variety with 30% higher yields. Without Agricultural English, this information would have been inaccessible. By reading and applying it, the client increased income by 28% that season.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Key Insight</div><div class="acad-case-val">More than 80% of peer-reviewed agricultural research is published in English. Mastering Agricultural English is not optional — it is a professional necessity.</div></div>'+
+'</div>'+
+
+'<h2>Section 1: Core Agricultural Vocabulary — القسم الأول: المفردات الزراعية الأساسية</h2>'+
+'<h3>1.1 The Land and Growing Environment</h3>'+
+'<p>Agricultural work begins with understanding the environment where crops grow. Here are the most essential terms:</p>'+
+
+'<div class="acad-twrap">'+
+'<table class="acad-tbl">'+
+'<thead><tr><th>English Term</th><th>Arabic Translation</th><th>Example Sentence</th></tr></thead>'+
+'<tbody>'+
+'<tr><td><strong>soil</strong></td><td>التربة</td><td>The soil in the Nile Delta is rich in clay and organic matter.</td></tr>'+
+'<tr><td><strong>land</strong></td><td>الأرض / الأراضي</td><td>Agricultural land in Egypt covers about 3.5% of total area.</td></tr>'+
+'<tr><td><strong>field</strong></td><td>الحقل</td><td>Farmers in Upper Egypt prepare their fields before sowing in October.</td></tr>'+
+'<tr><td><strong>plot</strong></td><td>القطعة / المطمر</td><td>Each experimental plot received a different fertilizer treatment.</td></tr>'+
+'<tr><td><strong>farm</strong></td><td>المزرعة</td><td>The dairy farm produces 500 liters of milk per day.</td></tr>'+
+'<tr><td><strong>orchard</strong></td><td>البستان / حديقة الفاكهة</td><td>The citrus orchard covers 20 feddans in Beheira Governorate.</td></tr>'+
+'<tr><td><strong>greenhouse</strong></td><td>البيت المحمي / الصوبة</td><td>Pepper and cucumber are cultivated in greenhouses in winter.</td></tr>'+
+'<tr><td><strong>arid</strong></td><td>جاف / قاحل</td><td>Drip irrigation is essential in arid desert reclamation areas.</td></tr>'+
+'<tr><td><strong>fertile</strong></td><td>خصيب / خصبة</td><td>The fertile Nile silt provided nutrients to crops for thousands of years.</td></tr>'+
+'</tbody></table></div>'+
+
+'<div class="acad-tip">'+
+'<h3>⚡ Quick Activity 1 — نشاط سريع</h3>'+
+'<p>Fill in the blank with the correct word (soil / field / orchard / greenhouse / arid):</p>'+
+'<ol>'+
+'<li>"Tomatoes are grown in a ________ to protect them from frost in winter."</li>'+
+'<li>"The ________ pH was measured at 6.8 — ideal for wheat production."</li>'+
+'<li>"The farmer irrigated his ________ every 5 days during summer."</li>'+
+'<li>"In ________ climates, water conservation is the highest priority."</li>'+
+'<li>"The apple ________ produces 40 tons per season."</li>'+
+'</ol>'+
+'<p><strong>Answers: 1-greenhouse, 2-soil, 3-field, 4-arid, 5-orchard</strong></p>'+
+'</div>'+
+
+'<h3>1.2 Plants and Their Products</h3>'+
+
+'<div class="acad-twrap">'+
+'<table class="acad-tbl">'+
+'<thead><tr><th>English Term</th><th>Arabic Translation</th><th>Example Sentence</th></tr></thead>'+
+'<tbody>'+
+'<tr><td><strong>crop</strong></td><td>محصول</td><td>Wheat is Egypt\'s most important cereal crop.</td></tr>'+
+'<tr><td><strong>plant</strong></td><td>نبات / يزرع</td><td>The farmer will plant cotton seeds next month.</td></tr>'+
+'<tr><td><strong>seed</strong></td><td>البذرة</td><td>Store seeds in a cool, dry place to maintain germination rate.</td></tr>'+
+'<tr><td><strong>seedling</strong></td><td>الشتلة</td><td>Tomato seedlings are transplanted 25–30 days after sowing.</td></tr>'+
+'<tr><td><strong>root</strong></td><td>الجذر</td><td>Deep roots allow drought-tolerant varieties to access subsoil moisture.</td></tr>'+
+'<tr><td><strong>stem</strong></td><td>الساق</td><td>The stem transports water and nutrients between roots and leaves.</td></tr>'+
+'<tr><td><strong>leaf (leaves)</strong></td><td>الورقة (الأوراق)</td><td>Yellow leaves often indicate nitrogen or iron deficiency.</td></tr>'+
+'<tr><td><strong>flower</strong></td><td>الزهرة</td><td>Bees are essential for pollinating fruit-tree flowers.</td></tr>'+
+'<tr><td><strong>fruit</strong></td><td>الثمرة</td><td>The fruit should be harvested at the correct maturity stage.</td></tr>'+
+'<tr><td><strong>harvest</strong></td><td>الحصاد / يحصد</td><td>The wheat harvest begins in May in Middle Egypt.</td></tr>'+
+'<tr><td><strong>yield</strong></td><td>الغلّة / المحصول الناتج</td><td>The average wheat yield in Egypt is approximately 19 ardab/feddan.</td></tr>'+
+'</tbody></table></div>'+
+
+'<div class="acad-tip">'+
+'<h3>⚡ Quick Activity 2 — Crop vs. Plant vs. Yield</h3>'+
+'<p>These three words confuse many students. Let\'s clarify:</p>'+
+'<ul>'+
+'<li><strong>Plant</strong> = the living organism (e.g., "a tomato plant") — also a verb: "to plant seeds"</li>'+
+'<li><strong>Crop</strong> = plants grown commercially for food, fiber, or other products (e.g., "the wheat crop")</li>'+
+'<li><strong>Yield</strong> = the quantity of product obtained from a given area (e.g., "a yield of 3 tons/feddan")</li>'+
+'</ul>'+
+'<p>Which word fits? Write crop, plant, or yield:</p>'+
+'<ol>'+
+'<li>"The cotton ________ is Egypt\'s most important fiber source."</li>'+
+'<li>"We will ________ the seedlings in the second week of March."</li>'+
+'<li>"With proper fertilization, the ________ of maize increased by 25%."</li>'+
+'</ol>'+
+'<p><strong>Answers: 1-crop, 2-plant, 3-yield</strong></p>'+
+'</div>'+
+
+'<h3>1.3 Farming Operations — العمليات الزراعية</h3>'+
+
+'<div class="acad-twrap">'+
+'<table class="acad-tbl">'+
+'<thead><tr><th>English Term</th><th>Arabic Translation</th><th>Context</th></tr></thead>'+
+'<tbody>'+
+'<tr><td><strong>cultivate / cultivation</strong></td><td>يزرع / الزراعة</td><td>Land preparation before sowing</td></tr>'+
+'<tr><td><strong>irrigate / irrigation</strong></td><td>يروي / الري</td><td>Applying water to crops</td></tr>'+
+'<tr><td><strong>fertilize / fertilizer</strong></td><td>يسمّد / السماد</td><td>Adding nutrients to soil or plants</td></tr>'+
+'<tr><td><strong>sow / sowing</strong></td><td>يبذر / البذر</td><td>Placing seeds in the soil</td></tr>'+
+'<tr><td><strong>transplant</strong></td><td>يشتل / الشتل</td><td>Moving seedlings from nursery to field</td></tr>'+
+'<tr><td><strong>prune / pruning</strong></td><td>يقلّم / التقليم</td><td>Removing excess branches in orchards</td></tr>'+
+'<tr><td><strong>spray / spraying</strong></td><td>يرش / الرش</td><td>Applying pesticides or foliar fertilizers</td></tr>'+
+'<tr><td><strong>weed / weeding</strong></td><td>الحشيشة / ازالة الحشائش</td><td>Removing unwanted plants from the field</td></tr>'+
+'<tr><td><strong>till / tillage</strong></td><td>يحرث / الحراثة</td><td>Breaking and turning the soil</td></tr>'+
+'</tbody></table></div>'+
+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Word Forms Tip</div><div class="acad-case-val">Notice how English agricultural verbs have related noun forms: fertilize → fertilizer (the product) / fertilization (the process). This pattern repeats: irrigate → irrigation → irrigated. Learning word families saves time and doubles your vocabulary quickly.</div></div>'+
+'</div>'+
+
+'<h2>Section 2: Key Concepts in Agricultural Science</h2>'+
+'<h3>2.1 Essential Scientific Terms Every Agronomist Must Know</h3>'+
+
+'<div class="acad-twrap">'+
+'<table class="acad-tbl">'+
+'<thead><tr><th>Term</th><th>Arabic</th><th>Definition in English</th></tr></thead>'+
+'<tbody>'+
+'<tr><td><strong>photosynthesis</strong></td><td>التمثيل الضوئي</td><td>The process by which plants use sunlight, CO₂, and water to produce glucose and oxygen</td></tr>'+
+'<tr><td><strong>germination</strong></td><td>الإنبات</td><td>The process by which a seed develops into a new plant after a period of dormancy</td></tr>'+
+'<tr><td><strong>pollination</strong></td><td>التلقيح</td><td>The transfer of pollen from male to female parts of a flower, enabling fertilization</td></tr>'+
+'<tr><td><strong>nutrient</strong></td><td>العنصر الغذائي</td><td>A chemical element or compound essential for plant growth (e.g. nitrogen, phosphorus, potassium)</td></tr>'+
+'<tr><td><strong>deficiency</strong></td><td>نقص / قصور</td><td>A shortage of an essential nutrient causing visible symptoms in the plant</td></tr>'+
+'<tr><td><strong>organic matter</strong></td><td>المادة العضوية</td><td>Decomposed plant and animal residues that improve soil structure and fertility</td></tr>'+
+'<tr><td><strong>biodiversity</strong></td><td>التنوع البيولوجي</td><td>The variety of life forms (plants, animals, microbes) in a given ecosystem</td></tr>'+
+'<tr><td><strong>sustainable</strong></td><td>مستدام</td><td>Meeting current agricultural needs without compromising the ability of future generations</td></tr>'+
+'</tbody></table></div>'+
+
+'<div class="acad-tip">'+
+'<h3>⚡ Quick Activity 3 — Matching Terms</h3>'+
+'<p>Match each term on the left with its correct description on the right:</p>'+
+'<p>1. Germination &nbsp;&nbsp; 2. Pollination &nbsp;&nbsp; 3. Deficiency &nbsp;&nbsp; 4. Organic matter</p>'+
+'<p>A. The movement of pollen enabling seed formation<br>'+
+'B. Yellow leaves caused by a lack of iron in the soil<br>'+
+'C. Decomposed plant residues that enrich the soil<br>'+
+'D. A dormant seed starting to grow after moisture contact</p>'+
+'<p><strong>Answers: 1-D, 2-A, 3-B, 4-C</strong></p>'+
+'</div>'+
+
+'<h2>Section 3: Reading Agricultural Labels and Documents</h2>'+
+'<p>One of the most practical skills in Agricultural English is reading product labels, research abstracts, and field reports accurately. Here is a real-style fertilizer label text:</p>'+
+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Sample Fertilizer Label</div><div class="acad-case-val"><em>"Compound Fertilizer — NPK 20-20-20 + Micronutrients. Composition: Total Nitrogen (N) 20%, Available Phosphorus (P₂O₅) 20%, Soluble Potassium (K₂O) 20%, plus chelated Iron (Fe), Zinc (Zn), and Manganese (Mn). Application rate: 2–3 kg/1000 L water. Suitable for foliar application and fertigation. Store in a cool, dry place away from direct sunlight."</em></div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Key Terms from the Label</div><div class="acad-case-val">NPK = nitrogen, phosphorus, potassium / Chelated = مخلّب (a form that plants absorb more easily) / Foliar application = رش على الأوراق / Fertigation = تسميد مع الري / Available = صالح للامتصاص</div></div>'+
+'</div>'+
+
+'<div class="acad-tip">'+
+'<h3>⚡ Quick Activity 4 — Reading Comprehension</h3>'+
+'<p>Based on the fertilizer label above, answer these questions in English:</p>'+
+'<ol>'+
+'<li>What is the nitrogen percentage in this fertilizer?</li>'+
+'<li>Can this fertilizer be applied through irrigation water? Which word tells you?</li>'+
+'<li>Name one micronutrient mentioned in the label.</li>'+
+'</ol>'+
+'<p><strong>Answers: 1- 20% / 2- Yes, the word "fertigation" indicates this / 3- Iron (Fe), Zinc (Zn), or Manganese (Mn)</strong></p>'+
+'</div>'+
+
+'<h2>Section 4: Reading Passage — Agricultural English in Practice</h2>'+
+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Reading Passage</div><div class="acad-case-val"><strong>Sustainable Farming in a Changing Climate</strong><br><br>Modern agriculture faces a serious challenge: how to produce more food using fewer resources while protecting the environment. The world\'s population is expected to reach 9.7 billion by 2050, requiring a 70% increase in food production according to FAO estimates. At the same time, agricultural land is shrinking due to urbanization, soil degradation, and water scarcity.<br><br>Farmers and scientists are developing innovative solutions. Drought-tolerant crop varieties, precision irrigation systems, and integrated pest management programs are helping farmers adapt to water stress and climate variability. Organic farming practices, which rely on natural inputs instead of synthetic chemicals, are gaining popularity in export markets demanding residue-free produce.<br><br>In Egypt specifically, the government has launched major reclamation projects to convert desert land into productive agricultural areas. These projects require skilled professionals who can read technical reports, follow international agricultural standards, and communicate with foreign partners — all of which demand proficiency in Agricultural English.</div></div>'+
+'</div>'+
+
+'<p><strong>Vocabulary from the reading (مفردات من النص):</strong></p>'+
+'<div class="acad-twrap">'+
+'<table class="acad-tbl">'+
+'<thead><tr><th>Word</th><th>Arabic Meaning</th></tr></thead>'+
+'<tbody>'+
+'<tr><td>sustainable</td><td>مستدام</td></tr>'+
+'<tr><td>urbanization</td><td>التحضر / التوسع العمراني</td></tr>'+
+'<tr><td>degradation</td><td>التدهور</td></tr>'+
+'<tr><td>scarcity</td><td>الشح / الندرة</td></tr>'+
+'<tr><td>drought-tolerant</td><td>متحمل للجفاف</td></tr>'+
+'<tr><td>precision irrigation</td><td>الري الدقيق</td></tr>'+
+'<tr><td>integrated pest management</td><td>المكافحة المتكاملة للآفات</td></tr>'+
+'<tr><td>reclamation</td><td>الاستصلاح</td></tr>'+
+'<tr><td>residue-free</td><td>خالٍ من المتبقيات</td></tr>'+
+'</tbody></table></div>'+
+
+'<div class="acad-tip">'+
+'<h3>⚡ Reading Comprehension Activity</h3>'+
+'<p>Answer these questions based on the reading passage:</p>'+
+'<ol>'+
+'<li>By how much does food production need to increase by 2050, according to FAO?</li>'+
+'<li>Name two causes of shrinking agricultural land mentioned in the text.</li>'+
+'<li>What does "residue-free produce" mean, and why do export markets demand it?</li>'+
+'</ol>'+
+'<p><strong>Suggested Answers: 1- 70% / 2- Urbanization and soil degradation (or water scarcity) / 3- Produce with no chemical residues — export markets require food safety standards</strong></p>'+
+'</div>'+
+
+'<h2>Section 5: Pronunciation Corner — نطق المصطلحات</h2>'+
+'<div class="acad-twrap">'+
+'<table class="acad-tbl">'+
+'<thead><tr><th>Word</th><th>Pronunciation Guide</th><th>Arabic Hint</th></tr></thead>'+
+'<tbody>'+
+'<tr><td>photosynthesis</td><td>/ˌfoʊ.toʊˈsɪn.θə.sɪs/</td><td>فوتو-سين-ثيسيس</td></tr>'+
+'<tr><td>germination</td><td>/ˌdʒɜr.mɪˈneɪ.ʃən/</td><td>جرمي-نيشن</td></tr>'+
+'<tr><td>fertilizer</td><td>/ˈfɜr.tɪ.laɪ.zər/</td><td>فيرتي-لايزر</td></tr>'+
+'<tr><td>irrigation</td><td>/ˌɪr.ɪˈɡeɪ.ʃən/</td><td>إيري-جيشن</td></tr>'+
+'<tr><td>sustainable</td><td>/səˈsteɪ.nə.bəl/</td><td>سيس-تيناب-ل</td></tr>'+
+'<tr><td>agronomist</td><td>/əˈɡrɒn.ə.mɪst/</td><td>اجرون-أميست</td></tr>'+
+'<tr><td>deficiency</td><td>/dɪˈfɪʃ.ən.si/</td><td>دي-فيشنسي</td></tr>'+
+'</tbody></table></div>'+
+
+'<div class="acad-tip">'+
+'<h3>⚡ Quick Activity 5 — Word Forms Challenge</h3>'+
+'<p>Complete the table — fill in the missing word form:</p>'+
+'<div class="acad-twrap"><table class="acad-tbl"><thead><tr><th>Verb</th><th>Noun (process)</th><th>Adjective</th></tr></thead>'+
+'<tbody>'+
+'<tr><td>irrigate</td><td>irrigation</td><td>irrigated</td></tr>'+
+'<tr><td>fertilize</td><td>?</td><td>fertile</td></tr>'+
+'<tr><td>?</td><td>cultivation</td><td>cultivated</td></tr>'+
+'<tr><td>germinate</td><td>germination</td><td>?</td></tr>'+
+'<tr><td>pollinate</td><td>?</td><td>pollinated</td></tr>'+
+'</tbody></table></div>'+
+'<p><strong>Answers: fertilization / cultivate / germinating / pollination</strong></p>'+
+'</div>'+
+
+'<h2>Interactive Quiz — اختبر نفسك</h2>'+
+'<p>Before moving to the unit quiz, try these rapid-fire questions:</p>'+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Q1</div><div class="acad-case-val">What is the English word for "التمثيل الضوئي"? → <strong>Photosynthesis</strong></div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Q2</div><div class="acad-case-val">Translate: "The yield gap between potential and actual production is 40%." → <strong>الفجوة في الغلة بين الإنتاج المحتمل والفعلي 40%</strong></div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Q3</div><div class="acad-case-val">What does "arid" mean? → <strong>جاف / قاحل — very low rainfall area</strong></div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Q4</div><div class="acad-case-val">What is the difference between "sowing" and "transplanting"? → <strong>Sowing = placing seeds directly in soil. Transplanting = moving a grown seedling from nursery to field.</strong></div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Q5</div><div class="acad-case-val">What does NPK stand for on a fertilizer bag? → <strong>Nitrogen (N), Phosphorus (P), Potassium (K)</strong></div></div>'+
+'</div>'+
+
+'<h2>Assignment — الواجب التطبيقي</h2>'+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Task</div><div class="acad-case-val">Look at a fertilizer bag, seed packet, or pesticide label you have at home or at work. Write 5 English terms you find on it, their Arabic translations, and one sentence using each term correctly in an agricultural context. If no label is available, use this product name: <strong>"Urea 46% — Nitrogen Fertilizer"</strong> and write 5 sentences about it.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Objective</div><div class="acad-case-val">This connects classroom vocabulary to your real working environment and trains your eye to automatically extract meaning from English agricultural text.</div></div>'+
+'</div>'+
+
+'<h2>Lecture Summary — ملخص المحاضرة</h2>'+
+'<div class="acad-igrid">'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">Why It Matters</div><div class="acad-icard-val">80%+ of agricultural research is in English — you need it to access global knowledge</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">Land & Environment</div><div class="acad-icard-val">soil, field, orchard, greenhouse, arid, fertile — and how to use them correctly</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">Crops & Operations</div><div class="acad-icard-val">crop, yield, seed, seedling + sowing, irrigation, fertilization, tillage, pruning</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">Science Terms</div><div class="acad-icard-val">photosynthesis, germination, pollination, nutrient, deficiency, sustainable</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">Practical Skill</div><div class="acad-icard-val">Reading fertilizer labels, product instructions, and short research passages</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">Word Forms</div><div class="acad-icard-val">Every verb has noun and adjective forms — learn families, not single words</div></div>'+
+'</div>'+
+
+'<h2>Next Lecture — المحاضرة القادمة</h2>'+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">Lecture 2</div><div class="acad-case-val">Plant Anatomy and Botanical Terminology — we will go deeper into the English vocabulary of plant structure, cell biology terms, and how to describe plant symptoms of disease and deficiency in a professional scientific report.</div></div>'+
+'</div>'+
+
+'<div class="acad-refs"><h3>Scientific References — المراجع</h3>'+
+'<div class="acad-ref"><span class="acad-ref-n">1</span>FAO (2023). <em>The State of Food and Agriculture 2023.</em> Food and Agriculture Organization of the United Nations, Rome.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">2</span>Brady, N.C. & Weil, R.R. (2016). <em>The Nature and Properties of Soils</em>, 15th ed. Pearson Education.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">3</span>Taiz, L. et al. (2022). <em>Plant Physiology and Development</em>, 7th ed. Sinauer Associates.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">4</span>USDA-ARS (2024). <em>Agricultural Research Glossary.</em> United States Department of Agriculture.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">5</span>Radford, A. et al. (2021). <em>English for Academic Purposes in Agriculture.</em> Cambridge Academic Skills.</div>'+
+'</div>'+
+'</div>';
+
+return c[id]||null;
+}
+
 /* ── Molecular Biology Lesson Content ─────────────────────────── */
 function mbGetContent(id){
 var c={};
@@ -14910,6 +15404,7 @@ return c[id]||'<div class="acad-body"><p style="color:var(--muted);text-align:ce
 function acGetContent(id){
 if(AC_CID==='mol-bio')return mbGetContent(id);
 if(AC_CID==='food-quality')return fqGetContent(id);
+if(AC_CID==='ag-english')return agGetContent(id);
 var c={};
 
 c['p1']='<div class="acad-body">'+
@@ -15891,6 +16386,17 @@ else{acShowMbPayModal(st);}
 });
 }
 else if(id==='food-quality'){acSwitchCourse(id);acGo('home',null);}
+else if(id==='ag-english'){
+if(!(typeof currentUser!=='undefined'&&currentUser)){
+if(typeof showToast==='function')showToast('سجّل الدخول أولاً للاشتراك في الدورة','inf');
+if(typeof openAuth==='function')openAuth('login');
+return;
+}
+acCheckAgAccess(function(st){
+if(st==='paid'){acSwitchCourse('ag-english');acGo('home',null);}
+else{acShowAgPayModal(st);}
+});
+}
 },
 comingSoon:function(){if(typeof showToast==='function')showToast('🔜 هذه الدورة قيد الإعداد — تابعونا قريبًا','inf')},
 openFirst:function(){
@@ -35171,17 +35677,6 @@ document.addEventListener('click', e => {
           تثبيت التطبيق الآن
         </button>
       </div>
-      <!-- Android fallback instructions (shown when Chrome hasn't (re)fired the native install prompt) -->
-      <div id="pwa-android-fallback-section" style="display:none;">
-        <div style="background:rgba(27,107,58,.07);border:1px solid rgba(27,107,58,.15);border-radius:14px;padding:16px;">
-          <div style="font-size:13px;font-weight:800;color:var(--ink,#1e2a24);margin-bottom:12px;text-align:center;">تثبيت على Android</div>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <div style="display:flex;align-items:center;gap:12px;"><div style="width:30px;height:30px;border-radius:50%;background:#1B6B3A;color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px;flex-shrink:0;">1</div><div style="font-size:13px;color:var(--ink,#1e2a24);">اضغط على <strong>⋮</strong> (قائمة المتصفح) أعلى الشاشة</div></div>
-            <div style="display:flex;align-items:center;gap:12px;"><div style="width:30px;height:30px;border-radius:50%;background:#1B6B3A;color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px;flex-shrink:0;">2</div><div style="font-size:13px;color:var(--ink,#1e2a24);">اختر <strong>«تثبيت التطبيق»</strong> أو <strong>«إضافة إلى الشاشة الرئيسية»</strong></div></div>
-            <div style="display:flex;align-items:center;gap:12px;"><div style="width:30px;height:30px;border-radius:50%;background:#1B6B3A;color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px;flex-shrink:0;">3</div><div style="font-size:13px;color:var(--ink,#1e2a24);">أكّد الإضافة 🎉</div></div>
-          </div>
-        </div>
-      </div>
       <!-- iOS instructions -->
       <div id="pwa-ios-section" style="display:none;">
         <div style="background:rgba(27,107,58,.07);border:1px solid rgba(27,107,58,.15);border-radius:14px;padding:16px;">
@@ -35226,7 +35721,6 @@ function openPwaModal(){
   var isInstalled=window.matchMedia('(display-mode:standalone)').matches||(navigator.standalone===true);
   if(isInstalled){closePwaModal();return;}
   document.getElementById('pwa-android-section').style.display=hasPrompt?'block':'none';
-  document.getElementById('pwa-android-fallback-section').style.display=(isAndroid&&!hasPrompt)?'block':'none';
   document.getElementById('pwa-ios-section').style.display=(isIos&&!hasPrompt)?'block':'none';
   document.getElementById('pwa-desktop-section').style.display=(!isIos&&!isAndroid&&!hasPrompt)?'block':'none';
 }
@@ -35466,16 +35960,10 @@ document.addEventListener('DOMContentLoaded',function(){
     const dismissBtn = document.getElementById('pwa-install-dismiss');
     const banner     = document.getElementById('pwa-install-banner');
 
-    /* Show install FAB by default for any non-installed visitor.
-       We don't rely solely on 'beforeinstallprompt' to reveal it, because
-       Chrome on Android does not guarantee firing that event on every
-       visit (e.g. after a previous dismissal) — if we only show the FAB
-       inside that event handler, the install icon can vanish entirely on
-       later visits with no way for the user to install the app again. */
+    /* Show nav button on iOS (no beforeinstallprompt on Safari) */
     var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
     var isStandalone = ('standalone' in navigator) && navigator.standalone;
-    var isStandaloneDisplay = window.matchMedia('(display-mode: standalone)').matches;
-    if (!isStandalone && !isStandaloneDisplay) {
+    if (isIos && !isStandalone) {
       var nb = document.getElementById('pwa-fab');
       if (nb) nb.style.display = 'flex';
     }
@@ -35716,6 +36204,66 @@ document.addEventListener('DOMContentLoaded',function(){
           <div class="vcash-pending-title">طلبك قيد المراجعة</div>
           <div class="vcash-pending-desc">تلقينا طلبك بنجاح وسيتم مراجعة التحويل وتفعيل الكورس خلال 24 ساعة. ستُفتح الدورة تلقائياً بعد التفعيل.</div>
           <div class="vcash-pending-ref" id="vcash2-pending-ref-display"></div>
+          <div class="vcash-note">إذا مرّت 24 ساعة ولم يتم التفعيل، تواصل معنا عبر واتساب.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── Agricultural English Payment Modal ──────────────────────── -->
+<div class="vcash-overlay" id="vcash3-overlay" onclick="if(event.target===this)acCloseAgPayModal()">
+  <div class="vcash-box">
+    <div class="vcash-head">
+      <button class="vcash-close-btn" onclick="acCloseAgPayModal()" aria-label="إغلاق">✕</button>
+      <div class="vcash-head-logo">🌾</div>
+      <div class="vcash-head-title">Agricultural English</div>
+      <div class="vcash-head-sub">اللغة الإنجليزية الزراعية — اشترك الآن وابدأ التعلم فوراً</div>
+    </div>
+    <div class="vcash-body">
+      <!-- ── خطوة الدفع ── -->
+      <div class="vcash-steps on" id="vcash3-step-pay">
+        <div class="vcash-info-card">
+          <div class="vcash-info-row">
+            <span class="vcash-info-lbl">السعر بعد خصم 90%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash3-price-display">25 جنيه</span></div>
+          </div>
+          <div class="vcash-info-divider"></div>
+          <div class="vcash-num-wrap">
+            <div class="vcash-num-lbl">أرسل على محفظة فودافون كاش</div>
+            <div class="vcash-num" id="vcash3-number">01095282573</div>
+            <button class="vcash-copy-btn" onclick="acCopyVcash3Num()">📋 نسخ الرقم</button>
+          </div>
+        </div>
+        <div class="vcash-steps-list">
+          <div class="vcash-step-item">
+            <div class="vcash-step-num">1</div>
+            <div class="vcash-step-txt"><strong>افتح تطبيق فودافون كاش</strong>اختار «تحويل لمحفظة» وأدخل الرقم أعلاه</div>
+          </div>
+          <div class="vcash-step-item">
+            <div class="vcash-step-num">2</div>
+            <div class="vcash-step-txt"><strong>أرسل المبلغ واحتفظ بالرقم المرجعي</strong>رسالة SMS التأكيد تحتوي على رقم المعاملة</div>
+          </div>
+          <div class="vcash-step-item">
+            <div class="vcash-step-num">3</div>
+            <div class="vcash-step-txt"><strong>أدخل التفاصيل هنا</strong>وسيُفعَّل الكورس خلال 24 ساعة بعد التحقق</div>
+          </div>
+        </div>
+        <div class="vcash-field-lbl">رقم هاتفك المُرسِل (فودافون كاش)</div>
+        <input class="vcash-field" id="vcash3-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">الرقم المرجعي للمعاملة</div>
+        <input class="vcash-field" id="vcash3-ref" type="text" placeholder="الرقم الذي وصلك في رسالة التأكيد">
+        <button class="vcash-btn-primary" id="vcash3-submit-btn" onclick="acSubmitAgPayment()">أرسل طلب التفعيل</button>
+        <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
+      </div>
+      <!-- ── خطوة الانتظار ── -->
+      <div class="vcash-steps" id="vcash3-step-pending">
+        <div class="vcash-pending-state">
+          <div class="vcash-pending-ico">⏳</div>
+          <div class="vcash-pending-title">طلبك قيد المراجعة</div>
+          <div class="vcash-pending-desc">تلقينا طلبك بنجاح وسيتم مراجعة التحويل وتفعيل الكورس خلال 24 ساعة. ستُفتح الدورة تلقائياً بعد التفعيل.</div>
+          <div class="vcash-pending-ref" id="vcash3-pending-ref-display"></div>
           <div class="vcash-note">إذا مرّت 24 ساعة ولم يتم التفعيل، تواصل معنا عبر واتساب.</div>
         </div>
       </div>
