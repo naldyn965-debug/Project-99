@@ -7917,6 +7917,7 @@ body.modal-open { overflow: hidden; }
 .acad-card{background:var(--card);border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--s3)}
 .acad-card-top{height:180px;background:#0c3a23 url('https://images.unsplash.com/photo-1711900177627-1182b446bc8f?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat;position:relative;overflow:hidden}
 .acad-card-top.mb{background:#0a1c33 url('https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+.acad-card-top.fq{background:#1a0f00 url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-share-btn{position:absolute;top:14px;left:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(10,30,20,.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s;padding:0;appearance:none;-webkit-appearance:none;font:inherit;outline:none}
 .acad-share-btn:hover{background:rgba(10,30,20,.6);transform:translateY(-1px)}
 .acad-share-btn:active{transform:scale(.94)}
@@ -8605,22 +8606,37 @@ for(var r=0;r<n;r++)for(var c=0;c<n;c++)if(qr.isDark(r,c))ctx.fillRect(x+(c+quie
 /* ── Certificate verification ────────────────────────────── */
 var NB_CERT_BASE_URL='https://nabtex.vercel.app/';
 var NB_CERT_SALT='NBX-IPM-2026';
-function nbCertSign(name,date){
-var str='ipm|'+name+'|'+date+'|'+NB_CERT_SALT,h=5381;
+/* English/Arabic course names shown on the certificate — keyed by course id (AC_CID) */
+var AC_CERT_TITLES={
+'pest':{en:'Integrated Pest Management',abbr:'IPM',ar:'مكافحة الآفات الزراعية المتكاملة'},
+'mol-bio':{en:'Molecular Biology Techniques',abbr:'',ar:'تقنيات البيولوجيا الجزيئية'},
+'food-quality':{en:'Food Quality and Safety',abbr:'',ar:'جودة الغذاء وسلامته'}
+};
+function acCertCourseInfo(cid){
+var info=AC_CERT_TITLES[cid]||AC_CERT_TITLES.pest;
+return{en:info.en,abbr:info.abbr,ar:info.ar,enFull:info.abbr?(info.en+' ('+info.abbr+')'):info.en};
+}
+function nbCertSign(name,date,cid){
+/* cid omitted => legacy literal 'ipm' prefix, so certificates generated before
+   course-aware signing was added keep verifying exactly as before. */
+var pfx=cid||'ipm';
+var str=pfx+'|'+name+'|'+date+'|'+NB_CERT_SALT,h=5381;
 for(var i=0;i<str.length;i++){h=((h*33)^str.charCodeAt(i))>>>0}
 var hex=(h>>>0).toString(16);
 while(hex.length<8)hex='0'+hex;
 return hex;
 }
-function nbCertVerifyUrl(name,date){
-return NB_CERT_BASE_URL+'?nbcert=ipm&n='+encodeURIComponent(name)+'&d='+encodeURIComponent(date)+'&s='+nbCertSign(name,date);
+function nbCertVerifyUrl(name,date,cid){
+var c=cid||'pest';
+return NB_CERT_BASE_URL+'?nbcert=ipm&n='+encodeURIComponent(name)+'&d='+encodeURIComponent(date)+'&c='+encodeURIComponent(c)+'&s='+nbCertSign(name,date,c);
 }
 function nbCheckCertVerify(){
 var params;
 try{params=new URLSearchParams(location.search)}catch(e){return}
 if(!params.has('nbcert'))return;
 var name=params.get('n')||'',date=params.get('d')||'',sig=params.get('s')||'';
-var validSig=name&&date&&nbCertSign(name,date)===sig;
+var cid=params.get('c')||null;
+var validSig=name&&date&&nbCertSign(name,date,cid)===sig;
 if(!document.getElementById('nb-verify-style')){
 var st=document.createElement('style');st.id='nb-verify-style';
 st.textContent='#nb-verify-overlay{position:fixed;inset:0;z-index:99999;background:#dbe4dd;display:flex;align-items:center;justify-content:center;padding:24px;font-family:Cairo,sans-serif}.nbv-card{background:#fff;border:1.5px solid #84958d;border-radius:12px;padding:40px 32px;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(20,40,30,.25)}.nbv-logo{width:64px;height:64px;border-radius:50%;object-fit:cover;margin-bottom:16px}.nbv-badge{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;margin:0 auto 14px;color:#fff}.nbv-badge.nbv-ok{background:#1f6e42}.nbv-badge.nbv-warn{background:#c0392b}.nbv-title{font-family:"Cormorant Garamond",serif;font-size:1.6rem;color:#28352f;margin:0 0 4px}.nbv-sub{font-size:13px;color:#5e6f69;margin:0 0 22px}.nbv-rows{text-align:right;border-top:1px solid #e2e8e4;padding-top:16px;margin-bottom:24px}.nbv-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;font-size:13px;border-bottom:1px dashed #e2e8e4}.nbv-k{color:#5e6f69;flex-shrink:0}.nbv-v{color:#28352f;font-weight:700;text-align:left;word-break:break-word}.nbv-btn{width:100%;padding:13px;border-radius:9999px;border:none;background:#1B6B3A;color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:Cairo,sans-serif}';
@@ -8639,7 +8655,7 @@ overlay.innerHTML=
 )+
 '<div class="nbv-rows">'+
 '<div class="nbv-row"><span class="nbv-k">Name / الاسم</span><span class="nbv-v">'+acEsc(name||'—')+'</span></div>'+
-'<div class="nbv-row"><span class="nbv-k">Course / الدورة</span><span class="nbv-v">Integrated Pest Management (IPM)</span></div>'+
+'<div class="nbv-row"><span class="nbv-k">Course / الدورة</span><span class="nbv-v">'+acEsc(acCertCourseInfo(cid||'pest').enFull)+'</span></div>'+
 '<div class="nbv-row"><span class="nbv-k">Date / التاريخ</span><span class="nbv-v">'+acEsc(date||'—')+'</span></div>'+
 '</div>'+
 '<button class="nbv-btn" id="nb-verify-close">Visit Nabtex — زيارة نبتيكس</button>'+
@@ -12988,7 +13004,8 @@ var y=contentTop+10;
 ctx.textBaseline='alphabetic';ctx.textAlign='left';ctx.fillStyle='#33453f';
 ctx.font="600 92px 'Cormorant Garamond', serif";
 y+=80;ctx.fillText('CERTIFICATE OF',textLeft,y);
-y+=100;ctx.fillText('Integrated Pest Management',textLeft,y);
+var certCourse=acCertCourseInfo(AC_CID);
+y+=100;ctx.fillText(certCourse.en,textLeft,y);
 y+=100;ctx.fillText('NABTEX PLATFORM',textLeft,y);
 y+=70;ctx.font="400 36px 'Cairo', sans-serif";ctx.fillStyle='#5e6f69';
 ctx.fillText('This certificate is proudly presented to',textLeft,y);
@@ -13008,7 +13025,7 @@ ctx.strokeStyle='#c6d2cb';ctx.lineWidth=2;
 ctx.beginPath();ctx.moveTo(textLeft,y+24);ctx.lineTo(textLeft+Math.max(nameWidth,300),y+24);ctx.stroke();
 y+=90;
 ctx.font="700 42px 'Cairo', sans-serif";ctx.fillStyle='#28352f';ctx.textAlign='left';
-var completedLines=acWrapLines(ctx,'has successfully completed the Integrated Pest Management (IPM) Course offered by Nabtex Platform.',textWidth*0.92);
+var completedLines=acWrapLines(ctx,'has successfully completed the '+certCourse.enFull+' Course offered by Nabtex Platform.',textWidth*0.92);
 completedLines.forEach(function(line){y+=58;ctx.fillText(line,textLeft,y)});
 y+=50;
 ctx.font="700 34px 'Cairo', sans-serif";ctx.fillStyle='#1f5c39';
@@ -13027,7 +13044,7 @@ y+=40;ctx.font="400 32px 'Cairo', sans-serif";ctx.fillStyle='#5e6f69';
 ctx.fillText('Nabtex Platform',col1X,y);ctx.fillText(dateStr,col2X,y);
 var qrSize=170;
 var qrX=textRight-qrSize,qrY=Math.max(footerLineY-qrSize+18,textBlockBottom+24);
-nbqrDrawOnCanvas(ctx,nbCertVerifyUrl(safeName,dateStr),'M',qrX,qrY,qrSize);
+nbqrDrawOnCanvas(ctx,nbCertVerifyUrl(safeName,dateStr,AC_CID),'M',qrX,qrY,qrSize);
 ctx.strokeStyle='#c6d2cb';ctx.lineWidth=1.5;ctx.strokeRect(qrX,qrY,qrSize,qrSize);
 ctx.font="700 20px 'Cairo', sans-serif";ctx.fillStyle='#5e6f69';ctx.textAlign='center';
 ctx.fillText('Scan to verify',qrX+qrSize/2,qrY+qrSize+30);
@@ -13105,15 +13122,15 @@ bannerHTML+
 '<div class="acad-cert-row">'+
 '<div class="acad-cert-ribbon">'+ACAD_CERT_RIBBON_SVG+'</div>'+
 '<div class="acad-cert-main">'+
-'<div class="acad-cert-titles"><div>CERTIFICATE OF</div><div>Integrated Pest Management</div><div>NABTEX PLATFORM</div></div>'+
+'<div class="acad-cert-titles"><div>CERTIFICATE OF</div><div>'+acEsc(acCertCourseInfo(AC_CID).en)+'</div><div>NABTEX PLATFORM</div></div>'+
 '<div class="acad-cert-presented">This certificate is proudly presented to</div>'+
 '<div class="acad-cert-name" id="acad-cert-name" contenteditable="true" spellcheck="false" data-placeholder="Your Name" oninput="NAcademy.refreshCertQR()" onpaste="event.preventDefault();document.execCommand(\'insertText\',false,(event.clipboardData||window.clipboardData).getData(\'text\'))" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" onblur="if(!this.textContent.trim())this.innerHTML=\'\'">'+(userName?acEsc(userName):'')+'</div>'+
-'<div class="acad-cert-completed">has successfully completed the Integrated Pest Management (IPM) Course offered by Nabtex Platform.</div>'+
+'<div class="acad-cert-completed">has successfully completed the '+acEsc(acCertCourseInfo(AC_CID).enFull)+' Course offered by Nabtex Platform.</div>'+
 '<div class="acad-cert-recognition">This certificate is awarded in recognition of the recipient\'s successful completion of the course and final examination, as well as their commitment to professional development in the field of agriculture.</div>'+
 '<div class="acad-cert-footer">'+
 '<div class="acad-cert-footer-col"><div class="acad-cert-footer-line"></div><div class="acad-cert-footer-label">Authorized Signature</div><div class="acad-cert-footer-value">Nabtex Platform</div></div>'+
 '<div class="acad-cert-footer-col"><div class="acad-cert-footer-line"></div><div class="acad-cert-footer-label">Date of Issue</div><div class="acad-cert-footer-value">'+certDate+'</div></div>'+
-'<div class="acad-cert-footer-qr" data-date="'+acEsc(certDate)+'"><div class="acad-cert-qr-box" id="acad-cert-qr">'+nbqrSvgString(nbCertVerifyUrl(userName||'Your Name',certDate))+'</div><div class="acad-cert-qr-cap">Scan to verify</div></div>'+
+'<div class="acad-cert-footer-qr" data-date="'+acEsc(certDate)+'"><div class="acad-cert-qr-box" id="acad-cert-qr">'+nbqrSvgString(nbCertVerifyUrl(userName||'Your Name',certDate,AC_CID))+'</div><div class="acad-cert-qr-cap">Scan to verify</div></div>'+
 '</div>'+
 '</div>'+
 '</div>'+
@@ -13135,7 +13152,7 @@ if(!nameEl||!qrEl)return;
 var wrap=qrEl.closest('.acad-cert-footer-qr');
 var dt=wrap?wrap.getAttribute('data-date'):acCertDate();
 var nm=nameEl.textContent.trim()||'Your Name';
-try{qrEl.innerHTML=nbqrSvgString(nbCertVerifyUrl(nm,dt))}catch(e){}
+try{qrEl.innerHTML=nbqrSvgString(nbCertVerifyUrl(nm,dt,AC_CID))}catch(e){}
 }
 
 /* ── Food Quality Lesson Content ───────────────────────────── */
