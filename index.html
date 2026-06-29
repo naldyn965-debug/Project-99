@@ -8785,6 +8785,7 @@ for(var i=1;i<AC_COURSE.modules.length;i++){
   map[curLessons[0].id]=prevLessons[prevLessons.length-1].id}
 return map}
 function acUnitGateRemaining(id){
+if(AC_CID==='food-quality')return 0; /* القفل اليومي بين الوحدات مُعطَّل لكورس جودة الغذاء وسلامته */
 var gateLessonId=acModuleGateMap()[id];
 if(!gateLessonId)return 0;
 var dt=(acProg().dt||{})[gateLessonId];
