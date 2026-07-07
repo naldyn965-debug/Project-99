@@ -1138,13 +1138,13 @@ async function suggestHtml() {
   try {
     // جيب الحسابات + الحسابات اللي بتتابعها في نفس الوقت
     const [snap, followSnap] = await Promise.all([
-      db.collection('social_profiles').orderBy('followersCount','desc').limit(10).get(),
+      db.collection('social_profiles').orderBy('followersCount','desc').get(),
       S.uid ? db.collection('social_follows').where('followerUid','==',S.uid).get() : Promise.resolve({docs:[]})
     ]);
     // حدّث الـ followingSet من Firestore عشان يكون دايماً sync
     followSnap.docs.forEach(d => S.followingSet.add(d.data().targetUid));
     // فلتر: مش انت + مش بتتابعه فعلاً
-    const docs = snap.docs.filter(d=>d.id!==S.uid && !S.followingSet.has(d.id)).slice(0,5);
+    const docs = snap.docs.filter(d=>d.id!==S.uid && !S.followingSet.has(d.id));
     if (!docs.length) return '';
     const cards = docs.map(d=>{
       const p=d.data();
