@@ -369,13 +369,15 @@
 .soc-suggest-scroll{
   display:flex;gap:9px;overflow-x:auto;padding-bottom:8px;
   scrollbar-width:none;-ms-overflow-style:none;
+  -webkit-overflow-scrolling:touch;transform:translateZ(0);will-change:scroll-position;
 }
 .soc-suggest-scroll::-webkit-scrollbar{display:none}
 .soc-suggest-card{
   flex-shrink:0;width:126px;background:var(--card);
   border:1.5px solid var(--line);border-radius:18px;
   padding:14px 10px;text-align:center;cursor:pointer;
-  transition:all .28s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden;
+  transition:transform .28s cubic-bezier(.16,1,.3,1),box-shadow .28s cubic-bezier(.16,1,.3,1),border-color .28s cubic-bezier(.16,1,.3,1);
+  position:relative;overflow:hidden;
 }
 .soc-suggest-card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:52px;
@@ -1148,7 +1150,7 @@ async function suggestHtml() {
     if (!docs.length) return '';
     const cards = docs.map(d=>{
       const p=d.data();
-      const inn = p.photoURL?`<img src="${p.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:init(p.displayName);
+      const inn = p.photoURL?`<img src="${p.photoURL}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:init(p.displayName);
       const bg = p.photoURL?'background:transparent;':'background:linear-gradient(145deg,var(--brand-l),var(--brand-d));';
       return `<div class="soc-suggest-card" data-suggest-uid="${d.id}" onclick="SOCIAL.profile('${d.id}')">
 <div class="soc-avatar" style="width:46px;height:46px;font-size:16px;margin:0 auto;${bg}">${inn}</div>
