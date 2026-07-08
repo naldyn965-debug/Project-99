@@ -1486,17 +1486,43 @@ async function renderFollowing(uid) {
 async function renderNotifications() {
   const root = document.getElementById('social-notifications-root'); if (!root) return;
   const header = `<div class="soc-user-list-header" onclick="SOCIAL.backProfile()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>الإشعارات</div>`;
+  const emptyHtml = (icon, label) => `<div class="soc-profile-empty">${icon}<div class="soc-profile-empty-title">${label}</div></div>`;
+  const bellIcon = `<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`;
+  const errIcon   = `<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
   root.innerHTML = header + `<div class="soc-load-spinner" style="padding:55px 0"><div class="soc-spinner"></div></div>`;
+
   const db = getDB(); const uid = S.uid;
-  if (!db || !uid) { root.innerHTML = header + `<div class="soc-profile-empty"><div class="soc-profile-empty-title">لا توجد إشعارات</div></div>`; return; }
-  const snap = await db.collection('social_notifications').where('toUid','==',uid).orderBy('createdAt','desc').limit(30).get();
-  if (snap.empty) { root.innerHTML = header + `<div class="soc-profile-empty"><div class="soc-profile-empty-title">لا توجد إشعارات بعد</div></div>`; return; }
-  const fromUids = [...new Set(snap.docs.map(d=>d.data().fromUid))];
-  const fpm = {}; await Promise.all(fromUids.map(async u=>{fpm[u]=await getProfile(u);}));
-  const icons={follow:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>`,like:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,comment:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`};
-  const msgs={follow:n=>`<strong>${n}</strong> بدأ في متابعة صفحتك`,like:n=>`<strong>${n}</strong> أعجب بمنشورك`,comment:n=>`<strong>${n}</strong> علّق على منشورك`};
-  root.innerHTML = header + snap.docs.map(doc=>{const n=doc.data(),fp=fpm[n.fromUid]||{displayName:'مستخدم'},t=n.type||'follow';return`<div class="soc-notif-item ${n.read?'':'unread'}" onclick="SOCIAL.profile('${n.fromUid}')"><div class="soc-notif-icon ${t}">${icons[t]||icons.follow}</div><div><div class="soc-notif-text">${(msgs[t]||msgs.follow)(fp.displayName||'مستخدم')}</div><div class="soc-notif-time">${rel(n.createdAt)}</div></div>${av(fp,'soc-avatar-sm')}</div>`;}).join('');
-  snap.docs.filter(d=>!d.data().read).forEach(d=>d.ref.update({read:true}));
+  if (!db || !uid) { root.innerHTML = header + emptyHtml(bellIcon, 'لا توجد إشعارات'); return; }
+
+  // مهلة أمان — لو الاستعلام علّق أكتر من 8 ثواني نعرض رسالة بدل ما تفضل تلف للأبد
+  const spinTimeout = setTimeout(() => {
+    if (root.querySelector('.soc-spinner')) {
+      root.innerHTML = header + `<div class="soc-profile-empty"><div class="soc-profile-empty-title">انتهت مهلة التحميل — تحقق من الاتصال</div><button onclick="SOCIAL.notifications()" style="margin-top:9px;padding:7px 18px;background:var(--brand);color:#fff;border:none;border-radius:var(--rpill);font-size:12.5px;font-weight:800;font-family:var(--f-ui);cursor:pointer">إعادة المحاولة</button></div>`;
+    }
+  }, 8000);
+
+  try {
+    // من غير orderBy عشان ميحتاجش composite index — الترتيب بيتم محليًا بعد الجلب
+    const snap = await db.collection('social_notifications').where('toUid','==',uid).limit(30).get();
+    if (snap.empty) { root.innerHTML = header + emptyHtml(bellIcon, 'لا توجد إشعارات بعد'); return; }
+    const sortedDocs = snap.docs.slice().sort((a,b)=>{ const ta=a.data().createdAt; const tb=b.data().createdAt; const sa=ta&&ta.seconds?ta.seconds:0; const sb=tb&&tb.seconds?tb.seconds:0; return sb-sa; });
+    const fromUids = [...new Set(sortedDocs.map(d=>d.data().fromUid))];
+    const fpm = {}; await Promise.all(fromUids.map(async u=>{fpm[u]=await getProfile(u);}));
+    const icons={follow:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>`,like:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,comment:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`};
+    const msgs={follow:n=>`<strong>${n}</strong> بدأ في متابعة صفحتك`,like:n=>`<strong>${n}</strong> أعجب بمنشورك`,comment:n=>`<strong>${n}</strong> علّق على منشورك`};
+    root.innerHTML = header + sortedDocs.map(doc=>{const n=doc.data(),fp=fpm[n.fromUid]||{displayName:'مستخدم'},t=n.type||'follow';return`<div class="soc-notif-item ${n.read?'':'unread'}" onclick="SOCIAL.profile('${n.fromUid}')"><div class="soc-notif-icon ${t}">${icons[t]||icons.follow}</div><div><div class="soc-notif-text">${(msgs[t]||msgs.follow)(fp.displayName||'مستخدم')}</div><div class="soc-notif-time">${rel(n.createdAt)}</div></div>${av(fp,'soc-avatar-sm')}</div>`;}).join('');
+    sortedDocs.filter(d=>!d.data().read).forEach(d=>d.ref.update({read:true}));
+  } catch(e) {
+    console.warn('renderNotifications error', e.code || e.message);
+    const errLabel = (e.code === 'permission-denied' || e.code === 7)
+      ? 'خطأ في الصلاحيات — افتح Firebase Console وحدّث Firestore Rules'
+      : (e.code === 'failed-precondition' || e.code === 9)
+      ? 'خطأ في Index — افتح Firebase Console وأضف Composite Index'
+      : `خطأ (${e.code||'unknown'}): ${e.message||''}`;
+    root.innerHTML = header + emptyHtml(errIcon, errLabel);
+  } finally {
+    clearTimeout(spinTimeout);
+  }
 }
 
 function userItem(uid, p) {
