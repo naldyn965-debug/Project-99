@@ -609,6 +609,15 @@
 }
 .soc-msg-btn:hover{border-color:var(--brand-l);background:var(--brand-pale);color:var(--brand);transform:translateY(-1px)}
 
+.soc-notif-bell-btn{
+  flex-shrink:0;width:42px;height:42px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1.5px solid var(--line);background:var(--bg2);color:var(--ink);
+  cursor:pointer;transition:all .24s cubic-bezier(.16,1,.3,1);
+}
+.soc-notif-bell-btn:hover{border-color:var(--brand-l);background:var(--brand-pale);color:var(--brand);transform:translateY(-1px)}
+.soc-notif-bell-btn svg{width:16px;height:16px}
+
 /* تابات البروفايل */
 .soc-profile-tabs{
   display:flex;background:var(--glass);
@@ -1363,6 +1372,12 @@ async function renderProfile(uid, isSelf) {
         <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
       </svg>
       منشور جديد
+    </button>
+    <button class="soc-notif-bell-btn" onclick="SOCIAL.notifications()" title="الإشعارات">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
     </button>` : `
     <button class="soc-follow-btn ${fol ? 'following' : ''}" id="sfbm" onclick="SOCIAL.follow('${uid}',this)">
       ${fol ? svgFollowing + ' تتابعه' : svgFollow + ' متابعة'}
@@ -1385,12 +1400,6 @@ async function renderProfile(uid, isSelf) {
       منشورات
     </span>
   </button>
-  <button class="soc-pt" onclick="SOCIAL.ptab('products','${uid}')">
-    <span style="display:inline-flex;align-items:center;gap:4px;">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      منتجات
-    </span>
-  </button>
   <button class="soc-pt" onclick="SOCIAL.ptab('photos','${uid}')">
     <span style="display:inline-flex;align-items:center;gap:4px;">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -1409,7 +1418,7 @@ async function renderProfile(uid, isSelf) {
 
 async function ptab(tab, uid) {
   const el = document.getElementById('soc-pc'); if (!el) return;
-  document.querySelectorAll('.soc-pt').forEach((b,i)=>b.classList.toggle('active',['posts','products','photos'][i]===tab));
+  document.querySelectorAll('.soc-pt').forEach((b,i)=>b.classList.toggle('active',['posts','photos'][i]===tab));
   el.innerHTML = `<div class="soc-load-spinner" style="padding:38px 0"><div class="soc-spinner"></div></div>`;
   // Safety timeout — if query hangs > 8s show error
   const spinTimeout = setTimeout(() => {
@@ -1432,13 +1441,6 @@ async function ptab(tab, uid) {
       const sortedDocs = snap.docs.slice().sort((a,b)=>{ const ta=a.data().createdAt; const tb=b.data().createdAt; const sa=ta&&ta.seconds?ta.seconds:0; const sb=tb&&tb.seconds?tb.seconds:0; return sb-sa; });
       const authorProfile = await getProfile(uid);
       el.innerHTML = sortedDocs.map((d,i)=>postCard(d.id,d.data(),authorProfile,i)).join('');
-    } else if (tab==='products') {
-      // Try both sellerId and ownerId fields for compatibility
-      // ownerId is indexed; try ownerId first, fallback to sellerId without orderBy
-      let snap = await db.collection('marketplace_products').where('ownerId','==',uid).limit(18).get();
-      if (snap.empty) snap = await db.collection('marketplace_products').where('sellerId','==',uid).limit(18).get();
-      if (snap.empty) { el.innerHTML=emptyHtml(`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg>`,'لا توجد منتجات'); return; }
-      el.innerHTML=`<div class="soc-profile-products-grid">${snap.docs.map(d=>{const p=d.data(),img=p.images&&p.images[0]||p.imageURL;return`<div class="soc-profile-product-thumb" onclick="MKT&&MKT.openDetail&&MKT.openDetail('${d.id}')">${img?`<img src="${img}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg2);"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></div>`}<div class="soc-profile-product-thumb-overlay"><span>${p.price?p.price+' ج.م':''}</span></div></div>`;}).join('')}</div>`;
     } else {
       // Photos tab — posts with images
       // No orderBy = no composite index needed
@@ -1479,6 +1481,22 @@ async function renderFollowing(uid) {
   uids.forEach(id => S.followingSet.add(id));
   const profs=await Promise.all(uids.map(getProfile));
   root.innerHTML=`<div class="soc-user-list-header" onclick="SOCIAL.backProfile()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>يتابع (${snap.docs.length})</div>${uids.length===0?`<div class="soc-profile-empty"><div class="soc-profile-empty-title">لا يتابع أحدًا بعد</div></div>`:profs.map((p,i)=>p?userItem(uids[i],p):'').join('')}`;
+}
+
+async function renderNotifications() {
+  const root = document.getElementById('social-notifications-root'); if (!root) return;
+  const header = `<div class="soc-user-list-header" onclick="SOCIAL.backProfile()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>الإشعارات</div>`;
+  root.innerHTML = header + `<div class="soc-load-spinner" style="padding:55px 0"><div class="soc-spinner"></div></div>`;
+  const db = getDB(); const uid = S.uid;
+  if (!db || !uid) { root.innerHTML = header + `<div class="soc-profile-empty"><div class="soc-profile-empty-title">لا توجد إشعارات</div></div>`; return; }
+  const snap = await db.collection('social_notifications').where('toUid','==',uid).orderBy('createdAt','desc').limit(30).get();
+  if (snap.empty) { root.innerHTML = header + `<div class="soc-profile-empty"><div class="soc-profile-empty-title">لا توجد إشعارات بعد</div></div>`; return; }
+  const fromUids = [...new Set(snap.docs.map(d=>d.data().fromUid))];
+  const fpm = {}; await Promise.all(fromUids.map(async u=>{fpm[u]=await getProfile(u);}));
+  const icons={follow:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>`,like:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,comment:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`};
+  const msgs={follow:n=>`<strong>${n}</strong> بدأ في متابعة صفحتك`,like:n=>`<strong>${n}</strong> أعجب بمنشورك`,comment:n=>`<strong>${n}</strong> علّق على منشورك`};
+  root.innerHTML = header + snap.docs.map(doc=>{const n=doc.data(),fp=fpm[n.fromUid]||{displayName:'مستخدم'},t=n.type||'follow';return`<div class="soc-notif-item ${n.read?'':'unread'}" onclick="SOCIAL.profile('${n.fromUid}')"><div class="soc-notif-icon ${t}">${icons[t]||icons.follow}</div><div><div class="soc-notif-text">${(msgs[t]||msgs.follow)(fp.displayName||'مستخدم')}</div><div class="soc-notif-time">${rel(n.createdAt)}</div></div>${av(fp,'soc-avatar-sm')}</div>`;}).join('');
+  snap.docs.filter(d=>!d.data().read).forEach(d=>d.ref.update({read:true}));
 }
 
 function userItem(uid, p) {
@@ -1610,7 +1628,7 @@ function injectGlobal() {
 }
 
 // Social panels that SOCIAL module manages directly
-const SOCIAL_PANELS = ['feed','profile-me','followers','following'];
+const SOCIAL_PANELS = ['feed','profile-me','followers','following','notifications'];
 
 function switchPanel(name) {
   const isSocialPanel = SOCIAL_PANELS.includes(name);
@@ -2243,20 +2261,7 @@ window.SOCIAL = {
   following(uid) { switchPanel('following'); waitForAuth().then(()=>renderFollowing(uid)); },
   backProfile() { this.profile(S.profileUid); },
 
-  async loadSocialNotifications() {
-    const db=getDB(); const uid=S.uid; if(!db||!uid)return;
-    const snap=await db.collection('social_notifications').where('toUid','==',uid).limit(20).get();
-    const existing=document.getElementById('mkt-notif-list-page'); if(!existing||snap.empty)return;
-    const prev=document.getElementById('soc-sn'); if(prev)prev.remove();
-    const fromUids=[...new Set(snap.docs.map(d=>d.data().fromUid))];
-    const fpm={}; await Promise.all(fromUids.map(async u=>{fpm[u]=await getProfile(u);}));
-    const icons={follow:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>`,like:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,comment:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`};
-    const msgs={follow:n=>`<strong>${n}</strong> بدأ في متابعة صفحتك`,like:n=>`<strong>${n}</strong> أعجب بمنشورك`,comment:n=>`<strong>${n}</strong> علّق على منشورك`};
-    const sec=document.createElement('div'); sec.id='soc-sn';
-    sec.innerHTML=`<div style="padding:9px 16px;font-size:10.5px;font-weight:900;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--line);">إشعارات اجتماعية</div>`+snap.docs.map(doc=>{const n=doc.data(),fp=fpm[n.fromUid]||{displayName:'مستخدم'},t=n.type||'follow';return`<div class="soc-notif-item ${n.read?'':'unread'}" onclick="SOCIAL.profile('${n.fromUid}')"><div class="soc-notif-icon ${t}">${icons[t]||icons.follow}</div><div><div class="soc-notif-text">${(msgs[t]||msgs.follow)(fp.displayName||'مستخدم')}</div><div class="soc-notif-time">${rel(n.createdAt)}</div></div>${av(fp,'soc-avatar-sm')}</div>`;}).join('');
-    existing.appendChild(sec);
-    snap.docs.filter(d=>!d.data().read).forEach(d=>d.ref.update({read:true}));
-  },
+  notifications() { switchPanel('notifications'); waitForAuth().then(()=>renderNotifications()); },
 
   // aliases for onclick handlers in HTML
   showPanel(n) { this.show(n); },
@@ -2281,9 +2286,5 @@ function boot() {
 }
 if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot);
 else boot();
-
-document.addEventListener('click', e=>{
-  if (e.target.closest('#mkt-tab-notif')) setTimeout(()=>SOCIAL.loadSocialNotifications(), 450);
-});
 
 })();
