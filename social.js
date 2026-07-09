@@ -64,6 +64,15 @@
 }
 .soc-ft:not(.active):hover{color:var(--brand);background:var(--brand-pale)}
 
+/* زر الرجوع للرئيسية — أول شريط عنوان المجتمع */
+.soc-back-home-btn{
+  width:34px;height:34px;border-radius:10px;flex-shrink:0;
+  background:var(--bg2);border:1px solid var(--line);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .2s,transform .18s;
+}
+.soc-back-home-btn:hover{background:var(--brand-pale);color:var(--brand);transform:scale(1.05)}
+
 /* ── Create-post card ───────────────────────────────────────── */
 .soc-create-card{
   margin:12px 13px 0;
@@ -455,6 +464,19 @@
 }
 .soc-cover-edit-btn:hover{background:rgba(0,0,0,.78);transform:scale(1.03)}
 .soc-cover-edit-btn.uploading,.soc-avatar-edit-btn.uploading{opacity:.55;pointer-events:none}
+
+/* زر الرجوع للرئيسية — أعلى يمين الكوفر */
+.soc-cover-back-btn{
+  position:absolute;top:14px;right:14px;z-index:4;
+  background:rgba(10,10,10,.55);color:#fff;
+  border-radius:10px;padding:7px 14px;font-size:12px;font-weight:700;
+  font-family:var(--f-ui);cursor:pointer;
+  display:flex;align-items:center;gap:6px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.2);
+  transition:background .2s,transform .18s;
+}
+.soc-cover-back-btn:hover{background:rgba(0,0,0,.78);transform:scale(1.03)}
 
 /* الأفاتار — على اليمين، نصه داخل الكوفر ونصه في الكارد */
 .soc-profile-avatar-container{
@@ -1183,6 +1205,9 @@ async function renderFeed() {
   root.innerHTML = `
 <div class="soc-feed-header">
   <div class="soc-feed-title">
+    <button class="soc-back-home-btn" onclick="showPage('home')" aria-label="الرئيسية" title="الرئيسية">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
     <div class="soc-feed-title-icon">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -1297,6 +1322,11 @@ async function renderProfile(uid, isSelf) {
 <div class="soc-profile-cover-wrap">
   <div class="soc-profile-cover" style="${cov}">
     <div class="soc-profile-cover-overlay"></div>
+
+    <button class="soc-cover-back-btn" onclick="showPage('home')" aria-label="الرئيسية">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      الرئيسية
+    </button>
 
     ${isSelf ? `
     <button class="soc-cover-edit-btn" onclick="document.getElementById('soc-cover-input').click()">
