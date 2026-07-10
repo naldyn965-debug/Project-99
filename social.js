@@ -859,6 +859,7 @@ const S = {
   feedTab: 'following',
   feedLast: null,
   feedLoading: false,
+  feedSeenIds: new Set(), // معرّفات المنشورات المعروضة بالفعل — يمنع التكرار عند التمرير
   profileUid: null,
   imgs: [],
   initialized: false,
@@ -1112,7 +1113,7 @@ async function loadFeed(reset) {
   const db = getDB();
   const cont = document.getElementById('soc-posts');
   if (!cont || !db) { S.feedLoading=false; return; }
-  if (reset) { cont.innerHTML=skel(); S.feedLast=null; }
+  if (reset) { cont.innerHTML=skel(); S.feedLast=null; S.feedSeenIds=new Set(); }
   try {
     let q;
     if (S.feedTab==='following' && S.uid) {
@@ -1121,31 +1122,34 @@ async function loadFeed(reset) {
       uids.push(S.uid);
       // Firestore 'in' requires at least 1 element and max 10
       const safeUids = uids.slice(0,10);
-      // No orderBy on 'in' query — avoids composite index; sort client-side
-      q = db.collection('social_posts').where('authorUid','in',safeUids).limit(20);
+      // مرتّب من السيرفر (index: authorUid ASC, createdAt DESC — موجود في firestore.indexes)
+      // ده اللي بيخلي startAfter() يشتغل صح ويمنع تكرار/تعليق الصفحات
+      q = db.collection('social_posts').where('authorUid','in',safeUids).orderBy('createdAt','desc').limit(20);
     } else {
-      // Explore: fetch posts, sort client-side
-      q = db.collection('social_posts').limit(20);
+      q = db.collection('social_posts').orderBy('createdAt','desc').limit(20);
     }
     if (S.feedLast && !reset) q = q.startAfter(S.feedLast);
     const snap = await q.get();
-    // Sort client-side by createdAt descending (avoids composite index)
+    // فرز إضافي للتأكيد (السيرفر مرتّب أصلاً الآن بفضل orderBy)
     const sortedDocs = snap.docs.slice().sort((a,b)=>{
       const ta=a.data().createdAt; const tb=b.data().createdAt;
       const sa=ta&&ta.seconds?ta.seconds:0; const sb=tb&&tb.seconds?tb.seconds:0;
       return sb-sa;
     });
     S.feedLast = sortedDocs[sortedDocs.length-1]||null;
-    const uids2 = [...new Set(sortedDocs.map(d=>d.data().authorUid))];
+    // استبعاد أي منشور اتعرض قبل كده في نفس الجلسة (يمنع التكرار عند تداخل الصفحات)
+    const newDocs = sortedDocs.filter(d=>!S.feedSeenIds.has(d.id));
+    newDocs.forEach(d=>S.feedSeenIds.add(d.id));
+    const uids2 = [...new Set(newDocs.map(d=>d.data().authorUid))];
     const pm = {}; await Promise.all(uids2.map(async u=>{pm[u]=await getProfile(u);}));
-    if (sortedDocs.length === 0 && reset) {
+    if (newDocs.length === 0 && reset) {
       // If following tab is empty, suggest switching to explore
       const emptyMsg = S.feedTab==='following'
         ? `<div class="soc-profile-empty" style="margin:24px 13px;background:var(--card);border-radius:var(--r3);border:1px solid var(--line)"><svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="soc-profile-empty-title">لا توجد منشورات من المتابَعين بعد</div><button onclick="SOCIAL.ftab('explore')" style="margin-top:9px;padding:7px 18px;background:var(--brand);color:#fff;border:none;border-radius:var(--rpill);font-size:12.5px;font-weight:800;font-family:var(--f-ui);cursor:pointer">استكشاف عام</button></div>`
         : `<div class="soc-profile-empty" style="margin:24px 13px;background:var(--card);border-radius:var(--r3);border:1px solid var(--line)"><svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="soc-profile-empty-title">لا توجد منشورات بعد</div></div>`;
       cont.innerHTML = emptyMsg;
     } else {
-      const html = sortedDocs.map((d,i)=>postCard(d.id,d.data(),pm[d.data().authorUid],i)).join('');
+      const html = newDocs.map((d,i)=>postCard(d.id,d.data(),pm[d.data().authorUid],i)).join('');
       if (reset) cont.innerHTML = html; else cont.insertAdjacentHTML('beforeend',html);
     }
     const lm = document.getElementById('soc-lm');
