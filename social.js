@@ -465,18 +465,17 @@
 .soc-cover-edit-btn:hover{background:rgba(0,0,0,.78);transform:scale(1.03)}
 .soc-cover-edit-btn.uploading,.soc-avatar-edit-btn.uploading{opacity:.55;pointer-events:none}
 
-/* زر الرجوع للرئيسية — أعلى يمين الكوفر */
+/* زر الرجوع — أعلى يمين الكوفر، بنفس طراز زر الرجوع في صفحة الدورات
+   (نص + سهم بدون خلفية)، مع ظل خفيف يضمن وضوحه فوق أي صورة غلاف */
 .soc-cover-back-btn{
-  position:absolute;top:14px;right:14px;z-index:4;
-  background:rgba(10,10,10,.55);color:#fff;
-  border-radius:10px;padding:7px 14px;font-size:12px;font-weight:700;
-  font-family:var(--f-ui);cursor:pointer;
-  display:flex;align-items:center;gap:6px;
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.2);
-  transition:background .2s,transform .18s;
+  position:absolute;top:14px;right:16px;z-index:4;
+  display:flex;align-items:center;gap:5px;
+  font-family:var(--f-ui);font-size:12.5px;font-weight:700;
+  color:rgba(255,255,255,.85);cursor:pointer;
+  filter:drop-shadow(0 1px 3px rgba(0,0,0,.5));
+  transition:color .15s;
 }
-.soc-cover-back-btn:hover{background:rgba(0,0,0,.78);transform:scale(1.03)}
+.soc-cover-back-btn:hover{color:#fff}
 
 /* الأفاتار — على اليمين، نصه داخل الكوفر ونصه في الكارد */
 .soc-profile-avatar-container{
@@ -866,6 +865,7 @@ const S = {
   authReady: false,
   _authListeners: [],
   followingSet: new Set(), // الحسابات اللي بتتابعها
+  navStack: [], // سجل التنقّل داخل قسم المجتمع/صفحتي — لزر الرجوع الذكي
 };
 
 // Returns a promise that resolves once Firebase auth state is known
@@ -1323,9 +1323,9 @@ async function renderProfile(uid, isSelf) {
   <div class="soc-profile-cover" style="${cov}">
     <div class="soc-profile-cover-overlay"></div>
 
-    <button class="soc-cover-back-btn" onclick="showPage('home')" aria-label="الرئيسية">
+    <button class="soc-cover-back-btn" onclick="SOCIAL.navBack()" aria-label="رجوع">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-      الرئيسية
+      رجوع
     </button>
 
     ${isSelf ? `
@@ -1711,6 +1711,32 @@ function switchPanel(name) {
   }
 }
 
+/* ── Nav History (لزر الرجوع الذكي) ─────────────────────────────
+   يسجّل اللوحة اللي كنا واقفين عندها قبل الانتقال لبروفايل/متابعين/
+   يتابع/إشعارات، عشان زر الرجوع يرجّع المستخدم لمكانه بالظبط بدل
+   ما يودّيه للرئيسية دايمًا. */
+function navPush() {
+  const el = document.querySelector('.mkt-panel.active');
+  if (!el) return;
+  const name = el.id.replace('mkt-panel-', '');
+  const entry = { panel: name };
+  if (name === 'profile-me') entry.uid = S.profileUid;
+  const top = S.navStack[S.navStack.length - 1];
+  if (top && top.panel === entry.panel && top.uid === entry.uid) return; // تجنّب تكرار نفس اللوحة
+  S.navStack.push(entry);
+}
+function navBack() {
+  const entry = S.navStack.pop();
+  if (!entry) { if (window.showPage) showPage('home'); return; }
+  if (entry.panel === 'profile-me') {
+    S.profileUid = entry.uid;
+    switchPanel('profile-me');
+    renderProfile(entry.uid, entry.uid === S.uid);
+  } else {
+    switchPanel(entry.panel);
+  }
+}
+
 /* ─── PUBLIC API ─────────────────────────────────────────────── */
 window.SOCIAL = {
   async init() {
@@ -1761,6 +1787,7 @@ window.SOCIAL = {
   },
 
   async show(name) {
+    S.navStack = [];
     switchPanel(name);
     await waitForAuth();
     if (name==='feed') renderFeed();
@@ -1773,8 +1800,9 @@ window.SOCIAL = {
     }
   },
 
-  async profile(uid) {
+  async profile(uid, _skipNavPush) {
     if (!uid) return;
+    if (!_skipNavPush) navPush();
     S.profileUid = uid;
     switchPanel('profile-me');
     await waitForAuth();
@@ -2313,11 +2341,12 @@ window.SOCIAL = {
     }
   },
 
-  followers(uid) { switchPanel('followers'); waitForAuth().then(()=>renderFollowers(uid)); },
-  following(uid) { switchPanel('following'); waitForAuth().then(()=>renderFollowing(uid)); },
-  backProfile() { this.profile(S.profileUid); },
+  followers(uid) { navPush(); switchPanel('followers'); waitForAuth().then(()=>renderFollowers(uid)); },
+  following(uid) { navPush(); switchPanel('following'); waitForAuth().then(()=>renderFollowing(uid)); },
+  backProfile() { this.profile(S.profileUid, true); },
+  navBack() { navBack(); },
 
-  notifications() { switchPanel('notifications'); waitForAuth().then(()=>renderNotifications()); },
+  notifications() { navPush(); switchPanel('notifications'); waitForAuth().then(()=>renderNotifications()); },
 
   // aliases for onclick handlers in HTML
   showPanel(n) { this.show(n); },
