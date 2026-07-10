@@ -396,27 +396,25 @@ function updateEnrollments() {
   var el = document.getElementById('course-enrollments');
   if (!el) return;
 
-  // Count approved (enrolled) and pending per courseId
-  var approved = {}, pending = {};
+  // enrolledUids: { courseId: { uid: true } } — deduplicated per user
+  // pendingCount: { courseId: N }
+  var enrolledUids = {}, pendingCount = {};
   allPayments.forEach(function(p) {
     if (!p.courseId) return;
     if (p.status === 'approved') {
-      approved[p.courseId] = (approved[p.courseId] || 0) + 1;
+      if (!enrolledUids[p.courseId]) enrolledUids[p.courseId] = {};
+      // fallback to doc id so a missing uid never inflates the count
+      enrolledUids[p.courseId][p.uid || ('_' + p._id)] = true;
     } else if (p.status === 'pending') {
-      pending[p.courseId] = (pending[p.courseId] || 0) + 1;
+      pendingCount[p.courseId] = (pendingCount[p.courseId] || 0) + 1;
     }
   });
 
-  var allCids = Object.keys(Object.assign({}, approved, pending));
-  if (!allCids.length) {
-    el.innerHTML = '<div style="text-align:center;opacity:.35;font-size:12px;padding:8px 0">لا توجد بيانات بعد</div>';
-    return;
-  }
-
-  el.innerHTML = allCids.map(function(cid) {
-    var label   = COURSE_LABELS[cid] || cid;
-    var enrolled = approved[cid] || 0;
-    var pend     = pending[cid]  || 0;
+  // Always render ALL defined courses — even those with 0 enrollments
+  el.innerHTML = Object.keys(COURSE_LABELS).map(function(cid) {
+    var label    = COURSE_LABELS[cid];
+    var enrolled = enrolledUids[cid] ? Object.keys(enrolledUids[cid]).length : 0;
+    var pend     = pendingCount[cid] || 0;
     return '<div class="course-enroll-row">' +
       '<div>' +
         '<div class="course-enroll-name">' + label + '</div>' +
