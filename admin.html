@@ -111,6 +111,8 @@ html,body{height:100%;font-family:'Segoe UI',Tahoma,system-ui,sans-serif;backgro
 .action-btn.reject:hover{background:var(--rejected);color:#fff}
 .action-btn.wa{background:#25d366;color:#fff}
 .action-btn.wa:hover{opacity:.88}
+.action-btn.delete{background:#7f1d1d;color:#fca5a5;border:1px solid #991b1b}
+.action-btn.delete:hover{background:#991b1b;color:#fff}
 .action-btn:disabled{opacity:.45;cursor:not-allowed}
 .action-done{font-size:12.5px;color:var(--muted);padding:9px 0}
 
@@ -532,6 +534,7 @@ function buildCard(p) {
     (waLink ? '<a class="action-btn wa" href="' + waLink + '" target="_blank" rel="noopener">💬 واتساب</a>' : '')
     :
     '<span class="action-done">' + statusLabel + (p.rejectionNote ? ' — ' + p.rejectionNote : '') + '</span>' +
+    (p.status === 'approved' ? '<button class="action-btn delete" onclick="askDelete(\'' + p._id + '\',\'' + (p.uid||'') + '\',\'' + (p.courseId||'') + '\')">🗑️ حذف</button>' : '') +
     (waLink ? '<a class="action-btn wa" href="' + waLink + '" target="_blank" rel="noopener">💬 واتساب</a>' : '');
 
   return '<div class="pay-card ' + (p.status||'') + '">' +
@@ -591,6 +594,8 @@ async function confirmAction() {
   try {
     if (pendingAction.type === 'approve') {
       await doApprove(pendingAction.docId, pendingAction.uid, pendingAction.courseId);
+    } else if (pendingAction.type === 'delete') {
+      await doDelete(pendingAction.docId, pendingAction.uid, pendingAction.courseId);
     } else {
       const note = (document.getElementById('confirm-note').value || '').trim();
       await doReject(pendingAction.docId, note);
@@ -599,7 +604,8 @@ async function confirmAction() {
   } catch(e) {
     showToast('خطأ: ' + e.message, 'err');
     btn.disabled = false;
-    btn.textContent = pendingAction.type === 'approve' ? '✅ قبول وتفعيل' : '❌ رفض الطلب';
+    const labels = { approve: '✅ قبول وتفعيل', reject: '❌ رفض الطلب', delete: '🗑️ حذف نهائياً' };
+    btn.textContent = labels[pendingAction.type] || 'تأكيد';
   }
 }
 
@@ -646,6 +652,42 @@ async function doReject(docId, note) {
   }
   updateStats(); renderList();
   showToast('❌ تم رفض الطلب', 'ok');
+}
+
+/* ── Delete Approved Payment ────────────────────── */
+function askDelete(docId, uid, courseId) {
+  pendingAction = { type: 'delete', docId, uid, courseId };
+  document.getElementById('confirm-ico').textContent   = '🗑️';
+  document.getElementById('confirm-title').textContent = 'حذف الدفعة وإلغاء الاشتراك';
+  document.getElementById('confirm-msg').textContent   =
+    'سيتم حذف سجل الدفع نهائياً وإزالة الدورة من اشتراكات المستخدم. لا يمكن التراجع عن هذا الإجراء.';
+  document.getElementById('confirm-note').style.display = 'none';
+  document.getElementById('confirm-ok-btn').textContent = '🗑️ حذف نهائياً';
+  document.getElementById('confirm-ok-btn').style.background = '#991b1b';
+  document.getElementById('confirm-overlay').classList.add('on');
+}
+
+async function doDelete(docId, uid, courseId) {
+  const batch = db.batch();
+
+  // 1. Delete payment document from course_payments
+  batch.delete(db.collection('course_payments').doc(docId));
+
+  // 2. Remove courseId from user's paidCourses
+  if (uid && courseId) {
+    batch.update(
+      db.collection('users').doc(uid),
+      { paidCourses: firebase.firestore.FieldValue.arrayRemove(courseId) }
+    );
+  }
+
+  await batch.commit();
+
+  // Remove from local state immediately (onSnapshot will also fire)
+  allPayments = allPayments.filter(function(p) { return p._id !== docId; });
+  updateStats();
+  renderList();
+  showToast('🗑️ تم حذف الدفعة وإلغاء الاشتراك من الدورة', 'ok');
 }
 
 /* ── Toast ──────────────────────────────────────── */
