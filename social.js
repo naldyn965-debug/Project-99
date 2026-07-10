@@ -859,6 +859,7 @@ const S = {
   feedTab: 'following',
   feedLast: null,
   feedLoading: false,
+  feedFollowUids: null, // كاش لقائمة اللي بتتابعهم — يمنع تغيّر الفلتر بين صفحات نفس الجلسة
   feedSeenIds: new Set(), // معرّفات المنشورات المعروضة بالفعل — يمنع التكرار عند التمرير
   profileUid: null,
   imgs: [],
@@ -1117,11 +1118,14 @@ async function loadFeed(reset) {
   try {
     let q;
     if (S.feedTab==='following' && S.uid) {
-      const fs = await db.collection('social_follows').where('followerUid','==',S.uid).get();
-      const uids = fs.docs.map(d=>d.data().targetUid);
-      uids.push(S.uid);
-      // Firestore 'in' requires at least 1 element and max 10
-      const safeUids = uids.slice(0,10);
+      if (reset || !S.feedFollowUids) {
+        const fs = await db.collection('social_follows').where('followerUid','==',S.uid).get();
+        const uids = fs.docs.map(d=>d.data().targetUid);
+        uids.push(S.uid);
+        // Firestore 'in' requires at least 1 element and max 10
+        S.feedFollowUids = uids.slice(0,10);
+      }
+      const safeUids = S.feedFollowUids;
       // مرتّب من السيرفر (index: authorUid ASC, createdAt DESC — موجود في firestore.indexes)
       // ده اللي بيخلي startAfter() يشتغل صح ويمنع تكرار/تعليق الصفحات
       q = db.collection('social_posts').where('authorUid','in',safeUids).orderBy('createdAt','desc').limit(20);
