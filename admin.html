@@ -658,9 +658,9 @@ async function doReject(docId, note) {
 function askDelete(docId, uid, courseId) {
   pendingAction = { type: 'delete', docId, uid, courseId };
   document.getElementById('confirm-ico').textContent   = '🗑️';
-  document.getElementById('confirm-title').textContent = 'حذف الدفعة وإلغاء الاشتراك';
+  document.getElementById('confirm-title').textContent = 'حذف سجل الدفعة';
   document.getElementById('confirm-msg').textContent   =
-    'سيتم حذف سجل الدفع نهائياً وإزالة الدورة من اشتراكات المستخدم. لا يمكن التراجع عن هذا الإجراء.';
+    'سيتم حذف سجل الدفع من الإيرادات نهائياً. اشتراك المستخدم في الدورة سيبقى كما هو.';
   document.getElementById('confirm-note').style.display = 'none';
   document.getElementById('confirm-ok-btn').textContent = '🗑️ حذف نهائياً';
   document.getElementById('confirm-ok-btn').style.background = '#991b1b';
@@ -668,26 +668,14 @@ function askDelete(docId, uid, courseId) {
 }
 
 async function doDelete(docId, uid, courseId) {
-  const batch = db.batch();
+  // Delete payment document only — course access remains intact
+  await db.collection('course_payments').doc(docId).delete();
 
-  // 1. Delete payment document from course_payments
-  batch.delete(db.collection('course_payments').doc(docId));
-
-  // 2. Remove courseId from user's paidCourses
-  if (uid && courseId) {
-    batch.update(
-      db.collection('users').doc(uid),
-      { paidCourses: firebase.firestore.FieldValue.arrayRemove(courseId) }
-    );
-  }
-
-  await batch.commit();
-
-  // Remove from local state immediately (onSnapshot will also fire)
+  // Remove from local state immediately
   allPayments = allPayments.filter(function(p) { return p._id !== docId; });
   updateStats();
   renderList();
-  showToast('🗑️ تم حذف الدفعة وإلغاء الاشتراك من الدورة', 'ok');
+  showToast('🗑️ تم حذف سجل الدفعة', 'ok');
 }
 
 /* ── Toast ──────────────────────────────────────── */
