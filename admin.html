@@ -287,7 +287,9 @@ let currentFilter = 'pending';
 let pendingAction = null; // {type:'approve'|'reject', docId, uid, courseId}
 let paymentsUnsubscribe  = null; // real-time listener teardown
 let studyingUnsubscribe  = null; // academy_progress listener teardown
-let studyingCounts       = {};   // { courseId: { uid: true } }
+let studyingCounts       = {};   // { courseId: { uid: true } } — from academy_progress
+let paidCounts           = {};   // { courseId: { uid: true } } — from users.paidCourses
+let usersUnsubscribe     = null; // users collection listener teardown
 
 const COURSE_LABELS = {
   'pest':             'مكافحة الآفات الزراعية',
@@ -314,6 +316,7 @@ auth.onAuthStateChanged(async function(user) {
   showApp();
   loadPayments();
   startStudyingListener();
+  startPaidCoursesListener();
 });
 
 function showAuth() {
@@ -348,9 +351,11 @@ async function doLogin() {
 async function doLogout() {
   if (paymentsUnsubscribe) { paymentsUnsubscribe(); paymentsUnsubscribe = null; }
   if (studyingUnsubscribe) { studyingUnsubscribe(); studyingUnsubscribe = null; }
+  if (usersUnsubscribe)    { usersUnsubscribe();    usersUnsubscribe    = null; }
   await auth.signOut();
-  allPayments = [];
+  allPayments    = [];
   studyingCounts = {};
+  paidCounts     = {};
   showAuth();
 }
 
@@ -405,7 +410,6 @@ function startStudyingListener() {
       snap.docs.forEach(function(doc) {
         var data = doc.data();
         if (!data.courseId || !data.uid) return;
-        // “studying” = completed ≥1 lesson OR started final exam
         var active = (data.d && data.d.length > 0) ||
                      (typeof data.fe === 'number' && data.fe >= 0);
         if (active) {
@@ -414,9 +418,26 @@ function startStudyingListener() {
         }
       });
       updateEnrollments();
-    }, function(e) {
-      console.warn('academy_progress listener:', e.message);
-    });
+    }, function(e) { console.warn('academy_progress listener:', e.message); });
+}
+
+/* ── Paid Courses Listener (users.paidCourses) ────── */
+function startPaidCoursesListener() {
+  if (usersUnsubscribe) { usersUnsubscribe(); usersUnsubscribe = null; }
+  usersUnsubscribe = db.collection('users')
+    .onSnapshot(function(snap) {
+      paidCounts = {};
+      snap.docs.forEach(function(doc) {
+        var data = doc.data();
+        var uid  = doc.id;
+        if (!data.paidCourses || !Array.isArray(data.paidCourses)) return;
+        data.paidCourses.forEach(function(cid) {
+          if (!paidCounts[cid]) paidCounts[cid] = {};
+          paidCounts[cid][uid] = true;
+        });
+      });
+      updateEnrollments();
+    }, function(e) { console.warn('users listener:', e.message); });
 }
 
 /* ── Enrollments per Course (real-time) ─────────── */
@@ -424,33 +445,37 @@ function updateEnrollments() {
   var el = document.getElementById('course-enrollments');
   if (!el) return;
 
-  // purchased (approved payments) — deduplicated by uid
-  var enrolledUids = {}, pendingCount = {};
+  // pending count from payments
+  var pendingCount = {};
   allPayments.forEach(function(p) {
-    if (!p.courseId) return;
-    if (p.status === 'approved') {
-      if (!enrolledUids[p.courseId]) enrolledUids[p.courseId] = {};
-      enrolledUids[p.courseId][p.uid || ('_' + p._id)] = true;
-    } else if (p.status === 'pending') {
+    if (p.courseId && p.status === 'pending')
       pendingCount[p.courseId] = (pendingCount[p.courseId] || 0) + 1;
-    }
   });
 
-  // Always render ALL defined courses — even those with 0 students
   el.innerHTML = Object.keys(COURSE_LABELS).map(function(cid) {
-    var label    = COURSE_LABELS[cid];
-    var studying = studyingCounts[cid] ? Object.keys(studyingCounts[cid]).length : 0;
-    var enrolled = enrolledUids[cid]   ? Object.keys(enrolledUids[cid]).length   : 0;
-    var pend     = pendingCount[cid] || 0;
+    var label = COURSE_LABELS[cid];
+
+    // UNION: paidCourses (users) + academy_progress (studying)
+    var allUids = {};
+    if (paidCounts[cid])
+      Object.keys(paidCounts[cid]).forEach(function(u) { allUids[u] = true; });
+    if (studyingCounts[cid])
+      Object.keys(studyingCounts[cid]).forEach(function(u) { allUids[u] = true; });
+
+    var total   = Object.keys(allUids).length;
+    var paid    = paidCounts[cid]     ? Object.keys(paidCounts[cid]).length     : 0;
+    var pend    = pendingCount[cid] || 0;
+
     var sub = [];
-    if (enrolled) sub.push('✅ ' + enrolled + ' مشترك');
-    if (pend)     sub.push('⏳ ' + pend + ' معلّق');
+    if (paid) sub.push('✅ ' + paid + ' مشترك');
+    if (pend) sub.push('⏳ ' + pend + ' معلّق');
+
     return '<div class="course-enroll-row">' +
       '<div>' +
         '<div class="course-enroll-name">' + label + '</div>' +
         (sub.length ? '<div class="course-enroll-pending">' + sub.join(' · ') + '</div>' : '') +
       '</div>' +
-      '<div class="course-enroll-count">' + studying + '</div>' +
+      '<div class="course-enroll-count">' + total + '</div>' +
     '</div>';
   }).join('');
 }
