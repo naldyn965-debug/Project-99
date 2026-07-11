@@ -7,164 +7,242 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --brand:#1B6B3A;--brand-light:#2eaa5c;--brand-dark:#0d4a28;
-  --bg:#f0f4f0;--card:#fff;--border:#e2e8e4;
-  --ink:#0f1f14;--muted:#5a7566;--subtle:#8fa898;
-  --pending:#d97706;--pending-bg:rgba(217,119,6,.08);--pending-border:rgba(217,119,6,.2);
-  --approved:#16a34a;--approved-bg:rgba(22,163,74,.08);--approved-border:rgba(22,163,74,.2);
-  --rejected:#dc2626;--rejected-bg:rgba(220,38,38,.08);--rejected-border:rgba(220,38,38,.2);
-  --red:#e53030;
-  --radius:16px;--shadow:0 2px 16px rgba(0,0,0,.08);
-}
-html,body{height:100%;font-family:'Segoe UI',Tahoma,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
-
-/* ── Auth Screen ── */
-#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
-.auth-card{background:var(--card);border-radius:24px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(0,0,0,.12)}
-.auth-logo{text-align:center;margin-bottom:28px}
-.auth-logo-ico{font-size:48px;display:block;margin-bottom:10px}
-.auth-logo-title{font-size:1.4rem;font-weight:900;color:var(--brand)}
-.auth-logo-sub{font-size:12.5px;color:var(--muted);margin-top:4px}
-.auth-label{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;display:block}
-.auth-input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;font-size:14px;font-family:inherit;direction:rtl;outline:none;transition:border-color .2s;background:var(--bg);margin-bottom:14px}
-.auth-input:focus{border-color:var(--brand)}
-.auth-btn{width:100%;padding:13px;border-radius:12px;background:var(--brand);border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:opacity .2s;margin-top:4px}
-.auth-btn:hover{opacity:.88}
-.auth-btn:disabled{opacity:.5;cursor:not-allowed}
+  --bg:#070e09;--surface:#0c1510;--card:#111d14;--card-hov:#162219;
+  --border:rgba(34,197,94,.09);--border-md:rgba(34,197,94,.2);
+  --emerald:#22c55e;--glow:rgba(34,197,94,.18);
+  --pending:#f59e0b;--pending-bg:rgba(245,158,11,.08);
+  --approved:#22c55e;--approved-bg:rgba(34,197,94,.08);
+  --rejected:#ef4444;--rejected-bg:rgba(239,68,68,.08);
+  --text:#dbeade;--muted:#5a8068;--subtle:#2c4235;
+  --r:16px;--t:.22s cubic-bezier(.4,0,.2,1);}
+html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);font-size:14px;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;
+  background-image:radial-gradient(rgba(34,197,94,.035) 1px,transparent 1px);
+  background-size:30px 30px;pointer-events:none;z-index:0}
+#auth-screen{display:flex;align-items:center;justify-content:center;
+  min-height:100vh;padding:24px;position:relative;z-index:1}
+#auth-screen::after{content:'';position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%);width:700px;height:700px;
+  background:radial-gradient(circle,rgba(34,197,94,.055) 0%,transparent 65%);pointer-events:none}
+.auth-card{background:var(--card);border:1px solid var(--border-md);border-radius:24px;
+  padding:44px 40px;width:100%;max-width:420px;position:relative;overflow:hidden;
+  box-shadow:0 32px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.04);
+  animation:fadeUp .5s var(--t) both}
+.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(34,197,94,.45),transparent)}
+.auth-logo{text-align:center;margin-bottom:32px}
+.auth-logo-ico{display:flex;justify-content:center;margin-bottom:14px}
+.auth-logo-ico svg{filter:drop-shadow(0 0 14px rgba(34,197,94,.4))}
+.auth-logo-title{font-size:1.45rem;font-weight:900;letter-spacing:-.02em}
+.auth-logo-sub{font-size:12.5px;color:var(--muted);margin-top:5px}
+.auth-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:7px;
+  display:block;letter-spacing:.05em;text-transform:uppercase}
+.auth-input{width:100%;padding:13px 16px;background:rgba(255,255,255,.03);
+  border:1px solid var(--border-md);border-radius:12px;font-size:14px;
+  font-family:inherit;direction:rtl;outline:none;color:var(--text);
+  transition:border-color var(--t),box-shadow var(--t);margin-bottom:14px}
+.auth-input:focus{border-color:var(--emerald);box-shadow:0 0 0 3px rgba(34,197,94,.12)}
+.auth-btn{width:100%;padding:14px;border-radius:12px;background:var(--emerald);
+  border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;
+  transition:all var(--t);box-shadow:0 4px 20px rgba(34,197,94,.3);margin-top:4px}
+.auth-btn:hover{background:#16a34a;box-shadow:0 6px 28px rgba(34,197,94,.45);transform:translateY(-1px)}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .auth-err{font-size:12.5px;color:var(--rejected);text-align:center;margin-top:12px;min-height:18px}
-
-/* ── App Layout ── */
-#app-screen{display:none;min-height:100vh}
-.app-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-
-/* ── Sidebar ── */
-.sidebar{background:var(--brand-dark);color:#fff;display:flex;flex-direction:column;padding:0}
-.sidebar-head{padding:28px 24px 20px;border-bottom:1px solid rgba(255,255,255,.1)}
-.sidebar-logo-ico{font-size:32px;margin-bottom:8px}
-.sidebar-logo-name{font-size:1rem;font-weight:900;line-height:1.2}
-.sidebar-logo-sub{font-size:11px;opacity:.6;margin-top:2px}
-.sidebar-stats{padding:20px 24px;display:flex;flex-direction:column;gap:10px}
-.stat-card{background:rgba(255,255,255,.08);border-radius:14px;padding:14px 16px}
-.stat-val{font-size:1.8rem;font-weight:900;line-height:1}
-.stat-lbl{font-size:11px;opacity:.65;margin-top:4px}
-.stat-card.pending .stat-val{color:#fbbf24}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:8px;
+  background:rgba(255,255,255,.04);border:1px solid var(--border-md);color:var(--text);
+  font-size:14px;font-weight:700;padding:13px;border-radius:12px;cursor:pointer;
+  font-family:inherit;transition:all var(--t);width:100%;margin-top:4px}
+.google-btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15)}
+#app-screen{display:none;min-height:100vh;position:relative;z-index:1}
+.app-layout{display:grid;grid-template-columns:282px 1fr;min-height:100vh}
+.sidebar{background:linear-gradient(170deg,#091409 0%,#060f08 55%,#050c06 100%);
+  border-left:1px solid var(--border);color:var(--text);
+  display:flex;flex-direction:column;position:relative;overflow:hidden}
+.sidebar::before{content:'';position:absolute;top:-80px;right:-80px;width:340px;height:340px;
+  background:radial-gradient(circle,rgba(34,197,94,.07) 0%,transparent 65%);
+  pointer-events:none;animation:ambientShift 9s ease-in-out infinite alternate}
+@keyframes ambientShift{0%{transform:translate(0,0)}100%{transform:translate(16px,18px) scale(1.08)}}
+.sidebar-head{padding:26px 22px 22px;border-bottom:1px solid var(--border);position:relative}
+.sidebar-logo-icon{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+.sidebar-logo-svg{filter:drop-shadow(0 0 8px rgba(34,197,94,.35))}
+.sidebar-logo-name{font-size:1rem;font-weight:900;letter-spacing:-.01em}
+.sidebar-logo-sub{font-size:11px;color:var(--muted);margin-top:3px;margin-right:36px}
+.sidebar-section-label{font-size:10px;font-weight:800;color:var(--subtle);
+  text-transform:uppercase;letter-spacing:.1em;padding:18px 22px 8px}
+.sidebar-stats{padding:0 14px 4px;display:flex;flex-direction:column;gap:7px}
+.stat-card{border-radius:13px;padding:13px 14px;display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,.025);border:1px solid var(--border);transition:all var(--t)}
+.stat-card:hover{border-color:var(--border-md);background:rgba(255,255,255,.045)}
+.stat-icon{width:36px;height:36px;border-radius:9px;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0}
+.stat-card.pending  .stat-icon{background:rgba(245,158,11,.12);color:#f59e0b}
+.stat-card.approved .stat-icon{background:rgba(34,197,94,.12); color:#22c55e}
+.stat-card.rejected .stat-icon{background:rgba(239,68,68,.12); color:#ef4444}
+.stat-card.revenue  .stat-icon{background:rgba(168,85,247,.12);color:#a855f7}
+.stat-info{flex:1;min-width:0}
+.stat-val{font-size:1.45rem;font-weight:900;line-height:1;letter-spacing:-.02em}
+.stat-card.pending  .stat-val{color:#fbbf24}
 .stat-card.approved .stat-val{color:#4ade80}
 .stat-card.rejected .stat-val{color:#f87171}
-.sidebar-footer{margin-top:auto;padding:20px 24px;border-top:1px solid rgba(255,255,255,.1)}
-.sidebar-user{font-size:12px;opacity:.65;margin-bottom:10px;word-break:break-all}
-.logout-btn{width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s}
-.logout-btn:hover{background:rgba(255,255,255,.2)}
-
-/* ── Course Enrollments Section ── */
-.sidebar-courses{padding:0 24px 16px}
-.courses-heading{font-size:10.5px;font-weight:800;opacity:.45;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
-.course-enroll-row{background:rgba(255,255,255,.07);border-radius:12px;padding:11px 14px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.course-enroll-name{font-size:11.5px;opacity:.85;line-height:1.4}
-.course-enroll-pending{font-size:10px;opacity:.55;margin-top:2px}
-.course-enroll-count{font-size:1.4rem;font-weight:900;color:#86efac;flex-shrink:0;min-width:28px;text-align:left}
-/* ── Live indicator dot ── */
-.live-dot{display:inline-block;width:7px;height:7px;background:#4ade80;border-radius:50%;margin-left:6px;vertical-align:middle;animation:livePulse 1.6s ease-in-out infinite}
-.course-toggle-btn{font-size:10.5px;padding:4px 8px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;font-weight:800;margin-top:5px;width:100%;transition:all .2s}
-.course-toggle-btn.active{background:rgba(74,222,128,.12);color:#4ade80;border:1px solid rgba(74,222,128,.25)}
-.course-toggle-btn.active:hover{background:rgba(239,68,68,.15);color:#f87171;border-color:rgba(239,68,68,.3)}
-.course-toggle-btn.paused{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.25)}
-.course-toggle-btn.paused:hover{background:rgba(74,222,128,.15);color:#4ade80;border-color:rgba(74,222,128,.3)}
-.course-enroll-row.paused-course{border:1px solid rgba(239,68,68,.2)}
-@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
-
-/* ── Main Content ── */
-.main-content{padding:28px 32px;overflow-y:auto}
+.stat-card.revenue  .stat-val{color:#c084fc}
+.stat-lbl{font-size:10.5px;color:var(--muted);margin-top:3px}
+.sidebar-courses{padding:0 14px 12px}
+.courses-heading{font-size:10px;font-weight:800;color:var(--subtle);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;padding:16px 8px 8px}
+.course-enroll-row{background:rgba(255,255,255,.022);border:1px solid var(--border);
+  border-radius:11px;padding:11px 12px;margin-bottom:6px;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;transition:all var(--t)}
+.course-enroll-row:hover{background:rgba(255,255,255,.05);border-color:var(--border-md)}
+.course-enroll-row.paused-course{border-color:rgba(239,68,68,.18);background:rgba(239,68,68,.025)}
+.course-enroll-name{font-size:11px;opacity:.85;line-height:1.4}
+.course-enroll-pending{font-size:10px;color:var(--muted);margin-top:2px}
+.course-enroll-count{font-size:1.3rem;font-weight:900;color:#4ade80;
+  flex-shrink:0;min-width:26px;text-align:center;letter-spacing:-.02em}
+.course-toggle-btn{font-size:10px;padding:4px 8px;border-radius:6px;border:none;
+  cursor:pointer;font-family:inherit;font-weight:700;margin-top:4px;width:100%;
+  transition:all var(--t);display:flex;align-items:center;justify-content:center;gap:4px}
+.course-toggle-btn svg{width:9px;height:9px;flex-shrink:0}
+.course-toggle-btn.active{background:rgba(34,197,94,.1);color:#4ade80;border:1px solid rgba(34,197,94,.2)}
+.course-toggle-btn.active:hover{background:rgba(239,68,68,.1);color:#f87171;border-color:rgba(239,68,68,.25)}
+.course-toggle-btn.paused{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.course-toggle-btn.paused:hover{background:rgba(34,197,94,.1);color:#4ade80;border-color:rgba(34,197,94,.25)}
+.live-dot{display:inline-block;width:6px;height:6px;background:#4ade80;border-radius:50%;
+  margin-left:5px;vertical-align:middle;animation:livePulse 1.6s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+.sidebar-footer{margin-top:auto;padding:14px 14px 18px;border-top:1px solid var(--border)}
+.sidebar-user-badge{display:flex;align-items:center;gap:10px;padding:10px 12px;
+  border-radius:10px;background:rgba(255,255,255,.025);border:1px solid var(--border);margin-bottom:9px}
+.sidebar-user-avatar{width:30px;height:30px;border-radius:50%;
+  background:rgba(34,197,94,.1);border:1px solid var(--border-md);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--emerald)}
+.sidebar-user-avatar svg{width:15px;height:15px}
+.sidebar-user{font-size:11px;color:var(--muted);word-break:break-all;flex:1}
+.logout-btn{width:100%;padding:10px 14px;border-radius:10px;
+  background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.14);color:#f87171;
+  font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:all var(--t);display:flex;align-items:center;justify-content:center;gap:7px}
+.logout-btn:hover{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.28)}
+.logout-btn svg{width:15px;height:15px}
+.main-content{padding:28px 30px;overflow-y:auto}
 .main-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-.main-title{font-size:1.3rem;font-weight:900;color:var(--ink)}
-.main-subtitle{font-size:12.5px;color:var(--muted);margin-top:3px}
-.refresh-btn{display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--ink);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s;box-shadow:var(--shadow)}
-.refresh-btn:hover{background:var(--bg)}
-
-/* ── Filter Tabs + Search ── */
+.main-title{font-size:1.3rem;font-weight:900;letter-spacing:-.02em}
+.main-subtitle{font-size:12px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:5px}
+.refresh-btn{display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:10px;
+  background:var(--card);border:1px solid var(--border);color:var(--text);
+  font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:all var(--t);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.refresh-btn:hover{background:var(--card-hov);border-color:var(--border-md)}
+.refresh-btn:hover .ricon{transform:rotate(-40deg)}
+.ricon{transition:transform .4s var(--t);display:flex;align-items:center}
+.refresh-btn svg,.logout-btn svg{display:block}
 .controls-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-.tabs{display:flex;gap:6px;background:var(--card);border-radius:12px;padding:5px;box-shadow:var(--shadow)}
-.tab-btn{padding:7px 16px;border-radius:8px;border:none;background:transparent;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
-.tab-btn.active{background:var(--brand);color:#fff}
+.tabs{display:flex;gap:4px;background:var(--card);border-radius:12px;
+  padding:5px;border:1px solid var(--border)}
+.tab-btn{padding:7px 16px;border-radius:8px;border:none;background:transparent;
+  font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit;
+  transition:all var(--t);white-space:nowrap}
+.tab-btn.active{background:var(--emerald);color:#fff;box-shadow:0 2px 10px rgba(34,197,94,.35)}
 .search-wrap{flex:1;min-width:200px}
-.search-input{width:100%;padding:9px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;direction:rtl;outline:none;transition:border-color .2s;background:var(--card)}
-.search-input:focus{border-color:var(--brand)}
-
-/* ── Payment Cards ── */
-.payments-list{display:flex;flex-direction:column;gap:12px}
-.pay-card{background:var(--card);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);border-right:4px solid transparent;transition:box-shadow .2s}
-.pay-card:hover{box-shadow:0 4px 24px rgba(0,0,0,.12)}
-.pay-card.pending{border-right-color:var(--pending)}
+.search-input{width:100%;padding:10px 14px;background:var(--card);
+  border:1px solid var(--border);border-radius:10px;font-size:13px;
+  font-family:inherit;direction:rtl;outline:none;color:var(--text);transition:all var(--t)}
+.search-input:focus{border-color:var(--emerald);box-shadow:0 0 0 3px rgba(34,197,94,.1)}
+.search-input::placeholder{color:var(--subtle)}
+.payments-list{display:flex;flex-direction:column;gap:10px}
+.pay-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:20px 22px;border-right:3px solid transparent;
+  transition:all var(--t);animation:cardIn .32s var(--t) both;position:relative;overflow:hidden}
+.pay-card:hover{background:var(--card-hov);border-color:var(--border-md);
+  transform:translateY(-1px);box-shadow:0 8px 28px rgba(0,0,0,.4)}
+.pay-card.pending {border-right-color:var(--pending)}
 .pay-card.approved{border-right-color:var(--approved)}
 .pay-card.rejected{border-right-color:var(--rejected)}
+.pay-card:nth-child(1){animation-delay:.03s}
+.pay-card:nth-child(2){animation-delay:.07s}
+.pay-card:nth-child(3){animation-delay:.11s}
+.pay-card:nth-child(4){animation-delay:.15s}
+.pay-card:nth-child(n+5){animation-delay:.19s}
 .pay-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
-.pay-card-info{}
-.pay-email{font-size:14px;font-weight:800;color:var(--ink);margin-bottom:3px}
+.pay-email{font-size:14px;font-weight:800;margin-bottom:3px}
 .pay-date{font-size:11.5px;color:var(--subtle)}
-.status-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:30px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0}
-.status-badge.pending{background:var(--pending-bg);color:var(--pending);border:1px solid var(--pending-border)}
-.status-badge.approved{background:var(--approved-bg);color:var(--approved);border:1px solid var(--approved-border)}
-.status-badge.rejected{background:var(--rejected-bg);color:var(--rejected);border:1px solid var(--rejected-border)}
-.pay-card-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
-.detail-item{background:var(--bg);border-radius:10px;padding:10px 12px}
-.detail-lbl{font-size:10.5px;color:var(--subtle);font-weight:700;margin-bottom:3px}
-.detail-val{font-size:13px;font-weight:800;color:var(--ink);word-break:break-all}
+.status-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;
+  border-radius:30px;font-size:11.5px;font-weight:800;white-space:nowrap;flex-shrink:0}
+.status-badge.pending {background:var(--pending-bg); color:var(--pending); border:1px solid rgba(245,158,11,.2)}
+.status-badge.approved{background:var(--approved-bg);color:var(--approved);border:1px solid rgba(34,197,94,.2)}
+.status-badge.rejected{background:var(--rejected-bg);color:var(--rejected);border:1px solid rgba(239,68,68,.2)}
+.pay-card-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:8px;margin-bottom:16px}
+.detail-item{background:rgba(255,255,255,.02);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px;transition:border-color var(--t)}
+.detail-item:hover{border-color:var(--border-md)}
+.detail-lbl{font-size:10px;color:var(--subtle);font-weight:700;margin-bottom:4px;
+  text-transform:uppercase;letter-spacing:.04em}
+.detail-val{font-size:13px;font-weight:800;word-break:break-all}
 .detail-val.phone-val{direction:ltr;text-align:right}
-.pay-card-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.action-btn{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:10px;border:none;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s}
-.action-btn.approve{background:var(--approved);color:#fff}
-.action-btn.approve:hover{background:#15803d}
-.action-btn.reject{background:var(--rejected-bg);color:var(--rejected);border:1px solid var(--rejected-border)}
-.action-btn.reject:hover{background:var(--rejected);color:#fff}
-.action-btn.wa{background:#25d366;color:#fff}
-.action-btn.wa:hover{opacity:.88}
-.action-btn.delete{background:#7f1d1d;color:#fca5a5;border:1px solid #991b1b}
-.action-btn.delete:hover{background:#991b1b;color:#fff}
-.action-btn.suspend{background:#78350f;color:#fcd34d;border:1px solid #92400e}
-.action-btn.suspend:hover{background:#92400e;color:#fff}
-.action-btn.unsuspend{background:#134e4a;color:#5eead4;border:1px solid #0f766e}
-.action-btn.unsuspend:hover{background:#0f766e;color:#fff}
-.action-btn:disabled{opacity:.45;cursor:not-allowed}
-.action-done{font-size:12.5px;color:var(--muted);padding:9px 0}
-
-/* ── Empty State ── */
+.pay-card-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.action-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;
+  border-radius:9px;border:none;font-size:12.5px;font-weight:700;cursor:pointer;
+  font-family:inherit;transition:all var(--t);white-space:nowrap;text-decoration:none}
+.btn-icon{width:13px;height:13px;flex-shrink:0;display:block}
+.action-btn.approve  {background:rgba(34,197,94,.14);color:#4ade80;border:1px solid rgba(34,197,94,.24)}
+.action-btn.approve:hover{background:var(--emerald);color:#fff;box-shadow:0 4px 16px rgba(34,197,94,.35);transform:translateY(-1px)}
+.action-btn.reject   {background:rgba(239,68,68,.08);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.action-btn.reject:hover {background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.4)}
+.action-btn.wa       {background:rgba(37,211,102,.1);color:#25d366;border:1px solid rgba(37,211,102,.2)}
+.action-btn.wa:hover {background:#25d366;color:#fff}
+.action-btn.delete   {background:rgba(239,68,68,.06);color:#f87171;border:1px solid rgba(239,68,68,.15)}
+.action-btn.delete:hover  {background:rgba(239,68,68,.16);border-color:rgba(239,68,68,.35)}
+.action-btn.suspend  {background:rgba(245,158,11,.08);color:#fbbf24;border:1px solid rgba(245,158,11,.18)}
+.action-btn.suspend:hover {background:rgba(245,158,11,.18);border-color:rgba(245,158,11,.35)}
+.action-btn.unsuspend{background:rgba(34,197,94,.08);color:#4ade80;border:1px solid rgba(34,197,94,.18)}
+.action-btn.unsuspend:hover{background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.35)}
+.action-btn:disabled {opacity:.4;cursor:not-allowed;transform:none!important}
+.action-done{font-size:12px;color:var(--muted);padding:8px 0}
 .empty-state{text-align:center;padding:60px 24px;color:var(--muted)}
-.empty-ico{font-size:48px;margin-bottom:16px}
-.empty-title{font-size:1rem;font-weight:800;color:var(--ink);margin-bottom:8px}
-.empty-desc{font-size:13px;line-height:1.6}
-
-/* ── Loading ── */
+.empty-ico{margin:0 auto 16px;opacity:.3}
+.empty-title{font-size:1rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.empty-desc{font-size:13px;line-height:1.7}
 .loading-state{text-align:center;padding:60px 24px;color:var(--muted)}
-.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--brand);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px}
+.spinner{width:34px;height:34px;border:2px solid var(--border);border-top-color:var(--emerald);
+  border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── Toast ── */
-.toast-wrap{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-.toast{background:#1a1a1a;color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:700;white-space:nowrap;animation:toastIn .3s ease;pointer-events:auto}
-.toast.ok{background:var(--brand)}
-.toast.err{background:var(--rejected)}
-@keyframes toastIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── Confirm Dialog ── */
-.confirm-overlay{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:20px}
-.confirm-overlay.on{display:flex}
-.confirm-box{background:var(--card);border-radius:20px;padding:28px 24px;max-width:360px;width:100%;text-align:center}
-.confirm-ico{font-size:40px;margin-bottom:14px}
-.confirm-title{font-size:1rem;font-weight:900;margin-bottom:8px}
-.confirm-msg{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px}
+.toast-wrap{position:fixed;top:20px;left:50%;transform:translateX(-50%);
+  z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:12px 22px;border-radius:12px;font-size:13px;font-weight:700;white-space:nowrap;
+  animation:toastIn .28s var(--t);pointer-events:auto;backdrop-filter:blur(12px);
+  box-shadow:0 8px 28px rgba(0,0,0,.5)}
+.toast.ok {background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:#4ade80}
+.toast.err{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#f87171}
+@keyframes toastIn{from{opacity:0;transform:translateY(-12px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.confirm-overlay{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.72);
+  backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+.confirm-overlay.on{display:flex;animation:fadeIn .2s ease}
+.confirm-box{background:var(--card);border:1px solid var(--border-md);border-radius:22px;
+  padding:32px 28px;max-width:380px;width:100%;text-align:center;
+  box-shadow:0 32px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.04);
+  animation:confirmIn .28s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+.confirm-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(34,197,94,.25),transparent)}
+.confirm-ico{font-size:42px;margin-bottom:14px;display:block}
+.confirm-title{font-size:1.05rem;font-weight:900;margin-bottom:10px;letter-spacing:-.01em}
+.confirm-msg{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:22px}
 .confirm-actions{display:flex;gap:8px;justify-content:center}
-.confirm-btn{padding:10px 24px;border-radius:10px;border:none;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit}
-.confirm-btn.ok{background:var(--rejected);color:#fff}
-.confirm-btn.cancel{background:var(--bg);color:var(--ink);border:1px solid var(--border)}
-.confirm-note{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;direction:rtl;outline:none;resize:none;margin-bottom:12px;background:var(--bg)}
-.confirm-note:focus{border-color:var(--rejected)}
-.google-btn{display:flex;align-items:center;justify-content:center;gap:4px;background:#fff;color:#1f1f1f;border:1.5px solid #dadce0;font-size:15px;font-weight:700;padding:13px;border-radius:12px;cursor:pointer;transition:box-shadow .2s;width:100%;margin-top:4px;font-family:inherit}
-.google-btn:hover{box-shadow:0 2px 12px rgba(0,0,0,.15)}
-
-@media(max-width:768px){
-  .app-layout{grid-template-columns:1fr}
-  .sidebar{display:none}
-  .main-content{padding:16px}
-}
+.confirm-btn{padding:11px 26px;border-radius:11px;border:none;font-size:14px;font-weight:800;
+  cursor:pointer;font-family:inherit;transition:all var(--t)}
+.confirm-btn.ok{background:var(--rejected);color:#fff;box-shadow:0 3px 12px rgba(239,68,68,.3)}
+.confirm-btn.ok:hover{box-shadow:0 6px 20px rgba(239,68,68,.45);transform:translateY(-1px)}
+.confirm-btn.cancel{background:rgba(255,255,255,.05);color:var(--text);border:1px solid var(--border-md)}
+.confirm-btn.cancel:hover{background:rgba(255,255,255,.09)}
+.confirm-note{width:100%;padding:10px 13px;background:rgba(255,255,255,.03);
+  border:1px solid var(--border-md);border-radius:10px;font-size:13px;font-family:inherit;
+  direction:rtl;outline:none;color:var(--text);resize:none;margin-bottom:14px;
+  transition:border-color var(--t)}
+.confirm-note:focus{border-color:var(--emerald)}
+@keyframes fadeUp  {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn  {from{opacity:0}to{opacity:1}}
+@keyframes cardIn  {from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes confirmIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+@media(max-width:768px){.app-layout{grid-template-columns:1fr}.sidebar{display:none}.main-content{padding:16px}}
 </style>
 </head>
 <body>
@@ -173,7 +251,7 @@ html,body{height:100%;font-family:'Segoe UI',Tahoma,system-ui,sans-serif;backgro
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">
-      <span class="auth-logo-ico">🌿</span>
+      <div class="auth-logo-ico"><svg width="52" height="52" viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="26" fill="rgba(34,197,94,0.08)"/><path d="M26 42C26 42 14 34 14 22C14 14.82 19.82 9 27 9C34.18 9 40 14.82 40 22C40 34 26 42 26 42Z" fill="rgba(34,197,94,0.12)" stroke="#22c55e" stroke-width="1.5"/><line x1="26" y1="42" x2="26" y2="18" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/><path d="M26 28C26 28 20 23 20 18" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/><path d="M26 35C26 35 32 30 32 25" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></div>
       <div class="auth-logo-title">نبتيكس أكاديمي</div>
       <div class="auth-logo-sub">لوحة تحكم المدفوعات</div>
     </div>
@@ -192,26 +270,29 @@ html,body{height:100%;font-family:'Segoe UI',Tahoma,system-ui,sans-serif;backgro
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-head">
-        <div class="sidebar-logo-ico">🌿</div>
-        <div class="sidebar-logo-name">نبتيكس أكاديمي</div>
+        <div class="sidebar-logo-icon">
+          <svg class="sidebar-logo-svg" width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="rgba(34,197,94,0.1)"/><path d="M14 23C14 23 7 18.5 7 12C7 8.13 10.13 5 14 5C17.87 5 21 8.13 21 12C21 18.5 14 23 14 23Z" fill="rgba(34,197,94,0.18)" stroke="#22c55e" stroke-width="1.2"/><line x1="14" y1="23" x2="14" y2="10" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round"/><path d="M14 16C14 16 10.5 13 10.5 10" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round"/><path d="M14 19.5C14 19.5 17.5 16.5 17.5 13.5" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <div class="sidebar-logo-name">نبتيكس أكاديمي</div>
+        </div>
         <div class="sidebar-logo-sub">لوحة تحكم المدفوعات</div>
       </div>
+      <div class="sidebar-section-label">الإحصائيات</div>
       <div class="sidebar-stats">
         <div class="stat-card pending">
-          <div class="stat-val" id="stat-pending">—</div>
-          <div class="stat-lbl">⏳ قيد المراجعة</div>
+          <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="stat-info"><div class="stat-val" id="stat-pending">—</div><div class="stat-lbl">قيد المراجعة</div></div>
         </div>
         <div class="stat-card approved">
-          <div class="stat-val" id="stat-approved">—</div>
-          <div class="stat-lbl">✅ مقبول</div>
+          <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="stat-info"><div class="stat-val" id="stat-approved">—</div><div class="stat-lbl">مقبول</div></div>
         </div>
         <div class="stat-card rejected">
-          <div class="stat-val" id="stat-rejected">—</div>
-          <div class="stat-lbl">❌ مرفوض</div>
+          <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          <div class="stat-info"><div class="stat-val" id="stat-rejected">—</div><div class="stat-lbl">مرفوض</div></div>
         </div>
-        <div class="stat-card" style="background:rgba(255,255,255,.06)">
-          <div class="stat-val" id="stat-revenue" style="color:#86efac">—</div>
-          <div class="stat-lbl">💰 إجمالي الإيرادات (جنيه)</div>
+        <div class="stat-card revenue">
+          <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="stat-info"><div class="stat-val" id="stat-revenue">—</div><div class="stat-lbl">الإيرادات (جنيه)</div></div>
         </div>
       </div>
       <div class="sidebar-courses">
@@ -221,8 +302,11 @@ html,body{height:100%;font-family:'Segoe UI',Tahoma,system-ui,sans-serif;backgro
         </div>
       </div>
       <div class="sidebar-footer">
-        <div class="sidebar-user" id="sidebar-user-email"></div>
-        <button class="logout-btn" onclick="doLogout()">🚪 تسجيل الخروج</button>
+        <div class="sidebar-user-badge">
+          <div class="sidebar-user-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="sidebar-user" id="sidebar-user-email"></div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>تسجيل الخروج</button>
       </div>
     </aside>
 
@@ -233,18 +317,18 @@ html,body{height:100%;font-family:'Segoe UI',Tahoma,system-ui,sans-serif;backgro
           <div class="main-title">طلبات الدفع</div>
           <div class="main-subtitle" id="last-refresh">—</div>
         </div>
-        <button class="refresh-btn" onclick="loadPayments()">🔄 تحديث</button>
+        <button class="refresh-btn" onclick="loadPayments()"><span class="ricon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></span>تحديث</button>
       </div>
 
       <div class="controls-row">
         <div class="tabs">
-          <button class="tab-btn active" data-filter="pending"  onclick="setFilter('pending')">⏳ قيد المراجعة</button>
-          <button class="tab-btn"        data-filter="all"      onclick="setFilter('all')">📋 الكل</button>
-          <button class="tab-btn"        data-filter="approved" onclick="setFilter('approved')">✅ مقبول</button>
-          <button class="tab-btn"        data-filter="rejected" onclick="setFilter('rejected')">❌ مرفوض</button>
+          <button class="tab-btn active" data-filter="pending"  onclick="setFilter('pending')">قيد المراجعة</button>
+          <button class="tab-btn"        data-filter="all"      onclick="setFilter('all')">الكل</button>
+          <button class="tab-btn"        data-filter="approved" onclick="setFilter('approved')">مقبول</button>
+          <button class="tab-btn"        data-filter="rejected" onclick="setFilter('rejected')">مرفوض</button>
         </div>
         <div class="search-wrap">
-          <input class="search-input" id="search-input" type="text" placeholder="🔍 ابحث بالإيميل أو الهاتف أو المرجع..." oninput="renderList()">
+          <input class="search-input" id="search-input" type="text" placeholder="ابحث بالإيميل أو الهاتف أو المرجع..." oninput="renderList()">
         </div>
       </div>
 
@@ -293,6 +377,16 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.firestore();
 
+const IC = {
+  check:  '<svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 10 8 14 16 6"/></svg>',
+  x:      '<svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="5" x2="15" y2="15"/><line x1="15" y1="5" x2="5" y2="15"/></svg>',
+  trash:  '<svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 5 16 5"/><path d="M15 5v11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5m2-2h6"/></svg>',
+  pause:  '<svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><rect x="5" y="4" width="3.5" height="12" rx="1"/><rect x="11.5" y="4" width="3.5" height="12" rx="1"/></svg>',
+  unlock: '<svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="14" height="9" rx="2"/><path d="M7 9V6a3 3 0 0 1 5.83-1"/></svg>',
+  wa:     '<svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M14.5 11.9c-.23-.11-1.35-.67-1.56-.74-.21-.08-.36-.11-.51.11-.15.23-.58.74-.72.89-.13.15-.27.17-.5.06s-.96-.35-1.83-1.13c-.68-.6-1.14-1.35-1.27-1.58-.13-.23-.01-.35.1-.46.1-.1.23-.27.34-.4.11-.13.15-.23.23-.38.08-.15.04-.29-.02-.4-.06-.11-.51-1.24-.7-1.69-.19-.45-.38-.39-.52-.4l-.44-.01c-.15 0-.39.06-.6.28s-.78.77-.78 1.87.8 2.17.91 2.32c.11.15 1.57 2.4 3.8 3.37.53.23.95.37 1.27.47.54.17 1.02.14 1.41.09.43-.06 1.33-.54 1.52-1.07.19-.52.19-.97.13-1.06-.06-.1-.21-.15-.44-.26zM10 17h-.01a8 8 0 0 1-4.08-1.12l-.29-.17-3.02.79.81-2.96-.19-.3A8 8 0 0 1 2 10c0-4.42 3.58-8 8-8s8 3.58 8 8-3.58 8-8 8z"/></svg>',
+  circ_g: '<svg class="btn-icon" viewBox="0 0 20 20" fill="#4ade80"><circle cx="10" cy="10" r="8"/></svg>',
+  circ_r: '<svg class="btn-icon" viewBox="0 0 20 20" fill="#f87171"><circle cx="10" cy="10" r="8"/></svg>',
+};
 /* ── State ──────────────────────────────────────── */
 let allPayments = [];
 let currentFilter = 'pending';
@@ -488,7 +582,7 @@ function updateEnrollments() {
     var toggleClick = isActive
       ? 'askPauseCourse(\'' + cid + '\')'
       : 'toggleCourse(\'' + cid + '\', true)';
-    var toggleIcon  = isActive ? '������ نشط' : '������ موقوف';
+    var toggleIcon  = (isActive ? IC.circ_g : IC.circ_r) + ' ' + (isActive ? 'نشط' : 'موقوف');
 
     return '<div class="course-enroll-row' + (isActive ? '' : ' paused-course') + '">' +
       '<div>' +
@@ -550,18 +644,18 @@ function buildCard(p) {
   const waLink = p.phone ? 'https://wa.me/2' + p.phone.replace(/^0/, '') : null;
 
   const actions = p.status === 'pending' ?
-    '<button class="action-btn approve" onclick="askApprove(\'' + p._id + '\',\'' + (p.uid||'') + '\',\'' + (p.courseId||'') + '\')">✅ قبول وتفعيل</button>' +
-    '<button class="action-btn reject"  onclick="askReject(\''  + p._id + '\',\'' + (p.uid||'') + '\')">❌ رفض</button>' +
-    (waLink ? '<a class="action-btn wa" href="' + waLink + '" target="_blank" rel="noopener">💬 واتساب</a>' : '')
+    '<button class="action-btn approve" onclick="askApprove(\'' + p._id + '\',\'' + (p.uid||'') + '\',\'' + (p.courseId||'') + '\')">' + IC.check + ' قبول وتفعيل</button>' +
+    '<button class="action-btn reject"  onclick="askReject(\''  + p._id + '\',\'' + (p.uid||'') + '\')">' + IC.x + ' رفض</button>' +
+    (waLink ? '<a class="action-btn wa" href="' + waLink + '" target="_blank" rel="noopener">' + IC.wa + ' واتساب</a>' : '')
     :
     '<span class="action-done">' + statusLabel + (p.rejectionNote ? ' — ' + p.rejectionNote : '') + '</span>' +
     (p.status === 'approved' ?
       (p.suspended
-        ? '<button class="action-btn unsuspend" onclick="doUnsuspend(\'' + p._id + '\',\'' + (p.uid||'') + '\',\'' + (p.courseId||'') + '\')">🔓 رفع الإيقاف</button>'
-        : '<button class="action-btn suspend"   onclick="askSuspend(\''   + p._id + '\',\'' + (p.uid||'') + '\',\'' + (p.courseId||'') + '\')">⏸️ إيقاف</button>'
+        ? '<button class="action-btn unsuspend" onclick="doUnsuspend(\'' + p._id + '\',\'' + (p.uid||'') + '\',\'' + (p.courseId||'') + '\')">' + IC.unlock + ' رفع الإيقاف</button>'
+        : '<button class="action-btn suspend"   onclick="askSuspend(\''   + p._id + '\',\'' + (p.uid||'') + '\',\'' + (p.courseId||'') + '\')">' + IC.pause + ' إيقاف</button>'
       ) : '') +
-    (p.status === 'approved' ? '<button class="action-btn delete" onclick="askDelete(\'' + p._id + '\',\'' + (p.uid||'') + '\',\'' + (p.courseId||'') + '\')">🗑️ حذف</button>' : '') +
-    (waLink ? '<a class="action-btn wa" href="' + waLink + '" target="_blank" rel="noopener">💬 واتساب</a>' : '');
+    (p.status === 'approved' ? '<button class="action-btn delete" onclick="askDelete(\'' + p._id + '\',\'' + (p.uid||'') + '\',\'' + (p.courseId||'') + '\')">' + IC.trash + ' حذف</button>' : '') +
+    (waLink ? '<a class="action-btn wa" href="' + waLink + '" target="_blank" rel="noopener">' + IC.wa + ' واتساب</a>' : '');
 
   return '<div class="pay-card ' + (p.status||'') + '">' +
     '<div class="pay-card-top">' +
