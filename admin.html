@@ -119,6 +119,10 @@ html,body{height:100%;font-family:'Segoe UI',Tahoma,system-ui,sans-serif;backgro
 .action-btn.wa:hover{opacity:.88}
 .action-btn.delete{background:#7f1d1d;color:#fca5a5;border:1px solid #991b1b}
 .action-btn.delete:hover{background:#991b1b;color:#fff}
+.action-btn.suspend{background:#78350f;color:#fcd34d;border:1px solid #92400e}
+.action-btn.suspend:hover{background:#92400e;color:#fff}
+.action-btn.unsuspend{background:#134e4a;color:#5eead4;border:1px solid #0f766e}
+.action-btn.unsuspend:hover{background:#0f766e;color:#fff}
 .action-btn:disabled{opacity:.45;cursor:not-allowed}
 .action-done{font-size:12.5px;color:var(--muted);padding:9px 0}
 
@@ -542,7 +546,7 @@ function renderList() {
 function buildCard(p) {
   const date = p.createdAt ? new Date(p.createdAt.toDate ? p.createdAt.toDate() : p.createdAt).toLocaleString('ar-EG') : '—';
   const courseLabel = COURSE_LABELS[p.courseId] || p.courseId || '—';
-  const statusLabel = {pending:'⏳ قيد المراجعة', approved:'✅ مقبول', rejected:'❌ مرفوض'}[p.status] || p.status;
+  const statusLabel = {pending:'⏳ قيد المراجعة', approved: p.suspended ? '⏸️ موقوف' : '✅ مفعّل', rejected:'❌ مرفوض'}[p.status] || p.status;
   const waLink = p.phone ? 'https://wa.me/2' + p.phone.replace(/^0/, '') : null;
 
   const actions = p.status === 'pending' ?
@@ -551,6 +555,11 @@ function buildCard(p) {
     (waLink ? '<a class="action-btn wa" href="' + waLink + '" target="_blank" rel="noopener">💬 واتساب</a>' : '')
     :
     '<span class="action-done">' + statusLabel + (p.rejectionNote ? ' — ' + p.rejectionNote : '') + '</span>' +
+    (p.status === 'approved' ?
+      (p.suspended
+        ? '<button class="action-btn unsuspend" onclick="doUnsuspend(\'' + p._id + '\',\'' + (p.uid||'') + '\',\'' + (p.courseId||'') + '\')">🔓 رفع الإيقاف</button>'
+        : '<button class="action-btn suspend"   onclick="askSuspend(\''   + p._id + '\',\'' + (p.uid||'') + '\',\'' + (p.courseId||'') + '\')">⏸️ إيقاف</button>'
+      ) : '') +
     (p.status === 'approved' ? '<button class="action-btn delete" onclick="askDelete(\'' + p._id + '\',\'' + (p.uid||'') + '\',\'' + (p.courseId||'') + '\')">🗑️ حذف</button>' : '') +
     (waLink ? '<a class="action-btn wa" href="' + waLink + '" target="_blank" rel="noopener">💬 واتساب</a>' : '');
 
@@ -613,6 +622,8 @@ async function confirmAction() {
       await doApprove(pendingAction.docId, pendingAction.uid, pendingAction.courseId);
     } else if (pendingAction.type === 'delete') {
       await doDelete(pendingAction.docId, pendingAction.uid, pendingAction.courseId);
+    } else if (pendingAction.type === 'suspend') {
+      await doSuspend(pendingAction.docId, pendingAction.uid, pendingAction.courseId);
     } else if (pendingAction.type === 'pause-course') {
       await toggleCourse(pendingAction.cid, false);
     } else {
@@ -671,6 +682,48 @@ async function doReject(docId, note) {
   }
   updateStats(); renderList();
   showToast('❌ تم رفض الطلب', 'ok');
+}
+
+/* ── Per-Student Suspension ─────────────────────── */
+function askSuspend(docId, uid, courseId) {
+  pendingAction = { type: 'suspend', docId, uid, courseId };
+  document.getElementById('confirm-ico').textContent   = String.fromCodePoint(0x23F8, 0xFE0F);
+  document.getElementById('confirm-title').textContent = 'إيقاف الطالب من الدورة';
+  document.getElementById('confirm-msg').textContent   =
+    'سيتم إيقاف وصول هذا الطالب إلى دورة "' + (COURSE_LABELS[courseId] || courseId) +
+    '" فوراً. يمكنك رفع الإيقاف في أي وقت.';
+  document.getElementById('confirm-note').style.display = 'none';
+  document.getElementById('confirm-ok-btn').textContent = String.fromCodePoint(0x23F8, 0xFE0F) + ' إيقاف الطالب';
+  document.getElementById('confirm-ok-btn').style.background = '#92400e';
+  document.getElementById('confirm-overlay').classList.add('on');
+}
+
+async function doSuspend(docId, uid, courseId) {
+  const batch = db.batch();
+  batch.update(db.collection('course_payments').doc(docId), { suspended: true });
+  if (uid && courseId) {
+    batch.update(db.collection('users').doc(uid),
+      { suspendedCourses: firebase.firestore.FieldValue.arrayUnion(courseId) });
+  }
+  await batch.commit();
+  const idx = allPayments.findIndex(function(p) { return p._id === docId; });
+  if (idx > -1) allPayments[idx].suspended = true;
+  updateStats(); renderList();
+  showToast(String.fromCodePoint(0x23F8, 0xFE0F) + ' تم إيقاف الطالب من الدورة', 'ok');
+}
+
+async function doUnsuspend(docId, uid, courseId) {
+  const batch = db.batch();
+  batch.update(db.collection('course_payments').doc(docId), { suspended: false });
+  if (uid && courseId) {
+    batch.update(db.collection('users').doc(uid),
+      { suspendedCourses: firebase.firestore.FieldValue.arrayRemove(courseId) });
+  }
+  await batch.commit();
+  const idx = allPayments.findIndex(function(p) { return p._id === docId; });
+  if (idx > -1) allPayments[idx].suspended = false;
+  updateStats(); renderList();
+  showToast(String.fromCodePoint(0x1F513) + ' تم رفع الإيقاف عن الطالب', 'ok');
 }
 
 /* ── Course Config Listener ─────────────────────── */
