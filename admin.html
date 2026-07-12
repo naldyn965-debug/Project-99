@@ -262,9 +262,13 @@ body::before{content:'';position:fixed;inset:0;
 @media(max-width:768px){.app-layout{grid-template-columns:1fr}.sidebar{display:none}.main-content{padding:16px}}
 /* ── Date Navigator ─────────────────────────────── */
 .date-nav-wrap{overflow-x:auto;margin-bottom:10px;padding:2px 0 6px;
-  scrollbar-width:none;-ms-overflow-style:none}
+  scrollbar-width:none;-ms-overflow-style:none;
+  direction:ltr;                   /* force LTR so today is on right */
+  -webkit-overflow-scrolling:touch; /* smooth momentum on iOS */
+  touch-action:pan-x}             /* only horizontal pan — no accidental vertical scroll */
 .date-nav-wrap::-webkit-scrollbar{display:none}
 .date-nav{display:flex;gap:6px;min-width:max-content;direction:ltr}
+.day-btn{touch-action:manipulation} /* suppress 300ms tap delay */
 .day-btn{display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:9px 10px;border-radius:11px;border:1px solid var(--border);
   background:var(--card);cursor:pointer;font-family:inherit;color:var(--text);
@@ -543,7 +547,7 @@ function loadPayments() {
         return Object.assign({ _id: d.id }, d.data());
       });
       updateStats();
-      buildDateNav();
+      buildDateNav(true);
       renderList();
       const now = new Date();
       document.getElementById('last-refresh').innerHTML =
@@ -662,6 +666,10 @@ function updateEnrollments() {
 var MONTHS_AR = ['ينا','فبر','مار','أبر','ماي','يون','يول','أغس','سبت','أكت','نوف','ديس'];
 var MONTHS_AR_FULL = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
 
+/* scroll-vs-click guard for date nav */
+var _navScrolling = false;
+var _navScrollTimer = null;
+
 function getPayDate(p) {
   if (!p.createdAt) return null;
   try {
@@ -672,18 +680,30 @@ function getPayDate(p) {
   } catch(e) { return null; }
 }
 
-function buildDateNav() {
-  var el = document.getElementById('date-nav');
+function buildDateNav(scrollToToday) {
+  var el   = document.getElementById('date-nav');
+  var wrap = el && el.parentElement;
   if (!el) return;
+
+  // Attach scroll-detection listener once
+  if (!wrap._navListenerAdded) {
+    wrap._navListenerAdded = true;
+    wrap.addEventListener('scroll', function() {
+      _navScrolling = true;
+      clearTimeout(_navScrollTimer);
+      _navScrollTimer = setTimeout(function() { _navScrolling = false; }, 200);
+    }, { passive: true });
+  }
+
   var today = new Date();
-  var html = '';
+  var html  = '';
   for (var i = 29; i >= 0; i--) {
     var d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
     var isToday    = (i === 0);
     var isSelected = currentDateFilter &&
-      d.getFullYear()  === currentDateFilter.getFullYear() &&
-      d.getMonth()     === currentDateFilter.getMonth() &&
-      d.getDate()      === currentDateFilter.getDate();
+      d.getFullYear() === currentDateFilter.getFullYear() &&
+      d.getMonth()    === currentDateFilter.getMonth() &&
+      d.getDate()     === currentDateFilter.getDate();
     var count = allPayments.filter(function(p) {
       var pd = getPayDate(p); if (!pd) return false;
       return pd.getFullYear() === d.getFullYear() &&
@@ -702,21 +722,26 @@ function buildDateNav() {
       '</button>';
   }
   el.innerHTML = html;
-  // scroll to today (rightmost in LTR nav)
-  el.parentElement.scrollLeft = el.scrollWidth;
+  // Scroll to today only on initial load (not on every rebuild)
+  if (scrollToToday !== false) {
+    setTimeout(function() { wrap.scrollLeft = wrap.scrollWidth; }, 30);
+  }
 }
 
 function selectDate(y, m, d) {
+  // Ignore if user was just scrolling the date strip
+  if (_navScrolling) return;
+
   var clicked = new Date(y, m, d);
   if (currentDateFilter &&
       currentDateFilter.getFullYear() === y &&
       currentDateFilter.getMonth()    === m &&
       currentDateFilter.getDate()     === d) {
-    currentDateFilter = null; // toggle off on re-click
+    currentDateFilter = null;
   } else {
     currentDateFilter = clicked;
   }
-  buildDateNav();
+  buildDateNav(false); // false = don't jump scroll back to today
   updateDateLabel();
   renderList();
 }
