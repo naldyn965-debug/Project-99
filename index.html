@@ -30077,7 +30077,7 @@ const App = {
   },
 
   _nbContinueCardHTML(e){
-    return '<div class="nb-h2-course-card" onclick="showPage(\'academy\');setTimeout(function(){acSwitchCourse(\''+e.cid+'\');NAcademy.openFirst()},100)" role="button" tabindex="0">'+
+    return '<div class="nb-h2-course-card" onclick="showPage(\'academy\');setTimeout(function(){NAcademy.openCourse(\''+e.cid+'\')},100)" role="button" tabindex="0">'+
       '<div class="nb-h2-cc-top" style="background:'+e.grad+'">'+
         '<span class="nb-h2-cc-icon">'+e.icon+'</span>'+
       '</div>'+
