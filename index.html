@@ -29376,7 +29376,7 @@ getCurrentCourseId:function(){return AC_CID},
 getCurrentCourseInfo:function(){return acCertCourseInfo(AC_CID)},
 goHome:function(){acGo('home',null)},
 goCatalog:function(){acGo('catalog',null)},
-openCourse:function(id){
+openCourse:function(id,resume){
 /* Shared course link opened while logged out: acGo()/the mol-bio & food-safety
    branches below will bounce to the login modal. Remember the target course so
    auth.onAuthStateChanged can resume it automatically once login succeeds —
@@ -29387,7 +29387,7 @@ if(_acCourseConfig[id]&&_acCourseConfig[id].active===false){
   if(typeof showToast==='function')showToast('⛔ هذه الدورة موقوفة مؤقتاً — تابعونا قريباً','inf');
   return;
 }
-if(id==='pest'){acSwitchCourse(id);acGo('home',null);}
+if(id==='pest'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 else if(id==='mol-bio'){
 if(!(typeof currentUser!=='undefined'&&currentUser)){
 if(typeof showToast==='function')showToast('سجّل الدخول أولاً للاشتراك في الدورة','inf');
@@ -29395,13 +29395,13 @@ if(typeof openAuth==='function')openAuth('login');
 return;
 }
 acCheckMbAccess(function(st){
-if(st==='paid'){acSwitchCourse('mol-bio');acGo('home',null);}
+if(st==='paid'){acSwitchCourse('mol-bio');resume?NAcademy.openFirst():acGo('home',null);}
 else if(st==='suspended'){if(typeof showToast==='function')showToast('⛔ تم إيقاف اشتراكك في هذه الدورة — تواصل مع الدعم للاستفسار','err');}
 else{acShowMbPayModal(st);}
 });
 }
-else if(id==='food-quality'){acSwitchCourse(id);acGo('home',null);}
-else if(id==='ag-english'){acSwitchCourse(id);acGo('home',null);}
+else if(id==='food-quality'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
+else if(id==='ag-english'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 else if(id==='food-safety'){
 if(!(typeof currentUser!=='undefined'&&currentUser)){
 if(typeof showToast==='function')showToast('سجّل الدخول أولاً للاشتراك في الدورة','inf');
@@ -29409,12 +29409,12 @@ if(typeof openAuth==='function')openAuth('login');
 return;
 }
 acCheckFsAccess(function(st){
-if(st==='paid'){acSwitchCourse('food-safety');acGo('home',null);}
+if(st==='paid'){acSwitchCourse('food-safety');resume?NAcademy.openFirst():acGo('home',null);}
 else if(st==='suspended'){if(typeof showToast==='function')showToast('⛔ تم إيقاف اشتراكك في هذه الدورة — تواصل مع الدعم للاستفسار','err');}
 else{acShowFsPayModal(st);}
 });
 }
-else if(id==='land-reclamation'){acSwitchCourse(id);acGo('home',null);}
+else if(id==='land-reclamation'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 
 else if(id==='tissue-culture'){
 if(!(typeof currentUser!=='undefined'&&currentUser)){
@@ -29423,7 +29423,7 @@ if(typeof openAuth==='function')openAuth('login');
 return;
 }
 acCheckTcAccess(function(st){
-if(st==='paid'){acSwitchCourse('tissue-culture');acGo('home',null);}
+if(st==='paid'){acSwitchCourse('tissue-culture');resume?NAcademy.openFirst():acGo('home',null);}
 else{acShowTcPayModal(st);}
 });
 }
@@ -30077,7 +30077,7 @@ const App = {
   },
 
   _nbContinueCardHTML(e){
-    return '<div class="nb-h2-course-card" onclick="showPage(\'academy\');setTimeout(function(){NAcademy.openCourse(\''+e.cid+'\')},100)" role="button" tabindex="0">'+
+    return '<div class="nb-h2-course-card" onclick="showPage(\'academy\');setTimeout(function(){NAcademy.openCourse(\''+e.cid+'\',true)},100)" role="button" tabindex="0">'+
       '<div class="nb-h2-cc-top" style="background:'+e.grad+'">'+
         '<span class="nb-h2-cc-icon">'+e.icon+'</span>'+
       '</div>'+
