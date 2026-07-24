@@ -30321,7 +30321,7 @@ function saveRoleEdit() {
   const newRole = select.value;
   const roleSpan = document.getElementById('profileRole');
   roleSpan.textContent = newRole;
-  userRole = newRole.replace(/[🌾👨‍🔬🎓🏢]\s*/, '');
+  userRole = newRole.replace(/^\S+\s*/, '');
   if (currentUser) {
     db.collection('users').doc(currentUser.uid).set({ role: userRole }, { merge: true }).catch(console.error);
   }
