@@ -29985,13 +29985,13 @@ const App = {
   /* سجل الكورسات الحقيقي — نفس الكائنات المستخدمة في كتالوج الأكاديمية بالضبط */
   _nbHomeCourseRegistry(){
     var reg = [];
-    if(typeof AC_COURSE!=='undefined') reg.push({cid:'pest',            course:AC_COURSE, icon:'🛡️', grad:'linear-gradient(135deg,#1b6b3a,#2eaa5c)', paid:false});
-    if(typeof MB_COURSE!=='undefined') reg.push({cid:'mol-bio',         course:MB_COURSE, icon:'🧬', grad:'linear-gradient(135deg,#2563eb,#1e3a8a)', paid:true, price:25, oldPrice:250});
-    if(typeof FQ_COURSE!=='undefined') reg.push({cid:'food-quality',    course:FQ_COURSE, icon:'🥗', grad:'linear-gradient(135deg,#d97706,#92400e)', paid:false});
-    if(typeof AG_COURSE!=='undefined') reg.push({cid:'ag-english',      course:AG_COURSE, icon:'🌾', grad:'linear-gradient(135deg,#059669,#065f46)', paid:false});
-    if(typeof FS_COURSE!=='undefined') reg.push({cid:'food-safety',     course:FS_COURSE, icon:'🍽️', grad:'linear-gradient(135deg,#ea580c,#9a3412)', paid:true, price:25, oldPrice:250});
-    if(typeof TC_COURSE!=='undefined') reg.push({cid:'tissue-culture',  course:TC_COURSE, icon:'🧫', grad:'linear-gradient(135deg,#0d9488,#0f766e)', paid:true, price:150});
-    if(typeof LR_COURSE!=='undefined') reg.push({cid:'land-reclamation',course:LR_COURSE, icon:'🏜️', grad:'linear-gradient(135deg,#b45309,#78350f)', paid:false});
+    if(typeof AC_COURSE!=='undefined') reg.push({cid:'pest',            course:AC_COURSE, icon:'🛡️', grad:'linear-gradient(135deg,#1b6b3a,#2eaa5c)', paid:false, img:'https://images.unsplash.com/photo-1719665269650-5521f31420f3?auto=format&fit=crop&w=900&q=70'});
+    if(typeof MB_COURSE!=='undefined') reg.push({cid:'mol-bio',         course:MB_COURSE, icon:'🧬', grad:'linear-gradient(135deg,#2563eb,#1e3a8a)', paid:true, price:25, oldPrice:250, img:'https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=900&q=70'});
+    if(typeof FQ_COURSE!=='undefined') reg.push({cid:'food-quality',    course:FQ_COURSE, icon:'🥗', grad:'linear-gradient(135deg,#d97706,#92400e)', paid:false, img:'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=900&q=70'});
+    if(typeof AG_COURSE!=='undefined') reg.push({cid:'ag-english',      course:AG_COURSE, icon:'🌾', grad:'linear-gradient(135deg,#059669,#065f46)', paid:false, img:'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=900&q=70'});
+    if(typeof FS_COURSE!=='undefined') reg.push({cid:'food-safety',     course:FS_COURSE, icon:'🍽️', grad:'linear-gradient(135deg,#ea580c,#9a3412)', paid:true, price:25, oldPrice:250, img:'https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?auto=format&fit=crop&w=900&q=70'});
+    if(typeof TC_COURSE!=='undefined') reg.push({cid:'tissue-culture',  course:TC_COURSE, icon:'🧫', grad:'linear-gradient(135deg,#0d9488,#0f766e)', paid:true, price:150, img:'https://images.unsplash.com/photo-1622210445956-ca3320a5e7c5?auto=format&fit=crop&w=900&q=70'});
+    if(typeof LR_COURSE!=='undefined') reg.push({cid:'land-reclamation',course:LR_COURSE, icon:'🏜️', grad:'linear-gradient(135deg,#b45309,#78350f)', paid:false, img:'https://assets.science.nasa.gov/dynamicimage/assets/science/esd/eo/images/imagerecords/89000/89820/egypt_oli_2017057_detail.jpg?w=1200&h=500&fit=crop'});
     return reg;
   },
 
@@ -30026,8 +30026,7 @@ const App = {
     }
 
     return '<div class="nb-h2-course-card" onclick="showPage(\'academy\');setTimeout(function(){NAcademy.openCourse(\''+c.cid+'\')},100)" role="button" tabindex="0">'+
-      '<div class="nb-h2-cc-top" style="background:'+c.grad+'">'+
-        '<span class="nb-h2-cc-icon">'+c.icon+'</span>'+
+      '<div class="nb-h2-cc-top" style="background:url('+c.img+') center/cover no-repeat,'+c.grad+'">'+
       '</div>'+
       '<div class="nb-h2-cc-body">'+
         '<div class="nb-h2-cc-title">'+course.title+'</div>'+
@@ -30059,7 +30058,7 @@ const App = {
       if(!resumeTitle) return; /* لا يوجد درس متبقٍ — الكورس مكتمل فعلياً، تجاهله */
       var lastActivity = 0;
       Object.keys(dt).forEach(function(lid){ if(dt[lid]>lastActivity) lastActivity=dt[lid]; });
-      list.push({cid:c.cid, course:course, icon:c.icon, grad:c.grad, pct:pct, lessonTitle:resumeTitle, lastActivity:lastActivity});
+      list.push({cid:c.cid, course:course, icon:c.icon, grad:c.grad, img:c.img, pct:pct, lessonTitle:resumeTitle, lastActivity:lastActivity});
     });
 
     if(!list.length) return '';
@@ -30078,8 +30077,7 @@ const App = {
 
   _nbContinueCardHTML(e){
     return '<div class="nb-h2-course-card" onclick="showPage(\'academy\');setTimeout(function(){NAcademy.openCourse(\''+e.cid+'\',true)},100)" role="button" tabindex="0">'+
-      '<div class="nb-h2-cc-top" style="background:'+e.grad+'">'+
-        '<span class="nb-h2-cc-icon">'+e.icon+'</span>'+
+      '<div class="nb-h2-cc-top" style="background:url('+e.img+') center/cover no-repeat,'+e.grad+'">'+
       '</div>'+
       '<div class="nb-h2-cc-body">'+
         '<div class="nb-h2-cc-title">'+e.course.title+'</div>'+
