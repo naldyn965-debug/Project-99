@@ -30037,6 +30037,59 @@ const App = {
     '</div>';
   },
 
+  /* قسم "أكمل من حيث توقفت" — يُبنى فقط من نفس سجل الكورسات وبيانات التقدم الحقيقية،
+     بدون أي تتبّع أو تخزين جديد. */
+  _nbContinueLearningHTML(registry){
+    var u = (typeof currentUser!=='undefined'&&currentUser&&currentUser.uid) ? currentUser.uid : null;
+    var list = [];
+    registry.forEach(function(c){
+      var course = c.course;
+      var pct = (typeof _acPctFor==='function') ? _acPctFor(c.cid, course) : 0;
+      if(pct<=0 || pct>=100) return;
+      var pf  = 'nb-'+c.cid+'-p';
+      var key = u ? (pf+'__'+u) : (pf+'__guest');
+      var prog = {};
+      try{ prog = JSON.parse(localStorage.getItem(key)||'{}'); }catch(e){}
+      var done = prog.d  || [];
+      var dt   = prog.dt || {};
+      var resumeTitle = null;
+      for(var i=0;i<(course.modules||[]).length&&!resumeTitle;i++)
+       for(var j=0;j<course.modules[i].lessons.length&&!resumeTitle;j++)
+        if(!done.includes(course.modules[i].lessons[j].id))resumeTitle=course.modules[i].lessons[j].title;
+      if(!resumeTitle) return; /* لا يوجد درس متبقٍ — الكورس مكتمل فعلياً، تجاهله */
+      var lastActivity = 0;
+      Object.keys(dt).forEach(function(lid){ if(dt[lid]>lastActivity) lastActivity=dt[lid]; });
+      list.push({cid:c.cid, course:course, icon:c.icon, grad:c.grad, pct:pct, lessonTitle:resumeTitle, lastActivity:lastActivity});
+    });
+
+    if(!list.length) return '';
+
+    list.sort(function(a,b){ return b.lastActivity-a.lastActivity; });
+
+    var cardsHTML = list.map(this._nbContinueCardHTML.bind(this)).join('');
+
+    return '<div class="nb-h2-courses-sec">'+
+      '<div class="nb-h2-courses-head">'+
+        '<h2 class="nb-h2-courses-title">أكمل من حيث توقفت</h2>'+
+      '</div>'+
+      '<div class="nb-h2-scroll">'+cardsHTML+'</div>'+
+    '</div>';
+  },
+
+  _nbContinueCardHTML(e){
+    return '<div class="nb-h2-course-card" onclick="showPage(\'academy\');setTimeout(function(){acSwitchCourse(\''+e.cid+'\');NAcademy.openFirst()},100)" role="button" tabindex="0">'+
+      '<div class="nb-h2-cc-top" style="background:'+e.grad+'">'+
+        '<span class="nb-h2-cc-icon">'+e.icon+'</span>'+
+      '</div>'+
+      '<div class="nb-h2-cc-body">'+
+        '<div class="nb-h2-cc-title">'+e.course.title+'</div>'+
+        '<div class="nb-h2-continue-lesson">التالي: '+e.lessonTitle+'</div>'+
+        '<div class="nb-h2-cc-prog-track"><div class="nb-h2-cc-prog-fill" style="width:'+e.pct+'%"></div></div>'+
+        '<div class="nb-h2-cc-cta">أكمل — '+e.pct+'%</div>'+
+      '</div>'+
+    '</div>';
+  },
+
   _renderUnifiedHome(cnt){
     var name = (currentUser && (currentUser.displayName || currentUser.email.split('@')[0])) || '';
     var avatarHTML = (currentUser && currentUser.photoURL)
@@ -30053,6 +30106,7 @@ const App = {
     }).bind(this));
 
     var cardsHTML = registry.map(this._nbCourseCardHTML.bind(this)).join('');
+    var continueHTML = this._nbContinueLearningHTML(registry);
 
     var html = ''+
     '<div class="nb-h2-hero">'+
@@ -30082,6 +30136,7 @@ const App = {
         '<div class="nb-h2-stat"><div class="nb-h2-stat-num">'+registry.length+'</div><div class="nb-h2-stat-lbl">دورة</div></div>'+
       '</div>'+
     '</div>'+
+    continueHTML+
     '<div class="nb-h2-courses-sec">'+
       '<div class="nb-h2-courses-head">'+
         '<button class="nb-h2-viewall" onclick="showPage(\'academy\')">عرض الكل</button>'+
@@ -40409,6 +40464,7 @@ function nbFmtDate(date){
   min-height:38px;
 }
 .nb-h2-cc-meta{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:10px}
+.nb-h2-continue-lesson{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 .nb-h2-cc-prog-track{height:5px;border-radius:6px;background:var(--line);overflow:hidden;margin-bottom:8px}
 .nb-h2-cc-prog-fill{
