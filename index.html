@@ -5785,6 +5785,38 @@ body.modal-open { overflow: hidden; }
 }
 .acad-start-btn:active{transform:translateY(-1px) scale(.99) !important;transition-duration:70ms !important}
 
+/* Subscribe / premium CTA — gold gradient + continuous glow pulse, so it
+   reads as a distinct "premium upgrade" action next to the green start-btn.
+   Kept as its own class (not an inline override on .acad-start-btn) because
+   that class's background/box-shadow are !important — an inline override
+   was silently losing to it, which is why the button looked unclear. */
+@keyframes acadGoldGlow{
+  0%,100%{box-shadow:0 4px 16px rgba(201,135,26,.35),0 0 0 0 rgba(229,163,67,.4)}
+  50%{box-shadow:0 4px 20px rgba(201,135,26,.45),0 0 22px 6px rgba(229,163,67,.55)}
+}
+.acad-subscribe-btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:14px;margin-top:10px;border:none;border-radius:var(--rpill);
+  font-family:var(--f-ui);font-size:15px;font-weight:800;color:#fff;cursor:pointer;
+  letter-spacing:.01em;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#a8710f 0%,#c9871a 55%,#e5a343 100%);
+  transition:all .28s var(--ac-spring,cubic-bezier(.34,1.56,.64,1));
+  animation:acadGoldGlow 2.2s ease-in-out infinite;
+}
+.acad-subscribe-btn::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:42%;
+  background:linear-gradient(180deg,rgba(255,255,255,.24),transparent);
+  pointer-events:none;border-radius:inherit;
+}
+.acad-subscribe-btn:hover{
+  transform:translateY(-5px) scale(1.01);animation-play-state:paused;
+  box-shadow:0 16px 40px rgba(201,135,26,.5),0 4px 12px rgba(0,0,0,.12);
+}
+.acad-subscribe-btn:active{transform:translateY(-1px) scale(.99);transition-duration:70ms}
+@media(hover:none) and (pointer:coarse){
+  .acad-subscribe-btn:active{transform:scale(.97);transition-duration:80ms}
+}
+
 /* Lesson nav buttons */
 .acad-btn{
   transition:all .22s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important;
@@ -9108,7 +9140,7 @@ return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner
 '<span class="acad-chip">'+acIco('shield',14)+' '+AC_COURSE.instructor+'</span>'+
 '</div>'+
 '<button class="acad-start-btn" onclick="NAcademy.openLesson(\''+firstId+'\')">'+acIco('play',15)+' ابدأ المحاضرة الأولى مجاناً</button>'+
-'<button class="acad-start-btn" style="margin-top:10px;background:transparent;color:var(--brand);border:2px solid var(--brand);box-shadow:none" onclick="NAcademy.subscribeNow()">'+acIco('rocket',16)+' اشترك الآن</button>'+
+'<button class="acad-subscribe-btn" onclick="NAcademy.subscribeNow()">'+acIco('rocket',16)+' اشترك الآن</button>'+
 '</div>'+
 '<div class="acad-card-body" style="padding-top:0">'+
 '<div class="acad-modules-preview">'+
