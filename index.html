@@ -8718,7 +8718,11 @@ return questions.map(function(q,i){return acShuffleOptsToPosition(q,positions[i]
 var AC={view:'catalog',lid:null,qState:null};
 
 function acGo(view,lid){
-if(view!=='catalog'&&!(typeof currentUser!=='undefined'&&currentUser)){
+/* Free-preview teaser: the course info page, and its "first lecture free"
+   deep-link, stay reachable without login — but only for the monetized
+   courses this applies to. Every other view/course keeps the guard below. */
+var acFreeTeaser=(view==='info'||(view==='lesson'&&lid&&acFlatLessons()[0]===lid))&&(AC_CID==='mol-bio'||AC_CID==='food-safety'||AC_CID==='tissue-culture');
+if(view!=='catalog'&&!acFreeTeaser&&!(typeof currentUser!=='undefined'&&currentUser)){
  if(typeof showToast==='function')showToast('سجّل الدخول أو أنشئ حساباً جديداً للبدء في الدورة','inf');
  if(typeof openAuth==='function')openAuth('login');
  view='catalog';lid=null;
@@ -8746,6 +8750,7 @@ var root=document.getElementById('acad-root');
 if(!root)return;
 if(AC.view==='catalog'){root.innerHTML=acRenderCatalog();acRefreshCatalogStatuses();}
 else if(AC.view==='home')root.innerHTML=acRenderHome();
+else if(AC.view==='info')root.innerHTML=acRenderInfo();
 else if(AC.view==='lesson')root.innerHTML=acRenderLesson();
 else if(AC.view==='quiz'){root.innerHTML=acRenderQuiz();acBindQuiz()}
 else if(AC.view==='final-exam'){root.innerHTML=acRenderFinalExam();}
@@ -9044,6 +9049,71 @@ return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner
 '<div class="acad-mp-title">محتوى الدورة</div>'+
 modulesHTML+
 finalExamHTML+
+'</div></div></div>'+
+'</div></div>'}
+
+
+/* ── COURSE INFO (free preview / subscribe landing) ──────────
+   Shown instead of forcing login (guests) or the payment form (logged-in,
+   no active subscription) for the monetized courses. Mirrors acRenderHome()'s
+   hero/card structure, swapping the progress dashboard for two CTAs: the
+   free first lecture, and Subscribe. Only the first lesson is ever treated
+   as reachable here — deliberately not driven by acIsUnlocked(), since that
+   helper is purely sequential/completion-based and payment-unaware, so a
+   learner who finishes lesson 1 must not see lesson 2 unlock on this page. */
+function acRenderInfo(){
+var allLessons=AC_COURSE.modules.reduce(function(s,m){return s+m.lessons.length},0);
+var firstId=acFlatLessons()[0];
+var modulesHTML=AC_COURSE.modules.map(function(mod,mi){
+ var rows=mod.lessons.map(function(ls){
+  var isFirst=(ls.id===firstId);
+  var done=isFirst&&acDone(ls.id);
+  var checkContent=isFirst?(done?acIco('check',14):acIco('play',14)):acIco('lock',14);
+  var clickAttr=isFirst?' onclick="NAcademy.openLesson(\''+ls.id+'\')"':' onclick="NAcademy.subscribeNow()"';
+  var tailNote=isFirst?' &nbsp;·&nbsp; <span style="color:var(--brand);font-weight:800">مجاناً</span>':' &nbsp;·&nbsp; <span style="color:var(--muted)">يتطلب الاشتراك</span>';
+  return '<div class="acad-lesson-row'+(isFirst?(done?' done':''):' locked')+'"'+clickAttr+' role="button">'+
+   '<div class="acad-lesson-check">'+checkContent+'</div>'+
+   '<div class="acad-lesson-info">'+
+    '<div class="acad-lesson-name">'+ls.title+'</div>'+
+    '<div class="acad-lesson-dur">'+acIco('clock',12)+' '+ls.dur+tailNote+'</div>'+
+   '</div>'+
+   '<span class="acad-lesson-arr">'+(isFirst?'‹':'')+'</span>'+
+  '</div>'}).join('');
+ return '<div class="acad-module-block">'+
+  '<div class="acad-module-name"><span class="acad-module-num">'+(mi+1)+'</span>'+mod.title+'</div>'+
+  rows+'</div>'}).join('');
+
+return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner">'+
+'<div class="acad-hero-back" role="button" onclick="NAcademy.goCatalog()">‹ كل الدورات</div>'+
+'<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
+'<div class="acad-hero-title">'+AC_COURSE.title+'</div>'+
+'<div class="acad-hero-sub">'+AC_COURSE.heroSub+'</div>'+
+'<div class="acad-hero-stats">'+
+ '<div class="acad-hs"><div class="acad-hs-n">'+allLessons+'</div><div class="acad-hs-l">محاضرة</div></div>'+
+ '<div class="acad-hs-div"></div>'+
+ '<div class="acad-hs"><div class="acad-hs-n">'+AC_COURSE.modules.length+'</div><div class="acad-hs-l">وحدات</div></div>'+
+ '<div class="acad-hs-div"></div>'+
+ '<div class="acad-hs"><div class="acad-hs-n">'+AC_COURSE.duration+'</div><div class="acad-hs-l">مدة الدورة</div></div>'+
+'</div></div></div>'+
+'<div class="acad-course-section"><div class="acad-wrap">'+
+'<div class="acad-card">'+
+'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-safety'?' fs':' tc')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
+'<div class="acad-card-body">'+
+'<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
+'<div class="acad-card-desc">'+AC_COURSE.description+'</div>'+
+'<div class="acad-card-chips">'+
+'<span class="acad-chip">'+acIco('book',14)+' '+allLessons+' محاضرة</span>'+
+'<span class="acad-chip">'+acIco('clock',14)+' '+AC_COURSE.duration+'</span>'+
+'<span class="acad-chip">'+acIco('bars',14)+' '+AC_COURSE.level+'</span>'+
+'<span class="acad-chip">'+acIco('shield',14)+' '+AC_COURSE.instructor+'</span>'+
+'</div>'+
+'<button class="acad-start-btn" onclick="NAcademy.openLesson(\''+firstId+'\')">'+acIco('play',15)+' ابدأ المحاضرة الأولى مجاناً</button>'+
+'<button class="acad-start-btn" style="margin-top:10px;background:transparent;color:var(--brand);border:2px solid var(--brand);box-shadow:none" onclick="NAcademy.subscribeNow()">'+acIco('rocket',16)+' اشترك الآن</button>'+
+'</div>'+
+'<div class="acad-card-body" style="padding-top:0">'+
+'<div class="acad-modules-preview">'+
+'<div class="acad-mp-title">محتوى الدورة</div>'+
+modulesHTML+
 '</div></div></div>'+
 '</div></div>'}
 
@@ -29368,6 +29438,29 @@ w.document.close();
 }
 if(typeof showToast==='function')showToast('📄 جاري تجهيز المحاضرة للتحميل...','ok')}
 
+/* ── Subscribe flow (info page CTA) ──────────────────────────
+   Shared by NAcademy.subscribeNow() (clicked while already logged in) and
+   NAcademy.resumeSubscribe() (resumed right after login). Re-runs the
+   authoritative async access check and opens the same paid/suspended/
+   pending/none routing openCourse() already uses — landing on the payment
+   modal for a non-subscriber instead of the info page they just came from. */
+function _acSubscribeCheckAndModal(cid){
+if(cid==='mol-bio')acCheckMbAccess(function(st){
+if(st==='paid'){acSwitchCourse('mol-bio');acGo('home',null);if(typeof showToast==='function')showToast('✅ أنت مشترك بالفعل في هذه الدورة','ok');}
+else if(st==='suspended'){if(typeof showToast==='function')showToast('⛔ تم إيقاف اشتراكك في هذه الدورة — تواصل مع الدعم للاستفسار','err');}
+else acShowMbPayModal(st);
+});
+else if(cid==='food-safety')acCheckFsAccess(function(st){
+if(st==='paid'){acSwitchCourse('food-safety');acGo('home',null);if(typeof showToast==='function')showToast('✅ أنت مشترك بالفعل في هذه الدورة','ok');}
+else if(st==='suspended'){if(typeof showToast==='function')showToast('⛔ تم إيقاف اشتراكك في هذه الدورة — تواصل مع الدعم للاستفسار','err');}
+else acShowFsPayModal(st);
+});
+else if(cid==='tissue-culture')acCheckTcAccess(function(st){
+if(st==='paid'){acSwitchCourse('tissue-culture');acGo('home',null);if(typeof showToast==='function')showToast('✅ أنت مشترك بالفعل في هذه الدورة','ok');}
+else acShowTcPayModal(st);
+});
+}
+
 /* ── Public API ───────────────────────────────────────────── */
 
 window.NAcademy={
@@ -29390,43 +29483,63 @@ if(_acCourseConfig[id]&&_acCourseConfig[id].active===false){
 if(id==='pest'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 else if(id==='mol-bio'){
 if(!(typeof currentUser!=='undefined'&&currentUser)){
-if(typeof showToast==='function')showToast('سجّل الدخول أولاً للاشتراك في الدورة','inf');
-if(typeof openAuth==='function')openAuth('login');
+/* Guest — no forced login anymore: show the free info/preview page instead. */
+acSwitchCourse('mol-bio');acGo('info',null);
 return;
 }
 acCheckMbAccess(function(st){
 if(st==='paid'){acSwitchCourse('mol-bio');resume?NAcademy.openFirst():acGo('home',null);}
 else if(st==='suspended'){if(typeof showToast==='function')showToast('⛔ تم إيقاف اشتراكك في هذه الدورة — تواصل مع الدعم للاستفسار','err');}
-else{acShowMbPayModal(st);}
+else if(st==='pending'){acShowMbPayModal('pending');}
+else{acSwitchCourse('mol-bio');acGo('info',null);}
 });
 }
 else if(id==='food-quality'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 else if(id==='ag-english'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 else if(id==='food-safety'){
 if(!(typeof currentUser!=='undefined'&&currentUser)){
-if(typeof showToast==='function')showToast('سجّل الدخول أولاً للاشتراك في الدورة','inf');
-if(typeof openAuth==='function')openAuth('login');
+/* Guest — no forced login anymore: show the free info/preview page instead. */
+acSwitchCourse('food-safety');acGo('info',null);
 return;
 }
 acCheckFsAccess(function(st){
 if(st==='paid'){acSwitchCourse('food-safety');resume?NAcademy.openFirst():acGo('home',null);}
 else if(st==='suspended'){if(typeof showToast==='function')showToast('⛔ تم إيقاف اشتراكك في هذه الدورة — تواصل مع الدعم للاستفسار','err');}
-else{acShowFsPayModal(st);}
+else if(st==='pending'){acShowFsPayModal('pending');}
+else{acSwitchCourse('food-safety');acGo('info',null);}
 });
 }
 else if(id==='land-reclamation'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 
 else if(id==='tissue-culture'){
 if(!(typeof currentUser!=='undefined'&&currentUser)){
-if(typeof showToast==='function')showToast('سجّل الدخول أولاً للاشتراك في الدورة','inf');
-if(typeof openAuth==='function')openAuth('login');
+/* Guest — no forced login anymore: show the free info/preview page instead. */
+acSwitchCourse('tissue-culture');acGo('info',null);
 return;
 }
 acCheckTcAccess(function(st){
 if(st==='paid'){acSwitchCourse('tissue-culture');resume?NAcademy.openFirst():acGo('home',null);}
-else{acShowTcPayModal(st);}
+else if(st==='pending'){acShowTcPayModal('pending');}
+else{acSwitchCourse('tissue-culture');acGo('info',null);}
 });
 }
+},
+subscribeNow:function(){
+var cid=AC_CID;
+if(!(typeof currentUser!=='undefined'&&currentUser)){
+/* Not logged in — remember the subscribe intent so the auth listener can
+   resume straight into the payment modal after login, extending the
+   existing _acDeepLinkCourse deep-link-resume mechanism with a flag. */
+window._acDeepLinkCourse=cid;
+window._acDeepLinkSubscribe=true;
+if(typeof showToast==='function')showToast('سجّل الدخول أولاً للاشتراك في الدورة','inf');
+if(typeof openAuth==='function')openAuth('login');
+return;
+}
+_acSubscribeCheckAndModal(cid);
+},
+resumeSubscribe:function(cid){
+_acSubscribeCheckAndModal(cid);
 },
 comingSoon:function(){if(typeof showToast==='function')showToast('🔜 هذه الدورة قيد الإعداد — تابعونا قريبًا','inf')},
 openFirst:function(){
@@ -29494,10 +29607,28 @@ var passed=score>=60;
 if(passed)acMark(lid);
 var nextId=passed?acNextLessonId(lid):null;
 var gateRem=nextId?acUnitGateRemaining(nextId):0;
+/* Free-preview gate: passing the first lesson's quiz on a monetized course
+   while not yet subscribed must not auto-advance into paid content — show
+   the subscribe prompt instead. Every other lesson/course/outcome falls
+   through unchanged to _fqProceed(), the exact original flow below. */
+var _fqProceed=function(){
 if(passed&&nextId&&gateRem<=0)acGo('lesson',nextId);
 else acGo('home',null);
 var msg=passed?(nextId?(gateRem>0?'🎉 أحسنت! أنهيت هذه الوحدة بنجاح ('+score+'%) — الوحدة التالية تفتح غدًا':'✅ اجتزت الاختبار بنجاح ('+score+'%) — ننتقل للمحاضرة التالية'):'🎉 اجتزت اختبار آخر محاضرة! يمكنك الآن دخول الاختبار النهائي'):'📝 لم تجتز الاختبار ('+score+'%) — راجع المحاضرة وأعد المحاولة';
 if(typeof showToast==='function')showToast(msg,'ok')
+};
+var _fqOnStatus=function(st){
+if(st==='paid')_fqProceed();
+else{
+acGo('info',null);
+if(typeof showToast==='function')showToast('🎉 أحسنت في المحاضرة الأولى ('+score+'%) — اشترك الآن لمتابعة باقي الدورة','inf');
+}
+};
+var _fqAtFirst=passed&&nextId&&gateRem<=0&&lid===acFlatLessons()[0];
+if(_fqAtFirst&&AC_CID==='mol-bio')acCheckMbAccess(_fqOnStatus);
+else if(_fqAtFirst&&AC_CID==='food-safety')acCheckFsAccess(_fqOnStatus);
+else if(_fqAtFirst&&AC_CID==='tissue-culture')acCheckTcAccess(_fqOnStatus);
+else _fqProceed();
 }};
 
 /* ── showPage Hook ────────────────────────────────────────── */
@@ -30575,11 +30706,19 @@ auth.onAuthStateChanged(async (user) => {
       await window._acSyncCloudProgress();
     }
     /* Resume a course link shared with someone who wasn't logged in yet —
-       openCourse() stashed the intended course id before showing the login modal. */
+       openCourse() stashed the intended course id before showing the login modal.
+       If it was the info page's Subscribe button that stashed it instead, resume
+       straight into the payment modal rather than back onto the info page. */
     if (window._acDeepLinkCourse && typeof NAcademy !== 'undefined' && NAcademy.openCourse) {
       var _acPendingCourse = window._acDeepLinkCourse;
+      var _acPendingSubscribe = window._acDeepLinkSubscribe;
       window._acDeepLinkCourse = null;
-      NAcademy.openCourse(_acPendingCourse);
+      window._acDeepLinkSubscribe = null;
+      if (_acPendingSubscribe && typeof NAcademy.resumeSubscribe === 'function') {
+        NAcademy.resumeSubscribe(_acPendingCourse);
+      } else {
+        NAcademy.openCourse(_acPendingCourse);
+      }
     }
   } else {
     userFavorites.clear();
