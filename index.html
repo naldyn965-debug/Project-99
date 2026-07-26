@@ -5310,6 +5310,34 @@ body.modal-open { overflow: hidden; }
 .vcash-pending-ico{font-size:56px;margin-bottom:16px}
 .vcash-pending-title{font-size:1.1rem;font-weight:800;color:var(--ink);margin-bottom:10px}
 .vcash-pending-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px}
+
+/* ── Payment Method Step + InstaPay + Receipt Upload (additive) ──────── */
+@keyframes vcStepIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.vcash-steps.on{animation:vcStepIn .32s cubic-bezier(.34,1.56,.64,1) both}
+.vcash-trust-line{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--brand-l,#2d9a58);font-weight:700;text-align:center;margin:2px 0 18px}
+.vcash-method-card{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;transition:all .2s ease;margin-bottom:12px}
+.vcash-method-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.vcash-method-card.vodafone:hover{border-color:#e53030}
+.vcash-method-card.instapay:hover{border-color:#7C3AED}
+.vcash-method-ico{font-size:24px;width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
+.vcash-method-card.vodafone .vcash-method-ico{background:linear-gradient(135deg,#e53030,#c9251f)}
+.vcash-method-card.instapay .vcash-method-ico{background:linear-gradient(135deg,#7C3AED,#5B21B6)}
+.vcash-method-txt{flex:1;min-width:0}
+.vcash-method-name{font-size:14.5px;font-weight:800;color:var(--ink)}
+.vcash-method-sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+.vcash-method-arrow{color:var(--muted);font-size:18px;flex-shrink:0}
+.vcash-back-link{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;margin-bottom:16px;background:none;border:none;font-family:inherit;padding:0}
+.vcash-back-link:hover{color:var(--brand)}
+.vcash-info-card.instapay{background:linear-gradient(135deg,#7C3AED,#5B21B6)}
+.vcash-step-num.instapay{background:linear-gradient(135deg,#7C3AED,#5B21B6)}
+.vcash-receipt-zone{border:1.5px dashed var(--line);border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:16px;background:var(--card)}
+.vcash-receipt-zone:hover{border-color:var(--brand)}
+.vcash-receipt-zone.has-file{border-style:solid;border-color:var(--brand)}
+.vcash-receipt-placeholder{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);font-weight:700}
+.vcash-receipt-zone.has-file .vcash-receipt-placeholder{display:none}
+.vcash-receipt-ico{font-size:22px}
+.vcash-receipt-thumb{display:none;max-width:100%;max-height:140px;border-radius:10px;margin-bottom:8px}
+.vcash-receipt-name{font-size:11.5px;color:var(--brand);font-weight:700;word-break:break-all}
 .vcash-pending-ref{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:12px;color:var(--muted);margin-bottom:16px;direction:ltr;text-align:center;word-break:break-all}
 .vcash-card-pending{display:flex;align-items:center;gap:8px;margin-top:16px;padding:10px 14px;background:rgba(217,119,6,.1);border-radius:12px;border:1px solid rgba(217,119,6,.25);font-size:12.5px;color:#92400e;font-weight:700}
 
@@ -10056,11 +10084,86 @@ return((JSON.parse(localStorage.getItem(key)||'{}').d)||[]).length;
 }catch(e){return 0}}
 window._acDoneFor=_acDoneFor; /* تعريض عالمي — يستخدمه كاروسيل الكورسات في الرئيسية */
 
+/* ── Shared helpers: Payment-Method step nav + InstaPay + Receipt upload ──
+   Used by the Mb / Fs / Tc Vodafone-Cash+InstaPay payment modals below.
+   prefix argument is 'vcash' | 'vcash4' | 'vcash5'.                      */
+function acVcashSetStep(prefix,stepName){
+var steps=['method','pay','instapay','pending'];
+steps.forEach(function(s){
+var elS=document.getElementById(prefix+'-step-'+s);
+if(!elS)return;
+if(s===stepName)elS.classList.add('on');else elS.classList.remove('on');
+});
+}
+window.acVcashSetStep=acVcashSetStep;
+
+function acCopyGeneric(elId){
+var el=document.getElementById(elId);if(!el)return;
+var val=el.textContent;
+if(navigator.clipboard){
+navigator.clipboard.writeText(val).then(function(){
+if(typeof showToast==='function')showToast('تم النسخ','ok');
+}).catch(function(){});
+}else{
+try{
+var ta=document.createElement('textarea');ta.value=val;
+document.body.appendChild(ta);ta.select();
+document.execCommand('copy');document.body.removeChild(ta);
+if(typeof showToast==='function')showToast('تم النسخ','ok');
+}catch(e){}
+}
+}
+window.acCopyGeneric=acCopyGeneric;
+
+/* Renders 1-3 InstaPay identifier rows (handle/mobile/IBAN) with their own
+   copy buttons — only the identifiers the owner actually filled in appear. */
+function acVcashRenderInstapayInfo(prefix,info){
+var wrap=document.getElementById(prefix+'-ip-identifiers');
+if(!wrap||!info)return;
+var rows=[];
+if(info.handle)rows.push({lbl:'معرّف InstaPay',val:info.handle,id:prefix+'-ip-id-handle'});
+if(info.mobile)rows.push({lbl:'رقم الموبايل المرتبط',val:info.mobile,id:prefix+'-ip-id-mobile'});
+if(info.iban)rows.push({lbl:'رقم الحساب (IBAN)',val:info.iban,id:prefix+'-ip-id-iban'});
+if(!rows.length){wrap.innerHTML='<div class="vcash-num-lbl">تواصل مع الدعم للحصول على بيانات التحويل</div>';return;}
+wrap.innerHTML=rows.map(function(r){
+return '<div class="vcash-num-lbl">'+r.lbl+'</div>'+
+'<div class="vcash-num" id="'+r.id+'">'+r.val+'</div>'+
+'<button class="vcash-copy-btn" onclick="acCopyGeneric(\''+r.id+'\')">📋 نسخ</button>';
+}).join('<div class="vcash-info-divider"></div>');
+}
+window.acVcashRenderInstapayInfo=acVcashRenderInstapayInfo;
+
+function acVcashReceiptChange(inputId){
+var input=document.getElementById(inputId);
+if(!input||!input.files||!input.files[0])return;
+var file=input.files[0];
+var zone=document.getElementById(inputId+'-zone');
+var thumb=document.getElementById(inputId+'-thumb');
+var nameEl=document.getElementById(inputId+'-name');
+if(zone)zone.classList.add('has-file');
+if(nameEl)nameEl.textContent=file.name;
+if(thumb){
+var reader=new FileReader();
+reader.onload=function(e){thumb.src=e.target.result;thumb.style.display='block';};
+reader.readAsDataURL(file);
+}
+}
+window.acVcashReceiptChange=acVcashReceiptChange;
+
+function acVcashResetReceipt(inputId){
+var input=document.getElementById(inputId);if(input)input.value='';
+var zone=document.getElementById(inputId+'-zone');if(zone)zone.classList.remove('has-file');
+var thumb=document.getElementById(inputId+'-thumb');if(thumb){thumb.removeAttribute('src');thumb.style.display='none';}
+var nameEl=document.getElementById(inputId+'-name');if(nameEl)nameEl.textContent='';
+}
+window.acVcashResetReceipt=acVcashResetReceipt;
+
 /* ── Vodafone Cash Payment — Mol-Bio Course ─────────────────────
    رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
 
 var _MB_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
 var _MB_COURSE_PRICE=25;          /* ← السعر بالجنيه              */
+var _MB_INSTAPAY_INFO={handle:'',mobile:'',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
 function acMbStatus(){
@@ -10102,6 +10205,9 @@ var st=docs[0].data().status;
 if(st==='approved'){
 try{localStorage.setItem(cacheKey,'paid');}catch(e){}
 cb('paid');
+}else if(st==='rejected'){
+try{localStorage.removeItem('nb-mol-bio-pending__'+u);}catch(e){}
+cb('rejected',docs[0].data().rejectionNote||'');
 }else{
 try{localStorage.setItem('nb-mol-bio-pending__'+u,'true');}catch(e){}
 cb('pending');
@@ -10112,18 +10218,25 @@ cb('pending');
 
 function acShowMbPayModal(mode){
 var el=document.getElementById('vcash-overlay');if(!el)return;
-var stepPay=document.getElementById('vcash-step-pay');
-var stepPend=document.getElementById('vcash-step-pending');
 document.getElementById('vcash-number').textContent=_MB_VCASH_NUM;
 document.getElementById('vcash-price-display').textContent=_MB_COURSE_PRICE+' جنيه';
+document.getElementById('vcash-method-price-display').textContent=_MB_COURSE_PRICE+' جنيه';
+document.getElementById('vcash-ip-price-display').textContent=_MB_COURSE_PRICE+' جنيه';
+acVcashRenderInstapayInfo('vcash',_MB_INSTAPAY_INFO);
 if(mode==='pending'){
-stepPay.classList.remove('on');stepPend.classList.add('on');
+acVcashSetStep('vcash','pending');
 }else{
-stepPay.classList.add('on');stepPend.classList.remove('on');
+acVcashSetStep('vcash','method');
 var ph=document.getElementById('vcash-phone');var rf=document.getElementById('vcash-ref');
 if(ph)ph.value='';if(rf)rf.value='';
+var iph=document.getElementById('vcash-ip-phone');var irf=document.getElementById('vcash-ip-ref');
+if(iph)iph.value='';if(irf)irf.value='';
+acVcashResetReceipt('vcash-receipt');
+acVcashResetReceipt('vcash-ip-receipt');
 var btn=document.getElementById('vcash-submit-btn');
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
+var ibtn=document.getElementById('vcash-ip-submit-btn');
+if(ibtn){ibtn.disabled=false;ibtn.textContent='أرسل طلب التفعيل';}
 }
 el.classList.add('on');
 document.body.classList.add('modal-open');
@@ -10152,20 +10265,35 @@ if(typeof showToast==='function')showToast('تم نسخ الرقم','ok');
 }
 }
 
-function acSubmitMbPayment(){
+function acSubmitMbPayment(method){
+method=method||'vodafone_cash';
 var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
 if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أولاً','err');return;}
-var phone=(document.getElementById('vcash-phone').value||'').trim();
-var ref=(document.getElementById('vcash-ref').value||'').trim();
+var isIP=method==='instapay';
+var phoneId=isIP?'vcash-ip-phone':'vcash-phone';
+var refId=isIP?'vcash-ip-ref':'vcash-ref';
+var fileId=isIP?'vcash-ip-receipt':'vcash-receipt';
+var btnId=isIP?'vcash-ip-submit-btn':'vcash-submit-btn';
+var phone=(document.getElementById(phoneId).value||'').trim();
+var ref=(document.getElementById(refId).value||'').trim();
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
 }
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
 }
-var btn=document.getElementById('vcash-submit-btn');
+var fileInput=document.getElementById(fileId);
+var file=fileInput&&fileInput.files&&fileInput.files[0];
+if(!file){
+if(typeof showToast==='function')showToast('برجاء إرفاق صورة إيصال التحويل','err');return;
+}
+var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
-db.collection('course_payments').add({
+var receiptRef=storage.ref().child('payment-receipts/'+u+'-mol-bio-'+Date.now());
+receiptRef.put(file).then(function(){
+return receiptRef.getDownloadURL();
+}).then(function(receiptUrl){
+return db.collection('course_payments').add({
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -10174,15 +10302,15 @@ courseId:'mol-bio',
 amount:_MB_COURSE_PRICE,
 currency:'EGP',
 status:'pending',
+paymentMethod:method,
+receiptUrl:receiptUrl,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
 }).then(function(docRef){
 try{localStorage.setItem('nb-mol-bio-pending__'+u,'true');}catch(e){}
-var stepPay=document.getElementById('vcash-step-pay');
-var stepPend=document.getElementById('vcash-step-pending');
 var refDisp=document.getElementById('vcash-pending-ref-display');
 if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  رقم التواصل: '+ref;
-if(stepPay)stepPay.classList.remove('on');
-if(stepPend)stepPend.classList.add('on');
+acVcashSetStep('vcash','pending');
 if(typeof showToast==='function')showToast('تم إرسال طلبك — سيُفعَّل الكورس خلال 24 ساعة','ok');
 /* Re-render catalog card if visible */
 if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
@@ -22871,6 +22999,7 @@ cor:0,exp:'التوتيبوتنتية، التي درسناها في المحا�
 
 var _FS_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
 var _FS_COURSE_PRICE=25;          /* ← السعر بالجنيه              */
+var _FS_INSTAPAY_INFO={handle:'',mobile:'',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
 function acFsStatus(){
@@ -22906,6 +23035,9 @@ var st=docs[0].data().status;
 if(st==='approved'){
 try{localStorage.setItem(cacheKey,'paid');}catch(e){}
 cb('paid');
+}else if(st==='rejected'){
+try{localStorage.removeItem('nb-food-safety-pending__'+u);}catch(e){}
+cb('rejected',docs[0].data().rejectionNote||'');
 }else{
 try{localStorage.setItem('nb-food-safety-pending__'+u,'true');}catch(e){}
 cb('pending');
@@ -22916,18 +23048,25 @@ cb('pending');
 
 function acShowFsPayModal(mode){
 var el=document.getElementById('vcash4-overlay');if(!el)return;
-var stepPay=document.getElementById('vcash4-step-pay');
-var stepPend=document.getElementById('vcash4-step-pending');
 document.getElementById('vcash4-number').textContent=_FS_VCASH_NUM;
 document.getElementById('vcash4-price-display').textContent=_FS_COURSE_PRICE+' جنيه';
+document.getElementById('vcash4-method-price-display').textContent=_FS_COURSE_PRICE+' جنيه';
+document.getElementById('vcash4-ip-price-display').textContent=_FS_COURSE_PRICE+' جنيه';
+acVcashRenderInstapayInfo('vcash4',_FS_INSTAPAY_INFO);
 if(mode==='pending'){
-stepPay.classList.remove('on');stepPend.classList.add('on');
+acVcashSetStep('vcash4','pending');
 }else{
-stepPay.classList.add('on');stepPend.classList.remove('on');
+acVcashSetStep('vcash4','method');
 var ph=document.getElementById('vcash4-phone');var rf=document.getElementById('vcash4-ref');
 if(ph)ph.value='';if(rf)rf.value='';
+var iph=document.getElementById('vcash4-ip-phone');var irf=document.getElementById('vcash4-ip-ref');
+if(iph)iph.value='';if(irf)irf.value='';
+acVcashResetReceipt('vcash4-receipt');
+acVcashResetReceipt('vcash4-ip-receipt');
 var btn=document.getElementById('vcash4-submit-btn');
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
+var ibtn=document.getElementById('vcash4-ip-submit-btn');
+if(ibtn){ibtn.disabled=false;ibtn.textContent='أرسل طلب التفعيل';}
 }
 el.classList.add('on');
 document.body.classList.add('modal-open');
@@ -22956,20 +23095,35 @@ if(typeof showToast==='function')showToast('تم نسخ الرقم','ok');
 }
 }
 
-function acSubmitFsPayment(){
+function acSubmitFsPayment(method){
+method=method||'vodafone_cash';
 var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
 if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أولاً','err');return;}
-var phone=(document.getElementById('vcash4-phone').value||'').trim();
-var ref=(document.getElementById('vcash4-ref').value||'').trim();
+var isIP=method==='instapay';
+var phoneId=isIP?'vcash4-ip-phone':'vcash4-phone';
+var refId=isIP?'vcash4-ip-ref':'vcash4-ref';
+var fileId=isIP?'vcash4-ip-receipt':'vcash4-receipt';
+var btnId=isIP?'vcash4-ip-submit-btn':'vcash4-submit-btn';
+var phone=(document.getElementById(phoneId).value||'').trim();
+var ref=(document.getElementById(refId).value||'').trim();
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
 }
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
 }
-var btn=document.getElementById('vcash4-submit-btn');
+var fileInput=document.getElementById(fileId);
+var file=fileInput&&fileInput.files&&fileInput.files[0];
+if(!file){
+if(typeof showToast==='function')showToast('برجاء إرفاق صورة إيصال التحويل','err');return;
+}
+var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
-db.collection('course_payments').add({
+var receiptRef=storage.ref().child('payment-receipts/'+u+'-food-safety-'+Date.now());
+receiptRef.put(file).then(function(){
+return receiptRef.getDownloadURL();
+}).then(function(receiptUrl){
+return db.collection('course_payments').add({
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -22978,15 +23132,15 @@ courseId:'food-safety',
 amount:_FS_COURSE_PRICE,
 currency:'EGP',
 status:'pending',
+paymentMethod:method,
+receiptUrl:receiptUrl,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
 }).then(function(docRef){
 try{localStorage.setItem('nb-food-safety-pending__'+u,'true');}catch(e){}
-var stepPay=document.getElementById('vcash4-step-pay');
-var stepPend=document.getElementById('vcash4-step-pending');
 var refDisp=document.getElementById('vcash4-pending-ref-display');
 if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  رقم التواصل: '+ref;
-if(stepPay)stepPay.classList.remove('on');
-if(stepPend)stepPend.classList.add('on');
+acVcashSetStep('vcash4','pending');
 if(typeof showToast==='function')showToast('تم إرسال طلبك — سيُفعَّل الكورس خلال 24 ساعة','ok');
 /* Re-render catalog card if visible */
 if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
@@ -23011,6 +23165,7 @@ window.acSubmitFsPayment=acSubmitFsPayment;
 
 var _TC_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
 var _TC_COURSE_PRICE=150;          /* ← السعر بالجنيه              */
+var _TC_INSTAPAY_INFO={handle:'',mobile:'',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
 function acTcStatus(){
@@ -23046,6 +23201,9 @@ var st=docs[0].data().status;
 if(st==='approved'){
 try{localStorage.setItem(cacheKey,'paid');}catch(e){}
 cb('paid');
+}else if(st==='rejected'){
+try{localStorage.removeItem('nb-tissue-culture-pending__'+u);}catch(e){}
+cb('rejected',docs[0].data().rejectionNote||'');
 }else{
 try{localStorage.setItem('nb-tissue-culture-pending__'+u,'true');}catch(e){}
 cb('pending');
@@ -23056,18 +23214,25 @@ cb('pending');
 
 function acShowTcPayModal(mode){
 var el=document.getElementById('vcash5-overlay');if(!el)return;
-var stepPay=document.getElementById('vcash5-step-pay');
-var stepPend=document.getElementById('vcash5-step-pending');
 document.getElementById('vcash5-number').textContent=_TC_VCASH_NUM;
 document.getElementById('vcash5-price-display').textContent=_TC_COURSE_PRICE+' جنيه';
+document.getElementById('vcash5-method-price-display').textContent=_TC_COURSE_PRICE+' جنيه';
+document.getElementById('vcash5-ip-price-display').textContent=_TC_COURSE_PRICE+' جنيه';
+acVcashRenderInstapayInfo('vcash5',_TC_INSTAPAY_INFO);
 if(mode==='pending'){
-stepPay.classList.remove('on');stepPend.classList.add('on');
+acVcashSetStep('vcash5','pending');
 }else{
-stepPay.classList.add('on');stepPend.classList.remove('on');
+acVcashSetStep('vcash5','method');
 var ph=document.getElementById('vcash5-phone');var rf=document.getElementById('vcash5-ref');
 if(ph)ph.value='';if(rf)rf.value='';
+var iph=document.getElementById('vcash5-ip-phone');var irf=document.getElementById('vcash5-ip-ref');
+if(iph)iph.value='';if(irf)irf.value='';
+acVcashResetReceipt('vcash5-receipt');
+acVcashResetReceipt('vcash5-ip-receipt');
 var btn=document.getElementById('vcash5-submit-btn');
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
+var ibtn=document.getElementById('vcash5-ip-submit-btn');
+if(ibtn){ibtn.disabled=false;ibtn.textContent='أرسل طلب التفعيل';}
 }
 el.classList.add('on');
 document.body.classList.add('modal-open');
@@ -23096,20 +23261,35 @@ if(typeof showToast==='function')showToast('تم نسخ الرقم','ok');
 }
 }
 
-function acSubmitTcPayment(){
+function acSubmitTcPayment(method){
+method=method||'vodafone_cash';
 var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
 if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أولاً','err');return;}
-var phone=(document.getElementById('vcash5-phone').value||'').trim();
-var ref=(document.getElementById('vcash5-ref').value||'').trim();
+var isIP=method==='instapay';
+var phoneId=isIP?'vcash5-ip-phone':'vcash5-phone';
+var refId=isIP?'vcash5-ip-ref':'vcash5-ref';
+var fileId=isIP?'vcash5-ip-receipt':'vcash5-receipt';
+var btnId=isIP?'vcash5-ip-submit-btn':'vcash5-submit-btn';
+var phone=(document.getElementById(phoneId).value||'').trim();
+var ref=(document.getElementById(refId).value||'').trim();
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
 }
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
 }
-var btn=document.getElementById('vcash5-submit-btn');
+var fileInput=document.getElementById(fileId);
+var file=fileInput&&fileInput.files&&fileInput.files[0];
+if(!file){
+if(typeof showToast==='function')showToast('برجاء إرفاق صورة إيصال التحويل','err');return;
+}
+var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
-db.collection('course_payments').add({
+var receiptRef=storage.ref().child('payment-receipts/'+u+'-tissue-culture-'+Date.now());
+receiptRef.put(file).then(function(){
+return receiptRef.getDownloadURL();
+}).then(function(receiptUrl){
+return db.collection('course_payments').add({
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -23118,15 +23298,15 @@ courseId:'tissue-culture',
 amount:_TC_COURSE_PRICE,
 currency:'EGP',
 status:'pending',
+paymentMethod:method,
+receiptUrl:receiptUrl,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
 }).then(function(docRef){
 try{localStorage.setItem('nb-tissue-culture-pending__'+u,'true');}catch(e){}
-var stepPay=document.getElementById('vcash5-step-pay');
-var stepPend=document.getElementById('vcash5-step-pending');
 var refDisp=document.getElementById('vcash5-pending-ref-display');
 if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  رقم التواصل: '+ref;
-if(stepPay)stepPay.classList.remove('on');
-if(stepPend)stepPend.classList.add('on');
+acVcashSetStep('vcash5','pending');
 if(typeof showToast==='function')showToast('تم إرسال طلبك — سيُفعَّل الكورس خلال 24 ساعة','ok');
 /* Re-render catalog card if visible */
 if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
@@ -29477,18 +29657,21 @@ if(typeof showToast==='function')showToast('📄 جاري تجهيز المحا�
    pending/none routing openCourse() already uses — landing on the payment
    modal for a non-subscriber instead of the info page they just came from. */
 function _acSubscribeCheckAndModal(cid){
-if(cid==='mol-bio')acCheckMbAccess(function(st){
+if(cid==='mol-bio')acCheckMbAccess(function(st,note){
 if(st==='paid'){acSwitchCourse('mol-bio');acGo('home',null);if(typeof showToast==='function')showToast('✅ أنت مشترك بالفعل في هذه الدورة','ok');}
 else if(st==='suspended'){if(typeof showToast==='function')showToast('⛔ تم إيقاف اشتراكك في هذه الدورة — تواصل مع الدعم للاستفسار','err');}
+else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowMbPayModal('rejected');}
 else acShowMbPayModal(st);
 });
-else if(cid==='food-safety')acCheckFsAccess(function(st){
+else if(cid==='food-safety')acCheckFsAccess(function(st,note){
 if(st==='paid'){acSwitchCourse('food-safety');acGo('home',null);if(typeof showToast==='function')showToast('✅ أنت مشترك بالفعل في هذه الدورة','ok');}
 else if(st==='suspended'){if(typeof showToast==='function')showToast('⛔ تم إيقاف اشتراكك في هذه الدورة — تواصل مع الدعم للاستفسار','err');}
+else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowFsPayModal('rejected');}
 else acShowFsPayModal(st);
 });
-else if(cid==='tissue-culture')acCheckTcAccess(function(st){
+else if(cid==='tissue-culture')acCheckTcAccess(function(st,note){
 if(st==='paid'){acSwitchCourse('tissue-culture');acGo('home',null);if(typeof showToast==='function')showToast('✅ أنت مشترك بالفعل في هذه الدورة','ok');}
+else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowTcPayModal('rejected');}
 else acShowTcPayModal(st);
 });
 }
@@ -29519,10 +29702,11 @@ if(!(typeof currentUser!=='undefined'&&currentUser)){
 acSwitchCourse('mol-bio');acGo('info',null);
 return;
 }
-acCheckMbAccess(function(st){
+acCheckMbAccess(function(st,note){
 if(st==='paid'){acSwitchCourse('mol-bio');resume?NAcademy.openFirst():acGo('home',null);}
 else if(st==='suspended'){if(typeof showToast==='function')showToast('⛔ تم إيقاف اشتراكك في هذه الدورة — تواصل مع الدعم للاستفسار','err');}
 else if(st==='pending'){acShowMbPayModal('pending');}
+else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowMbPayModal('rejected');}
 else{acSwitchCourse('mol-bio');acGo('info',null);}
 });
 }
@@ -29534,10 +29718,11 @@ if(!(typeof currentUser!=='undefined'&&currentUser)){
 acSwitchCourse('food-safety');acGo('info',null);
 return;
 }
-acCheckFsAccess(function(st){
+acCheckFsAccess(function(st,note){
 if(st==='paid'){acSwitchCourse('food-safety');resume?NAcademy.openFirst():acGo('home',null);}
 else if(st==='suspended'){if(typeof showToast==='function')showToast('⛔ تم إيقاف اشتراكك في هذه الدورة — تواصل مع الدعم للاستفسار','err');}
 else if(st==='pending'){acShowFsPayModal('pending');}
+else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowFsPayModal('rejected');}
 else{acSwitchCourse('food-safety');acGo('info',null);}
 });
 }
@@ -29549,9 +29734,10 @@ if(!(typeof currentUser!=='undefined'&&currentUser)){
 acSwitchCourse('tissue-culture');acGo('info',null);
 return;
 }
-acCheckTcAccess(function(st){
+acCheckTcAccess(function(st,note){
 if(st==='paid'){acSwitchCourse('tissue-culture');resume?NAcademy.openFirst():acGo('home',null);}
 else if(st==='pending'){acShowTcPayModal('pending');}
+else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowTcPayModal('rejected');}
 else{acSwitchCourse('tissue-culture');acGo('info',null);}
 });
 }
@@ -29649,8 +29835,12 @@ else acGo('home',null);
 var msg=passed?(nextId?(gateRem>0?'🎉 أحسنت! أنهيت هذه الوحدة بنجاح ('+score+'%) — الوحدة التالية تفتح غدًا':'✅ اجتزت الاختبار بنجاح ('+score+'%) — ننتقل للمحاضرة التالية'):'🎉 اجتزت اختبار آخر محاضرة! يمكنك الآن دخول الاختبار النهائي'):'📝 لم تجتز الاختبار ('+score+'%) — راجع المحاضرة وأعد المحاولة';
 if(typeof showToast==='function')showToast(msg,'ok')
 };
-var _fqOnStatus=function(st){
+var _fqOnStatus=function(st,note){
 if(st==='paid')_fqProceed();
+else if(st==='rejected'){
+acGo('info',null);
+if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلب اشتراكك السابق — يمكنك إعادة المحاولة من صفحة الدورة'),'err');
+}
 else{
 acGo('info',null);
 if(typeof showToast==='function')showToast('🎉 أحسنت في المحاضرة الأولى ('+score+'%) — اشترك الآن لمتابعة باقي الدورة','inf');
@@ -38903,7 +39093,35 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     <div class="vcash-body">
       <!-- ── خطوة الدفع ── -->
-      <div class="vcash-steps on" id="vcash-step-pay">
+      <!-- ── خطوة اختيار وسيلة الدفع ── -->
+      <div class="vcash-steps on" id="vcash-step-method">
+        <div class="vcash-info-card">
+          <div class="vcash-info-row">
+            <span class="vcash-info-lbl">السعر بعد خصم 90%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash-method-price-display">25 جنيه</span></div>
+          </div>
+        </div>
+        <div class="vcash-trust-line">🔒 دفع آمن — تفعيل خلال 24 ساعة</div>
+        <div class="vcash-method-card vodafone" onclick="acVcashSetStep('vcash','pay')" role="button" tabindex="0">
+          <div class="vcash-method-ico">📱</div>
+          <div class="vcash-method-txt">
+            <div class="vcash-method-name">فودافون كاش</div>
+            <div class="vcash-method-sub">حوّل من محفظتك مباشرة</div>
+          </div>
+          <div class="vcash-method-arrow">‹</div>
+        </div>
+        <div class="vcash-method-card instapay" onclick="acVcashSetStep('vcash','instapay')" role="button" tabindex="0">
+          <div class="vcash-method-ico">🏦</div>
+          <div class="vcash-method-txt">
+            <div class="vcash-method-name">InstaPay</div>
+            <div class="vcash-method-sub">تحويل فوري من أي بنك</div>
+          </div>
+          <div class="vcash-method-arrow">‹</div>
+        </div>
+      </div>
+      <!-- ── خطوة الدفع (فودافون كاش) ── -->
+      <div class="vcash-steps" id="vcash-step-pay">
+        <button class="vcash-back-link" onclick="acVcashSetStep('vcash','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card">
           <div class="vcash-info-row">
             <span class="vcash-info-lbl">السعر بعد خصم 90%</span>
@@ -38934,7 +39152,53 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
-        <button class="vcash-btn-primary" id="vcash-submit-btn" onclick="acSubmitMbPayment()">أرسل طلب التفعيل</button>
+        <div class="vcash-field-lbl">صورة إيصال التحويل (مطلوبة)</div>
+        <input type="file" id="vcash-receipt" accept="image/*" style="display:none" onchange="acVcashReceiptChange('vcash-receipt')">
+        <div class="vcash-receipt-zone" id="vcash-receipt-zone" onclick="document.getElementById('vcash-receipt').click()">
+          <img id="vcash-receipt-thumb" class="vcash-receipt-thumb" alt="معاينة الإيصال">
+          <div class="vcash-receipt-placeholder"><span class="vcash-receipt-ico">📎</span><span>اضغط لإرفاق صورة الإيصال</span></div>
+          <div class="vcash-receipt-name" id="vcash-receipt-name"></div>
+        </div>
+        <button class="vcash-btn-primary" id="vcash-submit-btn" onclick="acSubmitMbPayment('vodafone_cash')">أرسل طلب التفعيل</button>
+        <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
+      </div>
+      <!-- ── خطوة الدفع (InstaPay) ── -->
+      <div class="vcash-steps" id="vcash-step-instapay">
+        <button class="vcash-back-link" onclick="acVcashSetStep('vcash','method')">→ رجوع لاختيار وسيلة الدفع</button>
+        <div class="vcash-info-card instapay">
+          <div class="vcash-info-row">
+            <span class="vcash-info-lbl">السعر بعد خصم 90%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash-ip-price-display">25 جنيه</span></div>
+          </div>
+          <div class="vcash-info-divider"></div>
+          <div class="vcash-num-wrap" id="vcash-ip-identifiers"></div>
+        </div>
+        <div class="vcash-steps-list">
+          <div class="vcash-step-item">
+            <div class="vcash-step-num instapay">1</div>
+            <div class="vcash-step-txt"><strong>افتح تطبيق InstaPay أو تطبيق بنكك</strong>اختار «تحويل» وأدخل البيانات أعلاه</div>
+          </div>
+          <div class="vcash-step-item">
+            <div class="vcash-step-num instapay">2</div>
+            <div class="vcash-step-txt"><strong>أرسل المبلغ من حسابك</strong>تأكد من إرسال المبلغ بالكامل</div>
+          </div>
+          <div class="vcash-step-item">
+            <div class="vcash-step-num instapay">3</div>
+            <div class="vcash-step-txt"><strong>أدخل التفاصيل هنا</strong>وسيُفعَّل الكورس خلال 24 ساعة بعد التحقق</div>
+          </div>
+        </div>
+        <div class="vcash-field-lbl">رقم هاتفك المُرسِل</div>
+        <input class="vcash-field" id="vcash-ip-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
+        <input class="vcash-field" id="vcash-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">صورة إيصال التحويل (مطلوبة)</div>
+        <input type="file" id="vcash-ip-receipt" accept="image/*" style="display:none" onchange="acVcashReceiptChange('vcash-ip-receipt')">
+        <div class="vcash-receipt-zone" id="vcash-ip-receipt-zone" onclick="document.getElementById('vcash-ip-receipt').click()">
+          <img id="vcash-ip-receipt-thumb" class="vcash-receipt-thumb" alt="معاينة الإيصال">
+          <div class="vcash-receipt-placeholder"><span class="vcash-receipt-ico">📎</span><span>اضغط لإرفاق صورة الإيصال</span></div>
+          <div class="vcash-receipt-name" id="vcash-ip-receipt-name"></div>
+        </div>
+        <button class="vcash-btn-primary" id="vcash-ip-submit-btn" onclick="acSubmitMbPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
       </div>
       <!-- ── خطوة الانتظار ── -->
@@ -39081,7 +39345,35 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     <div class="vcash-body">
       <!-- ── خطوة الدفع ── -->
-      <div class="vcash-steps on" id="vcash4-step-pay">
+      <!-- ── خطوة اختيار وسيلة الدفع ── -->
+      <div class="vcash-steps on" id="vcash4-step-method">
+        <div class="vcash-info-card">
+          <div class="vcash-info-row">
+            <span class="vcash-info-lbl">السعر بعد خصم 90%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash4-method-price-display">25 جنيه</span></div>
+          </div>
+        </div>
+        <div class="vcash-trust-line">🔒 دفع آمن — تفعيل خلال 24 ساعة</div>
+        <div class="vcash-method-card vodafone" onclick="acVcashSetStep('vcash4','pay')" role="button" tabindex="0">
+          <div class="vcash-method-ico">📱</div>
+          <div class="vcash-method-txt">
+            <div class="vcash-method-name">فودافون كاش</div>
+            <div class="vcash-method-sub">حوّل من محفظتك مباشرة</div>
+          </div>
+          <div class="vcash-method-arrow">‹</div>
+        </div>
+        <div class="vcash-method-card instapay" onclick="acVcashSetStep('vcash4','instapay')" role="button" tabindex="0">
+          <div class="vcash-method-ico">🏦</div>
+          <div class="vcash-method-txt">
+            <div class="vcash-method-name">InstaPay</div>
+            <div class="vcash-method-sub">تحويل فوري من أي بنك</div>
+          </div>
+          <div class="vcash-method-arrow">‹</div>
+        </div>
+      </div>
+      <!-- ── خطوة الدفع (فودافون كاش) ── -->
+      <div class="vcash-steps" id="vcash4-step-pay">
+        <button class="vcash-back-link" onclick="acVcashSetStep('vcash4','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card">
           <div class="vcash-info-row">
             <span class="vcash-info-lbl">السعر بعد خصم 90%</span>
@@ -39112,7 +39404,53 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash4-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash4-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
-        <button class="vcash-btn-primary" id="vcash4-submit-btn" onclick="acSubmitFsPayment()">أرسل طلب التفعيل</button>
+        <div class="vcash-field-lbl">صورة إيصال التحويل (مطلوبة)</div>
+        <input type="file" id="vcash4-receipt" accept="image/*" style="display:none" onchange="acVcashReceiptChange('vcash4-receipt')">
+        <div class="vcash-receipt-zone" id="vcash4-receipt-zone" onclick="document.getElementById('vcash4-receipt').click()">
+          <img id="vcash4-receipt-thumb" class="vcash-receipt-thumb" alt="معاينة الإيصال">
+          <div class="vcash-receipt-placeholder"><span class="vcash-receipt-ico">📎</span><span>اضغط لإرفاق صورة الإيصال</span></div>
+          <div class="vcash-receipt-name" id="vcash4-receipt-name"></div>
+        </div>
+        <button class="vcash-btn-primary" id="vcash4-submit-btn" onclick="acSubmitFsPayment('vodafone_cash')">أرسل طلب التفعيل</button>
+        <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
+      </div>
+      <!-- ── خطوة الدفع (InstaPay) ── -->
+      <div class="vcash-steps" id="vcash4-step-instapay">
+        <button class="vcash-back-link" onclick="acVcashSetStep('vcash4','method')">→ رجوع لاختيار وسيلة الدفع</button>
+        <div class="vcash-info-card instapay">
+          <div class="vcash-info-row">
+            <span class="vcash-info-lbl">السعر بعد خصم 90%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash4-ip-price-display">25 جنيه</span></div>
+          </div>
+          <div class="vcash-info-divider"></div>
+          <div class="vcash-num-wrap" id="vcash4-ip-identifiers"></div>
+        </div>
+        <div class="vcash-steps-list">
+          <div class="vcash-step-item">
+            <div class="vcash-step-num instapay">1</div>
+            <div class="vcash-step-txt"><strong>افتح تطبيق InstaPay أو تطبيق بنكك</strong>اختار «تحويل» وأدخل البيانات أعلاه</div>
+          </div>
+          <div class="vcash-step-item">
+            <div class="vcash-step-num instapay">2</div>
+            <div class="vcash-step-txt"><strong>أرسل المبلغ من حسابك</strong>تأكد من إرسال المبلغ بالكامل</div>
+          </div>
+          <div class="vcash-step-item">
+            <div class="vcash-step-num instapay">3</div>
+            <div class="vcash-step-txt"><strong>أدخل التفاصيل هنا</strong>وسيُفعَّل الكورس خلال 24 ساعة بعد التحقق</div>
+          </div>
+        </div>
+        <div class="vcash-field-lbl">رقم هاتفك المُرسِل</div>
+        <input class="vcash-field" id="vcash4-ip-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
+        <input class="vcash-field" id="vcash4-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">صورة إيصال التحويل (مطلوبة)</div>
+        <input type="file" id="vcash4-ip-receipt" accept="image/*" style="display:none" onchange="acVcashReceiptChange('vcash4-ip-receipt')">
+        <div class="vcash-receipt-zone" id="vcash4-ip-receipt-zone" onclick="document.getElementById('vcash4-ip-receipt').click()">
+          <img id="vcash4-ip-receipt-thumb" class="vcash-receipt-thumb" alt="معاينة الإيصال">
+          <div class="vcash-receipt-placeholder"><span class="vcash-receipt-ico">📎</span><span>اضغط لإرفاق صورة الإيصال</span></div>
+          <div class="vcash-receipt-name" id="vcash4-ip-receipt-name"></div>
+        </div>
+        <button class="vcash-btn-primary" id="vcash4-ip-submit-btn" onclick="acSubmitFsPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
       </div>
       <!-- ── خطوة الانتظار ── -->
@@ -39139,7 +39477,35 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     <div class="vcash-body">
       <!-- ── خطوة الدفع ── -->
-      <div class="vcash-steps on" id="vcash5-step-pay">
+      <!-- ── خطوة اختيار وسيلة الدفع ── -->
+      <div class="vcash-steps on" id="vcash5-step-method">
+        <div class="vcash-info-card">
+          <div class="vcash-info-row">
+            <span class="vcash-info-lbl">سعر الاشتراك</span>
+            <div><span class="vcash-info-val" id="vcash5-method-price-display">150 جنيه</span></div>
+          </div>
+        </div>
+        <div class="vcash-trust-line">🔒 دفع آمن — تفعيل خلال 24 ساعة</div>
+        <div class="vcash-method-card vodafone" onclick="acVcashSetStep('vcash5','pay')" role="button" tabindex="0">
+          <div class="vcash-method-ico">📱</div>
+          <div class="vcash-method-txt">
+            <div class="vcash-method-name">فودافون كاش</div>
+            <div class="vcash-method-sub">حوّل من محفظتك مباشرة</div>
+          </div>
+          <div class="vcash-method-arrow">‹</div>
+        </div>
+        <div class="vcash-method-card instapay" onclick="acVcashSetStep('vcash5','instapay')" role="button" tabindex="0">
+          <div class="vcash-method-ico">🏦</div>
+          <div class="vcash-method-txt">
+            <div class="vcash-method-name">InstaPay</div>
+            <div class="vcash-method-sub">تحويل فوري من أي بنك</div>
+          </div>
+          <div class="vcash-method-arrow">‹</div>
+        </div>
+      </div>
+      <!-- ── خطوة الدفع (فودافون كاش) ── -->
+      <div class="vcash-steps" id="vcash5-step-pay">
+        <button class="vcash-back-link" onclick="acVcashSetStep('vcash5','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card">
           <div class="vcash-info-row">
             <span class="vcash-info-lbl">سعر الاشتراك</span>
@@ -39170,7 +39536,53 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash5-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash5-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
-        <button class="vcash-btn-primary" id="vcash5-submit-btn" onclick="acSubmitTcPayment()">أرسل طلب التفعيل</button>
+        <div class="vcash-field-lbl">صورة إيصال التحويل (مطلوبة)</div>
+        <input type="file" id="vcash5-receipt" accept="image/*" style="display:none" onchange="acVcashReceiptChange('vcash5-receipt')">
+        <div class="vcash-receipt-zone" id="vcash5-receipt-zone" onclick="document.getElementById('vcash5-receipt').click()">
+          <img id="vcash5-receipt-thumb" class="vcash-receipt-thumb" alt="معاينة الإيصال">
+          <div class="vcash-receipt-placeholder"><span class="vcash-receipt-ico">📎</span><span>اضغط لإرفاق صورة الإيصال</span></div>
+          <div class="vcash-receipt-name" id="vcash5-receipt-name"></div>
+        </div>
+        <button class="vcash-btn-primary" id="vcash5-submit-btn" onclick="acSubmitTcPayment('vodafone_cash')">أرسل طلب التفعيل</button>
+        <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
+      </div>
+      <!-- ── خطوة الدفع (InstaPay) ── -->
+      <div class="vcash-steps" id="vcash5-step-instapay">
+        <button class="vcash-back-link" onclick="acVcashSetStep('vcash5','method')">→ رجوع لاختيار وسيلة الدفع</button>
+        <div class="vcash-info-card instapay">
+          <div class="vcash-info-row">
+            <span class="vcash-info-lbl">سعر الاشتراك</span>
+            <div><span class="vcash-info-val" id="vcash5-ip-price-display">150 جنيه</span></div>
+          </div>
+          <div class="vcash-info-divider"></div>
+          <div class="vcash-num-wrap" id="vcash5-ip-identifiers"></div>
+        </div>
+        <div class="vcash-steps-list">
+          <div class="vcash-step-item">
+            <div class="vcash-step-num instapay">1</div>
+            <div class="vcash-step-txt"><strong>افتح تطبيق InstaPay أو تطبيق بنكك</strong>اختار «تحويل» وأدخل البيانات أعلاه</div>
+          </div>
+          <div class="vcash-step-item">
+            <div class="vcash-step-num instapay">2</div>
+            <div class="vcash-step-txt"><strong>أرسل المبلغ من حسابك</strong>تأكد من إرسال المبلغ بالكامل</div>
+          </div>
+          <div class="vcash-step-item">
+            <div class="vcash-step-num instapay">3</div>
+            <div class="vcash-step-txt"><strong>أدخل التفاصيل هنا</strong>وسيُفعَّل الكورس خلال 24 ساعة بعد التحقق</div>
+          </div>
+        </div>
+        <div class="vcash-field-lbl">رقم هاتفك المُرسِل</div>
+        <input class="vcash-field" id="vcash5-ip-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
+        <input class="vcash-field" id="vcash5-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">صورة إيصال التحويل (مطلوبة)</div>
+        <input type="file" id="vcash5-ip-receipt" accept="image/*" style="display:none" onchange="acVcashReceiptChange('vcash5-ip-receipt')">
+        <div class="vcash-receipt-zone" id="vcash5-ip-receipt-zone" onclick="document.getElementById('vcash5-ip-receipt').click()">
+          <img id="vcash5-ip-receipt-thumb" class="vcash-receipt-thumb" alt="معاينة الإيصال">
+          <div class="vcash-receipt-placeholder"><span class="vcash-receipt-ico">📎</span><span>اضغط لإرفاق صورة الإيصال</span></div>
+          <div class="vcash-receipt-name" id="vcash5-ip-receipt-name"></div>
+        </div>
+        <button class="vcash-btn-primary" id="vcash5-ip-submit-btn" onclick="acSubmitTcPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
       </div>
       <!-- ── خطوة الانتظار ── -->

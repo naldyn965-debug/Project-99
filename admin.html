@@ -468,7 +468,8 @@ const COURSE_LABELS = {
   'food-quality':     'جودة وسلامة الغذاء',
   'ag-english':       'الإنجليزية الزراعية',
   'food-safety':      'سلامة الغذاء',
-  'land-reclamation': 'استصلاح الأراضي'
+  'land-reclamation': 'استصلاح الأراضي',
+  'tissue-culture':   'زراعة الأنسجة النباتية وتطبيقاتها الحديثة'
 };
 
 /* ── Auth ───────────────────────────────────────── */
@@ -906,6 +907,8 @@ function buildCard(p) {
       '<div class="detail-item"><div class="detail-lbl">الدورة</div><div class="detail-val">' + courseLabel + '</div></div>' +
       '<div class="detail-item"><div class="detail-lbl">المبلغ</div><div class="detail-val">' + (p.amount||'—') + ' جنيه</div></div>' +
       '<div class="detail-item" style="word-break:break-all"><div class="detail-lbl">رقم الطلب</div><div class="detail-val" style="font-size:11px">' + p._id + '</div></div>' +
+      (p.paymentMethod ? '<div class="detail-item"><div class="detail-lbl">طريقة الدفع</div><div class="detail-val">' + (p.paymentMethod==='instapay' ? '🔷 InstaPay' : (p.paymentMethod==='vodafone_cash' ? '🔴 فودافون كاش' : p.paymentMethod)) + '</div></div>' : '') +
+      (p.receiptUrl ? '<div class="detail-item"><div class="detail-lbl">إيصال التحويل</div><div class="detail-val"><a href="' + p.receiptUrl + '" target="_blank" rel="noopener"><img src="' + p.receiptUrl + '" alt="إيصال الدفع" style="width:100%;max-width:110px;border-radius:8px;display:block;margin-top:2px"></a></div></div>' : '') +
     '</div>' +
     '<div class="pay-card-actions">' + actions + '</div>' +
   '</div>';
