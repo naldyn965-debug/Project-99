@@ -10318,7 +10318,7 @@ if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
 console.error('[VCash] code:',e&&e.code,'|',e);
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
 var _msg='خطأ في الإرسال — أعد المحاولة';
-if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'))
+if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'||e.code==='storage/unauthorized'||e.code==='storage/unauthenticated'))
   _msg='خطأ في الصلاحيات — تواصل مع الدعم';
 else if(e&&(e.code==='unavailable'||e.code==='deadline-exceeded'||e.code==='network-request-failed'))
   _msg='خطأ في الاتصال — تحقق من الإنترنت وأعد المحاولة';
@@ -23148,7 +23148,7 @@ if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
 console.error('[VCash4] code:',e&&e.code,'|',e);
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
 var _msg='خطأ في الإرسال — أعد المحاولة';
-if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'))
+if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'||e.code==='storage/unauthorized'||e.code==='storage/unauthenticated'))
   _msg='خطأ في الصلاحيات — تواصل مع الدعم';
 else if(e&&(e.code==='unavailable'||e.code==='deadline-exceeded'||e.code==='network-request-failed'))
   _msg='خطأ في الاتصال — تحقق من الإنترنت وأعد المحاولة';
@@ -23314,7 +23314,7 @@ if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
 console.error('[VCash5] code:',e&&e.code,'|',e);
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
 var _msg='خطأ في الإرسال — أعد المحاولة';
-if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'))
+if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'||e.code==='storage/unauthorized'||e.code==='storage/unauthenticated'))
   _msg='خطأ في الصلاحيات — تواصل مع الدعم';
 else if(e&&(e.code==='unavailable'||e.code==='deadline-exceeded'||e.code==='network-request-failed'))
   _msg='خطأ في الاتصال — تحقق من الإنترنت وأعد المحاولة';
