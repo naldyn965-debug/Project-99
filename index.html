@@ -10231,8 +10231,6 @@ var ph=document.getElementById('vcash-phone');var rf=document.getElementById('vc
 if(ph)ph.value='';if(rf)rf.value='';
 var iph=document.getElementById('vcash-ip-phone');var irf=document.getElementById('vcash-ip-ref');
 if(iph)iph.value='';if(irf)irf.value='';
-acVcashResetReceipt('vcash-receipt');
-acVcashResetReceipt('vcash-ip-receipt');
 var btn=document.getElementById('vcash-submit-btn');
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
 var ibtn=document.getElementById('vcash-ip-submit-btn');
@@ -10272,7 +10270,6 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash-ip-phone':'vcash-phone';
 var refId=isIP?'vcash-ip-ref':'vcash-ref';
-var fileId=isIP?'vcash-ip-receipt':'vcash-receipt';
 var btnId=isIP?'vcash-ip-submit-btn':'vcash-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
@@ -10282,18 +10279,9 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم اله�
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
 }
-var fileInput=document.getElementById(fileId);
-var file=fileInput&&fileInput.files&&fileInput.files[0];
-if(!file){
-if(typeof showToast==='function')showToast('برجاء إرفاق صورة إيصال التحويل','err');return;
-}
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
-var receiptRef=storage.ref().child('payment-receipts/'+u+'-mol-bio-'+Date.now());
-receiptRef.put(file).then(function(){
-return receiptRef.getDownloadURL();
-}).then(function(receiptUrl){
-return db.collection('course_payments').add({
+db.collection('course_payments').add({
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -10303,9 +10291,7 @@ amount:_MB_COURSE_PRICE,
 currency:'EGP',
 status:'pending',
 paymentMethod:method,
-receiptUrl:receiptUrl,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
-});
 }).then(function(docRef){
 try{localStorage.setItem('nb-mol-bio-pending__'+u,'true');}catch(e){}
 var refDisp=document.getElementById('vcash-pending-ref-display');
@@ -10318,7 +10304,7 @@ if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
 console.error('[VCash] code:',e&&e.code,'|',e);
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
 var _msg='خطأ في الإرسال — أعد المحاولة';
-if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'||e.code==='storage/unauthorized'||e.code==='storage/unauthenticated'))
+if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'))
   _msg='خطأ في الصلاحيات — تواصل مع الدعم';
 else if(e&&(e.code==='unavailable'||e.code==='deadline-exceeded'||e.code==='network-request-failed'))
   _msg='خطأ في الاتصال — تحقق من الإنترنت وأعد المحاولة';
@@ -23061,8 +23047,6 @@ var ph=document.getElementById('vcash4-phone');var rf=document.getElementById('v
 if(ph)ph.value='';if(rf)rf.value='';
 var iph=document.getElementById('vcash4-ip-phone');var irf=document.getElementById('vcash4-ip-ref');
 if(iph)iph.value='';if(irf)irf.value='';
-acVcashResetReceipt('vcash4-receipt');
-acVcashResetReceipt('vcash4-ip-receipt');
 var btn=document.getElementById('vcash4-submit-btn');
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
 var ibtn=document.getElementById('vcash4-ip-submit-btn');
@@ -23102,7 +23086,6 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash4-ip-phone':'vcash4-phone';
 var refId=isIP?'vcash4-ip-ref':'vcash4-ref';
-var fileId=isIP?'vcash4-ip-receipt':'vcash4-receipt';
 var btnId=isIP?'vcash4-ip-submit-btn':'vcash4-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
@@ -23112,18 +23095,9 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم اله�
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
 }
-var fileInput=document.getElementById(fileId);
-var file=fileInput&&fileInput.files&&fileInput.files[0];
-if(!file){
-if(typeof showToast==='function')showToast('برجاء إرفاق صورة إيصال التحويل','err');return;
-}
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
-var receiptRef=storage.ref().child('payment-receipts/'+u+'-food-safety-'+Date.now());
-receiptRef.put(file).then(function(){
-return receiptRef.getDownloadURL();
-}).then(function(receiptUrl){
-return db.collection('course_payments').add({
+db.collection('course_payments').add({
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -23133,9 +23107,7 @@ amount:_FS_COURSE_PRICE,
 currency:'EGP',
 status:'pending',
 paymentMethod:method,
-receiptUrl:receiptUrl,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
-});
 }).then(function(docRef){
 try{localStorage.setItem('nb-food-safety-pending__'+u,'true');}catch(e){}
 var refDisp=document.getElementById('vcash4-pending-ref-display');
@@ -23148,7 +23120,7 @@ if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
 console.error('[VCash4] code:',e&&e.code,'|',e);
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
 var _msg='خطأ في الإرسال — أعد المحاولة';
-if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'||e.code==='storage/unauthorized'||e.code==='storage/unauthenticated'))
+if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'))
   _msg='خطأ في الصلاحيات — تواصل مع الدعم';
 else if(e&&(e.code==='unavailable'||e.code==='deadline-exceeded'||e.code==='network-request-failed'))
   _msg='خطأ في الاتصال — تحقق من الإنترنت وأعد المحاولة';
@@ -23227,8 +23199,6 @@ var ph=document.getElementById('vcash5-phone');var rf=document.getElementById('v
 if(ph)ph.value='';if(rf)rf.value='';
 var iph=document.getElementById('vcash5-ip-phone');var irf=document.getElementById('vcash5-ip-ref');
 if(iph)iph.value='';if(irf)irf.value='';
-acVcashResetReceipt('vcash5-receipt');
-acVcashResetReceipt('vcash5-ip-receipt');
 var btn=document.getElementById('vcash5-submit-btn');
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
 var ibtn=document.getElementById('vcash5-ip-submit-btn');
@@ -23268,7 +23238,6 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash5-ip-phone':'vcash5-phone';
 var refId=isIP?'vcash5-ip-ref':'vcash5-ref';
-var fileId=isIP?'vcash5-ip-receipt':'vcash5-receipt';
 var btnId=isIP?'vcash5-ip-submit-btn':'vcash5-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
@@ -23278,18 +23247,9 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم اله�
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
 }
-var fileInput=document.getElementById(fileId);
-var file=fileInput&&fileInput.files&&fileInput.files[0];
-if(!file){
-if(typeof showToast==='function')showToast('برجاء إرفاق صورة إيصال التحويل','err');return;
-}
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
-var receiptRef=storage.ref().child('payment-receipts/'+u+'-tissue-culture-'+Date.now());
-receiptRef.put(file).then(function(){
-return receiptRef.getDownloadURL();
-}).then(function(receiptUrl){
-return db.collection('course_payments').add({
+db.collection('course_payments').add({
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -23299,9 +23259,7 @@ amount:_TC_COURSE_PRICE,
 currency:'EGP',
 status:'pending',
 paymentMethod:method,
-receiptUrl:receiptUrl,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
-});
 }).then(function(docRef){
 try{localStorage.setItem('nb-tissue-culture-pending__'+u,'true');}catch(e){}
 var refDisp=document.getElementById('vcash5-pending-ref-display');
@@ -23314,7 +23272,7 @@ if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
 console.error('[VCash5] code:',e&&e.code,'|',e);
 if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
 var _msg='خطأ في الإرسال — أعد المحاولة';
-if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'||e.code==='storage/unauthorized'||e.code==='storage/unauthenticated'))
+if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'))
   _msg='خطأ في الصلاحيات — تواصل مع الدعم';
 else if(e&&(e.code==='unavailable'||e.code==='deadline-exceeded'||e.code==='network-request-failed'))
   _msg='خطأ في الاتصال — تحقق من الإنترنت وأعد المحاولة';
@@ -39152,13 +39110,6 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
-        <div class="vcash-field-lbl">صورة إيصال التحويل (مطلوبة)</div>
-        <input type="file" id="vcash-receipt" accept="image/*" style="display:none" onchange="acVcashReceiptChange('vcash-receipt')">
-        <div class="vcash-receipt-zone" id="vcash-receipt-zone" onclick="document.getElementById('vcash-receipt').click()">
-          <img id="vcash-receipt-thumb" class="vcash-receipt-thumb" alt="معاينة الإيصال">
-          <div class="vcash-receipt-placeholder"><span class="vcash-receipt-ico">📎</span><span>اضغط لإرفاق صورة الإيصال</span></div>
-          <div class="vcash-receipt-name" id="vcash-receipt-name"></div>
-        </div>
         <button class="vcash-btn-primary" id="vcash-submit-btn" onclick="acSubmitMbPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
       </div>
@@ -39191,13 +39142,6 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash-ip-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
-        <div class="vcash-field-lbl">صورة إيصال التحويل (مطلوبة)</div>
-        <input type="file" id="vcash-ip-receipt" accept="image/*" style="display:none" onchange="acVcashReceiptChange('vcash-ip-receipt')">
-        <div class="vcash-receipt-zone" id="vcash-ip-receipt-zone" onclick="document.getElementById('vcash-ip-receipt').click()">
-          <img id="vcash-ip-receipt-thumb" class="vcash-receipt-thumb" alt="معاينة الإيصال">
-          <div class="vcash-receipt-placeholder"><span class="vcash-receipt-ico">📎</span><span>اضغط لإرفاق صورة الإيصال</span></div>
-          <div class="vcash-receipt-name" id="vcash-ip-receipt-name"></div>
-        </div>
         <button class="vcash-btn-primary" id="vcash-ip-submit-btn" onclick="acSubmitMbPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
       </div>
@@ -39404,13 +39348,6 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash4-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash4-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
-        <div class="vcash-field-lbl">صورة إيصال التحويل (مطلوبة)</div>
-        <input type="file" id="vcash4-receipt" accept="image/*" style="display:none" onchange="acVcashReceiptChange('vcash4-receipt')">
-        <div class="vcash-receipt-zone" id="vcash4-receipt-zone" onclick="document.getElementById('vcash4-receipt').click()">
-          <img id="vcash4-receipt-thumb" class="vcash-receipt-thumb" alt="معاينة الإيصال">
-          <div class="vcash-receipt-placeholder"><span class="vcash-receipt-ico">📎</span><span>اضغط لإرفاق صورة الإيصال</span></div>
-          <div class="vcash-receipt-name" id="vcash4-receipt-name"></div>
-        </div>
         <button class="vcash-btn-primary" id="vcash4-submit-btn" onclick="acSubmitFsPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
       </div>
@@ -39443,13 +39380,6 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash4-ip-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash4-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
-        <div class="vcash-field-lbl">صورة إيصال التحويل (مطلوبة)</div>
-        <input type="file" id="vcash4-ip-receipt" accept="image/*" style="display:none" onchange="acVcashReceiptChange('vcash4-ip-receipt')">
-        <div class="vcash-receipt-zone" id="vcash4-ip-receipt-zone" onclick="document.getElementById('vcash4-ip-receipt').click()">
-          <img id="vcash4-ip-receipt-thumb" class="vcash-receipt-thumb" alt="معاينة الإيصال">
-          <div class="vcash-receipt-placeholder"><span class="vcash-receipt-ico">📎</span><span>اضغط لإرفاق صورة الإيصال</span></div>
-          <div class="vcash-receipt-name" id="vcash4-ip-receipt-name"></div>
-        </div>
         <button class="vcash-btn-primary" id="vcash4-ip-submit-btn" onclick="acSubmitFsPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
       </div>
@@ -39536,13 +39466,6 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash5-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash5-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
-        <div class="vcash-field-lbl">صورة إيصال التحويل (مطلوبة)</div>
-        <input type="file" id="vcash5-receipt" accept="image/*" style="display:none" onchange="acVcashReceiptChange('vcash5-receipt')">
-        <div class="vcash-receipt-zone" id="vcash5-receipt-zone" onclick="document.getElementById('vcash5-receipt').click()">
-          <img id="vcash5-receipt-thumb" class="vcash-receipt-thumb" alt="معاينة الإيصال">
-          <div class="vcash-receipt-placeholder"><span class="vcash-receipt-ico">📎</span><span>اضغط لإرفاق صورة الإيصال</span></div>
-          <div class="vcash-receipt-name" id="vcash5-receipt-name"></div>
-        </div>
         <button class="vcash-btn-primary" id="vcash5-submit-btn" onclick="acSubmitTcPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
       </div>
@@ -39575,13 +39498,6 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash5-ip-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash5-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
-        <div class="vcash-field-lbl">صورة إيصال التحويل (مطلوبة)</div>
-        <input type="file" id="vcash5-ip-receipt" accept="image/*" style="display:none" onchange="acVcashReceiptChange('vcash5-ip-receipt')">
-        <div class="vcash-receipt-zone" id="vcash5-ip-receipt-zone" onclick="document.getElementById('vcash5-ip-receipt').click()">
-          <img id="vcash5-ip-receipt-thumb" class="vcash-receipt-thumb" alt="معاينة الإيصال">
-          <div class="vcash-receipt-placeholder"><span class="vcash-receipt-ico">📎</span><span>اضغط لإرفاق صورة الإيصال</span></div>
-          <div class="vcash-receipt-name" id="vcash5-ip-receipt-name"></div>
-        </div>
         <button class="vcash-btn-primary" id="vcash5-ip-submit-btn" onclick="acSubmitTcPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال 24 ساعة وتفعيل الكورس تلقائياً</div>
       </div>
