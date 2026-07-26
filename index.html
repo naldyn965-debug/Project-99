@@ -30337,7 +30337,10 @@ const App = {
     }
 
     return '<div class="nb-h2-course-card" onclick="showPage(\'academy\');setTimeout(function(){NAcademy.openCourse(\''+c.cid+'\')},100)" role="button" tabindex="0">'+
-      '<div class="nb-h2-cc-top" style="background:url('+c.img+') center/cover no-repeat,'+c.grad+'">'+
+      '<div class="nb-h2-cc-top">'+
+        '<div class="nb-h2-cc-img" style="background:url('+c.img+') center/cover no-repeat,'+c.grad+'"></div>'+
+        '<div class="nb-h2-cc-shine"></div>'+
+        '<div class="nb-h2-cc-badge">'+c.icon+'</div>'+
       '</div>'+
       '<div class="nb-h2-cc-body">'+
         '<div class="nb-h2-cc-title">'+course.title+'</div>'+
@@ -30388,7 +30391,10 @@ const App = {
 
   _nbContinueCardHTML(e){
     return '<div class="nb-h2-course-card" onclick="showPage(\'academy\');setTimeout(function(){NAcademy.openCourse(\''+e.cid+'\',true)},100)" role="button" tabindex="0">'+
-      '<div class="nb-h2-cc-top" style="background:url('+e.img+') center/cover no-repeat,'+e.grad+'">'+
+      '<div class="nb-h2-cc-top">'+
+        '<div class="nb-h2-cc-img" style="background:url('+e.img+') center/cover no-repeat,'+e.grad+'"></div>'+
+        '<div class="nb-h2-cc-shine"></div>'+
+        '<div class="nb-h2-cc-badge">'+e.icon+'</div>'+
       '</div>'+
       '<div class="nb-h2-cc-body">'+
         '<div class="nb-h2-cc-title">'+e.course.title+'</div>'+
@@ -30420,6 +30426,7 @@ const App = {
     var html = ''+
     '<div class="nb-h2-hero">'+
       '<div class="nb-h2-hero-glow"></div>'+
+      '<div class="nb-h2-hero-motif" aria-hidden="true"><svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><path d="M-20 320C40 260 55 205 38 145C22 88 58 45 118 -8" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M38 145C38 145 88 133 116 92" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M58 195C58 195 98 188 122 156" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M345 305C303 244 322 183 362 141C393 107 382 58 340 16" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M362 141C362 141 320 134 294 98" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>'+
       '<div class="nb-h2-top">'+
         '<button class="nb-h2-profile-btn" onclick="showPage(\'profile\')" aria-label="ملفي الشخصي">'+
           '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>'+
@@ -30438,11 +30445,11 @@ const App = {
         '</button>'+
       '</div>'+
       '<div class="nb-h2-stats">'+
-        '<div class="nb-h2-stat"><div class="nb-h2-stat-num">'+totalHours+'</div><div class="nb-h2-stat-lbl">ساعة محتوى</div></div>'+
+        '<div class="nb-h2-stat"><div class="nb-h2-stat-ico">'+acIco('clock',15)+'</div><div class="nb-h2-stat-num" data-target="'+totalHours+'">0</div><div class="nb-h2-stat-lbl">ساعة محتوى</div></div>'+
         '<div class="nb-h2-stat-div"></div>'+
-        '<div class="nb-h2-stat"><div class="nb-h2-stat-num">'+completedCount+'</div><div class="nb-h2-stat-lbl">منجزة</div></div>'+
+        '<div class="nb-h2-stat"><div class="nb-h2-stat-ico">'+acIco('check',15)+'</div><div class="nb-h2-stat-num" data-target="'+completedCount+'">0</div><div class="nb-h2-stat-lbl">منجزة</div></div>'+
         '<div class="nb-h2-stat-div"></div>'+
-        '<div class="nb-h2-stat"><div class="nb-h2-stat-num">'+registry.length+'</div><div class="nb-h2-stat-lbl">دورة</div></div>'+
+        '<div class="nb-h2-stat"><div class="nb-h2-stat-ico">'+acIco('book',15)+'</div><div class="nb-h2-stat-num" data-target="'+registry.length+'">0</div><div class="nb-h2-stat-lbl">دورة</div></div>'+
       '</div>'+
     '</div>'+
     continueHTML+
@@ -30462,6 +30469,10 @@ const App = {
         el.style.transitionDelay = (i*55)+'ms';
         requestAnimationFrame(function(){ el.classList.add('nb-h2-in'); });
       });
+    });
+    /* عدّاد الإحصائيات المتحرك — يعيد استخدام دالة counter() العامة الموجودة مسبقاً */
+    cnt.querySelectorAll('.nb-h2-stat-num[data-target]').forEach(function(el){
+      if(typeof counter==='function')counter(el);else el.textContent=el.dataset.target;
     });
   },
 
@@ -40325,13 +40336,13 @@ body {
   /* ══ 1. RIPPLE ═══════════════════════════════════════════ */
   function spawnRipple(e) {
     var el = e.target.closest(
-      'button, .nl, .hpill, .sc-qt, .sp-chip, .nb-nav-item'
+      'button, .nl, .hpill, .sc-qt, .sp-chip, .nb-nav-item, .nb-h2-course-card'
     );
     if (!el || el.disabled) return;
 
     /* Light ripple on coloured backgrounds, brand tint on white */
     var isDark = el.matches(
-      '.btn-hero-p, .btn-goal, .btn-sub, #registerBtn, .nb-nav-item'
+      '.btn-hero-p, .btn-goal, .btn-sub, #registerBtn, .nb-nav-item, .nb-h2-profile-btn, .nb-h2-search-btn'
     );
     var color = isDark
       ? 'rgba(255,255,255,.22)'
@@ -40744,8 +40755,10 @@ function nbFmtDate(date){
 </style>
 
 <!-- ════════════════════════════════════════════════════════════
-     NABTEX HOME — UNIFIED HERO + REAL COURSE CAROUSEL v1.0
+     NABTEX HOME — UNIFIED HERO + REAL COURSE CAROUSEL v2.0
      تصميم بريميوم موحّد — يستبدل شبكة الودجت الثلاثية القديمة
+     v2.0: إضاءة متعددة الطبقات، زجاج أعمق، عدّاد إحصائيات حي،
+     شارات كورسات، تأثير لمعان عند التمرير — بدون أي تغيير منطقي
      ════════════════════════════════════════════════════════════ -->
 <style id="nb-home-hero-styles">
 /* ══ Design tokens (scoped) ══════════════════════════════════ */
@@ -40759,70 +40772,88 @@ function nbFmtDate(date){
   position:relative;
   overflow:hidden;
   border-radius:32px;
-  padding:22px 20px 26px;
-  background:linear-gradient(150deg,#1B6B3A 0%,#15803d 45%,#0f5c2c 100%);
-  box-shadow:0 12px 36px rgba(27,107,58,.24),0 2px 8px rgba(0,0,0,.06);
-  animation:nbH2HeroIn .6s var(--h2-out) both;
+  padding:24px 20px 28px;
+  background:
+    radial-gradient(ellipse 520px 360px at 88% -8%, rgba(229,163,67,.20), transparent 60%),
+    radial-gradient(ellipse 460px 380px at -8% 108%, rgba(9,49,25,.55), transparent 62%),
+    linear-gradient(160deg,#0f5c2c 0%,#1B6B3A 40%,#1c7d43 68%,#15803d 100%);
+  box-shadow:
+    0 22px 60px -16px rgba(9,49,25,.5),
+    0 8px 24px rgba(0,0,0,.12),
+    inset 0 1px 0 rgba(255,255,255,.09);
+  animation:nbH2HeroIn .7s var(--h2-out) both;
 }
 @keyframes nbH2HeroIn{
-  from{opacity:0;transform:translateY(-14px)}
+  from{opacity:0;transform:translateY(-16px) scale(.985)}
   to{opacity:1;transform:none}
 }
 
 /* Ambient glow orbs — breathing */
-.nb-h2-hero-glow{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit}
+.nb-h2-hero-glow{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit;z-index:1}
 .nb-h2-hero-glow::before,
 .nb-h2-hero-glow::after{
   content:'';position:absolute;border-radius:50%;
-  animation:nbH2Breath 8s ease-in-out infinite alternate;
+  animation:nbH2Breath 9s ease-in-out infinite alternate;
 }
 .nb-h2-hero-glow::before{
-  width:220px;height:220px;top:-90px;left:-60px;
-  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%);
+  width:240px;height:240px;top:-95px;left:-65px;
+  background:radial-gradient(circle,rgba(255,255,255,.15),transparent 70%);
 }
 .nb-h2-hero-glow::after{
-  width:260px;height:260px;bottom:-120px;right:-80px;
-  background:radial-gradient(circle,rgba(255,255,255,.1),transparent 70%);
-  animation-delay:1.2s;
+  width:280px;height:280px;bottom:-130px;right:-85px;
+  background:radial-gradient(circle,rgba(255,255,255,.10),transparent 70%);
+  animation-delay:1.4s;
 }
 @keyframes nbH2Breath{
-  from{opacity:.6;transform:scale(1)}
-  to{opacity:1;transform:scale(1.12)}
+  from{opacity:.55;transform:scale(1)}
+  to{opacity:1;transform:scale(1.14)}
+}
+
+/* Signature: faint botanical linework — echoes the sprout logomark */
+.nb-h2-hero-motif{
+  position:absolute;inset:0;pointer-events:none;z-index:1;
+  opacity:.10;
+  animation:nbH2Sway 17s ease-in-out infinite alternate;
+  transform-origin:60% 40%;
+}
+.nb-h2-hero-motif svg{width:100%;height:100%;display:block}
+@keyframes nbH2Sway{
+  from{transform:rotate(-1deg) scale(1)}
+  to{transform:rotate(1deg) scale(1.02)}
 }
 
 /* ── Top row: profile btn / greeting / avatar ── */
 .nb-h2-top{
   display:flex;align-items:flex-start;gap:12px;
-  position:relative;z-index:2;margin-bottom:20px;
+  position:relative;z-index:2;margin-bottom:22px;
 }
 .nb-h2-profile-btn{
   width:42px;height:42px;flex-shrink:0;
   border-radius:14px;border:none;cursor:pointer;
   background:rgba(255,255,255,.14);
-  color:#fff;
+  color:#fff;overflow:hidden;position:relative;
   display:flex;align-items:center;justify-content:center;
-  transition:transform .22s var(--h2-spring),background .2s;
+  transition:transform .25s var(--h2-spring),background .2s;
 }
-.nb-h2-profile-btn:hover{background:rgba(255,255,255,.22);transform:scale(1.06)}
-.nb-h2-profile-btn:active{transform:scale(.94);transition-duration:80ms}
+.nb-h2-profile-btn:hover{background:rgba(255,255,255,.24);transform:scale(1.07)}
+.nb-h2-profile-btn:active{transform:scale(.92);transition-duration:80ms}
 
-.nb-h2-greet-wrap{flex:1;min-width:0;padding-top:2px}
+.nb-h2-greet-wrap{flex:1;min-width:0;padding-top:3px}
 .nb-h2-greet{
-  font-family:var(--f-display,inherit);
-  font-size:17px;font-weight:800;color:#fff;
+  font-family:var(--f-ui,inherit);
+  font-size:18px;font-weight:800;color:#fff;
   line-height:1.35;margin-bottom:3px;
-  letter-spacing:-.005em;
 }
-.nb-h2-greet-sub{font-size:12.5px;color:rgba(255,255,255,.68);font-weight:500}
+.nb-h2-greet-sub{font-size:12.5px;color:rgba(255,255,255,.7);font-weight:500}
 
 .nb-h2-avatar{
   width:46px;height:46px;flex-shrink:0;border-radius:50%;
-  cursor:pointer;overflow:hidden;
+  cursor:pointer;overflow:hidden;position:relative;
   border:2.5px solid rgba(255,255,255,.55);
-  box-shadow:0 4px 14px rgba(0,0,0,.18);
-  transition:transform .22s var(--h2-spring),border-color .2s;
+  box-shadow:0 4px 14px rgba(0,0,0,.2);
+  transition:transform .25s var(--h2-spring),border-color .2s,box-shadow .2s;
 }
-.nb-h2-avatar:hover{transform:scale(1.07);border-color:#fff}
+.nb-h2-avatar:hover{transform:scale(1.08);border-color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.28)}
 .nb-h2-avatar-img{width:100%;height:100%;object-fit:cover;display:block}
 .nb-h2-avatar-fallback{
   width:100%;height:100%;display:flex;align-items:center;justify-content:center;
@@ -40833,72 +40864,83 @@ function nbFmtDate(date){
 .nb-h2-search{
   position:relative;z-index:2;
   display:flex;align-items:center;gap:8px;
-  background:rgba(255,255,255,.14);
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:50px;
-  padding:5px 6px 5px 6px;
-  margin-bottom:22px;
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  transition:background .2s,border-color .2s;
+  background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.20);
+  border-radius:var(--rpill,50px);
+  padding:5px 6px;
+  margin-bottom:24px;
+  backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 4px 16px rgba(0,0,0,.08);
+  transition:background .25s,border-color .25s,box-shadow .25s;
 }
 .nb-h2-search:focus-within{
-  background:rgba(255,255,255,.19);
-  border-color:rgba(255,255,255,.32);
+  background:rgba(255,255,255,.20);
+  border-color:rgba(255,255,255,.4);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 0 0 4px rgba(255,255,255,.14),0 8px 24px rgba(0,0,0,.14);
 }
 .nb-h2-search-inp{
   flex:1;min-width:0;background:none;border:none;outline:none;
-  color:#fff;font-size:14px;font-family:inherit;
-  padding:9px 6px 9px 4px;
+  color:#fff;font-size:14.5px;font-family:inherit;font-weight:500;
+  padding:10px 8px 10px 4px;
 }
-.nb-h2-search-inp::placeholder{color:rgba(255,255,255,.6)}
+.nb-h2-search-inp::placeholder{color:rgba(255,255,255,.62)}
 .nb-h2-search-btn{
-  width:38px;height:38px;flex-shrink:0;border-radius:50%;border:none;cursor:pointer;
-  background:rgba(255,255,255,.2);color:#fff;
+  width:40px;height:40px;flex-shrink:0;border-radius:50%;border:none;cursor:pointer;
+  background:rgba(255,255,255,.22);color:#fff;overflow:hidden;position:relative;
   display:flex;align-items:center;justify-content:center;
-  transition:transform .2s var(--h2-spring),background .2s;
+  transition:transform .22s var(--h2-spring),background .2s,color .2s;
 }
-.nb-h2-search-btn:hover{background:#fff;color:#15803d}
+.nb-h2-search-btn:hover{background:#fff;color:#15803d;transform:scale(1.06)}
 .nb-h2-search-btn:active{transform:scale(.9);transition-duration:80ms}
 
 /* ── Stats row ── */
 .nb-h2-stats{
   position:relative;z-index:2;
   display:flex;align-items:center;justify-content:center;
-  gap:22px;
+  gap:20px;
   background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.15);
   border-radius:20px;
-  padding:16px 10px;
+  padding:17px 10px;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
 }
 .nb-h2-stat{text-align:center;flex:1}
+.nb-h2-stat-ico{display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.55);margin-bottom:6px}
 .nb-h2-stat-num{
-  font-family:var(--f-display,inherit);
-  font-size:26px;font-weight:900;color:#fff;line-height:1;margin-bottom:5px;
-  letter-spacing:-.02em;
+  font-family:var(--f-ui,inherit);
+  font-size:27px;font-weight:900;color:#fff;line-height:1;margin-bottom:5px;
+  font-variant-numeric:tabular-nums;
 }
-.nb-h2-stat-lbl{font-size:11px;color:rgba(255,255,255,.65);font-weight:600}
-.nb-h2-stat-div{width:1px;height:32px;background:rgba(255,255,255,.18);flex-shrink:0}
+.nb-h2-stat-lbl{font-size:11px;color:rgba(255,255,255,.68);font-weight:600}
+.nb-h2-stat-div{width:1px;height:34px;background:rgba(255,255,255,.18);flex-shrink:0}
 
 /* ══ 2. COURSES SECTION ══════════════════════════════════════ */
-.nb-h2-courses-sec{padding:26px 0 6px;animation:nbH2FadeUp .55s .1s var(--h2-out,cubic-bezier(.16,1,.3,1)) both}
-@keyframes nbH2FadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.nb-h2-courses-sec{padding:28px 0 6px;animation:nbH2FadeUp .6s .1s var(--h2-out) both}
+@keyframes nbH2FadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
 .nb-h2-courses-head{
   display:flex;align-items:center;justify-content:space-between;
   padding:0 4px;margin-bottom:16px;
 }
 .nb-h2-courses-title{
-  font-family:var(--f-display,inherit);
+  font-family:var(--f-ui,inherit);
   font-size:19px;font-weight:800;color:var(--ink);
-  letter-spacing:-.01em;margin:0;
+  margin:0;
 }
 .nb-h2-viewall{
+  position:relative;
   background:none;border:none;cursor:pointer;
   font-size:13px;font-weight:700;color:var(--brand);
-  padding:6px 4px;
-  transition:transform .2s var(--h2-spring),opacity .2s;
+  padding:7px 22px 7px 9px;border-radius:8px;
+  transition:opacity .2s,background .2s;
 }
-.nb-h2-viewall:hover{transform:translateX(-3px);opacity:.75}
+.nb-h2-viewall::after{
+  content:'‹';position:absolute;left:7px;top:50%;font-size:14px;
+  transform:translateY(-50%);transition:transform .22s var(--h2-spring);
+}
+.nb-h2-viewall:hover{opacity:.8;background:var(--brand-mist)}
+.nb-h2-viewall:hover::after{transform:translateY(-50%) translateX(-3px)}
 
 /* ── Horizontal scroll ── */
 .nb-h2-scroll{
@@ -40914,105 +40956,124 @@ function nbFmtDate(date){
 
 /* ── Course card ── */
 .nb-h2-course-card{
-  flex:0 0 auto;width:198px;
+  flex:0 0 auto;width:200px;
   background:var(--card);
   border:1px solid var(--line);
   border-radius:22px;
-  overflow:hidden;cursor:pointer;
+  overflow:hidden;cursor:pointer;position:relative;
   scroll-snap-align:start;
   box-shadow:0 2px 8px rgba(0,0,0,.04),0 6px 20px rgba(0,0,0,.04);
-  opacity:0;transform:translateY(18px);
+  opacity:0;transform:translateY(20px);
   transition:
-    opacity .5s var(--h2-out,cubic-bezier(.16,1,.3,1)),
-    transform .5s var(--h2-out,cubic-bezier(.16,1,.3,1)),
-    box-shadow .24s ease,
-    border-color .2s ease;
+    opacity .55s var(--h2-out),
+    transform .45s var(--h2-out),
+    box-shadow .3s ease,
+    border-color .25s ease;
 }
 .nb-h2-course-card.nb-h2-in{opacity:1;transform:translateY(0)}
-.nb-h2-course-card:hover{
-  box-shadow:0 6px 20px rgba(27,107,58,.12),0 2px 8px rgba(0,0,0,.05);
-  border-color:rgba(27,107,58,.22);
+.nb-h2-course-card.nb-h2-in:hover{
+  transform:translateY(-6px);
+  box-shadow:0 16px 32px -8px rgba(27,107,58,.22),0 4px 12px rgba(0,0,0,.06);
+  border-color:rgba(27,107,58,.28);
 }
 @media(hover:none) and (pointer:coarse){
   .nb-h2-course-card:active{transform:scale(.97) !important;transition-duration:80ms !important}
 }
 
-.nb-h2-cc-top{
-  height:104px;display:flex;align-items:center;justify-content:center;
-  position:relative;overflow:hidden;
+.nb-h2-cc-top{height:112px;position:relative;overflow:hidden}
+.nb-h2-cc-img{position:absolute;inset:0;transition:transform .6s var(--h2-out)}
+.nb-h2-course-card:hover .nb-h2-cc-img{transform:scale(1.09)}
+.nb-h2-cc-top::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,0) 48%,rgba(0,0,0,.34) 100%);
 }
-.nb-h2-cc-top::before{
-  content:'';position:absolute;width:120px;height:120px;border-radius:50%;
-  background:rgba(255,255,255,.12);top:-30px;left:-20px;
+.nb-h2-cc-shine{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.30) 50%,transparent 58%);
+  transform:translateX(-120%);
+  transition:transform .7s ease;
 }
-.nb-h2-cc-icon{
-  font-size:40px;position:relative;z-index:1;
-  filter:drop-shadow(0 4px 10px rgba(0,0,0,.2));
-  transition:transform .32s var(--h2-spring,cubic-bezier(.34,1.56,.64,1));
+.nb-h2-course-card:hover .nb-h2-cc-shine{transform:translateX(120%)}
+.nb-h2-cc-badge{
+  position:absolute;top:10px;left:10px;z-index:2;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.24);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;line-height:1;
+  box-shadow:0 2px 8px rgba(0,0,0,.18);
 }
-.nb-h2-course-card:hover .nb-h2-cc-icon{transform:scale(1.14) translateY(-2px)}
 
 .nb-h2-cc-body{padding:14px 14px 16px}
 .nb-h2-cc-title{
-  font-family:var(--f-display,inherit);
+  font-family:var(--f-ui,inherit);
   font-size:14px;font-weight:800;color:var(--ink);
   line-height:1.35;margin-bottom:6px;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
   min-height:38px;
 }
-.nb-h2-cc-meta{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:10px}
-.nb-h2-continue-lesson{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nb-h2-cc-meta{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:11px}
+.nb-h2-continue-lesson{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.nb-h2-cc-prog-track{height:5px;border-radius:6px;background:var(--line);overflow:hidden;margin-bottom:8px}
+.nb-h2-cc-prog-track{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin-bottom:9px}
 .nb-h2-cc-prog-fill{
   height:100%;border-radius:6px;
   background:linear-gradient(90deg,#1B6B3A,#2eaa5c);
-  transition:width .6s var(--h2-out,cubic-bezier(.16,1,.3,1));
+  box-shadow:0 0 8px rgba(46,170,92,.5);
+  transition:width .7s var(--h2-out);
 }
 .nb-h2-cc-cta{
   font-size:12.5px;font-weight:800;color:var(--brand);
-  display:flex;align-items:center;gap:4px;
+  display:flex;align-items:center;justify-content:space-between;
 }
+.nb-h2-cc-cta::after{content:'‹';font-size:14px;transition:transform .25s var(--h2-spring)}
+.nb-h2-course-card:hover .nb-h2-cc-cta::after{transform:translateX(-3px)}
 .nb-h2-cc-cta--gold{color:#c9871a}
 .nb-h2-cc-done{
   font-size:12px;font-weight:800;color:var(--brand);
   display:inline-flex;align-items:center;gap:4px;
 }
 .nb-h2-cc-pending{font-size:11.5px;font-weight:700;color:#d97706}
-.nb-h2-cc-price{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.nb-h2-cc-price{display:flex;align-items:center;gap:7px;margin-bottom:7px}
 .nb-h2-cc-price-old{font-size:11px;color:var(--muted);text-decoration:line-through}
-.nb-h2-cc-price-new{font-size:14px;font-weight:800;color:#c9871a}
+.nb-h2-cc-price-new{font-size:14.5px;font-weight:800;color:#c9871a}
 
 /* ══ 3. DARK MODE ════════════════════════════════════════════ */
 [data-dark] .nb-h2-hero{
-  background:linear-gradient(150deg,#0f3d25 0%,#0b2e1c 55%,#081f13 100%);
-  box-shadow:0 12px 36px rgba(0,0,0,.35);
+  background:
+    radial-gradient(ellipse 520px 360px at 88% -8%, rgba(229,163,67,.14), transparent 60%),
+    radial-gradient(ellipse 460px 380px at -8% 108%, rgba(0,0,0,.4), transparent 62%),
+    linear-gradient(160deg,#0f3d25 0%,#0b2e1c 55%,#081f13 100%);
+  box-shadow:0 20px 56px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05);
 }
+[data-dark] .nb-h2-hero-motif{opacity:.07}
 [data-dark] .nb-h2-course-card{
   background:var(--card);border-color:var(--line);
   box-shadow:0 2px 10px rgba(0,0,0,.3);
 }
-[data-dark] .nb-h2-course-card:hover{
-  border-color:rgba(46,170,92,.28);
-  box-shadow:0 6px 22px rgba(0,0,0,.4),0 0 0 1px rgba(46,170,92,.12);
+[data-dark] .nb-h2-course-card.nb-h2-in:hover{
+  border-color:rgba(46,170,92,.3);
+  box-shadow:0 16px 34px rgba(0,0,0,.45),0 0 0 1px rgba(46,170,92,.14);
 }
 [data-dark] .nb-h2-cc-title{color:var(--ink)}
 
 /* ══ 4. RESPONSIVE ═══════════════════════════════════════════ */
 @media(min-width:640px){
-  .nb-h2-hero{padding:28px 30px 32px}
-  .nb-h2-course-card{width:220px}
+  .nb-h2-hero{padding:30px 32px 34px}
+  .nb-h2-course-card{width:222px}
 }
 @media(max-width:360px){
-  .nb-h2-course-card{width:172px}
-  .nb-h2-cc-top{height:92px}
+  .nb-h2-course-card{width:174px}
+  .nb-h2-cc-top{height:98px}
 }
 
 /* ══ 5. REDUCED MOTION ═══════════════════════════════════════ */
 @media(prefers-reduced-motion:reduce){
-  .nb-h2-hero,.nb-h2-hero-glow::before,.nb-h2-hero-glow::after,
+  .nb-h2-hero,.nb-h2-hero-glow::before,.nb-h2-hero-glow::after,.nb-h2-hero-motif,
   .nb-h2-courses-sec,.nb-h2-course-card{animation:none !important}
   .nb-h2-course-card{opacity:1 !important;transform:none !important}
+  .nb-h2-cc-shine,.nb-h2-cc-img{transition:none !important}
 }
 </style>
 
