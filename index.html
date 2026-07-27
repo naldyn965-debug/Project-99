@@ -7677,6 +7677,91 @@ body.modal-open { overflow: hidden; }
   background:#0f2a22 !important;
   border-color:rgba(142,182,155,.2) !important;
 }
+
+/* ══════════════════════════════════════════════════════════
+   K. NOTIFICATION BELL — dropdown panel, structurally cloned
+      from .mkt-notif-* (marketplace) but re-skinned in the
+      academy forest palette (--ac-*). See academy-notifications
+      feature: bell lives in #acad-social-subnav.
+   ══════════════════════════════════════════════════════════ */
+.ac-notif-badge{
+  position:absolute; top:4px; right:4px;
+  min-width:18px; height:18px; border-radius:9px;
+  background:#ef4444; color:#fff;
+  font-size:10px; font-weight:900;
+  display:flex; align-items:center; justify-content:center;
+  padding:0 5px; line-height:1;
+  box-shadow:0 1px 6px rgba(239,68,68,.5);
+}
+.ac-notif-panel{
+  display:none;
+  position:fixed;
+  top:118px;
+  left:24px;
+  width:360px;
+  max-height:520px;
+  z-index:850;
+  background:var(--ac-50, #EFF8F2);
+  border:1px solid var(--ac-300);
+  border-radius:22px;
+  overflow:hidden;
+  box-shadow:0 24px 64px rgba(5,31,32,.22), inset 0 1px 0 rgba(255,255,255,.4);
+  animation:acNotifIn .3s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes acNotifIn{
+  from{opacity:0; transform:translateY(-12px) scale(.97);}
+  to{opacity:1; transform:none;}
+}
+.ac-notif-panel.open{ display:block; }
+.ac-notif-panel-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 20px;
+  border-bottom:1px solid var(--ac-300);
+  background:var(--ac-900); color:var(--ac-100);
+}
+.ac-notif-panel-title{ font-size:14px; font-weight:900; }
+.ac-notif-panel-close{
+  width:28px; height:28px; border-radius:50%; display:grid; place-items:center;
+  color:var(--ac-100); background:rgba(255,255,255,.08); border:none; cursor:pointer;
+}
+.ac-notif-panel-close svg{ width:15px; height:15px; }
+#ac-notif-panel-list{
+  overflow-y:auto; max-height:390px;
+  scrollbar-width:thin; scrollbar-color:var(--ac-300) transparent;
+}
+.ac-notif-card{
+  padding:14px 20px; border-bottom:1px solid rgba(35,83,71,.12);
+  display:flex; gap:12px; align-items:flex-start;
+  transition:background .15s; cursor:pointer; position:relative;
+}
+.ac-notif-card:hover{ background:rgba(35,83,71,.06); }
+.ac-notif-card-icon{
+  width:36px; height:36px; border-radius:10px; flex-shrink:0;
+  background:linear-gradient(135deg, var(--ac-700), var(--ac-600));
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 8px rgba(11,43,38,.3);
+}
+.ac-notif-card-icon svg{ width:16px; height:16px; color:var(--ac-100); }
+.ac-notif-card-msg{ font-size:13px; color:var(--ac-900); line-height:1.6; }
+.ac-notif-card-time{ font-size:11px; color:var(--ac-600); margin-top:3px; }
+.ac-notif-card-dot{
+  width:8px; height:8px; border-radius:50%; background:#ef4444; flex-shrink:0; margin-top:6px;
+}
+.ac-notif-empty{ padding:44px 24px; text-align:center; }
+.ac-notif-empty svg{ width:40px; height:40px; display:block; margin:0 auto 12px; opacity:.25; color:var(--ac-700); }
+.ac-notif-empty-title{ font-size:13px; font-weight:800; color:var(--ac-700); }
+.ac-notif-empty-sub{ font-size:11px; color:var(--ac-600); opacity:.75; margin-top:6px; }
+.ac-notif-panel-foot{
+  padding:10px 16px; border-top:1px solid rgba(35,83,71,.12); background:rgba(35,83,71,.03);
+}
+.ac-notif-mute-toggle{
+  width:100%; background:none; border:none; cursor:pointer;
+  font-size:11.5px; font-weight:700; color:var(--ac-600); padding:6px 4px; text-align:center;
+}
+.ac-notif-mute-toggle.is-muted{ color:#b45309; }
+@media(max-width:768px){
+  .ac-notif-panel{ width:calc(100vw - 24px); left:12px; }
+}
 </style>
 
 <!-- Academy sound + celebration engine v4 -->
@@ -7867,6 +7952,26 @@ body.modal-open { overflow: hidden; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
         صفحتي
       </button>
+      <button class="mkt-tab" id="mkt-tab-acad-notif" onclick="AcNotif.togglePanel()" style="position:relative;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 5.5 2.5 8 2.5 8H3.5S6 13.5 6 8"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        الإشعارات
+        <span class="ac-notif-badge" id="ac-notif-count" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ACADEMY NOTIFICATIONS — dropdown panel (bell above). Independent overlay,
+       does not participate in acad-root / acad-social-panels view switching. -->
+  <div class="ac-notif-panel" id="ac-notif-panel">
+    <div class="ac-notif-panel-head">
+      <div class="ac-notif-panel-title">الإشعارات</div>
+      <button class="ac-notif-panel-close" onclick="AcNotif.togglePanel()" aria-label="إغلاق">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div id="ac-notif-panel-list"></div>
+    <div class="ac-notif-panel-foot">
+      <button class="ac-notif-mute-toggle" id="ac-notif-mute-btn" onclick="AcNotif.toggleMute()">🔕 كتم تذكيرات المتابعة</button>
     </div>
   </div>
 
@@ -29820,14 +29925,16 @@ _sp&&_sp.apply(this,arguments);
 if(e==='academy'){
  document.getElementById('nl-academy')&&document.getElementById('nl-academy').classList.add('active');
  var r=document.getElementById('acad-root');
- if(r&&!r.firstChild)acR()}};
+ if(r&&!r.firstChild)acR();
+ window.AcNotif&&AcNotif._touchActive()}};
 var _ap=document.getElementById('pg-academy');
 if(_ap)new MutationObserver(function(ms){
 ms.forEach(function(m){
  if(m.attributeName==='class'&&_ap.classList.contains('active')){
   document.getElementById('nl-academy')&&document.getElementById('nl-academy').classList.add('active');
   var r=document.getElementById('acad-root');
-  if(r&&!r.firstChild)acR()}})
+  if(r&&!r.firstChild)acR();
+  window.AcNotif&&AcNotif._touchActive()}})
 }).observe(_ap,{attributes:true});
 
 }();
@@ -29842,6 +29949,7 @@ ms.forEach(function(m){
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
 
 <script>
 // ======================== FIREBASE CONFIG ========================
@@ -32008,6 +32116,7 @@ function _requireAuth() {
 function _esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+window._esc = window._esc || _esc; // exposed (only if not already global) for reuse by AcNotif
 
 function _formatPhone(p) {
   const d = String(p||'').replace(/[^0-9]/g,'');
@@ -32117,6 +32226,7 @@ function _timeAgo(ts) {
   if (d<30) return `منذ ${d} يوم`;
   return date.toLocaleDateString('ar-EG');
 }
+window._timeAgo = _timeAgo; // exposed read-only so AcNotif (Academy notifications) can reuse it verbatim
 
 function _productImageHtml(images, title) {
   if (images && images.length > 0) {
@@ -38842,6 +38952,11 @@ document.addEventListener('DOMContentLoaded', function() {
             pendingQueueSync();
           }
         }
+        if (d.type === 'ACADEMY_NOTIF_CLICK') {
+          if (typeof showPage === 'function') showPage('academy');
+          if (typeof acShowCourses === 'function') acShowCourses();
+          if (d.courseId && window.NAcademy) NAcademy.openCourse(d.courseId);
+        }
       });
 
       /* Reload when new SW takes over — only for real updates (not first install) */
@@ -41077,6 +41192,286 @@ function nbFmtDate(date){
   .nb-h2-cc-shine,.nb-h2-cc-img{transition:none !important}
 }
 </style>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ACADEMY NOTIFICATIONS (AcNotif) — engagement bell
+     In-app delivery for: new_course / admin_broadcast (written by
+     admin.html) and inactivity (written by the Supabase Edge
+     Function). Separate collection & state from MKT's own
+     marketplace_notifications — mirrors its dual-listener +
+     dwell-based mark-read architecture, does not touch it.
+     ══════════════════════════════════════════════════════════════ -->
+<script>
+(function(){
+'use strict';
+
+// Paste the VAPID key from Firebase Console → Project settings → Cloud
+// Messaging → Web Push certificates. Push registration silently no-ops
+// until this is set (in-app bell delivery works regardless).
+var ACADEMY_VAPID_KEY = 'PASTE_YOUR_VAPID_KEY_HERE';
+
+var AcNotif = {
+  list: [],
+  broadcasts: [],
+  userNotifs: [],
+  unreadCount: 0,
+  muted: false,
+  list_open: false,
+  _uid: null,
+  _bcUnsub: null,
+  _userUnsub: null,
+  _lastActiveWrite: 0,
+  _dwellTimer: null,
+  _pushOfferDismissed: false,
+
+  init: function(){
+    if (typeof auth === 'undefined' || !auth || typeof db === 'undefined' || !db) {
+      setTimeout(function(){ AcNotif.init(); }, 400); return;
+    }
+    auth.onAuthStateChanged(function(user){
+      AcNotif._teardown();
+      AcNotif.broadcasts = []; AcNotif.userNotifs = []; AcNotif.list = [];
+      if (!user) { AcNotif.unreadCount = 0; AcNotif._updateBadge(); return; }
+      AcNotif._uid = user.uid;
+      AcNotif._loadMuteState(user.uid);
+      AcNotif._listenBroadcasts();
+      AcNotif._listenUser(user.uid);
+    });
+  },
+
+  _teardown: function(){
+    if (this._bcUnsub)   { this._bcUnsub();   this._bcUnsub = null; }
+    if (this._userUnsub) { this._userUnsub(); this._userUnsub = null; }
+  },
+
+  _listenBroadcasts: function(){
+    AcNotif._bcUnsub = db.collection('academy_notifications')
+      .where('scope','==','broadcast')
+      .orderBy('createdAt','desc')
+      .limit(30)
+      .onSnapshot(function(snap){
+        AcNotif.broadcasts = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+        AcNotif._merge();
+      }, function(){
+        // Fallback: drop orderBy so no composite index is required —
+        // same defensive pattern as the marketplace notif listener.
+        AcNotif._bcUnsub = db.collection('academy_notifications')
+          .where('scope','==','broadcast')
+          .onSnapshot(function(snap){
+            AcNotif.broadcasts = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); })
+              .sort(function(a,b){ return _acNotifSec(b) - _acNotifSec(a); });
+            AcNotif._merge();
+          }, function(){});
+      });
+  },
+
+  _listenUser: function(uid){
+    AcNotif._userUnsub = db.collection('academy_notifications')
+      .where('scope','==','user')
+      .where('userId','==',uid)
+      .orderBy('createdAt','desc')
+      .limit(30)
+      .onSnapshot(function(snap){
+        AcNotif.userNotifs = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+        AcNotif._merge();
+      }, function(){
+        AcNotif._userUnsub = db.collection('academy_notifications')
+          .where('scope','==','user')
+          .where('userId','==',uid)
+          .onSnapshot(function(snap){
+            AcNotif.userNotifs = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); })
+              .sort(function(a,b){ return _acNotifSec(b) - _acNotifSec(a); });
+            AcNotif._merge();
+          }, function(){});
+      });
+  },
+
+  _merge: function(){
+    var uid = this._uid;
+    var all = this.broadcasts.concat(this.userNotifs)
+      .sort(function(a,b){ return _acNotifSec(b) - _acNotifSec(a); });
+    this.list = all;
+    this.unreadCount = all.filter(function(n){
+      return n.scope === 'broadcast' ? (n.readBy||[]).indexOf(uid) === -1 : !n.read;
+    }).length;
+    this._updateBadge();
+    if (this.list_open) this._render();
+  },
+
+  _updateBadge: function(){
+    var b = document.getElementById('ac-notif-count');
+    if (!b) return;
+    b.textContent = this.unreadCount > 9 ? '9+' : String(this.unreadCount);
+    b.style.display = this.unreadCount > 0 ? 'flex' : 'none';
+  },
+
+  togglePanel: function(){
+    var panel = document.getElementById('ac-notif-panel');
+    if (!panel) return;
+    this.list_open = !panel.classList.contains('open');
+    panel.classList.toggle('open', this.list_open);
+    if (this.list_open) {
+      this._render();
+      clearTimeout(this._dwellTimer);
+      this._dwellTimer = setTimeout(function(){ AcNotif._markAllRead(); }, 1500);
+    }
+  },
+
+  _iconFor: function(type){
+    if (type === 'new_course') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9 12 4l10 5-10 5L2 9Z"/><path d="M6 11.3v3.8c0 1.5 2.8 3 6 3s6-1.5 6-3v-3.8"/></svg>';
+    if (type === 'inactivity')  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>';
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>'; // admin_broadcast
+  },
+
+  _render: function(){
+    var host = document.getElementById('ac-notif-panel-list');
+    if (!host) return;
+    var uid = this._uid;
+    var rows = '';
+
+    if (typeof Notification !== 'undefined' && Notification.permission === 'default' && !this._pushOfferDismissed) {
+      rows += '<div style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--ac-100);border-bottom:1px solid var(--ac-300)">' +
+        '<div style="flex:1;font-size:12px;color:var(--ac-900);font-weight:700">🔔 فعّل التنبيهات عشان توصلك حتى لو التطبيق مقفول</div>' +
+        '<button onclick="AcNotif.registerPush()" style="background:var(--ac-700);color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap">تفعيل</button>' +
+        '<button onclick="AcNotif._pushOfferDismissed=true;AcNotif._render()" style="background:none;border:none;color:var(--ac-600);font-size:16px;cursor:pointer;padding:0 2px" aria-label="إغلاق">×</button>' +
+      '</div>';
+    }
+
+    if (!this.list.length) {
+      rows += '<div class="ac-notif-empty">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 5.5 2.5 8 2.5 8H3.5S6 13.5 6 8"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>' +
+        '<div class="ac-notif-empty-title">لا توجد إشعارات</div>' +
+        '<div class="ac-notif-empty-sub">هتوصلك إشعارات الدورات الجديدة والتذكيرات هنا</div>' +
+      '</div>';
+    } else {
+      rows += this.list.map(function(n){
+        var unread = n.scope === 'broadcast' ? (n.readBy||[]).indexOf(uid) === -1 : !n.read;
+        return '<div class="ac-notif-card" onclick="AcNotif._openFromNotif(\'' + n.id + '\')">' +
+          '<div class="ac-notif-card-icon">' + AcNotif._iconFor(n.type) + '</div>' +
+          '<div style="flex:1;min-width:0">' +
+            '<div class="ac-notif-card-msg">' + _esc(n.message||'') + '</div>' +
+            '<div class="ac-notif-card-time">' + _timeAgo(n.createdAt) + '</div>' +
+          '</div>' +
+          (unread ? '<div class="ac-notif-card-dot"></div>' : '') +
+        '</div>';
+      }).join('');
+    }
+    host.innerHTML = rows;
+  },
+
+  _markAllRead: function(){
+    var uid = this._uid;
+    if (!uid) return;
+    var unreadUser = this.userNotifs.filter(function(n){ return !n.read; });
+    var unreadBc   = this.broadcasts.filter(function(n){ return (n.readBy||[]).indexOf(uid) === -1; });
+    if (!unreadUser.length && !unreadBc.length) return;
+    var batch = db.batch();
+    unreadUser.forEach(function(n){
+      batch.update(db.collection('academy_notifications').doc(n.id), { read: true });
+    });
+    unreadBc.forEach(function(n){
+      batch.update(db.collection('academy_notifications').doc(n.id), {
+        readBy: firebase.firestore.FieldValue.arrayUnion(uid)
+      });
+    });
+    batch.commit().catch(function(e){ console.warn('[AcNotif] markAllRead:', e.message); });
+  },
+
+  _openFromNotif: function(id){
+    var n = this.list.find(function(x){ return x.id === id; });
+    if (!n) return;
+    // Immediate single mark-read (don't wait for the dwell timer)
+    var uid = this._uid;
+    if (n.scope === 'broadcast') {
+      if ((n.readBy||[]).indexOf(uid) === -1) {
+        db.collection('academy_notifications').doc(id).update({
+          readBy: firebase.firestore.FieldValue.arrayUnion(uid)
+        }).catch(function(){});
+      }
+    } else if (!n.read) {
+      db.collection('academy_notifications').doc(id).update({ read: true }).catch(function(){});
+    }
+    if (n.courseId) {
+      this.togglePanel();
+      if (typeof showPage === 'function') showPage('academy');
+      if (typeof acShowCourses === 'function') acShowCourses();
+      if (window.NAcademy) NAcademy.openCourse(n.courseId);
+    }
+  },
+
+  _touchActive: function(){
+    if (!this._uid || typeof db === 'undefined') return;
+    var now = Date.now();
+    if (now - this._lastActiveWrite < 10*60*1000) return; // throttle: once per 10 min
+    this._lastActiveWrite = now;
+    db.collection('users').doc(this._uid).set({
+      lastActiveAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).catch(function(){});
+  },
+
+  _loadMuteState: function(uid){
+    db.collection('users').doc(uid).get().then(function(snap){
+      AcNotif.muted = !!(snap.exists && snap.data().notifMuted);
+      AcNotif._reflectMuteBtn();
+    }).catch(function(){});
+  },
+
+  _reflectMuteBtn: function(){
+    var btn = document.getElementById('ac-notif-mute-btn');
+    if (!btn) return;
+    btn.classList.toggle('is-muted', this.muted);
+    btn.textContent = this.muted ? '🔔 إعادة تفعيل تذكيرات المتابعة' : '🔕 كتم تذكيرات المتابعة';
+  },
+
+  toggleMute: function(){
+    if (!this._uid) return;
+    var next = !this.muted;
+    db.collection('users').doc(this._uid).set({ notifMuted: next }, { merge: true })
+      .then(function(){ AcNotif.muted = next; AcNotif._reflectMuteBtn();
+        if (typeof showToast === 'function') showToast(next ? '🔕 تم كتم تذكيرات المتابعة' : '🔔 تم إعادة تفعيلها', 'ok');
+      }).catch(function(e){ if (typeof showToast === 'function') showToast('خطأ: ' + e.message, 'err'); });
+  },
+
+  registerPush: function(){
+    if (typeof firebase === 'undefined' || !firebase.messaging || !firebase.messaging.isSupported) return;
+    firebase.messaging.isSupported().then(function(supported){
+      if (!supported) return;
+      Notification.requestPermission().then(function(perm){
+        AcNotif._render(); // hide the offer banner regardless of the answer
+        if (perm !== 'granted' || !AcNotif._uid) return;
+        var messaging = firebase.messaging();
+        messaging.getToken({ vapidKey: ACADEMY_VAPID_KEY }).then(function(token){
+          if (!token) return;
+          db.collection('users').doc(AcNotif._uid).set({
+            fcmTokens: firebase.firestore.FieldValue.arrayUnion(token)
+          }, { merge: true }).catch(function(){});
+        }).catch(function(e){ console.warn('[AcNotif] getToken:', e.message); });
+      });
+    });
+  }
+};
+
+function _acNotifSec(n){
+  if (n.createdAt && typeof n.createdAt.seconds === 'number') return n.createdAt.seconds;
+  if (typeof n.createdAt === 'number') return Math.floor(n.createdAt/1000);
+  return 0;
+}
+
+// Close panel when tapping outside it
+document.addEventListener('click', function(e){
+  var panel = document.getElementById('ac-notif-panel');
+  var btn   = document.getElementById('mkt-tab-acad-notif');
+  if (panel && panel.classList.contains('open') && !panel.contains(e.target) && !(btn && btn.contains(e.target))) {
+    panel.classList.remove('open');
+    AcNotif.list_open = false;
+  }
+});
+
+window.AcNotif = AcNotif;
+AcNotif.init();
+
+})();
+</script>
 
 </body>
 </html>
