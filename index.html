@@ -41208,7 +41208,7 @@ function nbFmtDate(date){
 // Paste the VAPID key from Firebase Console → Project settings → Cloud
 // Messaging → Web Push certificates. Push registration silently no-ops
 // until this is set (in-app bell delivery works regardless).
-var ACADEMY_VAPID_KEY = 'PASTE_YOUR_VAPID_KEY_HERE';
+var ACADEMY_VAPID_KEY = 'BAochWY8UrFyQb1Tcrly8ntpxaGUd2nyFtNMVyfP-FjlrDh-vffKrbK9SkCUawJLoXV_VGg5aDvyj9fBDjyRKSE';
 
 var AcNotif = {
   list: [],
@@ -41433,19 +41433,51 @@ var AcNotif = {
   },
 
   registerPush: function(){
-    if (typeof firebase === 'undefined' || !firebase.messaging || !firebase.messaging.isSupported) return;
+    var toast = function(msg, type){ if (typeof showToast === 'function') showToast(msg, type); else alert(msg); };
+
+    if (ACADEMY_VAPID_KEY === 'PASTE_YOUR_VAPID_KEY_HERE') {
+      toast('⚠️ الإشعارات لسه مش متجهزة من ناحيتنا (VAPID key). جرب تاني بعد ما نضيفه.', 'err');
+      return;
+    }
+    if (typeof firebase === 'undefined' || !firebase.messaging || !firebase.messaging.isSupported) {
+      toast('⚠️ المتصفح ده مش بيدعم إشعارات الويب', 'err');
+      return;
+    }
+    if (!('serviceWorker' in navigator)) {
+      toast('⚠️ المتصفح ده مش بيدعم Service Workers، فمينفعش نفعّل الإشعارات', 'err');
+      return;
+    }
+
     firebase.messaging.isSupported().then(function(supported){
-      if (!supported) return;
+      if (!supported) {
+        toast('⚠️ المتصفح ده مش بيدعم إشعارات الويب — جرب من كروم، أو من الشاشة الرئيسية لو آيفون', 'err');
+        return;
+      }
       Notification.requestPermission().then(function(perm){
         AcNotif._render(); // hide the offer banner regardless of the answer
-        if (perm !== 'granted' || !AcNotif._uid) return;
-        var messaging = firebase.messaging();
-        messaging.getToken({ vapidKey: ACADEMY_VAPID_KEY }).then(function(token){
-          if (!token) return;
-          db.collection('users').doc(AcNotif._uid).set({
-            fcmTokens: firebase.firestore.FieldValue.arrayUnion(token)
-          }, { merge: true }).catch(function(){});
-        }).catch(function(e){ console.warn('[AcNotif] getToken:', e.message); });
+        if (perm === 'denied') {
+          toast('❌ الإذن اتمنع. لازم تفعّله من إعدادات المتصفح للموقع علشان يوصلك إشعار', 'err');
+          return;
+        }
+        if (perm !== 'granted') return; // dismissed without a choice — banner stays, they can retry
+        if (!AcNotif._uid) return;
+
+        navigator.serviceWorker.ready.then(function(registration){
+          var messaging = firebase.messaging();
+          messaging.getToken({ vapidKey: ACADEMY_VAPID_KEY, serviceWorkerRegistration: registration }).then(function(token){
+            if (!token) { toast('⚠️ متقدرناش نجيب توكن الإشعارات، جرب تاني', 'err'); return; }
+            db.collection('users').doc(AcNotif._uid).set({
+              fcmTokens: firebase.firestore.FieldValue.arrayUnion(token)
+            }, { merge: true }).then(function(){
+              toast('🔔 تم تفعيل الإشعارات بنجاح', 'ok');
+            }).catch(function(e){ toast('⚠️ اتفعّلت بس مقدرناش نحفظها: ' + e.message, 'err'); });
+          }).catch(function(e){
+            console.warn('[AcNotif] getToken:', e);
+            toast('⚠️ فشل تفعيل الإشعارات (' + (e.code || e.message) + ')', 'err');
+          });
+        }).catch(function(e){
+          toast('⚠️ الـ Service Worker لسه مش جاهز، جرب تاني بعد شوية', 'err');
+        });
       });
     });
   }
