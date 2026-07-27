@@ -41332,7 +41332,7 @@ var AcNotif = {
     if (typeof Notification !== 'undefined' && Notification.permission === 'default' && !this._pushOfferDismissed) {
       rows += '<div style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--ac-100);border-bottom:1px solid var(--ac-300)">' +
         '<div style="flex:1;font-size:12px;color:var(--ac-900);font-weight:700">🔔 فعّل التنبيهات عشان توصلك حتى لو التطبيق مقفول</div>' +
-        '<button onclick="AcNotif.registerPush()" style="background:var(--ac-700);color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap">تفعيل</button>' +
+        '<button onclick="AcNotif.registerPush(this)" style="background:var(--ac-700);color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap">تفعيل</button>' +
         '<button onclick="AcNotif._pushOfferDismissed=true;AcNotif._render()" style="background:none;border:none;color:var(--ac-600);font-size:16px;cursor:pointer;padding:0 2px" aria-label="إغلاق">×</button>' +
       '</div>';
     }
@@ -41432,54 +41432,76 @@ var AcNotif = {
       }).catch(function(e){ if (typeof showToast === 'function') showToast('خطأ: ' + e.message, 'err'); });
   },
 
-  registerPush: function(){
-    var toast = function(msg, type){ if (typeof showToast === 'function') showToast(msg, type); else alert(msg); };
+  registerPush: function(btn){
+    var showMsg = function(msg, type){
+      try { if (typeof showToast === 'function') { showToast(msg, type); return; } } catch (e) {}
+      alert(msg);
+    };
+    var restoreBtn = function(){ if (btn) { btn.textContent = 'تفعيل'; btn.disabled = false; } };
 
-    if (ACADEMY_VAPID_KEY === 'PASTE_YOUR_VAPID_KEY_HERE') {
-      toast('⚠️ الإشعارات لسه مش متجهزة من ناحيتنا (VAPID key). جرب تاني بعد ما نضيفه.', 'err');
-      return;
-    }
-    if (typeof firebase === 'undefined' || !firebase.messaging || !firebase.messaging.isSupported) {
-      toast('⚠️ المتصفح ده مش بيدعم إشعارات الويب', 'err');
-      return;
-    }
-    if (!('serviceWorker' in navigator)) {
-      toast('⚠️ المتصفح ده مش بيدعم Service Workers، فمينفعش نفعّل الإشعارات', 'err');
-      return;
-    }
+    // Instant feedback the moment the tap registers — independent of Firebase,
+    // toast, or anything else below, so a click can never look like a no-op.
+    if (btn) { btn.textContent = '...جاري التفعيل'; btn.disabled = true; }
 
-    firebase.messaging.isSupported().then(function(supported){
-      if (!supported) {
-        toast('⚠️ المتصفح ده مش بيدعم إشعارات الويب — جرب من كروم، أو من الشاشة الرئيسية لو آيفون', 'err');
-        return;
+    try {
+      if (ACADEMY_VAPID_KEY === 'PASTE_YOUR_VAPID_KEY_HERE') {
+        restoreBtn(); showMsg('⚠️ الإشعارات لسه مش متجهزة من ناحيتنا (VAPID key)', 'err'); return;
       }
-      Notification.requestPermission().then(function(perm){
-        AcNotif._render(); // hide the offer banner regardless of the answer
-        if (perm === 'denied') {
-          toast('❌ الإذن اتمنع. لازم تفعّله من إعدادات المتصفح للموقع علشان يوصلك إشعار', 'err');
+      if (typeof firebase === 'undefined') {
+        restoreBtn(); showMsg('⚠️ خطأ: مكتبة Firebase مش محمّلة في الصفحة', 'err'); return;
+      }
+      if (!firebase.messaging) {
+        restoreBtn(); showMsg('⚠️ Firebase Messaging مش متاحة في المتصفح ده', 'err'); return;
+      }
+      if (!('serviceWorker' in navigator)) {
+        restoreBtn(); showMsg('⚠️ المتصفح ده مش بيدعم Service Workers', 'err'); return;
+      }
+
+      var isSupportedPromise = firebase.messaging.isSupported ? firebase.messaging.isSupported() : Promise.resolve(true);
+
+      isSupportedPromise.then(function(supported){
+        if (!supported) {
+          restoreBtn();
+          showMsg('⚠️ المتصفح ده مش بيدعم إشعارات الويب — جرب من كروم، أو ضيف الموقع للشاشة الرئيسية لو آيفون', 'err');
           return;
         }
-        if (perm !== 'granted') return; // dismissed without a choice — banner stays, they can retry
-        if (!AcNotif._uid) return;
+        Notification.requestPermission().then(function(perm){
+          AcNotif._render(); // rebuilds the banner (hidden if permission is no longer 'default')
+          if (perm === 'denied') { restoreBtn(); showMsg('❌ الإذن اتمنع من إعدادات المتصفح للموقع', 'err'); return; }
+          if (perm !== 'granted') { restoreBtn(); showMsg('ℹ️ محتاجين إذنك عشان نقدر نبعتلك إشعارات', 'inf'); return; }
+          if (!AcNotif._uid) { restoreBtn(); showMsg('⚠️ لازم تكون مسجّل دخول الأول', 'err'); return; }
 
-        navigator.serviceWorker.ready.then(function(registration){
-          var messaging = firebase.messaging();
-          messaging.getToken({ vapidKey: ACADEMY_VAPID_KEY, serviceWorkerRegistration: registration }).then(function(token){
-            if (!token) { toast('⚠️ متقدرناش نجيب توكن الإشعارات، جرب تاني', 'err'); return; }
-            db.collection('users').doc(AcNotif._uid).set({
-              fcmTokens: firebase.firestore.FieldValue.arrayUnion(token)
-            }, { merge: true }).then(function(){
-              toast('🔔 تم تفعيل الإشعارات بنجاح', 'ok');
-            }).catch(function(e){ toast('⚠️ اتفعّلت بس مقدرناش نحفظها: ' + e.message, 'err'); });
+          navigator.serviceWorker.ready.then(function(registration){
+            var messaging = firebase.messaging();
+            messaging.getToken({ vapidKey: ACADEMY_VAPID_KEY, serviceWorkerRegistration: registration }).then(function(token){
+              restoreBtn();
+              if (!token) { showMsg('⚠️ متقدرناش نجيب توكن الإشعارات، جرب تاني', 'err'); return; }
+              db.collection('users').doc(AcNotif._uid).set({
+                fcmTokens: firebase.firestore.FieldValue.arrayUnion(token)
+              }, { merge: true }).then(function(){
+                showMsg('🔔 تم تفعيل الإشعارات بنجاح', 'ok');
+              }).catch(function(e){ showMsg('⚠️ اتفعّلت بس مقدرناش نحفظها: ' + (e && e.message), 'err'); });
+            }).catch(function(e){
+              restoreBtn();
+              console.warn('[AcNotif] getToken:', e);
+              showMsg('⚠️ فشل تفعيل الإشعارات: ' + (e && (e.code || e.message) || 'خطأ غير معروف'), 'err');
+            });
           }).catch(function(e){
-            console.warn('[AcNotif] getToken:', e);
-            toast('⚠️ فشل تفعيل الإشعارات (' + (e.code || e.message) + ')', 'err');
+            restoreBtn();
+            showMsg('⚠️ الـ Service Worker لسه مش جاهز، جرب تاني بعد شوية', 'err');
           });
         }).catch(function(e){
-          toast('⚠️ الـ Service Worker لسه مش جاهز، جرب تاني بعد شوية', 'err');
+          restoreBtn();
+          showMsg('⚠️ خطأ في طلب الإذن: ' + (e && e.message || e), 'err');
         });
+      }).catch(function(e){
+        restoreBtn();
+        showMsg('⚠️ خطأ: ' + (e && e.message || e), 'err');
       });
-    });
+    } catch (e) {
+      restoreBtn();
+      showMsg('⚠️ خطأ غير متوقع: ' + (e && e.message || e), 'err');
+    }
   }
 };
 

@@ -7,7 +7,7 @@
  *  Firebase / Auth → Network Only  (NEVER cached)
  */
 
-const SW_VERSION   = 'nabtex-v2.4.0';
+const SW_VERSION   = 'nabtex-v2.5.0'; // bumped: academy push-notifications added
 const SHELL_CACHE  = SW_VERSION + '-shell';
 const STATIC_CACHE = SW_VERSION + '-static';
 const FONT_CACHE   = SW_VERSION + '-fonts';
