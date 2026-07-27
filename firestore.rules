@@ -2,117 +2,18 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function isAuth()    { return request.auth != null; }
-    function isSelf(uid) { return isAuth() && request.auth.uid == uid; }
-    function owns(res)   { return isAuth() && request.auth.uid == res.data.ownerId; }
-    function ownsOrder(res) {
-      return isAuth() && (request.auth.uid == res.data.buyerId ||
-                          request.auth.uid == res.data.sellerId);
+    // دالّتان مساعدتان (Helpers)
+    function isAuth() {
+      return request.auth != null;
     }
-    // Admin: add admins/{uid} doc once via Firebase Console to grant access
+    function isSelf(uid) {
+      return isAuth() && request.auth.uid == uid;
+    }
     function isAdmin() {
-      return isAuth() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+      return isAuth() && request.auth.token.admin == true;
     }
 
-    match /users/{uid} {
-      allow read:  if true;
-      allow write: if isSelf(uid) || isAdmin();
-    }
-
-    match /admins/{uid} {
-      allow read:  if isSelf(uid);
-      allow write: if false;
-    }
-
-    match /farms/{docId} {
-      allow read, write: if isAuth();
-    }
-
-    match /fields/{docId} {
-      allow read, write: if isAuth();
-    }
-
-    match /crops/{docId} {
-      allow read, write: if isAuth();
-    }
-
-    match /operations/{docId} {
-      allow read, write: if isAuth();
-    }
-
-    match /plants/{docId}   { allow read: if true; allow write: if false; }
-    match /diseases/{docId} { allow read: if true; allow write: if false; }
-
-    match /goals/{docId} {
-      allow read, write: if isAuth();
-    }
-
-    // ── COURSE CONFIG (admin toggles courses active/paused) ──
-    match /course_config/{courseId} {
-      allow read:  if true;
-      allow write: if isAdmin();
-    }
-
-    // ── ACADEMY PROGRESS (per-user course progress, synced across devices) ──
-    match /academy_progress/{docId} {
-      allow read:   if (isAuth() && request.auth.uid == resource.data.uid) || isAdmin();
-      allow write:  if isAuth() && request.auth.uid == resource.data.uid;
-      allow create: if isAuth() && request.auth.uid == request.resource.data.uid;
-    }
-
-    // ── COURSE PAYMENTS (Vodafone Cash payment requests) ──
-    // Users: create own + read own. Admin: read all + update status.
-    match /course_payments/{docId} {
-      allow read:   if (isAuth() && resource.data.uid == request.auth.uid) || isAdmin();
-      allow create: if isAuth()
-                    && request.resource.data.uid == request.auth.uid
-                    && request.resource.data.courseId is string
-                    && request.resource.data.phone is string
-                    && request.resource.data.transactionRef is string;
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
-    }
-
-    match /marketplace_products/{productId} {
-      allow read: if true;
-      allow create: if isAuth()
-                    && request.resource.data.ownerId == request.auth.uid
-                    && request.resource.data.title is string
-                    && request.resource.data.title.size() > 0
-                    && request.resource.data.price is number;
-      allow update: if owns(resource) || isAuth();
-      allow delete: if owns(resource);
-    }
-
-    match /marketplace_orders/{orderId} {
-      allow read:   if ownsOrder(resource);
-      allow create: if isAuth() && request.resource.data.buyerId == request.auth.uid;
-      allow update: if isAuth() && request.auth.uid == resource.data.sellerId;
-      allow delete: if false;
-    }
-
-    match /marketplace_reviews/{reviewId} {
-      allow read: if true;
-      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
-      allow update, delete: if isAuth() && resource.data.userId == request.auth.uid;
-    }
-
-    match /marketplace_notifications/{notifId} {
-      allow read, update, delete: if isAuth() && resource.data.userId == request.auth.uid;
-      allow create: if isAuth();
-    }
-
-    match /social_profiles/{uid} {
-      allow read: if true;
-      allow create: if isSelf(uid);
-      allow update: if isSelf(uid) || (
-        isAuth() &&
-        request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['followersCount', 'followingCount'])
-      );
-      allow delete: if isSelf(uid);
-    }
-
+    // ── SOCIAL POSTS ──
     match /social_posts/{postId} {
       allow read: if true;
       allow create: if isAuth()
@@ -134,6 +35,7 @@ service cloud.firestore {
       }
     }
 
+    // ── SOCIAL FOLLOWS ──
     match /social_follows/{followId} {
       allow read: if isAuth();
       allow create: if isAuth()
@@ -142,49 +44,49 @@ service cloud.firestore {
         && resource.data.followerUid == request.auth.uid;
     }
 
+    // ── SOCIAL NOTIFICATIONS ──
     match /social_notifications/{notifId} {
       allow read, update, delete: if isAuth()
         && resource.data.toUid == request.auth.uid;
       allow create: if isAuth();
     }
 
+    // ── FAVORITES ──
     match /favorites/{uid} {
       allow read, write: if isSelf(uid);
     }
 
-    // ── ACADEMY NOTIFICATIONS (bell: broadcasts + per-user, e.g. inactivity) ──
-    // scope:'broadcast' → readable by any signed-in student (admin.html + the
-    //   Supabase inactivity job write these; students never write them).
-    // scope:'user'      → readable only by the target student (readable /
-    //   mark-as-read); admin.html fan-outs and the Supabase job write these.
+    // ── ACADEMY NOTIFICATIONS ──
     match /academy_notifications/{notifId} {
-      allow read: if isAuth() && (
+      allow read: if (isAuth() && (
         resource.data.scope == 'broadcast' ||
         (resource.data.scope == 'user' && resource.data.userId == request.auth.uid)
-      ) || isAdmin();
+      )) || isAdmin();
+      
       allow update: if isAuth() && resource.data.scope == 'user'
                     && resource.data.userId == request.auth.uid
                     && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+                    
       allow update: if isAuth() && resource.data.scope == 'broadcast'
                     && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readBy'])
                     && request.resource.data.readBy.hasAll(resource.data.readBy)
                     && request.resource.data.readBy.hasOnly(resource.data.readBy.concat([request.auth.uid]));
+                    
       allow create, delete: if isAdmin();
-      // Note: the Supabase Edge Function and any Cloud Function use the
-      // Admin SDK / service-account token, which bypasses these rules
-      // entirely — isAdmin() above only gates admin.html's own client writes.
     }
 
-    // ── ACADEMY BROADCAST LOG (admin.html "last 10 sent" list — admin-only) ──
+    // ── ACADEMY BROADCAST LOG ──
     match /academy_broadcast_log/{logId} {
       allow read, create: if isAdmin();
       allow update, delete: if false;
     }
 
+    // ── USER SUBCOLLECTIONS ──
     match /users/{uid}/{subcollection}/{docId} {
       allow read, write: if isSelf(uid);
     }
 
+    // ── DEFAULT CATCH-ALL (Deny all other access) ──
     match /{document=**} {
       allow read, write: if false;
     }
