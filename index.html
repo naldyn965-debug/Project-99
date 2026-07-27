@@ -41457,7 +41457,7 @@ var AcNotif = {
         restoreBtn(); showMsg('⚠️ المتصفح ده مش بيدعم Service Workers', 'err'); return;
       }
 
-      var isSupportedPromise = firebase.messaging.isSupported ? firebase.messaging.isSupported() : Promise.resolve(true);
+      var isSupportedPromise = Promise.resolve(firebase.messaging.isSupported ? firebase.messaging.isSupported() : true);
 
       isSupportedPromise.then(function(supported){
         if (!supported) {
