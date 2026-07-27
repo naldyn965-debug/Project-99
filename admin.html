@@ -1203,6 +1203,10 @@ async function doDelete(docId, uid, courseId) {
    bell in index.html) and `academy_broadcast_log` (admin-facing history
    list only — kept separate so "last 10 sent" stays a simple query
    regardless of whether a send was one broadcast doc or a fan-out). ── */
+// Edge Function that actually pushes to closed/backgrounded devices — the
+// Firestore writes above only reach students who have a tab open (AcNotif's
+// realtime listener). Deploy steps: ACADEMY NOTIFICATIONS SETUP.md, Part E.
+const ACADEMY_BROADCAST_PUSH_URL = 'https://uexnkbspbhgelfmmvgqq.supabase.co/functions/v1/academy-broadcast-push';
 let broadcastLogUnsubscribe = null;
 
 function openBroadcastModal() {
@@ -1319,6 +1323,27 @@ async function doSendBroadcast(action) {
   });
 
   showToast('📢 تم إرسال الإشعار بنجاح', 'ok');
+
+  // Actual push to closed/backgrounded devices. Best-effort and fully
+  // isolated: the broadcast above (Firestore + in-app bell + success
+  // toast) has already completed either way, so a missing deploy or a
+  // network hiccup here can't undo or block it.
+  try {
+    const idToken = await auth.currentUser.getIdToken();
+    const pushRes = await fetch(ACADEMY_BROADCAST_PUSH_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        idToken: idToken,
+        message: action.message,
+        courseId: action.linkCid || action.targetCid || null,
+        uids: action.targetCid ? action.uids : null
+      })
+    });
+    console.log('[broadcast push]', await pushRes.json());
+  } catch (e) {
+    console.warn('[broadcast push] send skipped/failed:', e && e.message);
+  }
 }
 
 function startBroadcastLogListener() {

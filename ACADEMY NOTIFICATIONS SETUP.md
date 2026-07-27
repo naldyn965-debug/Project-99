@@ -11,6 +11,7 @@ own credentials/accounts, so it's written up here step by step.
 | `lastActiveAt` heartbeat (Academy-section entry, throttled 10 min) | `index.html` | ✅ done |
 | FCM token registration (deliberate-moment prompt in the panel) | `index.html` | ✅ done |
 | Admin broadcast composer (all students / one course's enrollees) | `admin.html` | ✅ done |
+| Immediate push when a broadcast is sent, so it also reaches closed/backgrounded devices — previously the composer above only updated the in-app bell | `academy-broadcast-push.ts` + `admin.html` | ✅ code done (needs deploy — Part E) |
 | Recent-sends log (last 10) | `admin.html` | ✅ done |
 | Firestore rules for `academy_notifications` / `academy_broadcast_log` | `firestore.rules` | ✅ done |
 | Background push + click deep-link | `sw.js` | ✅ done (needs VAPID key — Part A) |
@@ -86,11 +87,28 @@ course_config/tissue-culture   { active: true, totalLessons: <n>, title: "زرا
    ```
    It returns a small JSON summary (`scanned`, `notified`, `pushSent`, etc.) — check `errors` is empty on the first run.
 
-## Part D — Testing checklist
+## Part D — Supabase (immediate broadcast push, ~15 min if Part C is already done)
+
+Same project, same secrets — this just deploys a second, companion function
+so a broadcast sent from `admin.html` also reaches students whose site/app
+is closed, not only students with a tab open.
+
+1. **Add the file** to your local project at `supabase/functions/academy-broadcast-push/index.ts`, using `academy-broadcast-push.ts` from this delivery (same flattened-filename convention as `academy-inactivity-push.ts`).
+2. **No new secrets** — it reuses `GCP_SERVICE_ACCOUNT_JSON` and `FIREBASE_PROJECT_ID`, already set in Part C step 4.
+3. **Deploy**:
+   ```
+   supabase functions deploy academy-broadcast-push --no-verify-jwt
+   ```
+   (`--no-verify-jwt` because the caller here is an admin's browser sending a Firebase ID token in the request body, not a Supabase-authenticated caller — the function verifies that ID token itself, see the file's header comment.)
+4. **Paste the URL into `admin.html`**: search for `PASTE_YOUR_SUPABASE_PROJECT_REF_HERE` (one occurrence, right above the broadcast composer code) and replace it with your actual project ref — same pattern as the VAPID key in Part A.
+5. **Test it**: send any test broadcast from `admin.html`, then check the browser console — logs `[broadcast push]` with the same kind of JSON summary as Part C step 7 (`targeted`, `pushSent`, `pushFailed`, `errors`). A closed-tab device with a saved token should get a real push within seconds.
+
+## Part E — Testing checklist
 
 - [ ] Open the Academy tab as a logged-in student → bell shows, badge hidden when 0 unread
 - [ ] From `admin.html`, send a test broadcast to "كل الطلاب" → bell badge updates live, tapping opens the panel, message shows
 - [ ] Send a course-targeted broadcast → confirm only students with progress/payment in that course receive it (check `academy_notifications` docs in Firestore console: should be `scope:'user'` docs, one per uid)
+- [ ] With Part D deployed: close the app entirely on a test device that already granted notification permission, send a broadcast from `admin.html` → a real push notification arrives within seconds (not just the in-app bell)
 - [ ] Tap a notification with a course link attached → confirms it opens that course
 - [ ] Leave the panel open for 2 seconds → unread dot disappears, badge count drops
 - [ ] Toggle "🔕 كتم تذكيرات المتابعة" → check `users/{uid}.notifMuted` flips in Firestore
