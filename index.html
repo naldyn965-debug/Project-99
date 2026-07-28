@@ -7748,6 +7748,10 @@ body.modal-open { overflow: hidden; }
   padding:0 5px; line-height:1;
   box-shadow:0 1px 6px rgba(239,68,68,.5);
 }
+/* جرس النافبار (#nav-notif-btn) دائري بـ overflow:hidden من .nav-icon-btn،
+   وده بيقص طرف الشارة الدائرية فتطلع بشكل ممزّق بدل دائرة نضيفة. مقصورة
+   على الـ id ده بس عشان تفضل .nav-icon-btn (زر الثيم/الأفاتار) زي ما هي. */
+#nav-notif-btn{ overflow:visible; }
 .ac-notif-panel{
   display:none;
   position:fixed;
