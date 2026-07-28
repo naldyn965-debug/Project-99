@@ -1340,9 +1340,21 @@ async function doSendBroadcast(action) {
         uids: action.targetCid ? action.uids : null
       })
     });
-    console.log('[broadcast push]', await pushRes.json());
+    const pushStats = await pushRes.json().catch(function(){ return null; });
+    console.log('[broadcast push]', pushRes.status, pushStats);
+    // Surface push failures in the UI, not just the console — otherwise a
+    // dead/misconfigured Edge Function (e.g. Supabase's own gateway JWT
+    // check still on, rejecting this call before it even reaches the
+    // function) looks identical to success, since the toast above already
+    // fired for the Firestore/bell write, which is a separate, always-
+    // succeeds-independently path from this push call.
+    if (!pushRes.ok || !pushStats || pushStats.pushSent === 0) {
+      const reason = (pushStats && pushStats.errors && pushStats.errors[0]) || ('HTTP ' + pushRes.status);
+      showToast('⚠️ الإشعار وصل لأصحاب التاب المفتوح بس push للأجهزة المقفولة فشل: ' + reason, 'err');
+    }
   } catch (e) {
     console.warn('[broadcast push] send skipped/failed:', e && e.message);
+    showToast('⚠️ push للأجهزة المقفولة فشل (الإشعار جوه الموقع لسه وصل): ' + (e && e.message || 'خطأ شبكة'), 'err');
   }
 }
 
