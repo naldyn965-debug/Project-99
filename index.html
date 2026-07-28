@@ -41358,6 +41358,7 @@ var AcNotif = {
       AcNotif.broadcasts = []; AcNotif.userNotifs = []; AcNotif.list = [];
       if (!user) { AcNotif.unreadCount = 0; AcNotif._updateBadge(); return; }
       AcNotif._uid = user.uid;
+      AcNotif._hiddenIds = AcNotif._loadHiddenIds(user.uid);
       AcNotif._loadMuteState(user.uid);
       AcNotif._listenBroadcasts();
       AcNotif._listenUser(user.uid);
@@ -41531,6 +41532,22 @@ var AcNotif = {
     }
   },
 
+  // إخفاء محلي دائم: الإشعار اللي اتقفل قبل كده يفضل مقفول حتى لو نداء
+  // Firestore (hiddenBy/delete) اتأخر أو فشل بصمت — بيتقرأ عند فتح الجلسة
+  // قبل أول _merge، ونفس نمط nabtex-pwa-dismissed المستخدم بباقي الملف.
+  _hiddenKey: function(uid){ return 'ac-notif-hidden__' + uid; },
+
+  _loadHiddenIds: function(uid){
+    try { return JSON.parse(localStorage.getItem(this._hiddenKey(uid)) || '{}'); }
+    catch(e){ return {}; }
+  },
+
+  _saveHiddenIds: function(){
+    if (!this._uid) return;
+    try { localStorage.setItem(this._hiddenKey(this._uid), JSON.stringify(this._hiddenIds)); }
+    catch(e){}
+  },
+
   // Swipe-to-dismiss: إشعار broadcast بيتخفي لهذا المستخدم بس (hiddenBy)
   // والمستند نفسه فاضل موجود لباقي المستخدمين. إشعار user بيتحذف فعليًا
   // لأنه أصلاً خاص بالمستخدم ده وحده — مفيش حد تاني هيتأثر.
@@ -41538,6 +41555,7 @@ var AcNotif = {
     var n = this.list.find(function(x){ return x.id === id; });
     if (!n) return;
     this._hiddenIds[id] = true;
+    this._saveHiddenIds();
     var uid = this._uid;
     if (n.scope === 'broadcast') {
       db.collection('academy_notifications').doc(id).update({
