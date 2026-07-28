@@ -7788,6 +7788,7 @@ body.modal-open { overflow: hidden; }
   padding:14px 20px; border-bottom:1px solid rgba(35,83,71,.12);
   display:flex; gap:12px; align-items:flex-start;
   transition:background .15s; cursor:pointer; position:relative;
+  touch-action:pan-y; /* JS يتحكم بالسحب الأفقي، والتمرير الرأسي يفضل native */
 }
 .ac-notif-card:hover{ background:rgba(35,83,71,.06); }
 .ac-notif-card-icon{
@@ -41346,6 +41347,7 @@ var AcNotif = {
   _lastActiveWrite: 0,
   _dwellTimer: null,
   _pushOfferDismissed: false,
+  _hiddenIds: {},
 
   init: function(){
     if (typeof auth === 'undefined' || !auth || typeof db === 'undefined' || !db) {
@@ -41412,6 +41414,11 @@ var AcNotif = {
   _merge: function(){
     var uid = this._uid;
     var all = this.broadcasts.concat(this.userNotifs)
+      .filter(function(n){
+        if (AcNotif._hiddenIds[n.id]) return false;
+        if (n.scope === 'broadcast' && (n.hiddenBy||[]).indexOf(uid) !== -1) return false;
+        return true;
+      })
       .sort(function(a,b){ return _acNotifSec(b) - _acNotifSec(a); });
     this.list = all;
     this.unreadCount = all.filter(function(n){
@@ -41471,7 +41478,7 @@ var AcNotif = {
     } else {
       rows += this.list.map(function(n){
         var unread = n.scope === 'broadcast' ? (n.readBy||[]).indexOf(uid) === -1 : !n.read;
-        return '<div class="ac-notif-card" onclick="AcNotif._openFromNotif(\'' + n.id + '\')">' +
+        return '<div class="ac-notif-card" data-notif-id="' + n.id + '" onclick="AcNotif._openFromNotif(\'' + n.id + '\')">' +
           '<div class="ac-notif-card-icon">' + AcNotif._iconFor(n.type) + '</div>' +
           '<div style="flex:1;min-width:0">' +
             '<div class="ac-notif-card-msg">' + _esc(n.message||'') + '</div>' +
@@ -41522,6 +41529,24 @@ var AcNotif = {
       if (typeof acShowCourses === 'function') acShowCourses();
       if (window.NAcademy) NAcademy.openCourse(n.courseId);
     }
+  },
+
+  // Swipe-to-dismiss: إشعار broadcast بيتخفي لهذا المستخدم بس (hiddenBy)
+  // والمستند نفسه فاضل موجود لباقي المستخدمين. إشعار user بيتحذف فعليًا
+  // لأنه أصلاً خاص بالمستخدم ده وحده — مفيش حد تاني هيتأثر.
+  _dismiss: function(id){
+    var n = this.list.find(function(x){ return x.id === id; });
+    if (!n) return;
+    this._hiddenIds[id] = true;
+    var uid = this._uid;
+    if (n.scope === 'broadcast') {
+      db.collection('academy_notifications').doc(id).update({
+        hiddenBy: firebase.firestore.FieldValue.arrayUnion(uid)
+      }).catch(function(){});
+    } else {
+      db.collection('academy_notifications').doc(id).delete().catch(function(){});
+    }
+    this._merge();
   },
 
   _touchActive: function(){
@@ -41646,6 +41671,71 @@ document.addEventListener('click', function(e){
     AcNotif.list_open = false;
   }
 });
+
+// سحب بطاقة إشعار يمين/شمال لإلغائها (تاتش + ماوس عبر Pointer Events).
+// الاستماع مفوّض على #ac-notif-panel-list نفسها (عنصر ثابت) لأن محتواها
+// بيتغير بالكامل مع كل AcNotif._render() — مفيش داعي لإعادة ربط كل بطاقة.
+(function(){
+  var list = document.getElementById('ac-notif-panel-list');
+  if (!list) return;
+
+  var SWIPE_MOVE_PX    = 8;   // px قبل ما نعتبرها سحب مش تاب عادي
+  var SWIPE_DISMISS_PX = 90;  // px اللي لو اتعدّت وقت الإفلات، الإشعار يتحذف
+  var FADE_MAX_PX      = 120; // px السحب اللي عندها الشفافية توصل لأقل حد
+
+  var track = null; // السحب النشط: {id, card, startX, startY, dx, pointerId, dragging}
+  var suppressClick = false;
+
+  list.addEventListener('pointerdown', function(e){
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    var card = e.target.closest('.ac-notif-card');
+    if (!card || track) return;
+    track = { id: card.getAttribute('data-notif-id'), card: card,
+      startX: e.clientX, startY: e.clientY, dx: 0, dragging: false, pointerId: e.pointerId };
+  });
+
+  list.addEventListener('pointermove', function(e){
+    if (!track || e.pointerId !== track.pointerId) return;
+    var dx = e.clientX - track.startX;
+    var dy = e.clientY - track.startY;
+    if (!track.dragging) {
+      if (Math.abs(dx) < SWIPE_MOVE_PX) return;
+      if (Math.abs(dy) > Math.abs(dx)) { track = null; return; } // نية تمرير رأسي — سيبها للمتصفح
+      track.dragging = true;
+      track.card.style.transition = 'none';
+      try { track.card.setPointerCapture(track.pointerId); } catch(err){}
+    }
+    track.dx = dx;
+    track.card.style.transform = 'translateX(' + dx + 'px)';
+    track.card.style.opacity = String(Math.max(1 - Math.abs(dx) / FADE_MAX_PX, 0.15));
+  });
+
+  function endDrag(e){
+    if (!track || (e.pointerId !== undefined && e.pointerId !== track.pointerId)) return;
+    var t = track; track = null;
+    if (!t.dragging) return;
+    suppressClick = true;
+    setTimeout(function(){ suppressClick = false; }, 400);
+    if (Math.abs(t.dx) > SWIPE_DISMISS_PX) {
+      t.card.style.transition = 'transform .2s ease-out, opacity .2s ease-out';
+      t.card.style.transform = 'translateX(' + (t.dx > 0 ? '130%' : '-130%') + ')';
+      t.card.style.opacity = '0';
+      setTimeout(function(){ AcNotif._dismiss(t.id); }, 200);
+    } else {
+      t.card.style.transition = 'transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s';
+      t.card.style.transform = '';
+      t.card.style.opacity = '';
+    }
+  }
+  list.addEventListener('pointerup', endDrag);
+  list.addEventListener('pointercancel', endDrag);
+
+  // سحب حقيقي حرّك البطاقة مايفضلش كمان يفتح الإشعار (اللي بيحصل من الـ
+  // onclick اللي على الكارت) — نبلع أول click بعد سحب فعلي بس.
+  list.addEventListener('click', function(e){
+    if (suppressClick) { suppressClick = false; e.stopPropagation(); e.preventDefault(); }
+  }, true);
+})();
 
 window.AcNotif = AcNotif;
 AcNotif.init();
