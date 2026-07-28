@@ -4234,6 +4234,27 @@ body.modal-open { overflow: hidden; }
     <a href="#" class="nl" id="mobLogout" style="display:none;" onclick="logoutUser();closeMob();return false">تسجيل الخروج</a>
   </div>
 </nav>
+
+<!-- ACADEMY NOTIFICATIONS — dropdown panel (opened by the nav-bar bell
+     #nav-notif-btn and the in-academy bell #mkt-tab-acad-notif). Lives here,
+     outside every .page, because .page is display:none unless .active — as
+     a child of #pg-academy it was only ever visible while Academy itself
+     was the open page, so the nav-bar bell did nothing on every other page.
+     Independent overlay, does not participate in acad-root /
+     acad-social-panels view switching. -->
+<div class="ac-notif-panel" id="ac-notif-panel">
+  <div class="ac-notif-panel-head">
+    <div class="ac-notif-panel-title">الإشعارات</div>
+    <button class="ac-notif-panel-close" onclick="AcNotif.togglePanel()" aria-label="إغلاق">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div id="ac-notif-panel-list"></div>
+  <div class="ac-notif-panel-foot">
+    <button class="ac-notif-mute-toggle" id="ac-notif-mute-btn" onclick="AcNotif.toggleMute()">🔕 كتم تذكيرات المتابعة</button>
+  </div>
+</div>
+
 <!-- ══════════ PAGE: HOME ══════════ -->
 <div class="page active" id="pg-home">
 
@@ -7991,21 +8012,6 @@ body.modal-open { overflow: hidden; }
         الإشعارات
         <span class="ac-notif-badge" id="ac-notif-count" style="display:none;">0</span>
       </button>
-    </div>
-  </div>
-
-  <!-- ACADEMY NOTIFICATIONS — dropdown panel (bell above). Independent overlay,
-       does not participate in acad-root / acad-social-panels view switching. -->
-  <div class="ac-notif-panel" id="ac-notif-panel">
-    <div class="ac-notif-panel-head">
-      <div class="ac-notif-panel-title">الإشعارات</div>
-      <button class="ac-notif-panel-close" onclick="AcNotif.togglePanel()" aria-label="إغلاق">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div id="ac-notif-panel-list"></div>
-    <div class="ac-notif-panel-foot">
-      <button class="ac-notif-mute-toggle" id="ac-notif-mute-btn" onclick="AcNotif.toggleMute()">🔕 كتم تذكيرات المتابعة</button>
     </div>
   </div>
 
