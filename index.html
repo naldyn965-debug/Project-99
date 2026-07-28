@@ -7752,6 +7752,11 @@ body.modal-open { overflow: hidden; }
    وده بيقص طرف الشارة الدائرية فتطلع بشكل ممزّق بدل دائرة نضيفة. مقصورة
    على الـ id ده بس عشان تفضل .nav-icon-btn (زر الثيم/الأفاتار) زي ما هي. */
 #nav-notif-btn{ overflow:visible; }
+/* الشارة كانت متمركزة (top/right:4px) جوه دايرة 38px صغيرة فبتغطي شكل
+   الجرس نفسه. بنبعدها لطرف الزرار في السياق ده بس (نافبار)، من غير ما
+   نلمس .ac-notif-badge الأصلية المشتركة مع جرس تبويب إشعارات الأكاديمية
+   (تاب أعرض، مش متأثر بنفس المشكلة). */
+#nav-notif-btn .ac-notif-badge{ top:-3px; right:-3px; }
 .ac-notif-panel{
   display:none;
   position:fixed;
