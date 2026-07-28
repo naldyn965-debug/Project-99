@@ -30997,7 +30997,7 @@ function updateAuthUI(user) {
     loginBtn.style.display = 'none';
     registerBtn.style.display = 'none';
     userMenu.style.display = 'block';
-    if (navNotifBtn) navNotifBtn.style.display = 'block';
+    if (navNotifBtn) navNotifBtn.style.display = 'grid';
     const displayName = user.displayName || user.email.split('@')[0];
     if (userNameDisplay) userNameDisplay.textContent = displayName;
     if (userEmailDisplay) userEmailDisplay.textContent = user.email || '';
