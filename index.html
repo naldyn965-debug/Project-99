@@ -1703,6 +1703,33 @@ body.modal-open { overflow: hidden; }
 </script>
 </head>
 <body>
+  <!-- Liquid Glass — hidden SVG refraction filters (feDisplacementMap + feSpecularLighting).
+       Referenced via backdrop-filter:url(#id), gated by @supports so Safari/Firefox
+       fall back cleanly to plain blur+saturate. liquidHero = full refraction+rim light
+       for the hero card; liquidNav = subtle displacement only (kept cheap + legible
+       since it sits over scrolling page content, not a flat gradient). -->
+  <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="liquidHero" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.010 0.016" numOctaves="2" seed="11" result="nbNoise"/>
+        <feGaussianBlur in="nbNoise" stdDeviation="3" result="nbNoiseSoft"/>
+        <feDisplacementMap in="SourceGraphic" in2="nbNoiseSoft" scale="16" xChannelSelector="R" yChannelSelector="G" result="nbRefracted"/>
+        <feSpecularLighting in="nbNoiseSoft" surfaceScale="4" specularConstant=".85" specularExponent="20" lighting-color="#ffffff" result="nbSpec">
+          <feDistantLight azimuth="235" elevation="58"/>
+        </feSpecularLighting>
+        <feComposite in="nbSpec" in2="SourceAlpha" operator="in" result="nbSpecClip"/>
+        <feMerge>
+          <feMergeNode in="nbRefracted"/>
+          <feMergeNode in="nbSpecClip"/>
+        </feMerge>
+      </filter>
+      <filter id="liquidNav" x="-10%" y="-40%" width="120%" height="180%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.05" numOctaves="1" seed="4" result="nbNavNoise"/>
+        <feGaussianBlur in="nbNavNoise" stdDeviation="2" result="nbNavNoiseSoft"/>
+        <feDisplacementMap in="SourceGraphic" in2="nbNavNoiseSoft" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
   <!-- PWA STANDALONE HEIGHT FIX
        In standalone mode, 100vh/100dvh can be incorrect on iOS/Android.
        We set --app-height via JS to always match the real viewport.
@@ -4146,6 +4173,13 @@ body.modal-open { overflow: hidden; }
         <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
+      </button>
+      <button class="nav-icon-btn" id="nav-notif-btn" style="display:none;position:relative" onclick="AcNotif.togglePanel()" aria-label="الإشعارات" title="الإشعارات">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <span class="ac-notif-badge" id="ac-notif-count-nav" style="display:none;">0</span>
       </button>
       <button class="btn-nav-o" id="loginBtn" onclick="openAuth('login')">دخول</button>
       <button class="btn-nav-o" id="registerBtn" onclick="openAuth('reg')">ابدأ مجاناً</button>
@@ -30516,9 +30550,10 @@ const App = {
 
   _renderUnifiedHome(cnt){
     var name = (currentUser && (currentUser.displayName || currentUser.email.split('@')[0])) || '';
+    var nbInitials = _nbAvatarInitials(currentUser && currentUser.displayName) || (name?name.trim().charAt(0).toUpperCase():'N');
     var avatarHTML = (currentUser && currentUser.photoURL)
       ? '<img src="'+currentUser.photoURL+'" alt="'+name+'" class="nb-h2-avatar-img">'
-      : '<div class="nb-h2-avatar-fallback">'+(name?name.trim().charAt(0).toUpperCase():'N')+'</div>';
+      : '<div class="nb-h2-avatar-fallback">'+nbInitials+'</div>';
 
     var registry = this._nbHomeCourseRegistry();
 
@@ -30938,6 +30973,17 @@ async function logoutUser() {
   }
 }
 
+/* Single source of truth for avatar initials — shared by the nav avatar
+   (#av-initials) and the home hero avatar (.nb-h2-avatar-fallback) so the
+   two can't show conflicting letters again. Mirrors the original nav logic
+   exactly: first+last initial, or first two chars of a single-word name. */
+function _nbAvatarInitials(displayName){
+  if (!displayName) return null;
+  const parts = displayName.trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return null;
+  return (parts.length > 1 ? (parts[0][0] + parts[parts.length-1][0]) : parts[0].substring(0,2)).toUpperCase();
+}
+
 function updateAuthUI(user) {
   const loginBtn = document.getElementById('loginBtn');
   const registerBtn = document.getElementById('registerBtn');
@@ -30945,6 +30991,7 @@ function updateAuthUI(user) {
   const userNameDisplay = document.getElementById('userNameDisplay');
   const userEmailDisplay = document.getElementById('userEmailDisplay');
   const initialsEl = document.getElementById('av-initials');
+  const navNotifBtn = document.getElementById('nav-notif-btn');
   const mobLogin = document.getElementById('mobLogin');
   const mobRegister = document.getElementById('mobRegister');
   const mobLogout = document.getElementById('mobLogout');
@@ -30953,15 +31000,13 @@ function updateAuthUI(user) {
     loginBtn.style.display = 'none';
     registerBtn.style.display = 'none';
     userMenu.style.display = 'block';
+    if (navNotifBtn) navNotifBtn.style.display = 'block';
     const displayName = user.displayName || user.email.split('@')[0];
     if (userNameDisplay) userNameDisplay.textContent = displayName;
     if (userEmailDisplay) userEmailDisplay.textContent = user.email || '';
     if (initialsEl) {
-      if (user.displayName) {
-        const parts = user.displayName.trim().split(' ');
-        const initials = parts.length > 1
-          ? (parts[0][0] + parts[parts.length-1][0]).toUpperCase()
-          : parts[0].substring(0,2).toUpperCase();
+      const initials = _nbAvatarInitials(user.displayName);
+      if (initials) {
         initialsEl.textContent = initials;
       } else {
         initialsEl.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
@@ -30974,6 +31019,7 @@ function updateAuthUI(user) {
     loginBtn.style.display = 'block';
     registerBtn.style.display = 'block';
     userMenu.style.display = 'none';
+    if (navNotifBtn) navNotifBtn.style.display = 'none';
     if (mobLogin) mobLogin.style.display = 'block';
     if (mobRegister) mobRegister.style.display = 'block';
     if (mobLogout) mobLogout.style.display = 'none';
@@ -41191,6 +41237,106 @@ function nbFmtDate(date){
   .nb-h2-course-card{opacity:1 !important;transform:none !important}
   .nb-h2-cc-shine,.nb-h2-cc-img{transition:none !important}
 }
+
+/* ══════════════════════════════════════════════════════════════
+   6. LIQUID GLASS — brings the surfaces above up to #nb-bottom-nav's
+   level (the quality reference: layered blur+saturate+brightness).
+   Regular material (more opaque, backing text/numbers) vs. Clear
+   (lighter, used on the hero's own gradient cover) per surface.
+   Real refraction = the hidden #liquidHero/#liquidNav SVG filters
+   (feDisplacementMap+feSpecularLighting) defined right after <body>,
+   gated by @supports so Safari/Firefox fall back to plain
+   blur+saturate with no visual break. Appended here rather than
+   edited in place — later cascade order alone gives these priority.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── .nav-bg: was flat blur(20px) + a hard bottom border ── */
+.nav-bg{
+  background:var(--glass);
+  backdrop-filter:blur(20px) saturate(180%) brightness(105%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%) brightness(105%);
+  border-bottom:none;
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.5),0 8px 24px -14px rgba(15,45,25,.18);
+}
+[data-dark] .nav-bg{box-shadow:inset 0 -1px 0 rgba(255,255,255,.05),0 8px 24px -14px rgba(0,0,0,.5);}
+@supports (backdrop-filter:url(#liquidNav)){
+  .nav-bg{backdrop-filter:blur(9px) url(#liquidNav) saturate(180%) brightness(105%);-webkit-backdrop-filter:blur(9px) saturate(180%) brightness(105%);}
+}
+.nav.up .nav-bg{
+  backdrop-filter:blur(30px) saturate(200%) brightness(106%);
+  -webkit-backdrop-filter:blur(30px) saturate(200%) brightness(106%);
+  background:var(--glass);
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.5),0 10px 32px -10px rgba(15,45,25,.20);
+}
+[data-dark] .nav.up .nav-bg{box-shadow:inset 0 -1px 0 rgba(255,255,255,.05),0 10px 32px -10px rgba(0,0,0,.55);}
+@supports (backdrop-filter:url(#liquidNav)){
+  .nav.up .nav-bg{backdrop-filter:blur(14px) url(#liquidNav) saturate(200%) brightness(106%);-webkit-backdrop-filter:blur(14px) saturate(200%) brightness(106%);}
+}
+
+/* ── .nb-h2-hero: was a solid gradient, no glass on top. An element
+   can't backdrop-filter its own background, so ::after adds a real
+   glass PANE above it. Sits above .nb-h2-hero-glow/-motif (z-index:1,
+   wins the paint-order tie as ::after) so the ambient glow + linework
+   refract too, and below the z-index:2 content so text stays crisp. */
+.nb-h2-hero::after{
+  content:'';position:absolute;inset:0;z-index:1;
+  border-radius:inherit;pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,.03) 42%,rgba(255,255,255,0) 60%,rgba(255,255,255,.08) 100%);
+  backdrop-filter:blur(2px) saturate(140%) brightness(107%);
+  -webkit-backdrop-filter:blur(2px) saturate(140%) brightness(107%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 0 0 1px rgba(255,255,255,.08);
+}
+[data-dark] .nb-h2-hero::after{box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05);}
+@supports (backdrop-filter:url(#liquidHero)){
+  .nb-h2-hero::after{backdrop-filter:blur(1px) url(#liquidHero) saturate(140%) brightness(107%);-webkit-backdrop-filter:blur(1px) saturate(140%) brightness(107%);}
+}
+
+/* ── .nb-h2-stats: was its own boxed card (blur(10px) only, full
+   border+shadow). Now reads as a continuation of the hero's own
+   glass — hairline "fold" on top instead of a full border, low-
+   opacity tint. Concentric radius = hero radius(32) − hero's own
+   horizontal padding(20, mobile) = 12. ── */
+.nb-h2-stats{
+  background:rgba(255,255,255,.05);
+  border:1px solid transparent;
+  border-top-color:rgba(255,255,255,.18);
+  border-radius:12px;
+  backdrop-filter:blur(4px) saturate(130%);
+  -webkit-backdrop-filter:blur(4px) saturate(130%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16);
+}
+[data-dark] .nb-h2-stats{
+  background:rgba(255,255,255,.03);
+  border-top-color:rgba(255,255,255,.10);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+/* ── Avatar identity: unifies the hero fallback with the nav
+   avatar's brand gradient. Initials are unified in JS
+   (_nbAvatarInitials, shared by both call sites) — --brand/--brand-l
+   don't change under [data-dark] (see :root), so no separate dark
+   rule is needed here. */
+.nb-h2-avatar-fallback{background:linear-gradient(135deg,var(--brand-l,#2d9a58),var(--brand,#1B6B3A));}
+
+/* ── .nb-h2-course-card: was solid white + a classic shadow.
+   Light frosted glass (Regular — kept opaque enough to back the
+   title text). Deliberately NO SVG refraction filter: cards scroll
+   horizontally in .nb-h2-scroll, and a per-card displacement filter
+   would cost real scroll performance for a barely-visible gain. ── */
+.nb-h2-course-card{
+  background:rgba(255,255,255,.62);
+  border-color:rgba(255,255,255,.5);
+  backdrop-filter:blur(16px) saturate(160%);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  box-shadow:0 2px 8px rgba(0,0,0,.04),0 6px 20px rgba(0,0,0,.04),inset 0 1px 0 rgba(255,255,255,.5);
+}
+[data-dark] .nb-h2-course-card{
+  background:rgba(22,32,25,.62);
+  border-color:rgba(255,255,255,.08);
+  backdrop-filter:blur(16px) saturate(140%);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);
+  box-shadow:0 2px 10px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.04);
+}
 </style>
 
 <!-- ══════════════════════════════════════════════════════════════
@@ -41299,10 +41445,12 @@ var AcNotif = {
   },
 
   _updateBadge: function(){
-    var b = document.getElementById('ac-notif-count');
-    if (!b) return;
-    b.textContent = this.unreadCount > 9 ? '9+' : String(this.unreadCount);
-    b.style.display = this.unreadCount > 0 ? 'flex' : 'none';
+    var b  = document.getElementById('ac-notif-count');
+    var nb = document.getElementById('ac-notif-count-nav');
+    var txt  = this.unreadCount > 9 ? '9+' : String(this.unreadCount);
+    var show = this.unreadCount > 0 ? 'flex' : 'none';
+    if (b)  { b.textContent  = txt; b.style.display  = show; }
+    if (nb) { nb.textContent = txt; nb.style.display = show; }
   },
 
   togglePanel: function(){
@@ -41513,9 +41661,10 @@ function _acNotifSec(n){
 
 // Close panel when tapping outside it
 document.addEventListener('click', function(e){
-  var panel = document.getElementById('ac-notif-panel');
-  var btn   = document.getElementById('mkt-tab-acad-notif');
-  if (panel && panel.classList.contains('open') && !panel.contains(e.target) && !(btn && btn.contains(e.target))) {
+  var panel  = document.getElementById('ac-notif-panel');
+  var btn    = document.getElementById('mkt-tab-acad-notif');
+  var navBtn = document.getElementById('nav-notif-btn');
+  if (panel && panel.classList.contains('open') && !panel.contains(e.target) && !(btn && btn.contains(e.target)) && !(navBtn && navBtn.contains(e.target))) {
     panel.classList.remove('open');
     AcNotif.list_open = false;
   }
