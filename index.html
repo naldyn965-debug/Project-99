@@ -30572,9 +30572,6 @@ const App = {
       '<div class="nb-h2-hero-glow"></div>'+
       '<div class="nb-h2-hero-motif" aria-hidden="true"><svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><path d="M-20 320C40 260 55 205 38 145C22 88 58 45 118 -8" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M38 145C38 145 88 133 116 92" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M58 195C58 195 98 188 122 156" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M345 305C303 244 322 183 362 141C393 107 382 58 340 16" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M362 141C362 141 320 134 294 98" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>'+
       '<div class="nb-h2-top">'+
-        '<button class="nb-h2-profile-btn" onclick="showPage(\'profile\')" aria-label="ملفي الشخصي">'+
-          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>'+
-        '</button>'+
         '<div class="nb-h2-greet-wrap">'+
           '<div class="nb-h2-greet">👋 '+this._nbGreetWord()+(name?'، '+name:'')+'</div>'+
           '<div class="nb-h2-greet-sub">استمر في رحلتك التعليمية</div>'+
@@ -40988,22 +40985,12 @@ function nbFmtDate(date){
   display:flex;align-items:flex-start;gap:12px;
   position:relative;z-index:2;margin-bottom:22px;
 }
-.nb-h2-profile-btn{
-  width:42px;height:42px;flex-shrink:0;
-  border-radius:14px;border:none;cursor:pointer;
-  background:var(--brand-mist);
-  color:var(--brand);overflow:hidden;position:relative;
-  display:flex;align-items:center;justify-content:center;
-  transition:transform .25s var(--h2-spring),background .2s;
-}
-.nb-h2-profile-btn:hover{background:rgba(27,107,58,.16);transform:scale(1.07)}
-.nb-h2-profile-btn:active{transform:scale(.92);transition-duration:80ms}
-
 .nb-h2-greet-wrap{flex:1;min-width:0;padding-top:3px}
 .nb-h2-greet{
   font-family:var(--f-ui,inherit);
   font-size:19px;font-weight:800;color:var(--ink);
   line-height:1.35;margin-bottom:3px;letter-spacing:-.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .nb-h2-greet-sub{font-size:13px;color:var(--slate);font-weight:500}
 
