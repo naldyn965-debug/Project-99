@@ -30056,6 +30056,7 @@ let userJoinDate = null;
 let userProvider = 'email';
 let profileEditMode = false;
 let tempAvatarFile = null;
+let _nbAuthReady = false; // true بعد أول رد فعلي من auth.onAuthStateChanged (نعرف بقى مسجل ولا زائر)
 // ======================== DATABASE ========================
 // (تم حذف قاعدة بيانات النباتات DB بالكامل — إزالة قسم الموسوعة النباتية)
 
@@ -30147,7 +30148,10 @@ const App = {
     var self = this;
     var _afterPaint = window.requestIdleCallback || function(fn){ setTimeout(fn, 80); };
     _afterPaint(function() {
-      self._buildHome();
+      /* لو Firebase كان لسه ما ردش على حالة الدخول، نسيب auth.onAuthStateChanged
+         (تحت) هو اللي يبني الصفحة أول ما يوصل الرد الحقيقي — عشان نمنع ظهور
+         واجهة "زائر" لحظة قبل ما بيانات المستخدم المسجل تظهر */
+      if (_nbAuthReady) self._buildHome();
       setTimeout(_observeReveals, 400);
     });
   },
@@ -31064,6 +31068,7 @@ function updateAuthUI(user) {
 var _prevAuthUid = null; // track previous user to detect account switches
 
 auth.onAuthStateChanged(async (user) => {
+  _nbAuthReady = true;
   var newUid = user ? user.uid : null;
 
   /* If the user changed (switch or logout), wipe the previous user's farm cache */
@@ -31195,7 +31200,7 @@ function showPage(pg,opts={}){
   if(_pgTimer)clearTimeout(_pgTimer);
   document.querySelectorAll('.nl').forEach(l=>l.classList.remove('active'));
   if(pg==='home')document.getElementById('nl-home')?.classList.add('active');
-  if(pg==='home' && currentUser && typeof App._buildPersonalDashboard === 'function'){
+  if(pg==='home' && (currentUser || _nbAuthReady) && typeof App._buildPersonalDashboard === 'function'){
     App._buildPersonalDashboard();
   }
   if(pg==='search')document.getElementById('nl-srch')?.classList.add('active');
