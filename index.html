@@ -7829,6 +7829,104 @@ body.modal-open { overflow: hidden; }
 }
 </style>
 
+<style>
+/* ══════════════════════════════════════════════════════════
+   NABTEX ACADEMY — PREMIUM VIDEO PLAYER v1.0
+   Custom overlay UI for the existing YouTube embeds in the
+   Tissue Culture course. The iframe + its responsive wrapper
+   stay exactly as already in the HTML; this only styles the
+   overlay elements added on top by acBindVideoPlayers() (see
+   the script above). Falls back to the plain, unstyled embed
+   if the IFrame API doesn't load — see restoreOriginal().
+   ══════════════════════════════════════════════════════════ */
+.acad-vp{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.acad-vp:focus{outline:none}
+.acad-vp:focus-visible{box-shadow:var(--s3),0 0 0 3px rgba(27,107,58,.35) !important}
+
+.acad-vp-skeleton{
+  position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(120deg,#0d1a12,#16281b,#0d1a12);
+  transition:opacity .45s var(--ease-smooth);
+}
+.acad-vp-skeleton.out{opacity:0;pointer-events:none}
+.acad-vp-spin{width:36px;height:36px;border-radius:50%;border:3px solid rgba(255,255,255,.18);border-top-color:var(--brand-xl);animation:spin .8s linear infinite}
+
+.acad-vp-click{position:absolute;inset:0;z-index:1}
+
+.acad-vp-scrim{
+  position:absolute;left:0;right:0;bottom:0;height:60%;z-index:2;pointer-events:none;
+  background:linear-gradient(to top,rgba(0,0,0,.8),rgba(0,0,0,.28) 60%,transparent);
+  opacity:0;transition:opacity .3s var(--ease-out);
+}
+.acad-vp.show-ctrl .acad-vp-scrim,.acad-vp.paused .acad-vp-scrim,.acad-vp:hover .acad-vp-scrim{opacity:1}
+
+.acad-vp-center{
+  position:absolute;top:50%;left:50%;z-index:3;transform:translate(-50%,-50%) scale(.82);
+  width:60px;height:60px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.16);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  border:1.5px solid rgba(255,255,255,.32);color:#fff;
+  opacity:0;transition:all .3s var(--ease-spring);pointer-events:none;
+}
+.acad-vp-center svg{width:24px;height:24px}
+.acad-vp-center:hover{background:var(--brand);border-color:var(--brand);transform:translate(-50%,-50%) scale(1.08)}
+.acad-vp-center:active{transform:translate(-50%,-50%) scale(.94)}
+.acad-vp.show-ctrl .acad-vp-center,.acad-vp.paused .acad-vp-center,.acad-vp:hover .acad-vp-center{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
+
+.acad-vp-bar{
+  position:absolute;left:0;right:0;bottom:0;z-index:3;direction:ltr;
+  display:flex;align-items:center;gap:8px;padding:8px 12px 11px;
+  opacity:0;transform:translateY(6px);transition:all .28s var(--ease-out);pointer-events:none;
+}
+.acad-vp.show-ctrl .acad-vp-bar,.acad-vp.paused .acad-vp-bar,.acad-vp:hover .acad-vp-bar{opacity:1;transform:none;pointer-events:auto}
+
+.acad-vp-btn{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;color:#fff;background:transparent;transition:background .18s,transform .18s}
+.acad-vp-btn:hover{background:rgba(255,255,255,.18)}
+.acad-vp-btn:active{transform:scale(.9)}
+.acad-vp-btn svg{width:16px;height:16px}
+.acad-vp-speedbtn{width:auto;padding:0 9px;border-radius:var(--rpill);font-size:11px;font-weight:800;font-family:var(--f-ui)}
+
+.acad-vp-time{font-size:11.5px;color:#fff;font-variant-numeric:tabular-nums;flex-shrink:0;opacity:.92;white-space:nowrap}
+
+.acad-vp-progress{position:relative;flex:1;height:16px;display:flex;align-items:center;cursor:pointer;min-width:36px}
+.acad-vp-track{position:relative;width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.28);overflow:hidden;transition:height .15s}
+.acad-vp-buffered{position:absolute;top:0;bottom:0;left:0;background:rgba(255,255,255,.4);border-radius:2px}
+.acad-vp-fill{position:absolute;top:0;bottom:0;left:0;background:var(--brand-xl);border-radius:2px}
+.acad-vp-progress:hover .acad-vp-track{height:6px}
+.acad-vp-knob{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;background:var(--brand-xl);box-shadow:0 1px 4px rgba(0,0,0,.4);transform:translate(-50%,-50%) scale(0);transition:transform .15s}
+.acad-vp-progress:hover .acad-vp-knob,.acad-vp-progress.drag .acad-vp-knob{transform:translate(-50%,-50%) scale(1)}
+
+.acad-vp-vol{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.acad-vp-vol input[type=range]{width:0;opacity:0;transition:width .22s var(--ease-out),opacity .22s;-webkit-appearance:none;appearance:none;height:3px;border-radius:2px;background:rgba(255,255,255,.3);cursor:pointer}
+.acad-vp-vol:hover input[type=range]{width:56px;opacity:1}
+.acad-vp-vol input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#fff;cursor:pointer}
+.acad-vp-vol input[type=range]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#fff;border:none;cursor:pointer}
+
+.acad-vp-ended{
+  position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  background:rgba(8,16,10,.92);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;transition:opacity .3s var(--ease-out);
+}
+.acad-vp-ended.show{opacity:1;pointer-events:auto}
+.acad-vp-replay{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:#fff;background:var(--brand);box-shadow:0 6px 20px rgba(27,107,58,.4);transition:all .22s var(--ease-spring)}
+.acad-vp-replay:hover{transform:scale(1.08) rotate(-14deg);background:var(--brand-l)}
+.acad-vp-replay svg{width:22px;height:22px}
+.acad-vp-ended-txt{font-size:13px;color:#fff;font-weight:700;font-family:var(--f-ui)}
+
+.acad-vp:fullscreen{padding-bottom:0 !important;width:100vw;height:100vh}
+.acad-vp:-webkit-full-screen{padding-bottom:0 !important;width:100vw;height:100vh}
+
+@media(max-width:480px){
+  .acad-vp-bar{padding:6px 8px 9px;gap:5px}
+  .acad-vp-btn{width:27px;height:27px}
+  .acad-vp-time{font-size:10px}
+  .acad-vp-vol input[type=range]{display:none}
+}
+@media(hover:none){.acad-vp-vol input[type=range]{width:52px;opacity:1}}
+@media(prefers-reduced-motion:reduce){
+  .acad-vp *{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+</style>
+
 <!-- Academy sound + celebration engine v4 -->
 <script>
 (function(){
@@ -8966,7 +9064,7 @@ if(!root)return;
 if(AC.view==='catalog'){root.innerHTML=acRenderCatalog();acRefreshCatalogStatuses();}
 else if(AC.view==='home')root.innerHTML=acRenderHome();
 else if(AC.view==='info')root.innerHTML=acRenderInfo();
-else if(AC.view==='lesson')root.innerHTML=acRenderLesson();
+else if(AC.view==='lesson'){root.innerHTML=acRenderLesson();acBindVideoPlayers();}
 else if(AC.view==='quiz'){root.innerHTML=acRenderQuiz();acBindQuiz()}
 else if(AC.view==='final-exam'){root.innerHTML=acRenderFinalExam();}
 else if(AC.view==='cert')root.innerHTML=acRenderCert();
@@ -9014,7 +9112,12 @@ star:'<path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3 1.1-6.4-4.7-
 wrench:'<path d="M14.7 6.3a4 4 0 1 1-5.4 5.4L4.5 16.5l3 3 4.8-4.8a4 4 0 0 1 5.4-5.4l-2.7 2.7-2-2 2.7-2.7Z"/>',
 printer:'<path d="M6.5 9V3.5h11V9"/><rect x="4" y="9" width="16" height="8" rx="1.6"/><path d="M6.5 17h11v4h-11Z"/>',
 download:'<path d="M12 3.5v11.5"/><path d="m7.2 11 4.8 4.8L16.8 11"/><path d="M5 20.5h14"/>',
-share:'<circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="18" cy="18" r="2.6"/><path d="m8.3 10.6 7.4-4.2M8.3 13.4l7.4 4.2"/>'
+share:'<circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="18" cy="18" r="2.6"/><path d="m8.3 10.6 7.4-4.2M8.3 13.4l7.4 4.2"/>',
+pause:'<path d="M8 5v14M16 5v14"/>',
+volume:'<path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>',
+mute:'<path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M23 9l-6 6M17 9l6 6"/>',
+expand:'<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>',
+compress:'<path d="M8 3v3a2 2 0 0 1-2 2H3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M16 21v-3a2 2 0 0 1 2-2h3"/>'
 };
 function acIco(name,size,extra){
 return '<svg viewBox="0 0 24 24" width="'+(size||16)+'" height="'+(size||16)+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-3px'+(extra?';'+extra:'')+'">'+(AC_ICO[name]||'')+'</svg>'
@@ -9379,6 +9482,263 @@ content+
 '<button class="acad-btn acad-btn-primary" onclick="NAcademy.goQuiz(\''+ls.id+'\')">'+
 (done?'إعادة الاختبار '+acIco('refresh',13):'الاختبار ←')+'</button>'+
 '</div></div>'}
+
+/* ── PREMIUM VIDEO PLAYER (Tissue Culture) ────────────────────
+   Upgrades the existing YouTube embeds into a custom in-app
+   player via the official IFrame API. Purely additive: the
+   iframe and its existing responsive wrapper (position:relative;
+   padding-bottom:56.25%...) already in the HTML above are left
+   untouched and only get an overlay UI on top at runtime. If the
+   API can't load, restoreOriginal() removes the overlay so the
+   plain embed keeps working exactly as it did before. */
+
+var _acYTQueue=[];
+function acLoadYT(cb){
+if(window.YT&&window.YT.Player){cb();return}
+_acYTQueue.push(cb);
+if(window._acYTLoading)return;
+window._acYTLoading=true;
+var prev=window.onYouTubeIframeAPIReady;
+window.onYouTubeIframeAPIReady=function(){
+if(typeof prev==='function')try{prev()}catch(e){}
+var q=_acYTQueue;_acYTQueue=[];
+q.forEach(function(fn){try{fn()}catch(e){}});
+};
+var tag=document.createElement('script');
+tag.src='https://www.youtube.com/iframe_api';
+document.head.appendChild(tag);
+}
+
+function acFmtTime(s){
+if(!isFinite(s)||s<0)s=0;
+s=Math.floor(s);
+var h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+return (h?h+':'+(m<10?'0':'')+m:m)+':'+(sec<10?'0':'')+sec;
+}
+
+function acBindVideoPlayers(){
+if(AC_CID!=='tissue-culture')return;
+var root=document.getElementById('acad-root');
+if(!root)return;
+var frames=root.querySelectorAll('iframe[src*="youtube.com/embed/"]');
+for(var i=0;i<frames.length;i++)acInitVideoPlayer(frames[i]);
+}
+
+var _acVpSeq=0;
+function acInitVideoPlayer(frame){
+if(frame.dataset.acvp)return; /* already upgraded */
+frame.dataset.acvp='1';
+var wrap=frame.parentElement;
+if(!wrap)return;
+var vidM=frame.src.match(/embed\/([a-zA-Z0-9_-]+)/);
+var videoId=vidM?vidM[1]:null;
+if(!videoId)return;
+var startM=frame.src.match(/[?&]start=(\d+)/),endM=frame.src.match(/[?&]end=(\d+)/);
+var startSec=startM?parseInt(startM[1],10):0;
+var endSec=endM?parseInt(endM[1],10):0;
+if(!frame.id)frame.id='acvp-'+(++_acVpSeq);
+
+wrap.classList.add('acad-vp','paused');
+wrap.setAttribute('tabindex','0');
+wrap.setAttribute('dir','ltr');
+wrap.oncontextmenu=function(){return false}; /* the iframe itself is cross-origin and
+  can't be reached from parent JS — blocking the menu on this overlay is the supported approach */
+
+var playIco18=acIco('play',18),pauseIco18=acIco('pause',18);
+var playIco22=acIco('play',22),pauseIco22=acIco('pause',22);
+wrap.insertAdjacentHTML('beforeend',
+'<div class="acad-vp-skeleton"><div class="acad-vp-spin"></div></div>'+
+'<div class="acad-vp-click"></div>'+
+'<div class="acad-vp-scrim"></div>'+
+'<button type="button" class="acad-vp-center" aria-label="تشغيل">'+playIco22+'</button>'+
+'<div class="acad-vp-bar">'+
+ '<button type="button" class="acad-vp-btn acad-vp-play" aria-label="تشغيل">'+playIco18+'</button>'+
+ '<span class="acad-vp-time"><span class="acad-vp-cur">0:00</span> / <span class="acad-vp-dur">0:00</span></span>'+
+ '<div class="acad-vp-progress"><div class="acad-vp-track"><div class="acad-vp-buffered"></div><div class="acad-vp-fill"></div></div><div class="acad-vp-knob"></div></div>'+
+ '<div class="acad-vp-vol"><button type="button" class="acad-vp-btn acad-vp-mute" aria-label="كتم الصوت">'+acIco('volume',15)+'</button><input type="range" min="0" max="100" value="100" aria-label="مستوى الصوت"></div>'+
+ '<button type="button" class="acad-vp-btn acad-vp-speedbtn" aria-label="سرعة التشغيل">1x</button>'+
+ '<button type="button" class="acad-vp-btn acad-vp-fs" aria-label="ملء الشاشة">'+acIco('expand',15)+'</button>'+
+'</div>'+
+'<div class="acad-vp-ended"><button type="button" class="acad-vp-replay" aria-label="إعادة المشاهدة">'+acIco('refresh',20)+'</button><div class="acad-vp-ended-txt">أعد المشاهدة</div></div>');
+
+var $skel=wrap.querySelector('.acad-vp-skeleton');
+var $click=wrap.querySelector('.acad-vp-click');
+var $center=wrap.querySelector('.acad-vp-center');
+var $playBtn=wrap.querySelector('.acad-vp-play');
+var $cur=wrap.querySelector('.acad-vp-cur'),$dur=wrap.querySelector('.acad-vp-dur');
+var $progress=wrap.querySelector('.acad-vp-progress'),$fill=wrap.querySelector('.acad-vp-fill'),$buf=wrap.querySelector('.acad-vp-buffered'),$knob=wrap.querySelector('.acad-vp-knob');
+var $muteBtn=wrap.querySelector('.acad-vp-mute'),$volRange=wrap.querySelector('.acad-vp-vol input');
+var $speedBtn=wrap.querySelector('.acad-vp-speedbtn');
+var $fsBtn=wrap.querySelector('.acad-vp-fs');
+var $ended=wrap.querySelector('.acad-vp-ended');
+
+var player=null,ready=false,hideT=null;
+
+function showCtrl(){
+wrap.classList.add('show-ctrl');
+clearTimeout(hideT);
+if(!wrap.classList.contains('paused'))hideT=setTimeout(function(){wrap.classList.remove('show-ctrl')},2600);
+}
+wrap.addEventListener('mousemove',showCtrl);
+wrap.addEventListener('touchstart',showCtrl,{passive:true});
+
+function togglePlay(){
+if(!ready)return;
+if(player.getPlayerState()===YT.PlayerState.PLAYING)player.pauseVideo();else player.playVideo();
+wrap.focus();showCtrl();
+}
+$click.addEventListener('click',togglePlay);
+$center.addEventListener('click',togglePlay);
+$playBtn.addEventListener('click',togglePlay);
+
+function syncVolUI(){
+var muted=player.isMuted()||player.getVolume()===0;
+$muteBtn.innerHTML=acIco(muted?'mute':'volume',15);
+$volRange.value=muted?0:player.getVolume();
+}
+function toggleMute(){
+if(!ready)return;
+if(player.isMuted()){player.unMute();if(player.getVolume()===0)player.setVolume(100)}
+else player.mute();
+syncVolUI();
+}
+$muteBtn.addEventListener('click',toggleMute);
+$volRange.addEventListener('input',function(){
+if(!ready)return;
+var v=parseInt($volRange.value,10);
+player.setVolume(v);
+if(v===0)player.mute();else if(player.isMuted())player.unMute();
+$muteBtn.innerHTML=acIco(v===0?'mute':'volume',15);
+});
+
+var SPEEDS=[1,1.25,1.5,0.75],speedIdx=0;
+$speedBtn.addEventListener('click',function(){
+if(!ready)return;
+speedIdx=(speedIdx+1)%SPEEDS.length;
+player.setPlaybackRate(SPEEDS[speedIdx]);
+$speedBtn.textContent=SPEEDS[speedIdx]+'x';
+});
+
+function paintProgress(cur,end){
+var span=end-startSec;
+var pct=span>0?Math.min(100,Math.max(0,(cur-startSec)/span*100)):0;
+$fill.style.width=pct+'%';$knob.style.left=pct+'%';
+$cur.textContent=acFmtTime(cur-startSec);
+$dur.textContent=acFmtTime(end-startSec);
+}
+function scrub(clientX){
+var rect=$progress.getBoundingClientRect();
+var pct=Math.min(1,Math.max(0,(clientX-rect.left)/rect.width));
+var end=endSec||player.getDuration()||0;
+var t=startSec+pct*(end-startSec);
+player.seekTo(t,true);
+paintProgress(t,end);
+}
+function onDragMove(e){scrub(e.touches?e.touches[0].clientX:e.clientX)}
+function onDragEnd(){
+$progress.classList.remove('drag');
+window.removeEventListener('mousemove',onDragMove);
+window.removeEventListener('mouseup',onDragEnd);
+window.removeEventListener('touchmove',onDragMove);
+window.removeEventListener('touchend',onDragEnd);
+}
+function onDragStart(e){
+if(!ready)return;
+$progress.classList.add('drag');
+scrub(e.touches?e.touches[0].clientX:e.clientX);
+window.addEventListener('mousemove',onDragMove);
+window.addEventListener('mouseup',onDragEnd);
+window.addEventListener('touchmove',onDragMove,{passive:true});
+window.addEventListener('touchend',onDragEnd);
+}
+$progress.addEventListener('mousedown',onDragStart);
+$progress.addEventListener('touchstart',onDragStart,{passive:true});
+
+function toggleFs(){
+var d=document,fsEl=d.fullscreenElement||d.webkitFullscreenElement;
+if(fsEl){(d.exitFullscreen||d.webkitExitFullscreen).call(d)}
+else{var req=wrap.requestFullscreen||wrap.webkitRequestFullscreen;if(req)req.call(wrap)}
+}
+$fsBtn.addEventListener('click',toggleFs);
+['fullscreenchange','webkitfullscreenchange'].forEach(function(ev){
+document.addEventListener(ev,function(){
+if(!document.body.contains(wrap))return;
+$fsBtn.innerHTML=acIco((document.fullscreenElement||document.webkitFullscreenElement)===wrap?'compress':'expand',15);
+});
+});
+
+/* Minimal curated keys — replaces YouTube's own (disabled via disablekb)
+   with just what a learner needs, scoped to this player only. Skips
+   Space/Enter/arrows when a button or the volume slider itself has
+   focus so native control activation isn't double-fired. */
+wrap.addEventListener('keydown',function(e){
+if(!ready)return;
+var tag=(e.target.tagName||'').toUpperCase();
+if((e.code==='Space'||e.code==='Enter')&&tag!=='BUTTON'&&tag!=='INPUT'){e.preventDefault();togglePlay()}
+else if(e.code==='ArrowRight'&&tag!=='INPUT'){e.preventDefault();player.seekTo(player.getCurrentTime()+5,true)}
+else if(e.code==='ArrowLeft'&&tag!=='INPUT'){e.preventDefault();player.seekTo(Math.max(startSec,player.getCurrentTime()-5),true)}
+else if(e.code==='KeyM'){e.preventDefault();toggleMute()}
+else if(e.code==='KeyF'){e.preventDefault();toggleFs()}
+});
+
+$ended.querySelector('.acad-vp-replay').addEventListener('click',function(){
+if(!ready)return;
+$ended.classList.remove('show');
+player.seekTo(startSec,true);player.playVideo();
+});
+
+function restoreOriginal(){
+['.acad-vp-skeleton','.acad-vp-click','.acad-vp-scrim','.acad-vp-center','.acad-vp-bar','.acad-vp-ended'].forEach(function(sel){
+var el=wrap.querySelector(sel);if(el)el.remove();
+});
+wrap.classList.remove('acad-vp','paused','show-ctrl');
+wrap.oncontextmenu=null;
+}
+var fallbackT=setTimeout(function(){if(!ready)restoreOriginal()},8000);
+
+var pv={autoplay:0,rel:0,modestbranding:1,iv_load_policy:3,disablekb:1,controls:0,fs:0,playsinline:1,enablejsapi:1,hl:'ar',origin:location.origin};
+if(startSec)pv.start=startSec;
+if(endSec)pv.end=endSec;
+
+acLoadYT(function(){
+if(!document.body.contains(frame))return;
+player=new YT.Player(frame.id,{videoId:videoId,playerVars:pv,events:{
+onReady:function(){
+ready=true;clearTimeout(fallbackT);
+$skel.classList.add('out');
+syncVolUI();
+var end0=endSec||player.getDuration()||0;
+$dur.textContent=acFmtTime(end0-startSec);
+var iv=setInterval(function(){
+if(!document.body.contains(wrap)){clearInterval(iv);return}
+var cur=player.getCurrentTime(),end=endSec||player.getDuration()||end0;
+if(endSec&&cur>=endSec){player.pauseVideo();player.seekTo(endSec,true)}
+$buf.style.width=Math.min(100,(player.getVideoLoadedFraction?player.getVideoLoadedFraction():0)*100)+'%';
+paintProgress(cur,end);
+},250);
+},
+onStateChange:function(e){
+if(e.data===YT.PlayerState.PLAYING){
+wrap.classList.remove('paused');$ended.classList.remove('show');
+$center.innerHTML=pauseIco22;$center.setAttribute('aria-label','إيقاف');
+$playBtn.innerHTML=pauseIco18;$playBtn.setAttribute('aria-label','إيقاف');
+showCtrl();
+}else if(e.data===YT.PlayerState.PAUSED){
+wrap.classList.add('paused');
+$center.innerHTML=playIco22;$center.setAttribute('aria-label','تشغيل');
+$playBtn.innerHTML=playIco18;$playBtn.setAttribute('aria-label','تشغيل');
+clearTimeout(hideT);
+}else if(e.data===YT.PlayerState.ENDED){
+wrap.classList.add('paused');
+$center.innerHTML=playIco22;$playBtn.innerHTML=playIco18;
+$ended.classList.add('show');
+clearTimeout(hideT);
+}
+},
+onError:function(){$skel.classList.add('out');clearTimeout(fallbackT)}
+}});
+});
+}
 
 /* ── QUIZ ENGINE ──────────────────────────────────────────── */
 
