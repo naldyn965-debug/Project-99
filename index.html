@@ -7912,8 +7912,8 @@ body.modal-open { overflow: hidden; }
 .acad-vp-replay svg{width:22px;height:22px}
 .acad-vp-ended-txt{font-size:13px;color:#fff;font-weight:700;font-family:var(--f-ui)}
 
-.acad-vp:fullscreen{padding-bottom:0 !important;width:100vw;height:100vh}
-.acad-vp:-webkit-full-screen{padding-bottom:0 !important;width:100vw;height:100vh}
+.acad-vp:fullscreen{padding-bottom:0 !important;width:100vw !important;height:100vh !important}
+.acad-vp:-webkit-full-screen{padding-bottom:0 !important;width:100vw !important;height:100vh !important}
 
 @media(max-width:480px){
   .acad-vp-bar{padding:6px 8px 9px;gap:5px}
@@ -9663,7 +9663,13 @@ $fsBtn.addEventListener('click',toggleFs);
 ['fullscreenchange','webkitfullscreenchange'].forEach(function(ev){
 document.addEventListener(ev,function(){
 if(!document.body.contains(wrap))return;
-$fsBtn.innerHTML=acIco((document.fullscreenElement||document.webkitFullscreenElement)===wrap?'compress':'expand',15);
+var isFs=(document.fullscreenElement||document.webkitFullscreenElement)===wrap;
+$fsBtn.innerHTML=acIco(isFs?'compress':'expand',15);
+/* the wrapper's own inline style (the existing 16:9 aspect-ratio trick) always
+   wins over a plain CSS rule, so drive it directly here to guarantee it actually
+   fills the screen instead of collapsing to height:0 */
+wrap.style.height=isFs?'100vh':'0';
+wrap.style.paddingBottom=isFs?'0':'56.25%';
 });
 });
 
