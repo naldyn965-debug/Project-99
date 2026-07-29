@@ -6470,6 +6470,56 @@ body.modal-open { overflow: hidden; }
 .acad-icard-val{font-weight:800 !important;font-size:1rem !important}
 
 /* ══════════════════════════════════════════════════════════
+   F2. TISSUE CULTURE — PROFESSIONAL VIDEO PLAYER
+   واجهة مشغل مخصصة بالكامل لفيديوهات هذه الدورة: بدون شعار
+   يوتيوب وبدون أي عنصر ينقل المستخدم إليه. الإطار الأصلي يبقى
+   تفاعلياً افتراضياً (شبكة أمان) حتى يفعّله tcEnhanceVideos —
+   انظر دالته بجانب tcGetContent.
+   ══════════════════════════════════════════════════════════ */
+.tc-player{background:#0a1210}
+.tc-player.tc-ready iframe{pointer-events:none}
+.tc-player-hit{position:absolute;inset:0;z-index:2;cursor:pointer}
+.tc-player-poster{position:absolute;inset:0;z-index:3;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.tc-player-poster::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,10,7,.1) 0%,rgba(4,10,7,.15) 55%,rgba(4,10,7,.85) 100%)}
+.tc-player-play{position:relative;z-index:1;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1.5px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;transition:transform .25s var(--ease-spring),background .2s}
+.tc-player-poster:hover .tc-player-play{transform:scale(1.08);background:rgba(255,255,255,.26)}
+.tc-player-meta{position:absolute;right:16px;bottom:14px;left:16px;z-index:1;color:#fff;text-align:right}
+.tc-player-meta-t{font-size:13px;font-weight:800;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.tc-player-loading,.tc-player-ended{position:absolute;inset:0;z-index:4;display:none;align-items:center;justify-content:center;background:#0a1210}
+.tc-player.tc-loading .tc-player-loading{display:flex}
+.tc-player-spin{width:32px;height:32px;border-radius:50%;border:2.5px solid rgba(255,255,255,.2);border-top-color:#fff;animation:tcSpin .8s linear infinite}
+@keyframes tcSpin{to{transform:rotate(360deg)}}
+.tc-player-ended{z-index:6;flex-direction:column;gap:10px;background:rgba(6,14,10,.94);color:#fff;text-align:center;padding:20px}
+.tc-player.tc-ended .tc-player-ended{display:flex}
+.tc-player-ended-t{font-size:13px;font-weight:700}
+.tc-player-replay{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--rpill);background:#fff;color:#0a1210;font-size:12.5px;font-weight:800;transition:transform .2s var(--ease-spring)}
+.tc-player-replay:hover{transform:scale(1.04)}
+.tc-player-controls{position:absolute;left:0;right:0;bottom:0;z-index:5;direction:ltr;display:flex;align-items:center;gap:10px;padding:9px 12px 10px;background:linear-gradient(0deg,rgba(4,10,7,.9) 0%,rgba(4,10,7,.55) 65%,transparent 100%);opacity:0;transform:translateY(6px);transition:opacity .22s var(--ease-out),transform .22s var(--ease-out)}
+.tc-player.tc-active .tc-player-controls,.tc-player.tc-paused .tc-player-controls{opacity:1;transform:none}
+.tc-player-btn{width:30px;height:30px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;background:transparent;border-radius:6px;opacity:.9;transition:opacity .15s,background .15s}
+.tc-player-btn:hover{opacity:1;background:rgba(255,255,255,.14)}
+.tc-player-time{font-size:11px;color:rgba(255,255,255,.85);flex-shrink:0;font-variant-numeric:tabular-nums;min-width:32px}
+.tc-player-seek{position:relative;flex:1;height:16px;display:flex;align-items:center;cursor:pointer}
+.tc-player-seek-track{position:relative;width:100%;height:3px;border-radius:2px;background:rgba(255,255,255,.28)}
+.tc-player-seek-fill{position:absolute;top:0;left:0;height:100%;border-radius:2px;background:var(--brand-xl);width:0%}
+.tc-player-seek-thumb{position:absolute;top:50%;left:0%;width:11px;height:11px;border-radius:50%;background:var(--brand-xl);transform:translate(-50%,-50%) scale(0);transition:transform .15s}
+.tc-player-seek:hover .tc-player-seek-thumb,.tc-player-seek.tc-dragging .tc-player-seek-thumb{transform:translate(-50%,-50%) scale(1)}
+.tc-player-vol{display:flex;align-items:center}
+.tc-player-vol-track{width:0;overflow:hidden;transition:width .18s var(--ease-out)}
+.tc-player-vol:hover .tc-player-vol-track,.tc-player-vol.tc-active .tc-player-vol-track{width:54px}
+.tc-player-vol-range{width:50px;height:3px;margin:0 4px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.28);border-radius:2px;outline:none}
+.tc-player-vol-range::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#fff;cursor:pointer}
+.tc-player-vol-range::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#fff;border:none;cursor:pointer}
+.tc-player:fullscreen{border-radius:0}
+.tc-player:-webkit-full-screen{border-radius:0}
+@media(hover:none) and (pointer:coarse){
+.tc-player-controls{opacity:1;transform:none}
+.tc-player-seek-thumb{transform:translate(-50%,-50%) scale(1)}
+.tc-player-vol-track{width:54px}
+}
+.tc-player:focus-visible{outline:2px solid var(--brand-xl);outline-offset:2px}
+
+/* ══════════════════════════════════════════════════════════
    G. QUIZ — premium feel
    ══════════════════════════════════════════════════════════ */
 .acad-quiz-pg{padding:40px 24px 80px !important}
@@ -7829,104 +7879,6 @@ body.modal-open { overflow: hidden; }
 }
 </style>
 
-<style>
-/* ══════════════════════════════════════════════════════════
-   NABTEX ACADEMY — PREMIUM VIDEO PLAYER v1.0
-   Custom overlay UI for the existing YouTube embeds in the
-   Tissue Culture course. The iframe + its responsive wrapper
-   stay exactly as already in the HTML; this only styles the
-   overlay elements added on top by acBindVideoPlayers() (see
-   the script above). Falls back to the plain, unstyled embed
-   if the IFrame API doesn't load — see restoreOriginal().
-   ══════════════════════════════════════════════════════════ */
-.acad-vp{cursor:pointer;-webkit-tap-highlight-color:transparent}
-.acad-vp:focus{outline:none}
-.acad-vp:focus-visible{box-shadow:var(--s3),0 0 0 3px rgba(27,107,58,.35) !important}
-
-.acad-vp-skeleton{
-  position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(120deg,#0d1a12,#16281b,#0d1a12);
-  transition:opacity .45s var(--ease-smooth);
-}
-.acad-vp-skeleton.out{opacity:0;pointer-events:none}
-.acad-vp-spin{width:36px;height:36px;border-radius:50%;border:3px solid rgba(255,255,255,.18);border-top-color:var(--brand-xl);animation:spin .8s linear infinite}
-
-.acad-vp-click{position:absolute;inset:0;z-index:1}
-
-.acad-vp-scrim{
-  position:absolute;left:0;right:0;bottom:0;height:60%;z-index:2;pointer-events:none;
-  background:linear-gradient(to top,rgba(0,0,0,.8),rgba(0,0,0,.28) 60%,transparent);
-  opacity:0;transition:opacity .3s var(--ease-out);
-}
-.acad-vp.show-ctrl .acad-vp-scrim,.acad-vp.paused .acad-vp-scrim,.acad-vp:hover .acad-vp-scrim{opacity:1}
-
-.acad-vp-center{
-  position:absolute;top:50%;left:50%;z-index:3;transform:translate(-50%,-50%) scale(.82);
-  width:60px;height:60px;border-radius:50%;display:grid;place-items:center;
-  background:rgba(255,255,255,.16);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  border:1.5px solid rgba(255,255,255,.32);color:#fff;
-  opacity:0;transition:all .3s var(--ease-spring);pointer-events:none;
-}
-.acad-vp-center svg{width:24px;height:24px}
-.acad-vp-center:hover{background:var(--brand);border-color:var(--brand);transform:translate(-50%,-50%) scale(1.08)}
-.acad-vp-center:active{transform:translate(-50%,-50%) scale(.94)}
-.acad-vp.show-ctrl .acad-vp-center,.acad-vp.paused .acad-vp-center,.acad-vp:hover .acad-vp-center{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
-
-.acad-vp-bar{
-  position:absolute;left:0;right:0;bottom:0;z-index:3;direction:ltr;
-  display:flex;align-items:center;gap:8px;padding:8px 12px 11px;
-  opacity:0;transform:translateY(6px);transition:all .28s var(--ease-out);pointer-events:none;
-}
-.acad-vp.show-ctrl .acad-vp-bar,.acad-vp.paused .acad-vp-bar,.acad-vp:hover .acad-vp-bar{opacity:1;transform:none;pointer-events:auto}
-
-.acad-vp-btn{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;color:#fff;background:transparent;transition:background .18s,transform .18s}
-.acad-vp-btn:hover{background:rgba(255,255,255,.18)}
-.acad-vp-btn:active{transform:scale(.9)}
-.acad-vp-btn svg{width:16px;height:16px}
-.acad-vp-speedbtn{width:auto;padding:0 9px;border-radius:var(--rpill);font-size:11px;font-weight:800;font-family:var(--f-ui)}
-
-.acad-vp-time{font-size:11.5px;color:#fff;font-variant-numeric:tabular-nums;flex-shrink:0;opacity:.92;white-space:nowrap}
-
-.acad-vp-progress{position:relative;flex:1;height:16px;display:flex;align-items:center;cursor:pointer;min-width:36px}
-.acad-vp-track{position:relative;width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.28);overflow:hidden;transition:height .15s}
-.acad-vp-buffered{position:absolute;top:0;bottom:0;left:0;background:rgba(255,255,255,.4);border-radius:2px}
-.acad-vp-fill{position:absolute;top:0;bottom:0;left:0;background:var(--brand-xl);border-radius:2px}
-.acad-vp-progress:hover .acad-vp-track{height:6px}
-.acad-vp-knob{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;background:var(--brand-xl);box-shadow:0 1px 4px rgba(0,0,0,.4);transform:translate(-50%,-50%) scale(0);transition:transform .15s}
-.acad-vp-progress:hover .acad-vp-knob,.acad-vp-progress.drag .acad-vp-knob{transform:translate(-50%,-50%) scale(1)}
-
-.acad-vp-vol{display:flex;align-items:center;gap:4px;flex-shrink:0}
-.acad-vp-vol input[type=range]{width:0;opacity:0;transition:width .22s var(--ease-out),opacity .22s;-webkit-appearance:none;appearance:none;height:3px;border-radius:2px;background:rgba(255,255,255,.3);cursor:pointer}
-.acad-vp-vol:hover input[type=range]{width:56px;opacity:1}
-.acad-vp-vol input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#fff;cursor:pointer}
-.acad-vp-vol input[type=range]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#fff;border:none;cursor:pointer}
-
-.acad-vp-ended{
-  position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
-  background:rgba(8,16,10,.92);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
-  opacity:0;pointer-events:none;transition:opacity .3s var(--ease-out);
-}
-.acad-vp-ended.show{opacity:1;pointer-events:auto}
-.acad-vp-replay{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:#fff;background:var(--brand);box-shadow:0 6px 20px rgba(27,107,58,.4);transition:all .22s var(--ease-spring)}
-.acad-vp-replay:hover{transform:scale(1.08) rotate(-14deg);background:var(--brand-l)}
-.acad-vp-replay svg{width:22px;height:22px}
-.acad-vp-ended-txt{font-size:13px;color:#fff;font-weight:700;font-family:var(--f-ui)}
-
-.acad-vp:fullscreen{padding-bottom:0 !important;width:100vw !important;height:100vh !important}
-.acad-vp:-webkit-full-screen{padding-bottom:0 !important;width:100vw !important;height:100vh !important}
-
-@media(max-width:480px){
-  .acad-vp-bar{padding:6px 8px 9px;gap:5px}
-  .acad-vp-btn{width:27px;height:27px}
-  .acad-vp-time{font-size:10px}
-  .acad-vp-vol input[type=range]{display:none}
-}
-@media(hover:none){.acad-vp-vol input[type=range]{width:52px;opacity:1}}
-@media(prefers-reduced-motion:reduce){
-  .acad-vp *{transition-duration:.01ms !important;animation-duration:.01ms !important}
-}
-</style>
-
 <!-- Academy sound + celebration engine v4 -->
 <script>
 (function(){
@@ -9064,7 +9016,7 @@ if(!root)return;
 if(AC.view==='catalog'){root.innerHTML=acRenderCatalog();acRefreshCatalogStatuses();}
 else if(AC.view==='home')root.innerHTML=acRenderHome();
 else if(AC.view==='info')root.innerHTML=acRenderInfo();
-else if(AC.view==='lesson'){root.innerHTML=acRenderLesson();acBindVideoPlayers();}
+else if(AC.view==='lesson'){root.innerHTML=acRenderLesson();if(typeof tcEnhanceVideos==='function')tcEnhanceVideos();}
 else if(AC.view==='quiz'){root.innerHTML=acRenderQuiz();acBindQuiz()}
 else if(AC.view==='final-exam'){root.innerHTML=acRenderFinalExam();}
 else if(AC.view==='cert')root.innerHTML=acRenderCert();
@@ -9113,11 +9065,11 @@ wrench:'<path d="M14.7 6.3a4 4 0 1 1-5.4 5.4L4.5 16.5l3 3 4.8-4.8a4 4 0 0 1 5.4-
 printer:'<path d="M6.5 9V3.5h11V9"/><rect x="4" y="9" width="16" height="8" rx="1.6"/><path d="M6.5 17h11v4h-11Z"/>',
 download:'<path d="M12 3.5v11.5"/><path d="m7.2 11 4.8 4.8L16.8 11"/><path d="M5 20.5h14"/>',
 share:'<circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="18" cy="18" r="2.6"/><path d="m8.3 10.6 7.4-4.2M8.3 13.4l7.4 4.2"/>',
-pause:'<path d="M8 5v14M16 5v14"/>',
-volume:'<path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>',
-mute:'<path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M23 9l-6 6M17 9l6 6"/>',
-expand:'<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>',
-compress:'<path d="M8 3v3a2 2 0 0 1-2 2H3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M16 21v-3a2 2 0 0 1 2-2h3"/>'
+pause:'<rect x="6" y="4.5" width="4.6" height="15" rx="1.3" fill="currentColor" stroke="none"/><rect x="13.4" y="4.5" width="4.6" height="15" rx="1.3" fill="currentColor" stroke="none"/>',
+volume:'<path d="M4 9.5v5h3.6l4.6 3.6V5.9L7.6 9.5H4Z"/><path d="M15.8 8.8a4.6 4.6 0 0 1 0 6.4"/><path d="M18.4 6.2a8.4 8.4 0 0 1 0 11.6"/>',
+volumeMute:'<path d="M4 9.5v5h3.6l4.6 3.6V5.9L7.6 9.5H4Z"/><path d="M15.5 9.5l5 5M20.5 9.5l-5 5"/>',
+expand:'<path d="M4 9V4.5h4.5"/><path d="M15.5 4.5H20V9"/><path d="M20 15.5V20h-4.5"/><path d="M8.5 20H4v-4.5"/>',
+compress:'<path d="M9 4.5V9H4.5"/><path d="M15 9V4.5h4.5"/><path d="M15 15h4.5V19.5"/><path d="M9 19.5V15H4.5"/>'
 };
 function acIco(name,size,extra){
 return '<svg viewBox="0 0 24 24" width="'+(size||16)+'" height="'+(size||16)+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-3px'+(extra?';'+extra:'')+'">'+(AC_ICO[name]||'')+'</svg>'
@@ -9482,269 +9434,6 @@ content+
 '<button class="acad-btn acad-btn-primary" onclick="NAcademy.goQuiz(\''+ls.id+'\')">'+
 (done?'إعادة الاختبار '+acIco('refresh',13):'الاختبار ←')+'</button>'+
 '</div></div>'}
-
-/* ── PREMIUM VIDEO PLAYER (Tissue Culture) ────────────────────
-   Upgrades the existing YouTube embeds into a custom in-app
-   player via the official IFrame API. Purely additive: the
-   iframe and its existing responsive wrapper (position:relative;
-   padding-bottom:56.25%...) already in the HTML above are left
-   untouched and only get an overlay UI on top at runtime. If the
-   API can't load, restoreOriginal() removes the overlay so the
-   plain embed keeps working exactly as it did before. */
-
-var _acYTQueue=[];
-function acLoadYT(cb){
-if(window.YT&&window.YT.Player){cb();return}
-_acYTQueue.push(cb);
-if(window._acYTLoading)return;
-window._acYTLoading=true;
-var prev=window.onYouTubeIframeAPIReady;
-window.onYouTubeIframeAPIReady=function(){
-if(typeof prev==='function')try{prev()}catch(e){}
-var q=_acYTQueue;_acYTQueue=[];
-q.forEach(function(fn){try{fn()}catch(e){}});
-};
-var tag=document.createElement('script');
-tag.src='https://www.youtube.com/iframe_api';
-document.head.appendChild(tag);
-}
-
-function acFmtTime(s){
-if(!isFinite(s)||s<0)s=0;
-s=Math.floor(s);
-var h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
-return (h?h+':'+(m<10?'0':'')+m:m)+':'+(sec<10?'0':'')+sec;
-}
-
-function acBindVideoPlayers(){
-if(AC_CID!=='tissue-culture')return;
-var root=document.getElementById('acad-root');
-if(!root)return;
-var frames=root.querySelectorAll('iframe[src*="youtube.com/embed/"]');
-for(var i=0;i<frames.length;i++)acInitVideoPlayer(frames[i]);
-}
-
-var _acVpSeq=0;
-function acInitVideoPlayer(frame){
-if(frame.dataset.acvp)return; /* already upgraded */
-frame.dataset.acvp='1';
-var wrap=frame.parentElement;
-if(!wrap)return;
-var vidM=frame.src.match(/embed\/([a-zA-Z0-9_-]+)/);
-var videoId=vidM?vidM[1]:null;
-if(!videoId)return;
-var startM=frame.src.match(/[?&]start=(\d+)/),endM=frame.src.match(/[?&]end=(\d+)/);
-var startSec=startM?parseInt(startM[1],10):0;
-var endSec=endM?parseInt(endM[1],10):0;
-if(!frame.id)frame.id='acvp-'+(++_acVpSeq);
-
-wrap.classList.add('acad-vp','paused');
-wrap.setAttribute('tabindex','0');
-wrap.setAttribute('dir','ltr');
-wrap.oncontextmenu=function(){return false}; /* the iframe itself is cross-origin and
-  can't be reached from parent JS — blocking the menu on this overlay is the supported approach */
-
-var playIco18=acIco('play',18),pauseIco18=acIco('pause',18);
-var playIco22=acIco('play',22),pauseIco22=acIco('pause',22);
-wrap.insertAdjacentHTML('beforeend',
-'<div class="acad-vp-skeleton"><div class="acad-vp-spin"></div></div>'+
-'<div class="acad-vp-click"></div>'+
-'<div class="acad-vp-scrim"></div>'+
-'<button type="button" class="acad-vp-center" aria-label="تشغيل">'+playIco22+'</button>'+
-'<div class="acad-vp-bar">'+
- '<button type="button" class="acad-vp-btn acad-vp-play" aria-label="تشغيل">'+playIco18+'</button>'+
- '<span class="acad-vp-time"><span class="acad-vp-cur">0:00</span> / <span class="acad-vp-dur">0:00</span></span>'+
- '<div class="acad-vp-progress"><div class="acad-vp-track"><div class="acad-vp-buffered"></div><div class="acad-vp-fill"></div></div><div class="acad-vp-knob"></div></div>'+
- '<div class="acad-vp-vol"><button type="button" class="acad-vp-btn acad-vp-mute" aria-label="كتم الصوت">'+acIco('volume',15)+'</button><input type="range" min="0" max="100" value="100" aria-label="مستوى الصوت"></div>'+
- '<button type="button" class="acad-vp-btn acad-vp-speedbtn" aria-label="سرعة التشغيل">1x</button>'+
- '<button type="button" class="acad-vp-btn acad-vp-fs" aria-label="ملء الشاشة">'+acIco('expand',15)+'</button>'+
-'</div>'+
-'<div class="acad-vp-ended"><button type="button" class="acad-vp-replay" aria-label="إعادة المشاهدة">'+acIco('refresh',20)+'</button><div class="acad-vp-ended-txt">أعد المشاهدة</div></div>');
-
-var $skel=wrap.querySelector('.acad-vp-skeleton');
-var $click=wrap.querySelector('.acad-vp-click');
-var $center=wrap.querySelector('.acad-vp-center');
-var $playBtn=wrap.querySelector('.acad-vp-play');
-var $cur=wrap.querySelector('.acad-vp-cur'),$dur=wrap.querySelector('.acad-vp-dur');
-var $progress=wrap.querySelector('.acad-vp-progress'),$fill=wrap.querySelector('.acad-vp-fill'),$buf=wrap.querySelector('.acad-vp-buffered'),$knob=wrap.querySelector('.acad-vp-knob');
-var $muteBtn=wrap.querySelector('.acad-vp-mute'),$volRange=wrap.querySelector('.acad-vp-vol input');
-var $speedBtn=wrap.querySelector('.acad-vp-speedbtn');
-var $fsBtn=wrap.querySelector('.acad-vp-fs');
-var $ended=wrap.querySelector('.acad-vp-ended');
-
-var player=null,ready=false,hideT=null;
-
-function showCtrl(){
-wrap.classList.add('show-ctrl');
-clearTimeout(hideT);
-if(!wrap.classList.contains('paused'))hideT=setTimeout(function(){wrap.classList.remove('show-ctrl')},2600);
-}
-wrap.addEventListener('mousemove',showCtrl);
-wrap.addEventListener('touchstart',showCtrl,{passive:true});
-
-function togglePlay(){
-if(!ready)return;
-if(player.getPlayerState()===YT.PlayerState.PLAYING)player.pauseVideo();else player.playVideo();
-wrap.focus();showCtrl();
-}
-$click.addEventListener('click',togglePlay);
-$center.addEventListener('click',togglePlay);
-$playBtn.addEventListener('click',togglePlay);
-
-function syncVolUI(){
-var muted=player.isMuted()||player.getVolume()===0;
-$muteBtn.innerHTML=acIco(muted?'mute':'volume',15);
-$volRange.value=muted?0:player.getVolume();
-}
-function toggleMute(){
-if(!ready)return;
-if(player.isMuted()){player.unMute();if(player.getVolume()===0)player.setVolume(100)}
-else player.mute();
-syncVolUI();
-}
-$muteBtn.addEventListener('click',toggleMute);
-$volRange.addEventListener('input',function(){
-if(!ready)return;
-var v=parseInt($volRange.value,10);
-player.setVolume(v);
-if(v===0)player.mute();else if(player.isMuted())player.unMute();
-$muteBtn.innerHTML=acIco(v===0?'mute':'volume',15);
-});
-
-var SPEEDS=[1,1.25,1.5,0.75],speedIdx=0;
-$speedBtn.addEventListener('click',function(){
-if(!ready)return;
-speedIdx=(speedIdx+1)%SPEEDS.length;
-player.setPlaybackRate(SPEEDS[speedIdx]);
-$speedBtn.textContent=SPEEDS[speedIdx]+'x';
-});
-
-function paintProgress(cur,end){
-var span=end-startSec;
-var pct=span>0?Math.min(100,Math.max(0,(cur-startSec)/span*100)):0;
-$fill.style.width=pct+'%';$knob.style.left=pct+'%';
-$cur.textContent=acFmtTime(cur-startSec);
-$dur.textContent=acFmtTime(end-startSec);
-}
-function scrub(clientX){
-var rect=$progress.getBoundingClientRect();
-var pct=Math.min(1,Math.max(0,(clientX-rect.left)/rect.width));
-var end=endSec||player.getDuration()||0;
-var t=startSec+pct*(end-startSec);
-player.seekTo(t,true);
-paintProgress(t,end);
-}
-function onDragMove(e){scrub(e.touches?e.touches[0].clientX:e.clientX)}
-function onDragEnd(){
-$progress.classList.remove('drag');
-window.removeEventListener('mousemove',onDragMove);
-window.removeEventListener('mouseup',onDragEnd);
-window.removeEventListener('touchmove',onDragMove);
-window.removeEventListener('touchend',onDragEnd);
-}
-function onDragStart(e){
-if(!ready)return;
-$progress.classList.add('drag');
-scrub(e.touches?e.touches[0].clientX:e.clientX);
-window.addEventListener('mousemove',onDragMove);
-window.addEventListener('mouseup',onDragEnd);
-window.addEventListener('touchmove',onDragMove,{passive:true});
-window.addEventListener('touchend',onDragEnd);
-}
-$progress.addEventListener('mousedown',onDragStart);
-$progress.addEventListener('touchstart',onDragStart,{passive:true});
-
-function toggleFs(){
-var d=document,fsEl=d.fullscreenElement||d.webkitFullscreenElement;
-if(fsEl){(d.exitFullscreen||d.webkitExitFullscreen).call(d)}
-else{var req=wrap.requestFullscreen||wrap.webkitRequestFullscreen;if(req)req.call(wrap)}
-}
-$fsBtn.addEventListener('click',toggleFs);
-['fullscreenchange','webkitfullscreenchange'].forEach(function(ev){
-document.addEventListener(ev,function(){
-if(!document.body.contains(wrap))return;
-var isFs=(document.fullscreenElement||document.webkitFullscreenElement)===wrap;
-$fsBtn.innerHTML=acIco(isFs?'compress':'expand',15);
-/* the wrapper's own inline style (the existing 16:9 aspect-ratio trick) always
-   wins over a plain CSS rule, so drive it directly here to guarantee it actually
-   fills the screen instead of collapsing to height:0 */
-wrap.style.height=isFs?'100vh':'0';
-wrap.style.paddingBottom=isFs?'0':'56.25%';
-});
-});
-
-/* Minimal curated keys — replaces YouTube's own (disabled via disablekb)
-   with just what a learner needs, scoped to this player only. Skips
-   Space/Enter/arrows when a button or the volume slider itself has
-   focus so native control activation isn't double-fired. */
-wrap.addEventListener('keydown',function(e){
-if(!ready)return;
-var tag=(e.target.tagName||'').toUpperCase();
-if((e.code==='Space'||e.code==='Enter')&&tag!=='BUTTON'&&tag!=='INPUT'){e.preventDefault();togglePlay()}
-else if(e.code==='ArrowRight'&&tag!=='INPUT'){e.preventDefault();player.seekTo(player.getCurrentTime()+5,true)}
-else if(e.code==='ArrowLeft'&&tag!=='INPUT'){e.preventDefault();player.seekTo(Math.max(startSec,player.getCurrentTime()-5),true)}
-else if(e.code==='KeyM'){e.preventDefault();toggleMute()}
-else if(e.code==='KeyF'){e.preventDefault();toggleFs()}
-});
-
-$ended.querySelector('.acad-vp-replay').addEventListener('click',function(){
-if(!ready)return;
-$ended.classList.remove('show');
-player.seekTo(startSec,true);player.playVideo();
-});
-
-function restoreOriginal(){
-['.acad-vp-skeleton','.acad-vp-click','.acad-vp-scrim','.acad-vp-center','.acad-vp-bar','.acad-vp-ended'].forEach(function(sel){
-var el=wrap.querySelector(sel);if(el)el.remove();
-});
-wrap.classList.remove('acad-vp','paused','show-ctrl');
-wrap.oncontextmenu=null;
-}
-var fallbackT=setTimeout(function(){if(!ready)restoreOriginal()},8000);
-
-var pv={autoplay:0,rel:0,modestbranding:1,iv_load_policy:3,disablekb:1,controls:0,fs:0,playsinline:1,enablejsapi:1,hl:'ar',origin:location.origin};
-if(startSec)pv.start=startSec;
-if(endSec)pv.end=endSec;
-
-acLoadYT(function(){
-if(!document.body.contains(frame))return;
-player=new YT.Player(frame.id,{videoId:videoId,playerVars:pv,events:{
-onReady:function(){
-ready=true;clearTimeout(fallbackT);
-$skel.classList.add('out');
-syncVolUI();
-var end0=endSec||player.getDuration()||0;
-$dur.textContent=acFmtTime(end0-startSec);
-var iv=setInterval(function(){
-if(!document.body.contains(wrap)){clearInterval(iv);return}
-var cur=player.getCurrentTime(),end=endSec||player.getDuration()||end0;
-if(endSec&&cur>=endSec){player.pauseVideo();player.seekTo(endSec,true)}
-$buf.style.width=Math.min(100,(player.getVideoLoadedFraction?player.getVideoLoadedFraction():0)*100)+'%';
-paintProgress(cur,end);
-},250);
-},
-onStateChange:function(e){
-if(e.data===YT.PlayerState.PLAYING){
-wrap.classList.remove('paused');$ended.classList.remove('show');
-$center.innerHTML=pauseIco22;$center.setAttribute('aria-label','إيقاف');
-$playBtn.innerHTML=pauseIco18;$playBtn.setAttribute('aria-label','إيقاف');
-showCtrl();
-}else if(e.data===YT.PlayerState.PAUSED){
-wrap.classList.add('paused');
-$center.innerHTML=playIco22;$center.setAttribute('aria-label','تشغيل');
-$playBtn.innerHTML=playIco18;$playBtn.setAttribute('aria-label','تشغيل');
-clearTimeout(hideT);
-}else if(e.data===YT.PlayerState.ENDED){
-wrap.classList.add('paused');
-$center.innerHTML=playIco22;$playBtn.innerHTML=playIco18;
-$ended.classList.add('show');
-clearTimeout(hideT);
-}
-},
-onError:function(){$skel.classList.add('out');clearTimeout(fallbackT)}
-}});
-});
-}
 
 /* ── QUIZ ENGINE ──────────────────────────────────────────── */
 
@@ -23813,7 +23502,7 @@ var c={};
 
 c['tc1']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي — يصلح لأي مستوى</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">🌱</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2)"><iframe src="https://www.youtube.com/embed/Et7qY603Lc4?start=0&amp;end=250&amp;rel=0&amp;enablejsapi=1" title="زراعة الأنسجة النباتية — مقدمة" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen onload="ytGuard(this,250)" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">زراعة الأنسجة النباتية — مقدمة &nbsp;(0:00 – 4:10)</p></div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="Et7qY603Lc4" data-start="0" data-end="250" data-title="زراعة الأنسجة النباتية — مقدمة" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/Et7qY603Lc4?start=0&amp;end=250&amp;rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="زراعة الأنسجة النباتية — مقدمة" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">زراعة الأنسجة النباتية — مقدمة &nbsp;(0:00 – 4:10)</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>تعريف زراعة الأنسجة النباتية بكلمات بسيطة ومعرفة حدودها مقارنة بطرق الإكثار الأخرى</li><li>شرح مبدأ التوتيبوتنتية (الخاصية الكلية الشاملة) الذي يقوم عليه علم زراعة الأنسجة بالكامل</li><li>سرد أهم المحطات التاريخية التي شكّلت هذا المجال من بداياته وحتى اليوم</li><li>تفسير أهم أربع مزايا تجعل زراعة الأنسجة تقنية استراتيجية مقارنة بالإكثار التقليدي</li><li>تصنيف أبرز خمسة مجالات تطبيقية لزراعة الأنسجة في الزراعة والطب والصناعة والحفظ</li><li>تصحيح أكثر المفاهيم الخاطئة شيوعاً حول هذا المجال، وعلى رأسها الخلط بينه وبين الهندسة الوراثية</li><li>وصف الخريطة العامة لمسار الكورس القادم من التجهيز المعملي وحتى التطبيقات التجارية</li></ul>'+
@@ -23884,7 +23573,7 @@ c['tc1']='<div class="acad-body">'+
 
 c['tc2']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">🌱</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2)"><iframe src="https://www.youtube.com/embed/CnH9H_XVUdw?rel=0&amp;enablejsapi=1" title="تصميم وتجهيز معمل زراعة الأنسجة" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">تصميم وتجهيز معمل زراعة الأنسجة</p></div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="CnH9H_XVUdw" data-start="0" data-title="تصميم وتجهيز معمل زراعة الأنسجة" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/CnH9H_XVUdw?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="تصميم وتجهيز معمل زراعة الأنسجة" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">تصميم وتجهيز معمل زراعة الأنسجة</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>وصف المناطق الوظيفية الأربع لمعمل زراعة الأنسجة وتسلسل العمل بينها</li><li>تحديد الأجهزة الأساسية اللازمة لكل منطقة ومعرفة وظيفة كل جهاز بدقة</li><li>شرح مبدأ التدفق الهوائي الصفحي وسبب كونه قلب أي معمل زراعة أنسجة</li><li>تطبيق مبدأ "من الأوسخ إلى الأنظف" عند تصميم مسار الحركة داخل المعمل</li><li>تقييم بدائل اقتصادية ممكنة لتأسيس معمل صغير بميزانية محدودة</li><li>تجنب أخطاء التصميم الشائعة التي تزيد من مخاطر التلوث لاحقاً</li><li>تحديد المعايير التي تُراعى عند اختيار موقع المعمل داخل مبنى قائم</li></ul>'+
@@ -23952,7 +23641,7 @@ c['tc2']='<div class="acad-body">'+
 
 c['tc3']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">🌱</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2)"><iframe src="https://www.youtube.com/embed/4yJWfk298JA?rel=0&amp;enablejsapi=1" title="التعقيم في زراعة الأنسجة ومصادر التلوث" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">التعقيم في زراعة الأنسجة ومصادر التلوث</p></div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="4yJWfk298JA" data-start="0" data-title="التعقيم في زراعة الأنسجة ومصادر التلوث" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/4yJWfk298JA?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="التعقيم في زراعة الأنسجة ومصادر التلوث" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">التعقيم في زراعة الأنسجة ومصادر التلوث</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>تفسير سبب كون التلوث هو العدو الأول والأخطر في زراعة الأنسجة</li><li>تصنيف مصادر التلوث الرئيسية: داخلية وخارجية وبيئية وبشرية</li><li>التمييز بصرياً بين التلوث البكتيري والفطري والخميري في الأوعية المزروعة</li><li>تنفيذ بروتوكول التعقيم السطحي للأجزاء النباتية خطوة بخطوة</li><li>فهم التوازن الدقيق بين التعقيم الكافي وتجنب إتلاف النسيج النباتي</li><li>التعرف على تحدي التلوث الداخلي الكامن وكيفية التعامل معه</li><li>تطبيق قواعد الوقاية اليومية التي تقلل مخاطر التلوث في المعمل</li></ul>'+
@@ -24012,7 +23701,7 @@ c['tc3']='<div class="acad-body">'+
 
 c['tc4']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">🌱</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2)"><iframe src="https://www.youtube.com/embed/knsP5xn4ESw?start=0&amp;end=360&amp;rel=0&amp;enablejsapi=1" title="البيئات الغذائية ومكوناتها وتحضيرها" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen onload="ytGuard(this,360)" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">البيئات الغذائية ومكوناتها وتحضيرها &nbsp;(0:00 – 6:00)</p></div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="knsP5xn4ESw" data-start="0" data-end="360" data-title="البيئات الغذائية ومكوناتها وتحضيرها" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/knsP5xn4ESw?start=0&amp;end=360&amp;rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="البيئات الغذائية ومكوناتها وتحضيرها" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">البيئات الغذائية ومكوناتها وتحضيرها &nbsp;(0:00 – 6:00)</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>تعريف البيئة الغذائية ومعرفة وظيفتها الأساسية في تغذية النسيج المزروع معملياً</li><li>تصنيف المكونات الرئيسية للبيئة الغذائية: عناصر كبرى وصغرى ومصدر كربون وفيتامينات</li><li>شرح أهمية بيئة MS تحديداً ولماذا ظلت الأكثر استخداماً عالمياً منذ عام 1962</li><li>تنفيذ خطوات تحضير البيئة الغذائية بدءاً من المحاليل المركزة وحتى التعقيم</li><li>ضبط درجة الحموضة (pH) بالقيمة الصحيحة ومعرفة أثرها على نجاح الزراعة</li><li>تجنب أخطاء التحضير الشائعة التي تؤثر على جودة البيئة الغذائية النهائية</li><li>التمييز بين الحالات التي تحتاج بيئة كاملة التركيز وأخرى نصف مركّزة أو بلا هرمونات</li></ul>'+
@@ -24068,7 +23757,7 @@ c['tc4']='<div class="acad-body">'+
 
 c['tc5']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي إلى متوسط</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">🌱</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2)"><iframe src="https://www.youtube.com/embed/knsP5xn4ESw?start=360&amp;end=941&amp;rel=0&amp;enablejsapi=1" title="منظمات النمو النباتية واستخداماتها" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen onload="ytGuard(this,941)" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">منظمات النمو النباتية واستخداماتها &nbsp;(6:00 – 15:41)</p></div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="knsP5xn4ESw" data-start="360" data-end="941" data-title="منظمات النمو النباتية واستخداماتها" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/knsP5xn4ESw?start=360&amp;end=941&amp;rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="منظمات النمو النباتية واستخداماتها" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">منظمات النمو النباتية واستخداماتها &nbsp;(6:00 – 15:41)</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>تعريف منظمات النمو النباتية ومعرفة الفرق بينها وبين الهرمونات النباتية الطبيعية</li><li>تصنيف الفئات الرئيسية لمنظمات النمو: أوكسينات وسيتوكينينات وجبريلينات وحمض الأبسيسيك</li><li>شرح نموذج سكوگ وميلر ونسبة الأوكسين إلى السيتوكينين وتأثيرها على اتجاه النمو</li><li>التمييز بين أشهر الأوكسينات والسيتوكينينات المستخدمة معملياً واستخدام كل منها</li><li>تحديد أي منظمات النمو تحتاج تعقيماً بالترشيح بدل الأوتوكلاف</li><li>تجنب أخطاء شائعة في استخدام تركيزات منظمات النمو</li><li>ربط هذه النسبة الهرمونية بمراحل الإكثار الدقيق وتكوين الكالس التي ستُدرس لاحقاً</li></ul>'+
@@ -24126,7 +23815,7 @@ c['tc5']='<div class="acad-body">'+
 
 c['tc6']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">40 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">🌱</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2)"><iframe src="https://www.youtube.com/embed/Et7qY603Lc4?start=251&amp;end=1163&amp;rel=0&amp;enablejsapi=1" title="زراعة الأنسجة النباتية — الجزء السادس" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen onload="ytGuard(this,1163)" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">زراعة الأنسجة النباتية — الجزء السادس &nbsp;(4:11 – 19:23)</p></div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="Et7qY603Lc4" data-start="251" data-end="1163" data-title="زراعة الأنسجة النباتية — الجزء السادس" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/Et7qY603Lc4?start=251&amp;end=1163&amp;rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="زراعة الأنسجة النباتية — الجزء السادس" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">زراعة الأنسجة النباتية — الجزء السادس &nbsp;(4:11 – 19:23)</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>تعريف الجزء النباتي (Explant) ومعرفة أنواعه الرئيسية المستخدمة في زراعة الأنسجة</li><li>تصنيف أنواع الأجزاء النباتية: قمم نامية، عقد، أوراق، أجنة، ومتوك</li><li>شرح أهم معايير اختيار الجزء النباتي المناسب: الاستقرار الوراثي والعمر الفسيولوجي والموسم</li><li>تحليل المفاضلة بين حجم الجزء النباتي الصغير والكبير من حيث المخاطر والفوائد</li><li>تنفيذ خطوات إعداد الجزء النباتي للزراعة تمهيداً للتعقيم السطحي</li><li>تجنب أخطاء شائعة في اختيار الجزء النباتي تقلل من فرص نجاح الزراعة</li><li>ربط حجم الجزء النباتي بمبدأ إنتاج النباتات الخالية من الفيروسات الذي سيُدرس لاحقاً</li></ul>'+
@@ -24180,7 +23869,7 @@ c['tc6']='<div class="acad-body">'+
 
 c['tc7']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">متوسط وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">🌱</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2)"><iframe src="https://www.youtube.com/embed/oWpWfRNF2zg?rel=0&amp;enablejsapi=1" title="مراحل الإكثار الدقيق" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">مراحل الإكثار الدقيق</p></div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="oWpWfRNF2zg" data-start="0" data-title="مراحل الإكثار الدقيق" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/oWpWfRNF2zg?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="مراحل الإكثار الدقيق" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">مراحل الإكثار الدقيق</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>سرد المراحل الأربع الكلاسيكية للإكثار الدقيق بالترتيب الصحيح</li><li>شرح ما يحدث تحديداً في كل مرحلة من مراحل التأسيس والتضاعف والتجذير</li><li>حساب القدرة الرياضية التصاعدية لمرحلة التضاعف عبر دورات الإكثار المتكررة</li><li>ربط التوازن الهرموني المناسب بكل مرحلة وفق نموذج سكوگ وميلر</li><li>تحديد الفاصل الزمني المعتاد بين دورات الإكثار وأسباب عدم إطالته إلى ما لا نهاية</li><li>تجنب أخطاء شائعة تتعلق بعدد دورات الإكثار المتكررة ومخاطرها الوراثية</li><li>ربط هذه المراحل الأربع بكل ما تعلمناه من تعقيم وبيئات غذائية ومنظمات نمو واختيار أجزاء نباتية</li></ul>'+
@@ -24231,7 +23920,7 @@ c['tc7']='<div class="acad-body">'+
 
 c['tc8']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">متوسط إلى متقدم</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">🌱</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2)"><iframe src="https://www.youtube.com/embed/7hW7hQNBA4c?rel=0&amp;enablejsapi=1" title="الكالس والأجنة الجسدية" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">الكالس والأجنة الجسدية</p></div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="7hW7hQNBA4c" data-start="0" data-title="الكالس والأجنة الجسدية" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/7hW7hQNBA4c?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="الكالس والأجنة الجسدية" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">الكالس والأجنة الجسدية</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>شرح ماهية الكالس بيولوجياً وكيف يتكوّن من الناحية الهرمونية</li><li>التمييز بين نوعي الكالس: الهش والمتماسك، ومتى يُفضَّل كل منهما</li><li>التمييز الجوهري بين تكوين الأعضاء (Organogenesis) وتكوين الأجنة الجسدية (Somatic Embryogenesis)</li><li>سرد مراحل تطور الجنين الجسدي من الكروي وحتى الفلقي</li><li>المقارنة بين التكوين المباشر وغير المباشر للأجنة الجسدية من حيث المخاطر الوراثية</li><li>شرح مفهوم البذور الاصطناعية وتطبيقاتها التجارية والبحثية</li><li>تجنب الخلط الشائع بين المسارين التطوريين المختلفين لتجديد النبات</li></ul>'+
@@ -29158,6 +28847,278 @@ c['fq13']='<div class="acad-body">'+
 return c[id]||'<div class="acad-body"><p style="color:var(--muted);text-align:center;padding:40px 0">محتوى هذه المحاضرة قيد الإعداد — يُضاف قريباً.</p></div>';
 }
 
+/* ── Tissue Culture — Professional Video Player ──────────────
+   يستبدل واجهة يوتيوب الافتراضية بمشغل مخصص بالكامل لهذه الدورة:
+   بدون شعار يوتيوب، بدون أي عنصر قابل للنقر ينقل المستخدم إلى
+   يوتيوب، مع فرض دقيق لحدود كل مقطع (start/end) عبر YouTube
+   IFrame API — يحل محل استدعاء ytGuard القديم غير المُعرَّف
+   (كان صامتاً بلا أي تأثير فعلي). الإطار الأصلي يبقى موجوداً في
+   الـHTML كما هو (controls=0 فقط) كشبكة أمان: لو تعذّر تحميل
+   واجهة يوتيوب البرمجية لأي سبب (حجب إعلانات، شبكة بطيئة...)
+   يُكشف تلقائياً بعناصر التحكم الافتراضية بدل شاشة معطّلة.
+   يُستدعى tcEnhanceVideos() من acR() بعد كل عرض لمحاضرة.        */
+var _tcYtReady=false,_tcYtLoading=false,_tcYtQueue=[];
+function _tcLoadYtApi(cb){
+if(window.YT&&window.YT.Player){cb(false);return}
+_tcYtQueue.push(cb);
+if(_tcYtLoading)return;
+_tcYtLoading=true;
+try{
+var prevReady=window.onYouTubeIframeAPIReady;
+window.onYouTubeIframeAPIReady=function(){
+_tcYtReady=true;
+if(typeof prevReady==='function')try{prevReady()}catch(e){}
+var q=_tcYtQueue;_tcYtQueue=[];
+for(var i=0;i<q.length;i++)try{q[i](false)}catch(e){}
+};
+var s=document.createElement('script');
+s.src='https://www.youtube.com/iframe_api';
+s.onerror=function(){
+_tcYtLoading=false;
+var q=_tcYtQueue;_tcYtQueue=[];
+for(var i=0;i<q.length;i++)try{q[i](true)}catch(e){}
+};
+document.head.appendChild(s);
+}catch(e){_tcYtLoading=false;cb(true)}
+}
+
+function tcEnhanceVideos(){
+try{
+var wraps=document.querySelectorAll('.tc-player:not(.tc-ready)');
+for(var i=0;i<wraps.length;i++)_tcBuildPlayer(wraps[i]);
+}catch(e){}
+}
+window.tcEnhanceVideos=tcEnhanceVideos;
+
+function _tcFmt(sec){
+sec=Math.max(0,Math.floor(sec||0));
+var m=Math.floor(sec/60),s=sec%60;
+return m+':'+(s<10?'0':'')+s;
+}
+
+function _tcBuildPlayer(wrap){
+wrap.classList.add('tc-ready');
+var iframe=wrap.querySelector('iframe');
+if(!iframe)return;
+var vid=wrap.getAttribute('data-vid')||'';
+var start=parseInt(wrap.getAttribute('data-start')||'0',10)||0;
+var endAttr=wrap.getAttribute('data-end');
+var end=endAttr?parseInt(endAttr,10):null;
+var title=(wrap.getAttribute('data-title')||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+var hit=document.createElement('div');
+hit.className='tc-player-hit';
+
+var poster=document.createElement('div');
+poster.className='tc-player-poster';
+poster.style.backgroundImage='url(https://i.ytimg.com/vi/'+encodeURIComponent(vid)+'/hqdefault.jpg)';
+poster.innerHTML='<div class="tc-player-play">'+acIco('play',24,'fill:#fff;stroke:none;margin-right:-3px')+'</div>'+
+'<div class="tc-player-meta"><div class="tc-player-meta-t">'+title+'</div></div>';
+
+var loading=document.createElement('div');
+loading.className='tc-player-loading';
+loading.innerHTML='<div class="tc-player-spin"></div>';
+
+var ended=document.createElement('div');
+ended.className='tc-player-ended';
+ended.innerHTML='<div class="tc-player-ended-t">انتهى هذا المقطع</div><button type="button" class="tc-player-replay">'+acIco('refresh',14)+' إعادة المقطع</button>';
+
+var controls=document.createElement('div');
+controls.className='tc-player-controls';
+controls.innerHTML=
+'<button type="button" class="tc-player-btn tc-play-btn" aria-label="تشغيل">'+acIco('play',15,'fill:currentColor;stroke:none')+'</button>'+
+'<span class="tc-player-time tc-time-cur">0:00</span>'+
+'<div class="tc-player-seek"><div class="tc-player-seek-track"><div class="tc-player-seek-fill"></div><div class="tc-player-seek-thumb"></div></div></div>'+
+'<span class="tc-player-time tc-time-dur">0:00</span>'+
+'<div class="tc-player-vol">'+
+'<button type="button" class="tc-player-btn tc-vol-btn" aria-label="الصوت">'+acIco('volume',15)+'</button>'+
+'<div class="tc-player-vol-track"><input type="range" class="tc-player-vol-range" min="0" max="100" value="100" aria-label="مستوى الصوت"></div>'+
+'</div>'+
+'<button type="button" class="tc-player-btn tc-fs-btn" aria-label="ملء الشاشة">'+acIco('expand',15)+'</button>';
+
+wrap.appendChild(hit);
+wrap.appendChild(poster);
+wrap.appendChild(loading);
+wrap.appendChild(ended);
+wrap.appendChild(controls);
+wrap.setAttribute('tabindex','0');
+wrap.setAttribute('oncontextmenu','return false');
+
+var player=null,ytApiFailed=false,hideTimer=null,pollTimer=null,dragging=false;
+var playBtn=controls.querySelector('.tc-play-btn');
+var volBtn=controls.querySelector('.tc-vol-btn');
+var volRange=controls.querySelector('.tc-player-vol-range');
+var fsBtn=controls.querySelector('.tc-fs-btn');
+var seekEl=controls.querySelector('.tc-player-seek');
+var seekFill=controls.querySelector('.tc-player-seek-fill');
+var seekThumb=controls.querySelector('.tc-player-seek-thumb');
+var timeCur=controls.querySelector('.tc-time-cur');
+var timeDur=controls.querySelector('.tc-time-dur');
+
+function clipDuration(){
+if(!player)return 0;
+var d=player.getDuration()||0;
+return (end?Math.min(d,end):d)-start;
+}
+
+function showControlsTemporarily(){
+wrap.classList.add('tc-active');
+clearTimeout(hideTimer);
+hideTimer=setTimeout(function(){if(!dragging)wrap.classList.remove('tc-active')},2600);
+}
+
+function revealNativeFallback(){
+ytApiFailed=true;
+clearInterval(pollTimer);pollTimer=null;
+wrap.classList.remove('tc-loading');
+poster.style.display='none';
+hit.style.display='none';
+controls.style.display='none';
+loading.style.display='none';
+ended.style.display='none';
+iframe.style.pointerEvents='auto';
+var src=iframe.src;
+if(src.indexOf('controls=0')>-1)iframe.src=src.replace('controls=0','controls=1');
+}
+
+function onPlayerReady(){
+wrap.classList.remove('tc-loading');
+timeDur.textContent=_tcFmt(clipDuration());
+try{player.setVolume(100)}catch(e){}
+}
+
+function onPlayerState(e){
+if(!window.YT)return;
+if(e.data===YT.PlayerState.PLAYING){
+poster.style.display='none';
+wrap.classList.remove('tc-ended','tc-paused');
+playBtn.innerHTML=acIco('pause',15);
+showControlsTemporarily();
+if(!pollTimer)pollTimer=setInterval(pollProgress,250);
+}else if(e.data===YT.PlayerState.PAUSED){
+playBtn.innerHTML=acIco('play',15,'fill:currentColor;stroke:none');
+wrap.classList.add('tc-paused');
+clearTimeout(hideTimer);
+}else if(e.data===YT.PlayerState.ENDED){
+clearInterval(pollTimer);pollTimer=null;
+wrap.classList.add('tc-ended');
+}
+}
+
+function pollProgress(){
+if(!player||dragging)return;
+try{
+var cur=player.getCurrentTime();
+if(end&&cur>=end-0.15){
+player.pauseVideo();
+wrap.classList.add('tc-ended');
+clearInterval(pollTimer);pollTimer=null;
+return;
+}
+var rel=Math.max(0,cur-start);
+var dur=clipDuration();
+var pct=dur>0?Math.min(100,(rel/dur)*100):0;
+seekFill.style.width=pct+'%';
+seekThumb.style.left=pct+'%';
+timeCur.textContent=_tcFmt(rel);
+}catch(e){}
+}
+
+function togglePlay(){
+if(!player)return;
+var st=player.getPlayerState();
+if(st===1)player.pauseVideo();else player.playVideo();
+}
+
+function startPlayback(){
+if(player){player.playVideo();return}
+wrap.classList.add('tc-loading');
+_tcLoadYtApi(function(failed){
+if(failed||!window.YT||!window.YT.Player){revealNativeFallback();return}
+var readyFired=false;
+try{
+player=new YT.Player(iframe,{
+events:{
+onReady:function(e){readyFired=true;onPlayerReady();player.playVideo()},
+onStateChange:onPlayerState,
+onError:function(){revealNativeFallback()}
+}
+});
+}catch(err){revealNativeFallback();return}
+setTimeout(function(){if(!readyFired)revealNativeFallback()},7000);
+});
+}
+
+hit.addEventListener('click',function(){if(!ytApiFailed&&player)togglePlay()});
+hit.addEventListener('dblclick',function(){toggleFullscreen()});
+hit.addEventListener('mousemove',function(){if(player)showControlsTemporarily()});
+poster.addEventListener('click',function(){startPlayback()});
+
+playBtn.addEventListener('click',function(ev){ev.stopPropagation();if(!player){startPlayback();return}togglePlay()});
+
+volBtn.addEventListener('click',function(ev){
+ev.stopPropagation();
+if(!player)return;
+if(player.isMuted()){player.unMute();volRange.value=player.getVolume()||100;volBtn.innerHTML=acIco('volume',15)}
+else{player.mute();volRange.value=0;volBtn.innerHTML=acIco('volumeMute',15)}
+});
+volRange.addEventListener('input',function(){
+if(!player)return;
+var v=parseInt(volRange.value,10);
+player.setVolume(v);
+if(v===0){player.mute();volBtn.innerHTML=acIco('volumeMute',15)}
+else{if(player.isMuted())player.unMute();volBtn.innerHTML=acIco('volume',15)}
+});
+volRange.addEventListener('click',function(ev){ev.stopPropagation()});
+
+function seekFromClientX(clientX){
+if(!player)return;
+var rect=seekEl.getBoundingClientRect();
+var pct=Math.min(1,Math.max(0,(clientX-rect.left)/rect.width));
+var dur=clipDuration();
+player.seekTo(start+pct*dur,true);
+seekFill.style.width=(pct*100)+'%';
+seekThumb.style.left=(pct*100)+'%';
+timeCur.textContent=_tcFmt(pct*dur);
+}
+seekEl.addEventListener('mousedown',function(ev){ev.stopPropagation();dragging=true;seekEl.classList.add('tc-dragging');seekFromClientX(ev.clientX)});
+seekEl.addEventListener('touchstart',function(ev){dragging=true;seekEl.classList.add('tc-dragging');if(ev.touches[0])seekFromClientX(ev.touches[0].clientX)},{passive:true});
+document.addEventListener('mousemove',function(ev){if(dragging)seekFromClientX(ev.clientX)});
+document.addEventListener('touchmove',function(ev){if(dragging&&ev.touches[0])seekFromClientX(ev.touches[0].clientX)},{passive:true});
+document.addEventListener('mouseup',function(){if(dragging){dragging=false;seekEl.classList.remove('tc-dragging')}});
+document.addEventListener('touchend',function(){if(dragging){dragging=false;seekEl.classList.remove('tc-dragging')}});
+
+function toggleFullscreen(){
+if(!wrap.requestFullscreen&&!wrap.webkitRequestFullscreen)return;
+if(document.fullscreenElement===wrap||document.webkitFullscreenElement===wrap){
+(document.exitFullscreen||document.webkitExitFullscreen).call(document);
+}else{
+(wrap.requestFullscreen||wrap.webkitRequestFullscreen).call(wrap);
+}
+}
+fsBtn.addEventListener('click',function(ev){ev.stopPropagation();toggleFullscreen()});
+function onFsChange(){
+var isFs=document.fullscreenElement===wrap||document.webkitFullscreenElement===wrap;
+fsBtn.innerHTML=isFs?acIco('compress',15):acIco('expand',15);
+}
+document.addEventListener('fullscreenchange',onFsChange);
+document.addEventListener('webkitfullscreenchange',onFsChange);
+
+ended.querySelector('.tc-player-replay').addEventListener('click',function(ev){
+ev.stopPropagation();
+wrap.classList.remove('tc-ended');
+if(player){player.seekTo(start,true);player.playVideo()}
+});
+
+wrap.addEventListener('keydown',function(ev){
+if(!player)return;
+if(ev.key===' '||ev.key==='k'){ev.preventDefault();togglePlay()}
+else if(ev.key==='ArrowRight'){ev.preventDefault();player.seekTo(Math.min(player.getCurrentTime()+5,(end||player.getDuration()||0)-0.2),true)}
+else if(ev.key==='ArrowLeft'){ev.preventDefault();player.seekTo(Math.max(player.getCurrentTime()-5,start),true)}
+else if(ev.key==='f'){toggleFullscreen()}
+else if(ev.key==='m'){volBtn.click()}
+});
+}
 
 /* ── Lesson Content ───────────────────────────────────────── */
 
