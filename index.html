@@ -30096,8 +30096,29 @@ const SE = {
   lev(a,b){const m=Array.from({length:b.length+1},(_,i)=>[i]);m[0]=Array.from({length:a.length+1},(_,i)=>i);for(let i=1;i<=b.length;i++)for(let j=1;j<=a.length;j++)m[i][j]=b[i-1]===a[j-1]?m[i-1][j-1]:Math.min(m[i-1][j-1]+1,m[i][j-1]+1,m[i-1][j]+1);return m[b.length][a.length]},
   suggest(q){return null},
   search(q){
-    /* تم حذف قاعدة بيانات النباتات والأمراض — البحث لا يعيد نتائج حالياً */
-    return [];
+    /* البحث الآن يعمل على بيانات الكورسات الحقيقية (نفس سجل الكورسات المستخدم في الصفحة الرئيسية) */
+    const toks=this.tok(q);
+    if(!toks.length)return [];
+    const reg=(typeof App!=='undefined'&&typeof App._nbHomeCourseRegistry==='function')?App._nbHomeCourseRegistry():[];
+    const out=[];
+    reg.forEach(c=>{
+      const course=c.course||{};
+      const modText=(course.modules||[]).map(m=>(m.title||'')+' '+(m.lessons||[]).map(l=>l.title||'').join(' ')).join(' ');
+      const titleHay=(course.title||'').toLowerCase();
+      const bodyHay=[course.subtitle,course.kicker,course.heroSub,course.description,course.instructor,course.level,modText].filter(Boolean).join(' ').toLowerCase();
+      let score=0,hit=false;
+      toks.forEach(t=>{
+        [t,...(this.SYN[t]||[])].forEach(v=>{
+          const vl=String(v).toLowerCase();
+          if(!vl)return;
+          if(titleHay.indexOf(vl)!==-1){score+=this.W.name;hit=true}
+          else if(bodyHay.indexOf(vl)!==-1){score+=this.W.tips;hit=true}
+        });
+      });
+      if(hit)out.push({cid:c.cid,course:course,icon:c.icon,img:c.img,score:score});
+    });
+    out.sort((a,b)=>b.score-a.score);
+    return out;
   }
 };
 
@@ -31278,7 +31299,20 @@ function doFullSearch(q){
   },200);
 }
 
-// (تم حذف spRow — كانت خاصة بعرض نتائج الأمراض في البحث، والتي تم إزالتها)
+function spRow(r,q,i){
+  const course=r.course||{};
+  const lessons=(course.modules||[]).reduce((s,m)=>s+(m.lessons?m.lessons.length:0),0);
+  const snipSrc=course.description||course.heroSub||course.subtitle||'';
+  const snip=snipSrc?SE.snip(snipSrc,q):'';
+  return `<div class="sp-result-item" style="animation-delay:${i*35}ms" onclick="showPage('academy');setTimeout(function(){NAcademy.openCourse('${r.cid}')},100)" role="button" tabindex="0">
+    <img loading="lazy" decoding="async" class="sp-ri-img" src="${r.img}" alt="${course.title||''}">
+    <div class="sp-ri-body">
+      <div class="sp-ri-name">${SE.hl(course.title||'',q)}</div>
+      <div class="sp-ri-fields"><span class="sp-ri-field">${course.level||''}</span><span class="sp-ri-field">${lessons} درس · ${course.duration||''}</span></div>
+      ${snip?`<div class="sp-ri-snip">${SE.hl(snip,q)}</div>`:''}
+    </div>
+  </div>`;
+}
 
 // ======================== NAV / MOBILE ========================
 document.getElementById('ham').addEventListener('click', function(e) {
@@ -41043,7 +41077,7 @@ function nbFmtDate(date){
 }
 .nb-h2-search-inp{
   flex:1;min-width:0;background:none;border:none;outline:none;
-  color:var(--ink);font-size:15px;font-family:inherit;font-weight:500;
+  color:var(--ink);font-size:16px;font-family:inherit;font-weight:500;
   padding:10px 8px 10px 4px;
 }
 .nb-h2-search-inp::placeholder{color:var(--slate)}
