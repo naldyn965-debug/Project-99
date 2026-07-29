@@ -6507,7 +6507,7 @@ body.modal-open { overflow: hidden; }
 .tc-player-vol{display:flex;align-items:center}
 .tc-player-vol-track{width:0;overflow:hidden;transition:width .18s var(--ease-out)}
 .tc-player-vol:hover .tc-player-vol-track,.tc-player-vol.tc-active .tc-player-vol-track{width:54px}
-.tc-player-vol-range{width:50px;height:3px;margin:0 4px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.28);border-radius:2px;outline:none}
+.tc-player-vol-range{width:50px;height:3px;margin:0 4px;-webkit-appearance:none;appearance:none;background:linear-gradient(to right,var(--brand-xl) 0%,var(--brand-xl) var(--tcvol,100%),rgba(255,255,255,.28) var(--tcvol,100%),rgba(255,255,255,.28) 100%);border-radius:2px;outline:none}
 .tc-player-vol-range::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#fff;cursor:pointer}
 .tc-player-vol-range::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#fff;border:none;cursor:pointer}
 .tc-player:fullscreen{border-radius:0 !important;position:fixed !important;inset:0 !important;width:100vw !important;height:100vh !important;padding-bottom:0 !important}
@@ -29062,12 +29062,13 @@ playBtn.addEventListener('click',function(ev){ev.stopPropagation();if(!player){s
 volBtn.addEventListener('click',function(ev){
 ev.stopPropagation();
 if(!player)return;
-if(player.isMuted()){player.unMute();volRange.value=player.getVolume()||100;volBtn.innerHTML=acIco('volume',15)}
-else{player.mute();volRange.value=0;volBtn.innerHTML=acIco('volumeMute',15)}
+if(player.isMuted()){player.unMute();volRange.value=player.getVolume()||100;volRange.style.setProperty('--tcvol',volRange.value+'%');volBtn.innerHTML=acIco('volume',15)}
+else{player.mute();volRange.value=0;volRange.style.setProperty('--tcvol','0%');volBtn.innerHTML=acIco('volumeMute',15)}
 });
 volRange.addEventListener('input',function(){
 if(!player)return;
 var v=parseInt(volRange.value,10);
+volRange.style.setProperty('--tcvol',v+'%');
 player.setVolume(v);
 if(v===0){player.mute();volBtn.innerHTML=acIco('volumeMute',15)}
 else{if(player.isMuted())player.unMute();volBtn.innerHTML=acIco('volume',15)}
