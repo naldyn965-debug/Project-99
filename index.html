@@ -30398,30 +30398,14 @@ const App = {
     // Always show the section — hero is gone
     sec.style.display = 'block';
 
-    // Guest: show same unified hero (already safe for currentUser === null)
-    if(!currentUser){
-      if(ob) ob.style.display='none';
-      this._renderUnifiedHome(cnt);
-      return;
-    }
-
-    // Logged in but no userType: show onboarding
-    if(!userType){
-      cnt.innerHTML = '';
-      if(ob) ob.style.display='flex';
-      return;
-    }
-
-    // Hide onboarding, render dashboard
+    /* "من أنت؟" onboarding gate removed permanently — _renderFarmerDash /
+       _renderStudentDash / _renderEngineerDash below each just call
+       _renderUnifiedHome anyway (see their definitions), so every userType
+       already rendered identical content; the popup was pure friction with
+       zero effect on what's shown. Every visitor — guest or logged in,
+       regardless of userType — now goes straight to the unified home. */
     if(ob) ob.style.display='none';
-
-    // Show skeleton while loading
-    cnt.innerHTML = this._dashSkeleton(userType);
-
-    // Render based on type
-    if(userType === 'farmer') this._renderFarmerDash(cnt);
-    else if(userType === 'student') this._renderStudentDash(cnt);
-    else if(userType === 'engineer') this._renderEngineerDash(cnt);
+    this._renderUnifiedHome(cnt);
   },
 
   _dashSkeleton(type){
