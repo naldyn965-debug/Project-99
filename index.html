@@ -6513,6 +6513,8 @@ body.modal-open { overflow: hidden; }
 .tc-player:fullscreen{border-radius:0 !important;position:fixed !important;inset:0 !important;width:100vw !important;height:100vh !important;padding-bottom:0 !important}
 .tc-player:-webkit-full-screen{border-radius:0 !important;position:fixed !important;inset:0 !important;width:100vw !important;height:100vh !important;padding-bottom:0 !important}
 .tc-player.tc-fake-fs{border-radius:0 !important;position:fixed !important;inset:0 !important;width:100vw !important;height:100vh !important;padding-bottom:0 !important;z-index:99999;background:#000}
+/* fix: .page{will-change:transform} بيعمل containing block يحبس fake-fs جوه صندوق الصفحة بدل الشاشة الفعلية (سلوك CSS معروف) — بيتلغى مؤقتاً وقت تفعيل fake-fs بس وبيرجع لوحده تلقائي لما يتقفل */
+#pg-academy:has(.tc-player.tc-fake-fs){will-change:auto}
 @media(hover:none) and (pointer:coarse){
 .tc-player-controls{opacity:1;transform:none}
 .tc-player-seek-thumb{transform:translate(-50%,-50%) scale(1)}
