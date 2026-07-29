@@ -30151,21 +30151,29 @@ const App = {
       /* لو Firebase كان لسه ما ردش على حالة الدخول، نسيب auth.onAuthStateChanged
          (تحت) هو اللي يبني الصفحة أول ما يوصل الرد الحقيقي — عشان نمنع ظهور
          واجهة "زائر" لحظة قبل ما بيانات المستخدم المسجل تظهر */
-      if (_nbAuthReady) self._buildHome();
+      if (_nbAuthReady) { self._buildHome(); self._hideLoaderNow(); }
       setTimeout(_observeReveals, 400);
     });
   },
 
   _loader(){
-    /* Hide loader as soon as DOM is interactive, max 1.2s */
-    var _hideLoader = function(){
+    /* Hide the loader once real home content is ready (auth resolved +
+       dashboard built — see the two _hideLoaderNow() call sites below),
+       instead of on a fixed page-load timer. The old timer hid the loader
+       while auth was often still pending, exposing the empty/unbuilt home
+       page underneath for a stretch. The timeout below is now a safety
+       net only (e.g. auth blocked/offline with no cached session) — if
+       content still isn't ready by then, it force-renders the guest-safe
+       view so the loader never hides onto a blank page. */
+    var self=this;
+    this._hideLoaderNow = function(){
       var l=document.getElementById('ldr');
       if(l){l.classList.add('out');setTimeout(()=>l&&l.remove(),600);}
     };
-    if(document.readyState==='complete'){setTimeout(_hideLoader,200);}
-    else{window.addEventListener('load',function(){setTimeout(_hideLoader,200);},{once:true});}
-    /* Absolute max fallback */
-    setTimeout(_hideLoader,1800);
+    setTimeout(function(){
+      self._hideLoaderNow();
+      if(!_nbAuthReady) self._buildHome();
+    },5000);
   },
 
   _cursor(){
@@ -31114,6 +31122,7 @@ auth.onAuthStateChanged(async (user) => {
   if (document.getElementById('pg-home').classList.contains('active')) {
     App._buildHome();
   }
+  if (typeof App._hideLoaderNow === 'function') App._hideLoaderNow();
 });
 
 // ======================== UI HELPERS ========================
