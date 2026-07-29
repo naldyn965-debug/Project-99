@@ -6512,6 +6512,7 @@ body.modal-open { overflow: hidden; }
 .tc-player-vol-range::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#fff;border:none;cursor:pointer}
 .tc-player:fullscreen{border-radius:0 !important;position:fixed !important;inset:0 !important;width:100vw !important;height:100vh !important;padding-bottom:0 !important}
 .tc-player:-webkit-full-screen{border-radius:0 !important;position:fixed !important;inset:0 !important;width:100vw !important;height:100vh !important;padding-bottom:0 !important}
+.tc-player.tc-fake-fs{border-radius:0 !important;position:fixed !important;inset:0 !important;width:100vw !important;height:100vh !important;padding-bottom:0 !important;z-index:99999;background:#000}
 @media(hover:none) and (pointer:coarse){
 .tc-player-controls{opacity:1;transform:none}
 .tc-player-seek-thumb{transform:translate(-50%,-50%) scale(1)}
@@ -29089,12 +29090,27 @@ document.addEventListener('mouseup',function(){if(dragging){dragging=false;seekE
 document.addEventListener('touchend',function(){if(dragging){dragging=false;seekEl.classList.remove('tc-dragging')}});
 
 function toggleFullscreen(){
-if(!wrap.requestFullscreen&&!wrap.webkitRequestFullscreen)return;
+if(wrap.classList.contains('tc-fake-fs')){
+wrap.classList.remove('tc-fake-fs');
+document.body.style.overflow='';
+fsBtn.innerHTML=acIco('expand',15);
+return;
+}
 if(document.fullscreenElement===wrap||document.webkitFullscreenElement===wrap){
 (document.exitFullscreen||document.webkitExitFullscreen).call(document);
-}else{
-(wrap.requestFullscreen||wrap.webkitRequestFullscreen).call(wrap);
+return;
 }
+function _tcFallbackFs(){
+wrap.classList.add('tc-fake-fs');
+document.body.style.overflow='hidden';
+fsBtn.innerHTML=acIco('compress',15);
+}
+var reqFs=wrap.requestFullscreen||wrap.webkitRequestFullscreen;
+if(!reqFs){_tcFallbackFs();return}
+try{
+var fsPromise=reqFs.call(wrap);
+if(fsPromise&&typeof fsPromise.catch==='function')fsPromise.catch(_tcFallbackFs);
+}catch(e){_tcFallbackFs()}
 }
 fsBtn.addEventListener('click',function(ev){ev.stopPropagation();toggleFullscreen()});
 function onFsChange(){
