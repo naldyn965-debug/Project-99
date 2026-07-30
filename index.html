@@ -40333,7 +40333,7 @@ button, [role="button"] { cursor: pointer; }
 
 /* ── Outer shell ─────────────────────────── */
 #nb-bottom-nav {
-  display: none;
+  display: block;
   position: fixed;
   bottom: 0; left: 0; right: 0;
   z-index: 450;
@@ -40372,13 +40372,9 @@ button, [role="button"] { cursor: pointer; }
     0 -20px 56px rgba(0,0,0,.35);
 }
 
-/* Responsive: show on mobile only */
-@media (max-width: 768px) {
-  #nb-bottom-nav { display: block; }
-  body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
-  #pwa-install-banner { bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important; }
-  #pwa-fab            { bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important; }
-}
+/* PWA install banner/FAB offset above the bottom nav — applies at every screen size */
+#pwa-install-banner { bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important; }
+#pwa-fab            { bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important; }
 
 /* ── Inner row ───────────────────────────── */
 .nb-nav-inner {
@@ -40854,12 +40850,12 @@ button,
 
 </style>
 
-<!-- ── MOBILE BOTTOM CLEARANCE FIX ──
+<!-- ── BOTTOM CLEARANCE FIX ──
      Ensures no page content is hidden behind the bottom nav.
+     Applies at every screen size now that the bottom nav is always visible.
      Placed after ALL page-specific styles so it wins the cascade.
 ─────────────────────────────────────── -->
 <style id="nb-bottom-clearance">
-@media (max-width: 768px) {
 
   /* Body padding OFF */
   body { padding-bottom: 0 !important; }
@@ -40899,12 +40895,10 @@ button,
     padding-bottom: calc(72px + env(safe-area-inset-bottom, 8px)) !important;
   }
 
-  /* Scroll-to-top (#stk): hidden on mobile
-     — not needed (iOS: tap status bar; Android: native back)
+  /* Scroll-to-top (#stk): hidden everywhere the bottom nav shows
      — was peeking through the bottom nav border-radius */
   #stk { display: none !important; }
 
-}
 
 /* ─── FIXED TOP NAV ─────────────────────────────────────────────
    position:sticky يفشل مع overflow:hidden أو will-change:transform
