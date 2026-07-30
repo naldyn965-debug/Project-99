@@ -31350,24 +31350,33 @@ function saveRoleEdit() {
 
 async function saveProfileChanges() {
   if (!currentUser) return;
-  const newNameInput = document.getElementById('editNameInput');
-  if (newNameInput) {
-    const newName = newNameInput.value.trim();
-    if (newName && newName !== currentUser.displayName) {
-      await currentUser.updateProfile({ displayName: newName });
+  const saveBtn = document.getElementById('saveNameBtn');
+  if (saveBtn) saveBtn.style.opacity = '0.6';
+  try {
+    const newNameInput = document.getElementById('editNameInput');
+    if (newNameInput) {
+      const newName = newNameInput.value.trim();
+      if (newName && newName !== currentUser.displayName) {
+        await currentUser.updateProfile({ displayName: newName });
+      }
     }
+    if (tempAvatarFile) {
+      const storageRef = storage.ref();
+      const avatarRef = storageRef.child(`avatars/${currentUser.uid}`);
+      await avatarRef.put(tempAvatarFile);
+      const avatarUrl = await avatarRef.getDownloadURL();
+      await currentUser.updateProfile({ photoURL: avatarUrl });
+      tempAvatarFile = null;
+    }
+    await loadUserProfile();
+    toggleProfileEdit();
+    showToast('✅ تم حفظ الملف الشخصي', 'ok');
+  } catch (err) {
+    console.error('saveProfileChanges error:', err);
+    showToast('⚠️ تعذر حفظ التغييرات، حاول مرة أخرى', 'err');
+  } finally {
+    if (saveBtn) saveBtn.style.opacity = '';
   }
-  if (tempAvatarFile) {
-    const storageRef = storage.ref();
-    const avatarRef = storageRef.child(`avatars/${currentUser.uid}`);
-    await avatarRef.put(tempAvatarFile);
-    const avatarUrl = await avatarRef.getDownloadURL();
-    await currentUser.updateProfile({ photoURL: avatarUrl });
-    tempAvatarFile = null;
-  }
-  await loadUserProfile();
-  toggleProfileEdit();
-  showToast('✅ تم حفظ الملف الشخصي', 'ok');
 }
 
 function changePassword() {
