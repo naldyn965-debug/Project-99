@@ -4140,6 +4140,13 @@ body.modal-open { overflow: hidden; }
 <div id="cur"></div>
 <div id="cur-r"></div>
 
+<!-- LOADER -->
+<div id="ldr">
+  <div class="l-logo">Nabtex</div>
+  <div class="l-tag">نبتيكس أكاديمي — Nabtex academy</div>
+  <div class="l-line"></div>
+</div>
+
 <!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-bg"></div>
@@ -41475,7 +41482,7 @@ function nbFmtDate(date){
 .nb-h2-greet-wrap{flex:1;min-width:0;padding-top:3px}
 .nb-h2-greet{
   font-family:var(--f-ui,inherit);
-  font-size:19px;font-weight:800;color:var(--ink);
+  font-size:clamp(15px,4.6vw,19px);font-weight:800;color:var(--ink);
   line-height:1.35;margin-bottom:3px;letter-spacing:-.01em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
