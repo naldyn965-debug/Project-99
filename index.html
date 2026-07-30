@@ -29196,7 +29196,14 @@ if(tcRaf)return;
 tcRaf=true;
 requestAnimationFrame(function(){tcRaf=false;tcSyncSticky()});
 }
-tcSyncSticky();
+/* fix: الفحص الأول كان بينفّذ sync جوه acR() — أي *قبل* سطر
+   window.scrollTo(0,0) اللي بعده في acGo مباشرة — فكان بيقيس
+   rect.top لفيديو المحاضرة الجديدة بالنسبة لسكرول الصفحة القديمة
+   (لو المستخدم نازل شوية) فيظنّه اتخطى الناف بار ويثبّته fixed
+   فوراً لحظة، لحد ما اسكرول(0,0) يبعت scroll event يصححه — وده
+   اللي بيظهر كـ"لاج" والفيديو ملزّق تحت الناف أول ثانية. تأجيله
+   لإطار واحد بيخليه يتنفّذ بعد ما السكرول يترجّع فعلياً للصفر. */
+requestAnimationFrame(tcSyncSticky);
 window.addEventListener('scroll',tcOnScroll,{passive:true});
 window.addEventListener('resize',tcOnScroll);
 window.addEventListener('orientationchange',tcOnScroll);
