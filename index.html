@@ -6477,7 +6477,6 @@ body.modal-open { overflow: hidden; }
    انظر دالته بجانب tcGetContent.
    ══════════════════════════════════════════════════════════ */
 .tc-player{background:#0a1210}
-.acad-body>div:has(>.tc-player){position:sticky;top:140px;z-index:5;background:var(--bg)}
 .tc-player.tc-ready iframe{pointer-events:none}
 .tc-player-hit{position:absolute;inset:0;z-index:2;cursor:pointer}
 .tc-player-poster{position:absolute;inset:0;z-index:3;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;cursor:pointer}
@@ -6515,8 +6514,7 @@ body.modal-open { overflow: hidden; }
 .tc-player:-webkit-full-screen{border-radius:0 !important;position:fixed !important;inset:0 !important;width:100vw !important;height:100vh !important;padding-bottom:0 !important}
 .tc-player.tc-fake-fs{border-radius:0 !important;position:fixed !important;inset:0 !important;width:100vw !important;height:100vh !important;padding-bottom:0 !important;z-index:99999;background:#000}
 /* fix: .page{will-change:transform} بيعمل containing block يحبس fake-fs جوه صندوق الصفحة بدل الشاشة الفعلية (سلوك CSS معروف) — بيتلغى مؤقتاً وقت تفعيل fake-fs بس وبيرجع لوحده تلقائي لما يتقفل */
-#pg-academy:has(.tc-player.tc-fake-fs){will-change:auto}
-#pg-academy:has(.tc-player){will-change:auto}
+#pg-academy:has(.tc-player.tc-fake-fs,.tc-player.tc-stuck){will-change:auto}
 @media(hover:none) and (pointer:coarse){
 .tc-player-controls{opacity:1;transform:none}
 .tc-player-seek-thumb{transform:translate(-50%,-50%) scale(1)}
@@ -29103,6 +29101,7 @@ if(wrap.classList.contains('tc-fake-fs')){
 wrap.classList.remove('tc-fake-fs');
 document.body.style.overflow='';
 fsBtn.innerHTML=acIco('expand',15);
+tcSyncSticky();
 return;
 }
 if(document.fullscreenElement===wrap||document.webkitFullscreenElement===wrap){
@@ -29125,6 +29124,7 @@ fsBtn.addEventListener('click',function(ev){ev.stopPropagation();toggleFullscree
 function onFsChange(){
 var isFs=document.fullscreenElement===wrap||document.webkitFullscreenElement===wrap;
 fsBtn.innerHTML=isFs?acIco('compress',15):acIco('expand',15);
+if(!isFs)tcSyncSticky();
 }
 document.addEventListener('fullscreenchange',onFsChange);
 document.addEventListener('webkitfullscreenchange',onFsChange);
@@ -29143,6 +29143,63 @@ else if(ev.key==='ArrowLeft'){ev.preventDefault();player.seekTo(Math.max(player.
 else if(ev.key==='f'){toggleFullscreen()}
 else if(ev.key==='m'){volBtn.click()}
 });
+
+/* ── Sticky video ─────────────────────────────────────────────
+   position:sticky can't be trusted here — .tc-player lives inside
+   a .page ancestor with will-change:transform (see the tc-fake-fs
+   rule above), which traps position:fixed/sticky inside that
+   ancestor's box instead of the real viewport. So this reuses the
+   same will-change:auto escape hatch (now widened to .tc-stuck too)
+   and drives a manual "stuck" state from JS/scroll instead. */
+var origStyle=wrap.getAttribute('style')||'';
+var tcSpacer=document.createElement('div');
+tcSpacer.className='tc-player-spacer';
+tcSpacer.style.display='none';
+wrap.parentNode.insertBefore(tcSpacer,wrap);
+var tcStuck=false,tcRaf=false;
+function tcNavH(){
+var n=document.getElementById('nav');
+return n?n.getBoundingClientRect().height:64;
+}
+function tcStickOn(rect){
+tcStuck=true;
+wrap.classList.add('tc-stuck');
+tcSpacer.style.height=rect.height+'px';
+tcSpacer.style.display='block';
+wrap.style.cssText=origStyle+';position:fixed;top:'+tcNavH()+'px;left:'+rect.left+'px;width:'+rect.width+'px;height:'+rect.height+'px;padding-bottom:0;z-index:60';
+}
+function tcStickOff(){
+tcStuck=false;
+tcSpacer.style.display='none';
+wrap.setAttribute('style',origStyle);
+wrap.classList.remove('tc-stuck');
+}
+function tcSyncSticky(){
+if(wrap.classList.contains('tc-fake-fs'))return;
+var nh=tcNavH();
+if(!tcStuck){
+var r=wrap.getBoundingClientRect();
+if(r.top<=nh)tcStickOn(r);
+}else{
+var pr=tcSpacer.getBoundingClientRect();
+if(pr.top>=nh){tcStickOff();return}
+var h=pr.width*9/16;
+wrap.style.top=nh+'px';
+wrap.style.left=pr.left+'px';
+wrap.style.width=pr.width+'px';
+wrap.style.height=h+'px';
+tcSpacer.style.height=h+'px';
+}
+}
+function tcOnScroll(){
+if(tcRaf)return;
+tcRaf=true;
+requestAnimationFrame(function(){tcRaf=false;tcSyncSticky()});
+}
+tcSyncSticky();
+window.addEventListener('scroll',tcOnScroll,{passive:true});
+window.addEventListener('resize',tcOnScroll);
+window.addEventListener('orientationchange',tcOnScroll);
 }
 
 /* ── Lesson Content ───────────────────────────────────────── */
