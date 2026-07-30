@@ -7811,6 +7811,12 @@ body.modal-open { overflow: hidden; }
    (تاب أعرض، مش متأثر بنفس المشكلة). */
 #nav-notif-btn .ac-notif-badge{ top:-3px; right:-3px; }
 .ac-notif-panel{
+  --ac-900:#051F20;
+  --ac-700:#163832;
+  --ac-600:#235347;
+  --ac-300:#8EB69B;
+  --ac-100:#DAF1DE;
+  --ac-50: #EFF8F2;
   display:none;
   position:fixed;
   top:118px;
@@ -7819,7 +7825,7 @@ body.modal-open { overflow: hidden; }
   max-height:520px;
   z-index:850;
   background:var(--ac-50, #EFF8F2);
-  border:1px solid var(--ac-300);
+  border:1px solid var(--ac-300, #8EB69B);
   border-radius:22px;
   overflow:hidden;
   box-shadow:0 24px 64px rgba(5,31,32,.22), inset 0 1px 0 rgba(255,255,255,.4);
@@ -7833,18 +7839,18 @@ body.modal-open { overflow: hidden; }
 .ac-notif-panel-head{
   display:flex; align-items:center; justify-content:space-between;
   padding:16px 20px;
-  border-bottom:1px solid var(--ac-300);
-  background:var(--ac-900); color:var(--ac-100);
+  border-bottom:1px solid var(--ac-300, #8EB69B);
+  background:var(--ac-900, #051F20); color:var(--ac-100, #DAF1DE);
 }
 .ac-notif-panel-title{ font-size:14px; font-weight:900; }
 .ac-notif-panel-close{
   width:28px; height:28px; border-radius:50%; display:grid; place-items:center;
-  color:var(--ac-100); background:rgba(255,255,255,.08); border:none; cursor:pointer;
+  color:var(--ac-100, #DAF1DE); background:rgba(255,255,255,.08); border:none; cursor:pointer;
 }
 .ac-notif-panel-close svg{ width:15px; height:15px; }
 #ac-notif-panel-list{
   overflow-y:auto; max-height:390px;
-  scrollbar-width:thin; scrollbar-color:var(--ac-300) transparent;
+  scrollbar-width:thin; scrollbar-color:var(--ac-300, #8EB69B) transparent;
 }
 .ac-notif-card{
   padding:14px 20px; border-bottom:1px solid rgba(35,83,71,.12);
@@ -7855,26 +7861,26 @@ body.modal-open { overflow: hidden; }
 .ac-notif-card:hover{ background:rgba(35,83,71,.06); }
 .ac-notif-card-icon{
   width:36px; height:36px; border-radius:10px; flex-shrink:0;
-  background:linear-gradient(135deg, var(--ac-700), var(--ac-600));
+  background:linear-gradient(135deg, var(--ac-700, #163832), var(--ac-600, #235347));
   display:flex; align-items:center; justify-content:center;
   box-shadow:0 2px 8px rgba(11,43,38,.3);
 }
-.ac-notif-card-icon svg{ width:16px; height:16px; color:var(--ac-100); }
-.ac-notif-card-msg{ font-size:13px; color:var(--ac-900); line-height:1.6; }
-.ac-notif-card-time{ font-size:11px; color:var(--ac-600); margin-top:3px; }
+.ac-notif-card-icon svg{ width:16px; height:16px; color:var(--ac-100, #DAF1DE); }
+.ac-notif-card-msg{ font-size:13px; color:var(--ac-900, #051F20); line-height:1.6; }
+.ac-notif-card-time{ font-size:11px; color:var(--ac-600, #235347); margin-top:3px; }
 .ac-notif-card-dot{
   width:8px; height:8px; border-radius:50%; background:#ef4444; flex-shrink:0; margin-top:6px;
 }
 .ac-notif-empty{ padding:44px 24px; text-align:center; }
-.ac-notif-empty svg{ width:40px; height:40px; display:block; margin:0 auto 12px; opacity:.25; color:var(--ac-700); }
-.ac-notif-empty-title{ font-size:13px; font-weight:800; color:var(--ac-700); }
-.ac-notif-empty-sub{ font-size:11px; color:var(--ac-600); opacity:.75; margin-top:6px; }
+.ac-notif-empty svg{ width:40px; height:40px; display:block; margin:0 auto 12px; opacity:.25; color:var(--ac-700, #163832); }
+.ac-notif-empty-title{ font-size:13px; font-weight:800; color:var(--ac-700, #163832); }
+.ac-notif-empty-sub{ font-size:11px; color:var(--ac-600, #235347); opacity:.75; margin-top:6px; }
 .ac-notif-panel-foot{
   padding:10px 16px; border-top:1px solid rgba(35,83,71,.12); background:rgba(35,83,71,.03);
 }
 .ac-notif-mute-toggle{
   width:100%; background:none; border:none; cursor:pointer;
-  font-size:11.5px; font-weight:700; color:var(--ac-600); padding:6px 4px; text-align:center;
+  font-size:11.5px; font-weight:700; color:var(--ac-600, #235347); padding:6px 4px; text-align:center;
 }
 .ac-notif-mute-toggle.is-muted{ color:#b45309; }
 @media(max-width:768px){
@@ -41950,10 +41956,10 @@ var AcNotif = {
     var rows = '';
 
     if (typeof Notification !== 'undefined' && Notification.permission === 'default' && !this._pushOfferDismissed) {
-      rows += '<div style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--ac-100);border-bottom:1px solid var(--ac-300)">' +
-        '<div style="flex:1;font-size:12px;color:var(--ac-900);font-weight:700">🔔 فعّل التنبيهات عشان توصلك حتى لو التطبيق مقفول</div>' +
-        '<button onclick="AcNotif.registerPush(this)" style="background:var(--ac-700);color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap">تفعيل</button>' +
-        '<button onclick="AcNotif._pushOfferDismissed=true;AcNotif._render()" style="background:none;border:none;color:var(--ac-600);font-size:16px;cursor:pointer;padding:0 2px" aria-label="إغلاق">×</button>' +
+      rows += '<div style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--ac-100,#DAF1DE);border-bottom:1px solid var(--ac-300,#8EB69B)">' +
+        '<div style="flex:1;font-size:12px;color:var(--ac-900,#051F20);font-weight:700">🔔 فعّل التنبيهات عشان توصلك حتى لو التطبيق مقفول</div>' +
+        '<button onclick="AcNotif.registerPush(this)" style="background:var(--ac-700,#163832);color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap">تفعيل</button>' +
+        '<button onclick="AcNotif._pushOfferDismissed=true;AcNotif._render()" style="background:none;border:none;color:var(--ac-600,#235347);font-size:16px;cursor:pointer;padding:0 2px" aria-label="إغلاق">×</button>' +
       '</div>';
     }
 
