@@ -5230,7 +5230,7 @@ body.modal-open { overflow: hidden; }
 ══════════════════════════════════════════════════════════ -->
 <style>
 /* ── Layout ── */
-#pg-academy{background:var(--bg);min-height:100svh}
+#pg-academy{background:var(--bg);min-height:100svh;overflow-x:hidden}
 #acad-root{min-height:100svh}
 .acad-wrap{max-width:1100px;margin:0 auto;padding:0 20px}
 
@@ -19542,6 +19542,12 @@ function nbFmtDate(date){
 @supports (backdrop-filter:url(#liquidHero)){
   .nb-h2-hero::after{backdrop-filter:blur(1px) url(#liquidHero) saturate(140%) brightness(107%);-webkit-backdrop-filter:blur(1px) saturate(140%) brightness(107%);}
 }
+
+/* ── Glass pane removed per site-owner request: the diagonal glossy
+   sheen on the home greeting/stats card (.nb-h2-hero::after above)
+   is disabled. Original rules left intact above/at line 19542 — this
+   override just wins the cascade, so nothing upstream needs editing. */
+.nb-h2-hero::after{content:none !important;display:none !important}
 
 /* ── .nb-h2-stats: light inset module within the hero. Concentric
    radius = hero radius(32) − hero's own horizontal padding(20,
