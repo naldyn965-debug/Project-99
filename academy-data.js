@@ -1006,8 +1006,8 @@ var btnLabel=doneLessons===0?acIco('rocket',16)+' ابدأ الدورة الآن
              feScore>=70?acIco('cap',16)+' عرض الشهادة':
              feScore>=0?acIco('refresh',16)+' إعادة الاختبار النهائي':acIco('pencil',16)+' ابدأ الاختبار النهائي';
 var btnAction=!allDone?'NAcademy.openFirst()':feScore>=70?'NAcademy.goCert()':'NAcademy.goFinalExam()';
-var finalExamHTML='<div class="acad-module-block" style="border:2px solid rgba(201,135,26,.38);background:rgba(201,135,26,.03);margin-top:8px">'+
-'<div class="acad-module-name" style="color:#c9871a;padding:16px 18px 0"><span class="acad-module-num" style="background:linear-gradient(135deg,#c9871a,#e6a020);color:#fff">'+acIco('star',12)+'</span>الاختبار النهائي الشامل</div>'+
+var finalExamHTML='<div class="acad-module-block" style="margin-top:8px">'+
+'<div class="acad-module-name" style="color:#c9871a;padding:16px 18px 0">الاختبار النهائي الشامل</div>'+
 (allDone?
 '<div class="acad-fe-row'+(feScore>=70?' passed':feScore>=0?' failed':'')+'" onclick="NAcademy.goFinalExam()" role="button">'+
 

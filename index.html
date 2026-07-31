@@ -108,6 +108,12 @@
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+<!-- Preload the large academy course-data bundle (~4MB) so the browser starts
+     downloading it in parallel while parsing <head>, instead of only discovering
+     it once the parser reaches the <script src="academy-data.js"> tag mid-document.
+     Does not change execution order/timing — same script tag, same position. -->
+<link rel="preload" as="script" href="academy-data.js?v=1">
+
 <!-- Firebase SDKs moved to body — see just before Firebase initialization -->
 
 <!-- fonts preconnects already defined above -->
@@ -10988,7 +10994,7 @@ async function _renderDetailPanel(productId) {
     mktState._detailImgs = imgs;
 
     const thumbs = imgs.length > 1
-      ? `<div class="mkt-gallery-thumbs">${imgs.map((img,i)=>`<img decoding="async" class="mkt-gallery-thumb ${i===0?'active':''}" src="${img}" onclick="MKT._switchImgIdx(${i},this)" alt="صورة ${i+1}">`).join('')}</div>`
+      ? `<div class="mkt-gallery-thumbs">${imgs.map((img,i)=>`<img decoding="async" loading="lazy" class="mkt-gallery-thumb ${i===0?'active':''}" src="${img}" onclick="MKT._switchImgIdx(${i},this)" alt="صورة ${i+1}">`).join('')}</div>`
       : '';
     const statusBadge = p.status==='sold' ? '❌ مباع' : p.status==='inactive' ? '⏸️ غير نشط' : '✅ متاح';
     const stockBadge = p.stock > 0 ? `<span class="mkt-stock-badge mkt-stock-in">✅ متوفر (${p.stock} ${p.unit||'وحدة'})</span>` : `<span class="mkt-stock-badge mkt-stock-out">❌ نفذ</span>`;
