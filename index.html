@@ -18285,18 +18285,18 @@ button, [role="button"] { cursor: pointer; }
 [data-dark] .nb-nav-item.active .nb-ico { color: #60d080; }
 [data-dark] .nb-nav-item.active .nb-lbl { color: #60d080; }
 
-/* ── PRESS (haptic-like bounce) ───────────── */
+/* ── PRESS (soft, smooth feedback) ───────────── */
 .nb-nav-item:active {
-  transform: scale(.83);
-  transition: transform .08s ease !important;
+  transform: scale(.94);
+  transition: transform .16s ease-out !important;
 }
 .nb-nav-item:active .nb-ico {
   transform: translateY(0) scale(1) !important;
-  transition: transform .08s ease !important;
+  transition: transform .16s ease-out !important;
 }
 .nb-nav-item:active .nb-lbl {
   transform: translateY(0) !important;
-  transition: transform .08s ease !important;
+  transition: transform .16s ease-out !important;
 }
 
 /* ─── DESKTOP NAV ACTIVE INDICATOR ───── */
