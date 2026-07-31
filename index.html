@@ -18628,6 +18628,43 @@ button,
 
 </style>
 
+<!-- ── ACADEMY HERO — Android centering + perf fix (additive) ──
+     Placed after ALL academy styles so it wins the cascade.
+     Does not remove/alter any existing rule.
+─────────────────────────────────────── -->
+<style id="nb-acad-hero-android-fix">
+  /* Bulletproof horizontal centering for hero content —
+     works regardless of width:fit-content support */
+  .acad-hero-inner{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+  }
+  .acad-hero-badge,
+  .acad-hero-back,
+  .acad-hero-stats{
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+
+  /* Lighter GPU load on Android: smaller blur radius + drop the
+     infinite paint-triggering animations on the hero glass elements */
+  @media (max-width:900px){
+    .acad-hero-badge,
+    .acad-hero-stats{
+      backdrop-filter:blur(6px) !important;
+      -webkit-backdrop-filter:blur(6px) !important;
+    }
+    .acad-hero-badge,
+    .acad-hero-badge i,
+    .acad-hero-badge i::after,
+    .acad-hero::before,
+    .acad-hero::after{
+      animation:none !important;
+    }
+  }
+</style>
+
 <!-- ── BOTTOM CLEARANCE FIX ──
      Ensures no page content is hidden behind the bottom nav.
      Applies at every screen size now that the bottom nav is always visible.
