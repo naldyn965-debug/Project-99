@@ -8557,6 +8557,10 @@ const App = {
   _heroCanvas(){
     const canvas=document.getElementById('hero-canvas');
     if(!canvas)return;
+    /* الكانفاس متخفي دايماً (#hero-canvas{display:none!important}) — لو مخفي
+       منوقفش هنا عشان منشغلش loop رسم أبدي (requestAnimationFrame) على عنصر
+       مش ظاهر؛ ده كان بيستهلك CPU/بطارية بلا داعي خصوصاً على أندرويد */
+    if(getComputedStyle(canvas).display==='none')return;
     const ctx=canvas.getContext('2d');
     const resize=()=>{canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight};
     resize();

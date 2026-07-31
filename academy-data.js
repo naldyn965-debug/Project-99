@@ -1051,6 +1051,13 @@ feScore>=0?
 '</div>'
 )+'</div>';
 
+/* duration مخزّن كنص واحد "18 ساعة" — لو اتحط كامل جوه acad-hs-n (خط 1.8rem كبير)
+   بيلف على سطرين على شاشات أندرويد الضيقة ويخلي صف الإحصائيات مايل/غير متناسق.
+   بنفصل الرقم عن الوحدة زي باقي الإحصائيتين (رقم كبير + ليبل صغير) */
+var acDurNumM=String(AC_COURSE.duration).match(/^\d+/);
+var acDurNum=acDurNumM?acDurNumM[0]:AC_COURSE.duration;
+var acDurUnit=String(AC_COURSE.duration).replace(/^\d+\s*/,'')||'مدة الدورة';
+
 return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner">'+
 '<div class="acad-hero-back" role="button" onclick="NAcademy.goCatalog()">‹ كل الدورات</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
@@ -1061,7 +1068,7 @@ return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner
  '<div class="acad-hs-div"></div>'+
  '<div class="acad-hs"><div class="acad-hs-n">'+AC_COURSE.modules.length+'</div><div class="acad-hs-l">وحدات</div></div>'+
  '<div class="acad-hs-div"></div>'+
- '<div class="acad-hs"><div class="acad-hs-n">'+AC_COURSE.duration+'</div><div class="acad-hs-l">مدة الدورة</div></div>'+
+ '<div class="acad-hs"><div class="acad-hs-n">'+acDurNum+'</div><div class="acad-hs-l">'+acDurUnit+'</div></div>'+
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
@@ -1121,6 +1128,12 @@ var modulesHTML=AC_COURSE.modules.map(function(mod,mi){
   '<div class="acad-module-name"><span class="acad-module-num">'+(mi+1)+'</span>'+mod.title+'</div>'+
   rows+'</div>'}).join('');
 
+/* نفس تعديل acRenderHome: فصل الرقم عن وحدة المدة عشان صف الإحصائيات
+   ميلفّش سطرين ويبقى مايل على شاشات أندرويد الضيقة */
+var acDurNumM=String(AC_COURSE.duration).match(/^\d+/);
+var acDurNum=acDurNumM?acDurNumM[0]:AC_COURSE.duration;
+var acDurUnit=String(AC_COURSE.duration).replace(/^\d+\s*/,'')||'مدة الدورة';
+
 return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner">'+
 '<div class="acad-hero-back" role="button" onclick="NAcademy.goCatalog()">‹ كل الدورات</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
@@ -1131,7 +1144,7 @@ return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner
  '<div class="acad-hs-div"></div>'+
  '<div class="acad-hs"><div class="acad-hs-n">'+AC_COURSE.modules.length+'</div><div class="acad-hs-l">وحدات</div></div>'+
  '<div class="acad-hs-div"></div>'+
- '<div class="acad-hs"><div class="acad-hs-n">'+AC_COURSE.duration+'</div><div class="acad-hs-l">مدة الدورة</div></div>'+
+ '<div class="acad-hs"><div class="acad-hs-n">'+acDurNum+'</div><div class="acad-hs-l">'+acDurUnit+'</div></div>'+
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
