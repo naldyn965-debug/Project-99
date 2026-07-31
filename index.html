@@ -104,7 +104,6 @@
 <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com">
 <link rel="dns-prefetch" href="https://firestore.googleapis.com">
 <link rel="dns-prefetch" href="https://identitytoolkit.googleapis.com">
-<link rel="dns-prefetch" href="https://nabtex-b8475.firebaseio.com">
 <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 <noscript><link rel="dns-prefetch" href="https://fonts.googleapis.com"></noscript>
 <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -113,8 +112,6 @@
 
 <!-- Firebase SDKs moved to body — see just before Firebase initialization -->
 
-<!-- Academy hero photo preload -->
-<link rel="preload" as="image" href="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1920&q=80&auto=format&fit=crop">
 <!-- fonts preconnects already defined above -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"></noscript>
@@ -29106,7 +29103,7 @@ seekEl.addEventListener('touchstart',function(ev){dragging=true;seekEl.classList
 document.addEventListener('mousemove',function(ev){if(dragging)seekFromClientX(ev.clientX)});
 document.addEventListener('touchmove',function(ev){if(dragging&&ev.touches[0])seekFromClientX(ev.touches[0].clientX)},{passive:true});
 document.addEventListener('mouseup',function(){if(dragging){dragging=false;seekEl.classList.remove('tc-dragging')}});
-document.addEventListener('touchend',function(){if(dragging){dragging=false;seekEl.classList.remove('tc-dragging')}});
+document.addEventListener('touchend',function(){if(dragging){dragging=false;seekEl.classList.remove('tc-dragging')}},{passive:true});
 
 function toggleFullscreen(){
 if(wrap.classList.contains('tc-fake-fs')){
@@ -33434,7 +33431,7 @@ async function _renderSellerPanel() {
         products.map(p => `
         <div class="mkt-my-product-card" onclick="MKT.openDetail('${p.id}')">
           <div class="mkt-my-product-img">
-            ${p.images&&p.images.length ? `<img src="${p.images[0]}" alt="${_esc(p.title)}" onerror="this.parentElement.innerHTML='${CAT_EMOJIS[p.category]||'📦'}'">` : (CAT_EMOJIS[p.category]||'📦')}
+            ${p.images&&p.images.length ? `<img src="${p.images[0]}" alt="${_esc(p.title)}" loading="lazy" onerror="this.parentElement.innerHTML='${CAT_EMOJIS[p.category]||'📦'}'">` : (CAT_EMOJIS[p.category]||'📦')}
           </div>
           <div class="mkt-my-product-info">
             <div class="mkt-my-product-name">${_esc(p.title||'')}</div>
