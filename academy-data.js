@@ -754,7 +754,7 @@ function acGo(view,lid){
 /* Free-preview teaser: the course info page, and its "first lecture free"
    deep-link, stay reachable without login — but only for the monetized
    courses this applies to. Every other view/course keeps the guard below. */
-var acFreeTeaser=(view==='info'||(view==='lesson'&&lid&&acFlatLessons()[0]===lid))&&(AC_CID==='mol-bio'||AC_CID==='food-safety'||AC_CID==='tissue-culture');
+var acFreeTeaser=(view==='info'||(view==='lesson'&&lid&&acFlatLessons()[0]===lid))&&(AC_CID==='mol-bio'||AC_CID==='food-safety'||AC_CID==='tissue-culture'||AC_CID==='pesticide-tech');
 if(view!=='catalog'&&!acFreeTeaser&&!(typeof currentUser!=='undefined'&&currentUser)){
  if(typeof showToast==='function')showToast('سجّل الدخول أو أنشئ حساباً جديداً للبدء في الدورة','inf');
  if(typeof openAuth==='function')openAuth('login');
@@ -858,7 +858,7 @@ var fqPct=_acPctFor('food-quality',FQ_COURSE);var fqDone=_acDoneFor('food-qualit
 var agPct=_acPctFor('ag-english',AG_COURSE);var agDone=_acDoneFor('ag-english');var fsPct=_acPctFor('food-safety',FS_COURSE);var fsDone=_acDoneFor('food-safety');var fsStatus=acFsStatus();var agStatus=acAgStatus();
 var lrPct=_acPctFor('land-reclamation',LR_COURSE);var lrDone=_acDoneFor('land-reclamation');
 var tcPct=_acPctFor('tissue-culture',TC_COURSE);var tcDone=_acDoneFor('tissue-culture');var tcStatus=acTcStatus();
-var ptPct=_acPctFor('pesticide-tech',PT_COURSE);var ptDone=_acDoneFor('pesticide-tech');
+var ptPct=_acPctFor('pesticide-tech',PT_COURSE);var ptDone=_acDoneFor('pesticide-tech');var ptStatus=acPtStatus();
 var liveCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pest\')" role="button">'+
 '<div class="acad-cat-card-top" style="background:#071808 url(\'https://images.unsplash.com/photo-1719665269650-5521f31420f3?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat"><span class="acad-pop-badge">'+STAR_ICO+'Free</span></div>'+
 '<div class="acad-cat-card-body">'+
@@ -962,8 +962,10 @@ var lrCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'la
 '</div>'+
 lrBottom+
 '</div></div>';
+var ptBadge=ptStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':ptStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 72%</span>';
+var ptBottom=ptStatus==='paid'?(ptDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+ptPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+ptPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):ptStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">70 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var ptCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pesticide-tech\')" role="button" style="border-color:rgba(194,65,12,.25)">'+
-'<div class="acad-cat-card-top" style="background:#2a1206 url(\'https://images.unsplash.com/photo-1715360378677-d6375ac03dbf?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat"><span class="acad-pop-badge">'+STAR_ICO+'Free</span></div>'+
+'<div class="acad-cat-card-top" style="background:#2a1206 url(\'https://images.unsplash.com/photo-1715360378677-d6375ac03dbf?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+ptBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
 '<div class="acad-cat-card-kicker" style="color:#c2410c">'+PT_COURSE.kicker+'</div>'+
 '<div class="acad-cat-card-title">'+PT_COURSE.title+'</div>'+
@@ -973,8 +975,7 @@ var ptCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pe
 '<span class="acad-chip-pro">'+BARS_ICO+PT_COURSE.level+'</span>'+
 '<span class="acad-chip-pro gold">'+CERT_ICO+'شهادة إتمام</span>'+
 '</div>'+
-(ptDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+ptPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+ptPct+'%"></div></div></div>':
-'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>')+
+ptBottom+
 '</div></div>';
 return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-back" role="button" onclick="showPage(\'home\')">‹ الرئيسية</div>'+
@@ -1164,7 +1165,7 @@ return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
-'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-safety'?' fs':' tc')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
+'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-safety'?' fs':AC_CID==='pesticide-tech'?' pt':' tc')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
 '<div class="acad-card-body">'+
 '<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
 '<div class="acad-card-desc">'+AC_COURSE.description+'</div>'+
@@ -15349,6 +15350,158 @@ window.acCloseTcPayModal=acCloseTcPayModal;
 window.acCopyVcash5Num=acCopyVcash5Num;
 window.acSubmitTcPayment=acSubmitTcPayment;
 
+/* ── Vodafone Cash Payment — Pesticide Technology Course ──────────
+   رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
+
+var _PT_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
+var _PT_COURSE_PRICE=70;          /* ← السعر بالجنيه              */
+var _PT_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
+
+/* Returns locally-cached status: 'paid' | 'pending' | 'none' */
+function acPtStatus(){
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+if(!u)return 'none';
+try{
+if(localStorage.getItem('nb-pesticide-tech-access__'+u)==='paid')return 'paid';
+if(localStorage.getItem('nb-pesticide-tech-pending__'+u)==='true')return 'pending';
+}catch(e){}
+return 'none';
+}
+window.acPtStatus=acPtStatus; /* تعريض عالمي — يستخدمه كاروسيل الكورسات في الرئيسية */
+
+/* Async check against Firestore, updates local cache */
+function acCheckPtAccess(cb){
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+if(!u){cb('none');return;}
+var cacheKey='nb-pesticide-tech-access__'+u;
+try{if(localStorage.getItem(cacheKey)==='paid'){cb('paid');return;}}catch(e){}
+/* Check users/{uid}.paidCourses first */
+db.collection('users').doc(u).get().then(function(snap){
+var data=snap.exists?snap.data():{};
+if(data.paidCourses&&data.paidCourses.indexOf('pesticide-tech')>-1){
+try{localStorage.setItem(cacheKey,'paid');}catch(e){}
+cb('paid');return;
+}
+/* Check course_payments for pending/approved */
+db.collection('course_payments').where('uid','==',u).get().then(function(qs){
+if(qs.empty){cb('none');return;}
+var docs=qs.docs.filter(function(d){return d.data().courseId==='pesticide-tech';});
+if(!docs.length){cb('none');return;}
+var st=docs[0].data().status;
+if(st==='approved'){
+try{localStorage.setItem(cacheKey,'paid');}catch(e){}
+cb('paid');
+}else if(st==='rejected'){
+try{localStorage.removeItem('nb-pesticide-tech-pending__'+u);}catch(e){}
+cb('rejected',docs[0].data().rejectionNote||'');
+}else{
+try{localStorage.setItem('nb-pesticide-tech-pending__'+u,'true');}catch(e){}
+cb('pending');
+}
+}).catch(function(){cb('none');});
+}).catch(function(){cb('none');});
+}
+
+function acShowPtPayModal(mode){
+var el=document.getElementById('vcash6-overlay');if(!el)return;
+document.getElementById('vcash6-number').textContent=_PT_VCASH_NUM;
+document.getElementById('vcash6-price-display').textContent=_PT_COURSE_PRICE+' جنيه';
+document.getElementById('vcash6-method-price-display').textContent=_PT_COURSE_PRICE+' جنيه';
+document.getElementById('vcash6-ip-price-display').textContent=_PT_COURSE_PRICE+' جنيه';
+acVcashRenderInstapayInfo('vcash6',_PT_INSTAPAY_INFO);
+if(mode==='pending'){
+acVcashSetStep('vcash6','pending');
+}else{
+acVcashSetStep('vcash6','method');
+var ph=document.getElementById('vcash6-phone');var rf=document.getElementById('vcash6-ref');
+if(ph)ph.value='';if(rf)rf.value='';
+var iph=document.getElementById('vcash6-ip-phone');var irf=document.getElementById('vcash6-ip-ref');
+if(iph)iph.value='';if(irf)irf.value='';
+var btn=document.getElementById('vcash6-submit-btn');
+if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
+var ibtn=document.getElementById('vcash6-ip-submit-btn');
+if(ibtn){ibtn.disabled=false;ibtn.textContent='أرسل طلب التفعيل';}
+}
+el.classList.add('on');
+document.body.classList.add('modal-open');
+}
+
+function acClosePtPayModal(){
+var el=document.getElementById('vcash6-overlay');
+if(el)el.classList.remove('on');
+document.body.classList.remove('modal-open');
+}
+
+function acCopyVcash6Num(){
+var num=document.getElementById('vcash6-number');if(!num)return;
+var val=num.textContent;
+if(navigator.clipboard){
+navigator.clipboard.writeText(val).then(function(){
+if(typeof showToast==='function')showToast('تم نسخ رقم فودافون كاش','ok');
+}).catch(function(){});
+}else{
+try{
+var ta=document.createElement('textarea');ta.value=val;
+document.body.appendChild(ta);ta.select();
+document.execCommand('copy');document.body.removeChild(ta);
+if(typeof showToast==='function')showToast('تم نسخ الرقم','ok');
+}catch(e){}
+}
+}
+
+function acSubmitPtPayment(method){
+method=method||'vodafone_cash';
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أولاً','err');return;}
+var isIP=method==='instapay';
+var phoneId=isIP?'vcash6-ip-phone':'vcash6-phone';
+var refId=isIP?'vcash6-ip-ref':'vcash6-ref';
+var btnId=isIP?'vcash6-ip-submit-btn':'vcash6-submit-btn';
+var phone=(document.getElementById(phoneId).value||'').trim();
+var ref=(document.getElementById(refId).value||'').trim();
+if(!phone||phone.length<10){
+if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
+}
+if(!ref||ref.length<10){
+if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
+}
+var btn=document.getElementById(btnId);
+if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
+db.collection('course_payments').add({
+uid:u,
+email:(currentUser&&currentUser.email)||'',
+phone:phone,
+transactionRef:ref,
+courseId:'pesticide-tech',
+amount:_PT_COURSE_PRICE,
+currency:'EGP',
+status:'pending',
+paymentMethod:method,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+}).then(function(docRef){
+try{localStorage.setItem('nb-pesticide-tech-pending__'+u,'true');}catch(e){}
+var refDisp=document.getElementById('vcash6-pending-ref-display');
+if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  رقم التواصل: '+ref;
+acVcashSetStep('vcash6','pending');
+if(typeof showToast==='function')showToast('تم إرسال طلبك — سيُفعَّل الكورس خلال لحظات','ok');
+/* Re-render catalog card if visible */
+if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
+}).catch(function(e){
+console.error('[VCash6] code:',e&&e.code,'|',e);
+if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
+var _msg='خطأ في الإرسال — أعد المحاولة';
+if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'))
+  _msg='خطأ في الصلاحيات — تواصل مع الدعم';
+else if(e&&(e.code==='unavailable'||e.code==='deadline-exceeded'||e.code==='network-request-failed'))
+  _msg='خطأ في الاتصال — تحقق من الإنترنت وأعد المحاولة';
+if(typeof showToast==='function')showToast(_msg,'err');
+});
+}
+
+window.acClosePtPayModal=acClosePtPayModal;
+window.acCopyVcash6Num=acCopyVcash6Num;
+window.acSubmitPtPayment=acSubmitPtPayment;
+
 /* ── Tissue Culture Lesson Content ───────────────────────────── */
 
 function tcGetContent(id){
@@ -21092,6 +21245,7 @@ c['pt1']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="Dgv8pMNIbG0" data-start="0" data-title="مقدمة في تكنولوجيا المبيدات وأهميتها في الزراعة الحديثة" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/Dgv8pMNIbG0?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="مقدمة في تكنولوجيا المبيدات وأهميتها في الزراعة الحديثة" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">مقدمة في تكنولوجيا المبيدات وأهميتها في الزراعة الحديثة</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul>'+
@@ -21391,6 +21545,7 @@ c['pt2']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="v9U3MXyEPuM" data-start="0" data-title="تصنيف المبيدات وطرق عملها" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/v9U3MXyEPuM?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="تصنيف المبيدات وطرق عملها" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">تصنيف المبيدات وطرق عملها</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>التمييز بين محاور التصنيف المختلفة للمبيدات: الآفة المستهدفة، التركيب الكيميائي، طريقة الدخول، آلية التأثير، ودرجة السمية</li>'+
@@ -21607,6 +21762,7 @@ c['pt3']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="1QTDQRTcUdk" data-start="0" data-title="آليات تأثير المبيدات على الآفات النباتية" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/1QTDQRTcUdk?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="آليات تأثير المبيدات على الآفات النباتية" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">آليات تأثير المبيدات على الآفات النباتية</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>شرح آلية تثبيط إنزيم الأسيتيل كولين إستريز على المستوى العصبي، وربطها بمجموعة IRAC رقم 1</li>'+
@@ -21813,6 +21969,7 @@ c['pt4']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="leTm1oEHklc" data-start="0" data-title="اختيار المبيد المناسب واتخاذ القرار الحقلي" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/leTm1oEHklc?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="اختيار المبيد المناسب واتخاذ القرار الحقلي" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">اختيار المبيد المناسب واتخاذ القرار الحقلي</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>تطبيق إطار عمل من ست خطوات لاتخاذ قرار المكافحة الحقلي بشكل منهجي لا عشوائي</li>'+
@@ -22010,6 +22167,7 @@ c['pt5']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="yxL-_XRUo1Y" data-start="0" data-title="طرق تطبيق المبيدات ومعايرة معدات الرش" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/yxL-_XRUo1Y?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="طرق تطبيق المبيدات ومعايرة معدات الرش" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">طرق تطبيق المبيدات ومعايرة معدات الرش</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>التمييز بين طرق التطبيق الرئيسية للمبيدات ومتى يُفضَّل كل منها حسب الموقف الحقلي</li>'+
@@ -22211,6 +22369,7 @@ c['pt6']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="Ed4djR0cXG0" data-start="0" data-title="معدات الوقاية الشخصية والسلامة أثناء التداول والتطبيق" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/Ed4djR0cXG0?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="معدات الوقاية الشخصية والسلامة أثناء التداول والتطبيق" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">معدات الوقاية الشخصية والسلامة أثناء التداول والتطبيق</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>التعرف على المكونات الكاملة لمعدات الوقاية الشخصية ووظيفة كل قطعة ومادة صنعها المناسبة</li>'+
@@ -22403,6 +22562,7 @@ c['pt7']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="j5t-EfKi2kM" data-start="0" data-title="قراءة بطاقات المبيدات والملصقات الإرشادية" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/j5t-EfKi2kM?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="قراءة بطاقات المبيدات والملصقات الإرشادية" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">قراءة بطاقات المبيدات والملصقات الإرشادية</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>التعرف على الأقسام الإلزامية لأي ملصق مبيد مرخَّص والغرض العملي من كل قسم</li>'+
@@ -22598,6 +22758,7 @@ c['pt8']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="cK67pOqI-ac" data-start="0" data-title="السمية والمخاطر الصحية والبيئية للمبيدات" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/cK67pOqI-ac?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="السمية والمخاطر الصحية والبيئية للمبيدات" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">السمية والمخاطر الصحية والبيئية للمبيدات</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>التمييز بين السمية الحادة والمزمنة بأمثلة عملية توضح كل منهما</li>'+
@@ -22786,6 +22947,7 @@ c['pt9']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="HF0LrSN5PRY" data-start="0" data-title="متبقيات المبيدات وسلامة الغذاء" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/HF0LrSN5PRY?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="متبقيات المبيدات وسلامة الغذاء" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">متبقيات المبيدات وسلامة الغذاء</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>فهم كيف تتشكل متبقيات المبيدات على المحصول ولماذا تتحلل تدريجياً بمرور الوقت</li>'+
@@ -22970,6 +23132,7 @@ c['pt10']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="KTRzdKj7Flk" data-start="0" data-title="الإدارة المتكاملة للآفات وتقليل الاعتماد على المبيدات" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/KTRzdKj7Flk?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="الإدارة المتكاملة للآفات وتقليل الاعتماد على المبيدات" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">الإدارة المتكاملة للآفات وتقليل الاعتماد على المبيدات</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>تعريف الإدارة المتكاملة للآفات (IPM) بدقة كإطار متعدد الأدوات لا معاداة للمبيدات الكيميائية</li>'+
@@ -23148,6 +23311,7 @@ c['pt11']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="7zynVnshKUc" data-start="0" data-title="تخزين المبيدات ونقلها والتخلص الآمن من العبوات الفارغة" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/7zynVnshKUc?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="تخزين المبيدات ونقلها والتخلص الآمن من العبوات الفارغة" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">تخزين المبيدات ونقلها والتخلص الآمن من العبوات الفارغة</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>تطبيق معايير التخزين الآمن للمبيدات: الموقع، الظروف، والفصل بين المواد</li>'+
@@ -23349,6 +23513,7 @@ c['pt12']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="Z8sSmqIxWrA" data-start="0" data-title="التشريعات والقوانين المنظمة لاستخدام المبيدات" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/Z8sSmqIxWrA?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="التشريعات والقوانين المنظمة لاستخدام المبيدات" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">التشريعات والقوانين المنظمة لاستخدام المبيدات</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>التمييز بين الأطر التنظيمية الدولية والوطنية لاستخدام المبيدات وصلاحية كل منها</li>'+
@@ -23540,6 +23705,7 @@ c['pt13']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="fESRA8INDbE" data-start="0" data-title="التقنيات الحديثة في تطبيق المبيدات والزراعة الذكية" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/fESRA8INDbE?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="التقنيات الحديثة في تطبيق المبيدات والزراعة الذكية" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">التقنيات الحديثة في تطبيق المبيدات والزراعة الذكية</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>فهم مفهوم الزراعة الدقيقة وكيف تُغيِّر نموذج تطبيق المبيدات من «المساحة الكاملة» إلى «الهدف المحدَّد»</li>'+
@@ -23743,6 +23909,7 @@ c['pt14']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="6wkYy-QGD04" data-start="0" data-title="إدارة مقاومة الآفات للمبيدات" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/6wkYy-QGD04?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="إدارة مقاومة الآفات للمبيدات" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">إدارة مقاومة الآفات للمبيدات</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>تعريف مقاومة الآفات للمبيدات تعريفاً دقيقاً والتمييز بينها وبين التسامح الطبيعي</li>'+
@@ -23946,6 +24113,7 @@ c['pt15']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
 '</div>'+
 
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="GPSVzq7z3NQ" data-start="0" data-title="تطبيقات عملية ودراسات حالة في الاستخدام الآمن للمبيدات" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/GPSVzq7z3NQ?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="تطبيقات عملية ودراسات حالة في الاستخدام الآمن للمبيدات" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">تطبيقات عملية ودراسات حالة في الاستخدام الآمن للمبيدات</p></div>'+
 '<h2>أهداف التعلم</h2>'+
 '<ul>'+
 '<li>تطبيق الإطار الكامل للكورس (من المحاضرة الأولى للرابعة عشرة) على سيناريوهات حقلية متكاملة</li>'+
@@ -25080,6 +25248,11 @@ if(st==='paid'){acSwitchCourse('tissue-culture');acGo('home',null);if(typeof sho
 else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowTcPayModal('rejected');}
 else acShowTcPayModal(st);
 });
+else if(cid==='pesticide-tech')acCheckPtAccess(function(st,note){
+if(st==='paid'){acSwitchCourse('pesticide-tech');acGo('home',null);if(typeof showToast==='function')showToast('✅ أنت مشترك بالفعل في هذه الدورة','ok');}
+else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowPtPayModal('rejected');}
+else acShowPtPayModal(st);
+});
 }
 
 /* ── Public API ───────────────────────────────────────────── */
@@ -25147,7 +25320,19 @@ else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note
 else{acSwitchCourse('tissue-culture');acGo('info',null);}
 });
 }
-else if(id==='pesticide-tech'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
+else if(id==='pesticide-tech'){
+if(!(typeof currentUser!=='undefined'&&currentUser)){
+/* Guest — no forced login anymore: show the free info/preview page instead. */
+acSwitchCourse('pesticide-tech');acGo('info',null);
+return;
+}
+acCheckPtAccess(function(st,note){
+if(st==='paid'){acSwitchCourse('pesticide-tech');resume?NAcademy.openFirst():acGo('home',null);}
+else if(st==='pending'){acShowPtPayModal('pending');}
+else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowPtPayModal('rejected');}
+else{acSwitchCourse('pesticide-tech');acGo('info',null);}
+});
+}
 },
 subscribeNow:function(){
 var cid=AC_CID;
@@ -25257,6 +25442,7 @@ var _fqAtFirst=passed&&nextId&&gateRem<=0&&lid===acFlatLessons()[0];
 if(_fqAtFirst&&AC_CID==='mol-bio')acCheckMbAccess(_fqOnStatus);
 else if(_fqAtFirst&&AC_CID==='food-safety')acCheckFsAccess(_fqOnStatus);
 else if(_fqAtFirst&&AC_CID==='tissue-culture')acCheckTcAccess(_fqOnStatus);
+else if(_fqAtFirst&&AC_CID==='pesticide-tech')acCheckPtAccess(_fqOnStatus);
 else _fqProceed();
 }};
 
