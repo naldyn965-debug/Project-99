@@ -964,8 +964,8 @@ var lrCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'la
 '</div>'+
 lrBottom+
 '</div></div>';
-var ptBadge=ptStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':ptStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 72%</span>';
-var ptBottom=ptStatus==='paid'?(ptDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+ptPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+ptPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):ptStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">70 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var ptBadge=ptStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':ptStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 90%</span>';
+var ptBottom=ptStatus==='paid'?(ptDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+ptPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+ptPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):ptStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">25 جنيه</span><span class="acad-price-tag">⏳ عرض لمدة يومين فقط</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var ptCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pesticide-tech\')" role="button" style="border-color:rgba(194,65,12,.25)">'+
 '<div class="acad-cat-card-top" style="background:#2a1206 url(\'https://images.unsplash.com/photo-1715360378677-d6375ac03dbf?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+ptBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -16161,7 +16161,7 @@ window.acSubmitTcPayment=acSubmitTcPayment;
    رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
 
 var _PT_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
-var _PT_COURSE_PRICE=70;          /* ← السعر بالجنيه              */
+var _PT_COURSE_PRICE=25;          /* ← السعر بالجنيه              */
 var _PT_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
@@ -25362,6 +25362,7 @@ c['fd1']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">40 دقيقة</div></div>'+
 '<div class="acad-icard"><span class="acad-icard-ico">🌾</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">ميداني واقتصادي</div></div>'+
 '</div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="PLACEHOLDER_fd1" data-start="0" data-title="مقدمة في تغذية الحيوان وأهمية إدارة الأعلاف" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/PLACEHOLDER_fd1?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="مقدمة في تغذية الحيوان وأهمية إدارة الأعلاف" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">مقدمة في تغذية الحيوان وأهمية إدارة الأعلاف</p></div>'+
 
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
@@ -25678,6 +25679,7 @@ c['fd2']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div>'+
 '<div class="acad-icard"><span class="acad-icard-ico">🧪</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">تحليلي ومخبري</div></div>'+
 '</div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="PLACEHOLDER_fd2" data-start="0" data-title="مكونات الأعلاف والقيمة الغذائية للمواد العلفية" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/PLACEHOLDER_fd2?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="مكونات الأعلاف والقيمة الغذائية للمواد العلفية" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">مكونات الأعلاف والقيمة الغذائية للمواد العلفية</p></div>'+
 
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
@@ -25984,6 +25986,7 @@ c['fd3']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div>'+
 '<div class="acad-icard"><span class="acad-icard-ico">⚖️</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">حسابي وتحليلي</div></div>'+
 '</div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="PLACEHOLDER_fd3" data-start="0" data-title="احتياجات الحيوانات من العناصر الغذائية" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/PLACEHOLDER_fd3?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="احتياجات الحيوانات من العناصر الغذائية" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">احتياجات الحيوانات من العناصر الغذائية</p></div>'+
 
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
@@ -26265,6 +26268,7 @@ c['fd4']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div>'+
 '<div class="acad-icard"><span class="acad-icard-ico">🫀</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">فسيولوجي وميداني</div></div>'+
 '</div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="PLACEHOLDER_fd4" data-start="0" data-title="هضم وامتصاص المغذيات في الحيوانات المجترة وغير المجترة" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/PLACEHOLDER_fd4?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="هضم وامتصاص المغذيات في الحيوانات المجترة وغير المجترة" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">هضم وامتصاص المغذيات في الحيوانات المجترة وغير المجترة</p></div>'+
 
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
@@ -26538,6 +26542,7 @@ c['fd5']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div>'+
 '<div class="acad-icard"><span class="acad-icard-ico">🔍</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">تحليلي واقتصادي</div></div>'+
 '</div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="PLACEHOLDER_fd5" data-start="0" data-title="تقييم الأعلاف وتحليل مكوناتها الغذائية" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/PLACEHOLDER_fd5?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="تقييم الأعلاف وتحليل مكوناتها الغذائية" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">تقييم الأعلاف وتحليل مكوناتها الغذائية</p></div>'+
 
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
@@ -26798,6 +26803,7 @@ c['fd6']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">55 دقيقة</div></div>'+
 '<div class="acad-icard"><span class="acad-icard-ico">🥛</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">حسابي وميداني مباشر</div></div>'+
 '</div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="PLACEHOLDER_fd6" data-start="0" data-title="تصميم علائق الأبقار والجاموس الحلاب" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/PLACEHOLDER_fd6?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="تصميم علائق الأبقار والجاموس الحلاب" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">تصميم علائق الأبقار والجاموس الحلاب</p></div>'+
 
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
@@ -27048,6 +27054,7 @@ c['fd7']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div>'+
 '<div class="acad-icard"><span class="acad-icard-ico">📈</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">حسابي واقتصادي</div></div>'+
 '</div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="PLACEHOLDER_fd7" data-start="0" data-title="برامج تغذية عجول التسمين والأبقار النامية" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/PLACEHOLDER_fd7?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="برامج تغذية عجول التسمين والأبقار النامية" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">برامج تغذية عجول التسمين والأبقار النامية</p></div>'+
 
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
@@ -27284,6 +27291,7 @@ c['fd8']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div>'+
 '<div class="acad-icard"><span class="acad-icard-ico">🐐</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">حسابي وميداني</div></div>'+
 '</div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="PLACEHOLDER_fd8" data-start="0" data-title="برامج تغذية الأغنام والماعز" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/PLACEHOLDER_fd8?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="برامج تغذية الأغنام والماعز" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">برامج تغذية الأغنام والماعز</p></div>'+
 
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
@@ -27540,6 +27548,7 @@ c['fd9']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div>'+
 '<div class="acad-icard"><span class="acad-icard-ico">🐔</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">حسابي وميداني</div></div>'+
 '</div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="PLACEHOLDER_fd9" data-start="0" data-title="تغذية الدواجن ومراحل الإنتاج المختلفة" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/PLACEHOLDER_fd9?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="تغذية الدواجن ومراحل الإنتاج المختلفة" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">تغذية الدواجن ومراحل الإنتاج المختلفة</p></div>'+
 
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
@@ -27796,6 +27805,7 @@ c['fd10']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div>'+
 '<div class="acad-icard"><span class="acad-icard-ico">🧪</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">اقتصادي وتقني حديث</div></div>'+
 '</div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="PLACEHOLDER_fd10" data-start="0" data-title="إضافات الأعلاف الحديثة وتحسين الكفاءة الغذائية" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/PLACEHOLDER_fd10?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="إضافات الأعلاف الحديثة وتحسين الكفاءة الغذائية" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">إضافات الأعلاف الحديثة وتحسين الكفاءة الغذائية</p></div>'+
 
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
@@ -28045,6 +28055,7 @@ c['fd11']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div>'+
 '<div class="acad-icard"><span class="acad-icard-ico">🏠</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">ميداني — مزارع حيوانية من كل الأحجام</div></div>'+
 '</div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="PLACEHOLDER_fd11" data-start="0" data-title="إدارة الأعلاف داخل المزارع وتقليل الفاقد" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/PLACEHOLDER_fd11?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="إدارة الأعلاف داخل المزارع وتقليل الفاقد" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">إدارة الأعلاف داخل المزارع وتقليل الفاقد</p></div>'+
 
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
@@ -28277,6 +28288,7 @@ c['fd12']='<div class="acad-body">'+
 '<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div>'+
 '<div class="acad-icard"><span class="acad-icard-ico">🏆</span><div class="acad-icard-lbl">المحاضرة</div><div class="acad-icard-val">الأخيرة — المحاضرة الثانية عشرة</div></div>'+
 '</div>'+
+'<div style="margin:0 0 28px 0"><div style="font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px">📹 فيديو المحاضرة</div><div class="tc-player" data-vid="PLACEHOLDER_fd12" data-start="0" data-title="تطبيقات عملية ودراسات حالة في برامج التغذية الحيوانية" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r3);box-shadow:var(--s2);background:#0a1210"><iframe src="https://www.youtube-nocookie.com/embed/PLACEHOLDER_fd12?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;playsinline=1&amp;controls=0&amp;enablejsapi=1" title="تطبيقات عملية ودراسات حالة في برامج التغذية الحيوانية" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div><p style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">تطبيقات عملية ودراسات حالة في برامج التغذية الحيوانية</p></div>'+
 
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
