@@ -979,8 +979,8 @@ var ptCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pe
 '</div>'+
 ptBottom+
 '</div></div>';
-var feedBadge=feedStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':feedStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 90%</span>';
-var feedBottom=feedStatus==='paid'?(feedDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+feedPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+feedPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):feedStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">25 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var feedBadge='<span class="acad-pop-badge">'+STAR_ICO+'Free</span>';
+var feedBottom=(feedDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+feedPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+feedPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>');
 var feedCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'feed-mgmt\')" role="button" style="border-color:rgba(146,64,14,.25)">'+
 '<div class="acad-cat-card-top" style="background:#241505 url(\'https://images.unsplash.com/photo-1752219346775-fe086c57081b?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+feedBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -29582,18 +29582,7 @@ else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note
 else{acSwitchCourse('pesticide-tech');acGo('info',null);}
 });
 }
-else if(id==='feed-mgmt'){
-if(!(typeof currentUser!=='undefined'&&currentUser)){
-/* Guest — no forced login: show the free info/preview page instead. */
-acSwitchCourse('feed-mgmt');acGo('info',null);
-return;
-}
-acCheckFdAccess(function(st){
-if(st==='paid'){acSwitchCourse('feed-mgmt');resume?NAcademy.openFirst():acGo('home',null);}
-else if(st==='pending'){acShowFdPayModal('pending');}
-else{acSwitchCourse('feed-mgmt');acGo('info',null);}
-});
-}
+else if(id==='feed-mgmt'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 },
 subscribeNow:function(){
 var cid=AC_CID;
@@ -29704,7 +29693,6 @@ if(_fqAtFirst&&AC_CID==='mol-bio')acCheckMbAccess(_fqOnStatus);
 else if(_fqAtFirst&&AC_CID==='food-safety')acCheckFsAccess(_fqOnStatus);
 else if(_fqAtFirst&&AC_CID==='tissue-culture')acCheckTcAccess(_fqOnStatus);
 else if(_fqAtFirst&&AC_CID==='pesticide-tech')acCheckPtAccess(_fqOnStatus);
-else if(_fqAtFirst&&AC_CID==='feed-mgmt')acCheckFdAccess(_fqOnStatus);
 else _fqProceed();
 }};
 
