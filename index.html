@@ -6508,7 +6508,7 @@ body.modal-open { overflow: hidden; }
    الحل: تحديد أقصى ارتفاع نسبةً لارتفاع الشاشة (فقط للشاشات الأعرض من الموبايل) —
    ما بيلمسش الموبايل ولا أي عنصر تاني، واليوتيوب بيعرض الفيديو letterboxed تلقائي. */
 @media(min-width:601px){
-.tc-player:not(:fullscreen):not(.tc-fake-fs){max-height:46vh}
+.tc-player:not(:fullscreen):not(.tc-fake-fs){max-height:min(32vh,300px)}
 }
 
 /* ══════════════════════════════════════════════════════════
