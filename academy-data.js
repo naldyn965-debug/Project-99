@@ -756,7 +756,7 @@ function acGo(view,lid){
 /* Free-preview teaser: the course info page, and its "first lecture free"
    deep-link, stay reachable without login — but only for the monetized
    courses this applies to. Every other view/course keeps the guard below. */
-var acFreeTeaser=(view==='info'||(view==='lesson'&&lid&&acFlatLessons()[0]===lid))&&(AC_CID==='mol-bio'||AC_CID==='food-safety'||AC_CID==='tissue-culture'||AC_CID==='pesticide-tech'||AC_CID==='feed-mgmt');
+var acFreeTeaser=(view==='info'||(view==='lesson'&&lid&&acFlatLessons()[0]===lid))&&(AC_CID==='mol-bio'||AC_CID==='food-safety'||AC_CID==='tissue-culture'||AC_CID==='pesticide-tech'||AC_CID==='feed-mgmt'||AC_CID==='glp');
 if(view!=='catalog'&&!acFreeTeaser&&!(typeof currentUser!=='undefined'&&currentUser)){
  if(typeof showToast==='function')showToast('سجّل الدخول أو أنشئ حساباً جديداً للبدء في الدورة','inf');
  if(typeof openAuth==='function')openAuth('login');
@@ -858,7 +858,7 @@ var pestPct=_acPctFor('pest',PEST_COURSE);var pestDone=_acDoneFor('pest');
 var molPct=_acPctFor('mol-bio',MB_COURSE);var molDone=_acDoneFor('mol-bio');var mbStatus=acMbStatus();
 var fqPct=_acPctFor('food-quality',FQ_COURSE);var fqDone=_acDoneFor('food-quality');
 var agPct=_acPctFor('ag-english',AG_COURSE);var agDone=_acDoneFor('ag-english');var fsPct=_acPctFor('food-safety',FS_COURSE);var fsDone=_acDoneFor('food-safety');var fsStatus=acFsStatus();var agStatus=acAgStatus();
-var glpPct=_acPctFor('glp',GLP_COURSE);var glpDone=_acDoneFor('glp');
+var glpPct=_acPctFor('glp',GLP_COURSE);var glpDone=_acDoneFor('glp');var glpStatus=acGlpStatus();
 var lrPct=_acPctFor('land-reclamation',LR_COURSE);var lrDone=_acDoneFor('land-reclamation');
 var tcPct=_acPctFor('tissue-culture',TC_COURSE);var tcDone=_acDoneFor('tissue-culture');var tcStatus=acTcStatus();
 var ptPct=_acPctFor('pesticide-tech',PT_COURSE);var ptDone=_acDoneFor('pesticide-tech');var ptStatus=acPtStatus();
@@ -936,8 +936,10 @@ var foodSafetyCard='<div class="acad-cat-card premium" onclick="NAcademy.openCou
 '</div>'+
 fsBottom+
 '</div></div>';
+var glpBadge=glpStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':glpStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 90%</span>';
+var glpBottom=glpStatus==='paid'?(glpDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+glpPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+glpPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):glpStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">25 جنيه</span><span class="acad-price-tag">⏳ عرض لمدة يومين فقط</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var glpCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'glp\')" role="button" style="border-color:rgba(15,85,170,.25)">'+
-'<div class="acad-cat-card-top" style="background:#0b1a2e url(\'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat"><span class="acad-pop-badge">'+STAR_ICO+'Free</span></div>'+
+'<div class="acad-cat-card-top" style="background:#0b1a2e url(\'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+glpBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
 '<div class="acad-cat-card-kicker" style="color:#0f55aa">'+GLP_COURSE.kicker+'</div>'+
 '<div class="acad-cat-card-title">'+GLP_COURSE.title+'</div>'+
@@ -947,8 +949,7 @@ var glpCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'g
 '<span class="acad-chip-pro">'+BARS_ICO+GLP_COURSE.level+'</span>'+
 '<span class="acad-chip-pro gold">'+CERT_ICO+'شهادة إتمام</span>'+
 '</div>'+
-(glpDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+glpPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+glpPct+'%"></div></div></div>':
-'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>')+
+glpBottom+
 '</div></div>';
 var tcBadge=tcStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':tcStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 67%</span>';
 var tcBottom=tcStatus==='paid'?(tcDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+tcPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+tcPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):tcStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">150 جنيه</span><span class="acad-price-new">50 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
@@ -1198,7 +1199,7 @@ return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
-'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-safety'?' fs':AC_CID==='pesticide-tech'?' pt':AC_CID==='feed-mgmt'?' fd':' tc')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
+'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-safety'?' fs':AC_CID==='pesticide-tech'?' pt':AC_CID==='feed-mgmt'?' fd':AC_CID==='glp'?' glp':' tc')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
 '<div class="acad-card-body">'+
 '<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
 '<div class="acad-card-desc">'+AC_COURSE.description+'</div>'+
@@ -17075,6 +17076,158 @@ window.acClosePtPayModal=acClosePtPayModal;
 window.acCopyVcash6Num=acCopyVcash6Num;
 window.acSubmitPtPayment=acSubmitPtPayment;
 
+/* ── Vodafone Cash Payment — GLP (Good Laboratory Practices) Course ──
+   رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
+
+var _GLP_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
+var _GLP_COURSE_PRICE=25;          /* ← السعر بالجنيه              */
+var _GLP_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
+
+/* Returns locally-cached status: 'paid' | 'pending' | 'none' */
+function acGlpStatus(){
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+if(!u)return 'none';
+try{
+if(localStorage.getItem('nb-glp-access__'+u)==='paid')return 'paid';
+if(localStorage.getItem('nb-glp-pending__'+u)==='true')return 'pending';
+}catch(e){}
+return 'none';
+}
+window.acGlpStatus=acGlpStatus; /* تعريض عالمي — يستخدمه كاروسيل الكورسات في الرئيسية */
+
+/* Async check against Firestore, updates local cache */
+function acCheckGlpAccess(cb){
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+if(!u){cb('none');return;}
+var cacheKey='nb-glp-access__'+u;
+try{if(localStorage.getItem(cacheKey)==='paid'){cb('paid');return;}}catch(e){}
+/* Check users/{uid}.paidCourses first */
+db.collection('users').doc(u).get().then(function(snap){
+var data=snap.exists?snap.data():{};
+if(data.paidCourses&&data.paidCourses.indexOf('glp')>-1){
+try{localStorage.setItem(cacheKey,'paid');}catch(e){}
+cb('paid');return;
+}
+/* Check course_payments for pending/approved */
+db.collection('course_payments').where('uid','==',u).get().then(function(qs){
+if(qs.empty){cb('none');return;}
+var docs=qs.docs.filter(function(d){return d.data().courseId==='glp';});
+if(!docs.length){cb('none');return;}
+var st=docs[0].data().status;
+if(st==='approved'){
+try{localStorage.setItem(cacheKey,'paid');}catch(e){}
+cb('paid');
+}else if(st==='rejected'){
+try{localStorage.removeItem('nb-glp-pending__'+u);}catch(e){}
+cb('rejected',docs[0].data().rejectionNote||'');
+}else{
+try{localStorage.setItem('nb-glp-pending__'+u,'true');}catch(e){}
+cb('pending');
+}
+}).catch(function(){cb('none');});
+}).catch(function(){cb('none');});
+}
+
+function acShowGlpPayModal(mode){
+var el=document.getElementById('vcash8-overlay');if(!el)return;
+document.getElementById('vcash8-number').textContent=_GLP_VCASH_NUM;
+document.getElementById('vcash8-price-display').textContent=_GLP_COURSE_PRICE+' جنيه';
+document.getElementById('vcash8-method-price-display').textContent=_GLP_COURSE_PRICE+' جنيه';
+document.getElementById('vcash8-ip-price-display').textContent=_GLP_COURSE_PRICE+' جنيه';
+acVcashRenderInstapayInfo('vcash8',_GLP_INSTAPAY_INFO);
+if(mode==='pending'){
+acVcashSetStep('vcash8','pending');
+}else{
+acVcashSetStep('vcash8','method');
+var ph=document.getElementById('vcash8-phone');var rf=document.getElementById('vcash8-ref');
+if(ph)ph.value='';if(rf)rf.value='';
+var iph=document.getElementById('vcash8-ip-phone');var irf=document.getElementById('vcash8-ip-ref');
+if(iph)iph.value='';if(irf)irf.value='';
+var btn=document.getElementById('vcash8-submit-btn');
+if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
+var ibtn=document.getElementById('vcash8-ip-submit-btn');
+if(ibtn){ibtn.disabled=false;ibtn.textContent='أرسل طلب التفعيل';}
+}
+el.classList.add('on');
+document.body.classList.add('modal-open');
+}
+
+function acCloseGlpPayModal(){
+var el=document.getElementById('vcash8-overlay');
+if(el)el.classList.remove('on');
+document.body.classList.remove('modal-open');
+}
+
+function acCopyVcash8Num(){
+var num=document.getElementById('vcash8-number');if(!num)return;
+var val=num.textContent;
+if(navigator.clipboard){
+navigator.clipboard.writeText(val).then(function(){
+if(typeof showToast==='function')showToast('تم نسخ رقم فودافون كاش','ok');
+}).catch(function(){});
+}else{
+try{
+var ta=document.createElement('textarea');ta.value=val;
+document.body.appendChild(ta);ta.select();
+document.execCommand('copy');document.body.removeChild(ta);
+if(typeof showToast==='function')showToast('تم نسخ الرقم','ok');
+}catch(e){}
+}
+}
+
+function acSubmitGlpPayment(method){
+method=method||'vodafone_cash';
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أولاً','err');return;}
+var isIP=method==='instapay';
+var phoneId=isIP?'vcash8-ip-phone':'vcash8-phone';
+var refId=isIP?'vcash8-ip-ref':'vcash8-ref';
+var btnId=isIP?'vcash8-ip-submit-btn':'vcash8-submit-btn';
+var phone=(document.getElementById(phoneId).value||'').trim();
+var ref=(document.getElementById(refId).value||'').trim();
+if(!phone||phone.length<10){
+if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
+}
+if(!ref||ref.length<10){
+if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
+}
+var btn=document.getElementById(btnId);
+if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
+db.collection('course_payments').add({
+uid:u,
+email:(currentUser&&currentUser.email)||'',
+phone:phone,
+transactionRef:ref,
+courseId:'glp',
+amount:_GLP_COURSE_PRICE,
+currency:'EGP',
+status:'pending',
+paymentMethod:method,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+}).then(function(docRef){
+try{localStorage.setItem('nb-glp-pending__'+u,'true');}catch(e){}
+var refDisp=document.getElementById('vcash8-pending-ref-display');
+if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  رقم التواصل: '+ref;
+acVcashSetStep('vcash8','pending');
+if(typeof showToast==='function')showToast('تم إرسال طلبك — سيُفعَّل الكورس خلال لحظات','ok');
+/* Re-render catalog card if visible */
+if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
+}).catch(function(e){
+console.error('[VCash8] code:',e&&e.code,'|',e);
+if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
+var _msg='خطأ في الإرسال — أعد المحاولة';
+if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'))
+  _msg='خطأ في الصلاحيات — تواصل مع الدعم';
+else if(e&&(e.code==='unavailable'||e.code==='deadline-exceeded'||e.code==='network-request-failed'))
+  _msg='خطأ في الاتصال — تحقق من الإنترنت وأعد المحاولة';
+if(typeof showToast==='function')showToast(_msg,'err');
+});
+}
+
+window.acCloseGlpPayModal=acCloseGlpPayModal;
+window.acCopyVcash8Num=acCopyVcash8Num;
+window.acSubmitGlpPayment=acSubmitGlpPayment;
+
 /* ── Tissue Culture Lesson Content ───────────────────────────── */
 
 function tcGetContent(id){
@@ -30281,6 +30434,11 @@ else if(cid==='feed-mgmt')acCheckFdAccess(function(st){
 if(st==='paid'){acSwitchCourse('feed-mgmt');acGo('home',null);if(typeof showToast==='function')showToast('✅ أنت مشترك بالفعل في هذه الدورة','ok');}
 else acShowFdPayModal(st);
 });
+else if(cid==='glp')acCheckGlpAccess(function(st,note){
+if(st==='paid'){acSwitchCourse('glp');acGo('home',null);if(typeof showToast==='function')showToast('✅ أنت مشترك بالفعل في هذه الدورة','ok');}
+else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowGlpPayModal('rejected');}
+else acShowGlpPayModal(st);
+});
 }
 
 /* ── Public API ───────────────────────────────────────────── */
@@ -30333,7 +30491,19 @@ else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note
 else{acSwitchCourse('food-safety');acGo('info',null);}
 });
 }
-else if(id==='glp'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
+else if(id==='glp'){
+if(!(typeof currentUser!=='undefined'&&currentUser)){
+/* Guest — no forced login anymore: show the free info/preview page instead. */
+acSwitchCourse('glp');acGo('info',null);
+return;
+}
+acCheckGlpAccess(function(st,note){
+if(st==='paid'){acSwitchCourse('glp');resume?NAcademy.openFirst():acGo('home',null);}
+else if(st==='pending'){acShowGlpPayModal('pending');}
+else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowGlpPayModal('rejected');}
+else{acSwitchCourse('glp');acGo('info',null);}
+});
+}
 else if(id==='land-reclamation'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 
 else if(id==='tissue-culture'){
@@ -30473,6 +30643,7 @@ if(_fqAtFirst&&AC_CID==='mol-bio')acCheckMbAccess(_fqOnStatus);
 else if(_fqAtFirst&&AC_CID==='food-safety')acCheckFsAccess(_fqOnStatus);
 else if(_fqAtFirst&&AC_CID==='tissue-culture')acCheckTcAccess(_fqOnStatus);
 else if(_fqAtFirst&&AC_CID==='pesticide-tech')acCheckPtAccess(_fqOnStatus);
+else if(_fqAtFirst&&AC_CID==='glp')acCheckGlpAccess(_fqOnStatus);
 else _fqProceed();
 }};
 
