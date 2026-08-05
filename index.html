@@ -112,7 +112,7 @@
      downloading it in parallel while parsing <head>, instead of only discovering
      it once the parser reaches the <script src="academy-data.js"> tag mid-document.
      Does not change execution order/timing — same script tag, same position. -->
-<link rel="preload" as="script" href="academy-data.js?v=2">
+<link rel="preload" as="script" href="academy-data.js?v=3">
 
 <!-- Firebase SDKs moved to body — see just before Firebase initialization -->
 
@@ -5386,6 +5386,7 @@ body.modal-open { overflow: hidden; }
 .acad-card-top.fq{background:#1a0f00 url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.ag{background:#061408 url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.fs{background:#1a0e04 url('https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+.acad-card-top.glp{background:#08152a url('https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.lr{background:#241202 url('https://assets.science.nasa.gov/dynamicimage/assets/science/esd/eo/images/imagerecords/89000/89820/egypt_oli_2017057_detail.jpg?w=1200&h=500&fit=crop') center/cover no-repeat}
 .acad-card-top.tc{background:#081e1a url('https://images.unsplash.com/photo-1622210445956-ca3320a5e7c5?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.pt{background:#1a0c02 url('https://images.unsplash.com/photo-1715360378677-d6375ac03dbf?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
@@ -6502,6 +6503,14 @@ body.modal-open { overflow: hidden; }
 }
 .tc-player:focus-visible{outline:2px solid var(--brand-xl);outline-offset:2px}
 
+/* fix: على اللابتوب/الشاشات العريضة padding-bottom:56.25% بيطلع فيديو طويل جداً
+   بياخد ارتفاع الشاشة كله ومايسيبش مساحة للطالب يقرأ المحتوى تحته.
+   الحل: تحديد أقصى ارتفاع نسبةً لارتفاع الشاشة (فقط للشاشات الأعرض من الموبايل) —
+   ما بيلمسش الموبايل ولا أي عنصر تاني، واليوتيوب بيعرض الفيديو letterboxed تلقائي. */
+@media(min-width:601px){
+.tc-player:not(:fullscreen):not(.tc-fake-fs){max-height:46vh}
+}
+
 /* ══════════════════════════════════════════════════════════
    G. QUIZ — premium feel
    ══════════════════════════════════════════════════════════ */
@@ -7594,6 +7603,13 @@ body.modal-open { overflow: hidden; }
   background-size:100% 100%, cover !important;
   background-position:center, center !important;
 }
+.acad-hero--glp{
+  background-image:
+    linear-gradient(165deg,rgba(4,12,26,.90) 0%,rgba(4,12,26,.72) 35%,rgba(4,12,26,.62) 62%,rgba(4,12,26,.88) 100%),
+    url("https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=1400&q=75") !important;
+  background-size:100% 100%, cover !important;
+  background-position:center, center !important;
+}
 .acad-hero--land-reclamation{
   background-image:
     linear-gradient(165deg,rgba(20,10,2,.90) 0%,rgba(20,10,2,.72) 35%,rgba(20,10,2,.62) 62%,rgba(20,10,2,.88) 100%),
@@ -8240,7 +8256,7 @@ body.modal-open { overflow: hidden; }
 
 </div>
 
-<script src="academy-data.js?v=2"></script>
+<script src="academy-data.js?v=3"></script>
 
 
 <div id="tw"></div>
@@ -8733,6 +8749,7 @@ const App = {
     if(typeof FQ_COURSE!=='undefined') reg.push({cid:'food-quality',    course:FQ_COURSE, icon:'🥗', grad:'linear-gradient(135deg,#d97706,#92400e)', paid:false, img:'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=900&q=70'});
     if(typeof AG_COURSE!=='undefined') reg.push({cid:'ag-english',      course:AG_COURSE, icon:'🌾', grad:'linear-gradient(135deg,#059669,#065f46)', paid:false, img:'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=900&q=70'});
     if(typeof FS_COURSE!=='undefined') reg.push({cid:'food-safety',     course:FS_COURSE, icon:'🍽️', grad:'linear-gradient(135deg,#ea580c,#9a3412)', paid:true, price:50, oldPrice:250, img:'https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?auto=format&fit=crop&w=900&q=70'});
+    if(typeof GLP_COURSE!=='undefined') reg.push({cid:'glp',            course:GLP_COURSE, icon:'🧪', grad:'linear-gradient(135deg,#0f55aa,#0b3d7a)', paid:false, img:'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=900&q=70'});
     if(typeof TC_COURSE!=='undefined') reg.push({cid:'tissue-culture',  course:TC_COURSE, icon:'🧫', grad:'linear-gradient(135deg,#0d9488,#0f766e)', paid:true, price:50, oldPrice:150, img:'https://images.unsplash.com/photo-1622210445956-ca3320a5e7c5?auto=format&fit=crop&w=900&q=70'});
     if(typeof LR_COURSE!=='undefined') reg.push({cid:'land-reclamation',course:LR_COURSE, icon:'🏜️', grad:'linear-gradient(135deg,#b45309,#78350f)', paid:false, img:'https://assets.science.nasa.gov/dynamicimage/assets/science/esd/eo/images/imagerecords/89000/89820/egypt_oli_2017057_detail.jpg?w=1200&h=500&fit=crop'});
     if(typeof PT_COURSE!=='undefined') reg.push({cid:'pesticide-tech',   course:PT_COURSE, icon:'🧪', grad:'linear-gradient(135deg,#c2410c,#7c2d12)', paid:false, img:'https://images.unsplash.com/photo-1715360378677-d6375ac03dbf?auto=format&fit=crop&w=900&q=70'});

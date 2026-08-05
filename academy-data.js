@@ -502,6 +502,7 @@ var AC_CERT_TITLES={
 'food-quality':{en:'Food Quality and Safety',abbr:'',ar:'جودة الغذاء وسلامته'},
 'ag-english':{en:'Agricultural English',abbr:'',ar:'اللغة الإنجليزية الزراعية'},
 'food-safety':{en:'Food Safety',abbr:'',ar:'سلامة الغذاء'},
+'glp':{en:'Good Laboratory Practices and Applied Biosafety',abbr:'GLP',ar:'ممارسات المعامل الجيدة والسلامة الحيوية التطبيقية'},
 'land-reclamation':{en:'Land Reclamation and Fertilization Programs',abbr:'',ar:'استصلاح الأراضي ووضع برامج التسميد'},
 'tissue-culture':{en:'Plant Tissue Culture',abbr:'',ar:'زراعة الأنسجة النباتية وتطبيقاتها الحديثة'},
 'pesticide-tech':{en:'Pesticide Technology and Safe Use',abbr:'',ar:'تكنولوجيا المبيدات والاستخدام الآمن'},
@@ -585,7 +586,7 @@ return JSON.parse(raw||'{}')
 function acSave(p){try{localStorage.setItem(acProgKey(),JSON.stringify(p))}catch(e){}acPushCloud(AC_CID,p);}
 /* Clears a specific user's local academy progress (called on logout / account switch) */
 function acClearLocalProgress(targetUid){
-['pest','mol-bio','food-quality','ag-english','food-safety','land-reclamation','tissue-culture','pesticide-tech','feed-mgmt'].forEach(function(cid){
+['pest','mol-bio','food-quality','ag-english','food-safety','glp','land-reclamation','tissue-culture','pesticide-tech','feed-mgmt'].forEach(function(cid){
 var pf='nb-'+cid+'-p';
 var key=targetUid?(pf+'__'+targetUid):(pf+'__guest');
 try{localStorage.removeItem(key)}catch(e){}});
@@ -619,7 +620,7 @@ return new Promise(function(resolve){
 try{
 var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
 if(!u||typeof db==='undefined'||!db){resolve();return;}
-var cids=['pest','mol-bio','food-quality','ag-english','food-safety','land-reclamation','tissue-culture','pesticide-tech','feed-mgmt'],pending=cids.length;
+var cids=['pest','mol-bio','food-quality','ag-english','food-safety','glp','land-reclamation','tissue-culture','pesticide-tech','feed-mgmt'],pending=cids.length;
 function step(){pending--;if(pending<=0)resolve();}
 cids.forEach(function(cid){
 var key='nb-'+cid+'-p__'+u;
@@ -857,6 +858,7 @@ var pestPct=_acPctFor('pest',PEST_COURSE);var pestDone=_acDoneFor('pest');
 var molPct=_acPctFor('mol-bio',MB_COURSE);var molDone=_acDoneFor('mol-bio');var mbStatus=acMbStatus();
 var fqPct=_acPctFor('food-quality',FQ_COURSE);var fqDone=_acDoneFor('food-quality');
 var agPct=_acPctFor('ag-english',AG_COURSE);var agDone=_acDoneFor('ag-english');var fsPct=_acPctFor('food-safety',FS_COURSE);var fsDone=_acDoneFor('food-safety');var fsStatus=acFsStatus();var agStatus=acAgStatus();
+var glpPct=_acPctFor('glp',GLP_COURSE);var glpDone=_acDoneFor('glp');
 var lrPct=_acPctFor('land-reclamation',LR_COURSE);var lrDone=_acDoneFor('land-reclamation');
 var tcPct=_acPctFor('tissue-culture',TC_COURSE);var tcDone=_acDoneFor('tissue-culture');var tcStatus=acTcStatus();
 var ptPct=_acPctFor('pesticide-tech',PT_COURSE);var ptDone=_acDoneFor('pesticide-tech');var ptStatus=acPtStatus();
@@ -934,6 +936,20 @@ var foodSafetyCard='<div class="acad-cat-card premium" onclick="NAcademy.openCou
 '</div>'+
 fsBottom+
 '</div></div>';
+var glpCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'glp\')" role="button" style="border-color:rgba(15,85,170,.25)">'+
+'<div class="acad-cat-card-top" style="background:#0b1a2e url(\'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat"><span class="acad-pop-badge">'+STAR_ICO+'Free</span></div>'+
+'<div class="acad-cat-card-body">'+
+'<div class="acad-cat-card-kicker" style="color:#0f55aa">'+GLP_COURSE.kicker+'</div>'+
+'<div class="acad-cat-card-title">'+GLP_COURSE.title+'</div>'+
+'<div class="acad-cat-card-desc">'+GLP_COURSE.subtitle+'</div>'+
+'<div class="acad-cat-card-meta">'+
+'<span class="acad-chip-pro">'+CLOCK_ICO+GLP_COURSE.duration+'</span>'+
+'<span class="acad-chip-pro">'+BARS_ICO+GLP_COURSE.level+'</span>'+
+'<span class="acad-chip-pro gold">'+CERT_ICO+'شهادة إتمام</span>'+
+'</div>'+
+(glpDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+glpPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+glpPct+'%"></div></div></div>':
+'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>')+
+'</div></div>';
 var tcBadge=tcStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':tcStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 67%</span>';
 var tcBottom=tcStatus==='paid'?(tcDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+tcPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+tcPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):tcStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">150 جنيه</span><span class="acad-price-new">50 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var tcCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'tissue-culture\')" role="button" style="border-color:rgba(13,148,136,.25)">'+
@@ -1001,7 +1017,7 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-sub">محتوى علمي موثّق باللغة العربية من فريق نبتيكس. اختر دورة لتبدأ رحلة التعلّم.</div>'+
 '</div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
-'<div class="acad-cat-grid">'+liveCard+molBioCard+fqCard+agCard+foodSafetyCard+lrCard+tcCard+ptCard+feedCard+'</div>'+
+'<div class="acad-cat-grid">'+liveCard+molBioCard+fqCard+agCard+foodSafetyCard+glpCard+lrCard+tcCard+ptCard+feedCard+'</div>'+
 '</div></div>'}
 
 /* ── HOME ─────────────────────────────────────────────────── */
@@ -1106,7 +1122,7 @@ return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
-'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-quality'?' fq':AC_CID==='ag-english'?' ag':AC_CID==='food-safety'?' fs':AC_CID==='land-reclamation'?' lr':AC_CID==='tissue-culture'?' tc':AC_CID==='pesticide-tech'?' pt':AC_CID==='feed-mgmt'?' fd':'')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
+'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-quality'?' fq':AC_CID==='ag-english'?' ag':AC_CID==='food-safety'?' fs':AC_CID==='glp'?' glp':AC_CID==='land-reclamation'?' lr':AC_CID==='tissue-culture'?' tc':AC_CID==='pesticide-tech'?' pt':AC_CID==='feed-mgmt'?' fd':'')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
 '<div class="acad-card-body">'+
 '<div class="acad-card-kicker">'+AC_COURSE.kicker+'</div>'+
 '<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
@@ -2233,6 +2249,7 @@ if(cid==='mol-bio'){AC_COURSE=MB_COURSE;AC_QUIZZES=MB_QUIZZES;AC_FINAL_EXAM=MB_F
 else if(cid==='food-quality'){AC_COURSE=FQ_COURSE;AC_QUIZZES=FQ_QUIZZES;AC_FINAL_EXAM=FQ_FINAL_EXAM;}
 else if(cid==='ag-english'){AC_COURSE=AG_COURSE;AC_QUIZZES=AG_QUIZZES;AC_FINAL_EXAM=AG_FINAL_EXAM;}
 else if(cid==='food-safety'){AC_COURSE=FS_COURSE;AC_QUIZZES=FS_QUIZZES;AC_FINAL_EXAM=FS_FINAL_EXAM;}
+else if(cid==='glp'){AC_COURSE=GLP_COURSE;AC_QUIZZES=GLP_QUIZZES;AC_FINAL_EXAM=GLP_FINAL_EXAM;}
 else if(cid==='land-reclamation'){AC_COURSE=LR_COURSE;AC_QUIZZES=LR_QUIZZES;AC_FINAL_EXAM=LR_FINAL_EXAM;}
 else if(cid==='tissue-culture'){AC_COURSE=TC_COURSE;AC_QUIZZES=TC_QUIZZES;AC_FINAL_EXAM=TC_FINAL_EXAM;}
 else if(cid==='pesticide-tech'){AC_COURSE=PT_COURSE;AC_QUIZZES=PT_QUIZZES;AC_FINAL_EXAM=PT_FINAL_EXAM;}
@@ -14844,6 +14861,755 @@ return c[id]||null;
 
 
 /* ── Tissue Culture Course Data ───────────────────────────────── */
+
+/* ══════════════════════════════════════════════════════════════════
+   GLP & BIOSAFETY COURSE — ممارسات المعامل الجيدة والسلامة الحيوية
+   ══════════════════════════════════════════════════════════════════ */
+
+var GLP_COURSE={
+id:'glp',title:'ممارسات المعامل الجيدة والسلامة الحيوية التطبيقية',
+kicker:'GLP والسلامة الحيوية',
+heroSub:'الدورة الأشمل عربياً في ممارسات المعامل الجيدة (GLP) والسلامة الحيوية التطبيقية. من أسس السلامة إلى تطبيقات معملية حقيقية، مُصمَّمة لتأهيلك للعمل في المختبرات البحثية والتشخيصية والصناعية وفق المعايير الدولية.',
+subtitle:'من مبادئ GLP إلى تطبيقات السلامة الحيوية المتقدمة',icon:'🧪',
+level:'مبتدئ إلى متقدم',duration:'18 ساعة',cert:true,
+instructor:'فريق نبتيكس الأكاديمي',
+description:'الدورة الأشمل باللغة العربية في ممارسات المعامل الجيدة (GLP) والسلامة الحيوية التطبيقية. ستتعلم أسس GLP الدولية، وتستوعب مستويات السلامة الحيوية الأربعة، وتتقن إدارة المخاطر والتوثيق المعملي، وتتدرب على معدات الوقاية وإدارة النفايات والاستجابة للطوارئ، وصولاً إلى تطبيقات عملية تؤهلك للعمل وفق المعايير العالمية.',
+modules:[
+{id:'gm1',title:'أسس GLP والسلامة الحيوية',lessons:[
+ {id:'glp1',title:'مقدمة في ممارسات المعامل الجيدة (GLP) وأسس السلامة الحيوية',dur:'60 دقيقة'},
+ {id:'glp2',title:'تصميم المختبرات وتجهيز بيئة العمل الآمنة',dur:'55 دقيقة'},
+ {id:'glp3',title:'تصنيف مستويات السلامة الحيوية (BSL-1 إلى BSL-4)',dur:'55 دقيقة'}
+]},
+{id:'gm2',title:'معدات الوقاية وإدارة المخاطر',lessons:[
+ {id:'glp4',title:'معدات الوقاية الشخصية وإجراءات السلامة داخل المختبر',dur:'50 دقيقة'},
+ {id:'glp5',title:'إدارة المخاطر الحيوية وتقييم المخاطر المعملية',dur:'55 دقيقة'}
+]},
+{id:'gm3',title:'التوثيق والإجراءات القياسية',lessons:[
+ {id:'glp6',title:'إجراءات التشغيل القياسية (SOPs) وإدارة الوثائق',dur:'50 دقيقة'},
+ {id:'glp7',title:'التوثيق والسجلات وفق متطلبات GLP',dur:'50 دقيقة'},
+ {id:'glp8',title:'ضمان الجودة وضبط الجودة في المختبرات',dur:'55 دقيقة'}
+]},
+{id:'gm4',title:'التعامل الآمن والأجهزة',lessons:[
+ {id:'glp9',title:'التعامل الآمن مع المواد الكيميائية والبيولوجية',dur:'55 دقيقة'},
+ {id:'glp10',title:'استخدام وصيانة الأجهزة والمعدات المعملية',dur:'55 دقيقة'},
+ {id:'glp11',title:'إدارة النفايات البيولوجية والكيميائية والتخلص منها',dur:'50 دقيقة'}
+]},
+{id:'gm5',title:'الاستجابة والامتثال والتطبيقات',lessons:[
+ {id:'glp12',title:'الاستجابة للحوادث والطوارئ المعملية',dur:'50 دقيقة'},
+ {id:'glp13',title:'التدقيق الداخلي والامتثال لمتطلبات GLP',dur:'50 دقيقة'},
+ {id:'glp14',title:'تطبيقات GLP في المختبرات البحثية والتشخيصية والصناعية',dur:'50 دقيقة'},
+ {id:'glp15',title:'تطبيقات عملية ودراسات حالة في السلامة الحيوية وممارسات المعامل الجيدة',dur:'60 دقيقة'}
+]}
+]};
+
+var GLP_QUIZZES={
+glp1:{title:'اختبار المحاضرة الأولى — مقدمة في GLP والسلامة الحيوية',questions:[
+{q:'مختبر حكومي يُجري دراسة لتسجيل مبيد جديد. المنظمة الدولية التي وضعت الإطار التنظيمي الرئيسي لـ GLP والذي تستند إليه معظم دول العالم عند تقييم هذه الدراسات هي:',
+opts:['منظمة الصحة العالمية (WHO)','منظمة التعاون الاقتصادي والتنمية (OECD)','المعهد الوطني للصحة الأمريكي (NIH)','الوكالة الدولية للطاقة الذرية (IAEA)'],
+cor:1,exp:'نشرت منظمة OECD في عام 1981 أول مبادئ GLP الدولية، ثم نقّحتها عام 1997. تعتمد معظم الجهات التنظيمية حول العالم (FDA، EMA، وغيرها) على مبادئ OECD كأساس لقبول بيانات الاختبارات. WHO لها دور مهم في الصحة العامة لكنها ليست الجهة المرجعية الأولى لـ GLP.'},
+{q:'باحثة تُجري تجربة على مادة كيميائية جديدة. وجدت أن مسودة البروتوكول تُوصف بأنها "وثيقة GLP". ما المقصود الأدق بهذا التوصيف؟',
+opts:['الوثيقة مترجمة إلى اللغة الإنجليزية بالكامل','الوثيقة مكتوبة بخط اليد ولا تحتوي على تصحيحات بالمحو','الوثيقة مُعدَّة وفق هيكل موثَّق ومراجَع ومُعتمَد، وتتضمن مسؤوليات واضحة وخطة عمل مفصَّلة قابلة للتدقيق','الوثيقة طُبعت على ورق أبيض رسمي وتحمل ختم المؤسسة'],
+cor:2,exp:'جوهر GLP ليس في الشكل الخارجي للوثيقة، بل في كونها مُعدَّة بطريقة منهجية شاملة تتضمن: تحديد الأهداف، وخطوات العمل، ومسؤوليات كل طرف، والموارد المطلوبة، وآليات التحقق والتدقيق. هذا ما يجعل النتائج قابلة للإعادة والتحقق من قِبل أي مفتش خارجي.'},
+{q:'حادثة أمنية وقعت في مختبر: تسرَّب سائل مجهول المصدر خلال مرحلة صب المزارع البكتيرية. أفضل وصف لهذا الحادث من منظور السلامة الحيوية هو:',
+opts:['حادثة لا تستدعي الإبلاغ لأن المادة المتسربة غير مؤكدة الخطورة','انتهاك مباشر لمبادئ الاحتواء البيولوجي ويجب تسجيله والتحقيق فيه فوراً','خطأ بشري بسيط يُعالَج بإعادة التدريب دون الحاجة إلى توثيق رسمي','مسألة تنظيف فقط لا علاقة لها بالسلامة الحيوية ما لم يُؤكَّد وجود عامل ممرض'],
+cor:1,exp:'السلامة الحيوية تُلزم بالإبلاغ عن أي انتهاك للاحتواء — حتى لو كان الخطر غير مؤكد. المنطق هو أن "مجهول المصدر" يُعامَل كمحتمل الخطورة حتى يثبت العكس. التوثيق الفوري ضروري لتحليل الأسباب الجذرية ومنع التكرار، وهو صميم متطلبات GLP.'},
+{q:'مدير مختبر يقول لمساعده: "السلامة الحيوية وGLP هما نفس الشيء، يكفي الالتزام بأحدهما." ما التقييم العلمي الأدق لهذا الرأي؟',
+opts:['الرأي صحيح تماماً، فكلا النظامين يؤديان وظيفة واحدة ويمكن الاكتفاء بأي منهما','الرأي خاطئ: GLP يتعلق بجودة البيانات وموثوقية النتائج، بينما السلامة الحيوية تحمي الناس والبيئة — وكلاهما ضروري ومتكامل','الرأي صحيح جزئياً: السلامة الحيوية أهم في المختبرات الصحية، أما GLP فيختص بالمختبرات الصناعية فقط','الرأي خاطئ: GLP أهم بكثير وتطبيقه يُلغي الحاجة للسلامة الحيوية في معظم الحالات'],
+cor:1,exp:'GLP نظام لضمان جودة البيانات وموثوقية نتائج الدراسات غير السريرية، وهدفه أن تكون البيانات صحيحة وقابلة للإعادة والتدقيق. السلامة الحيوية نظام منفصل لحماية الباحث والمجتمع والبيئة من المواد ذات الخطر البيولوجي. الاثنان متكاملان: GLP يمنع تزوير النتائج، والسلامة الحيوية تمنع الإصابة والتلوث.'},
+{q:'خلال مراجعة تاريخية، وُجد أن ظهور GLP جاء استجابةً مباشرةً لحوادث مُحددة. أي التالي يمثل السبب التاريخي الرئيسي الذي دفع الجهات التنظيمية لوضع أول مبادئ GLP في السبعينيات؟',
+opts:['الرغبة في توحيد أجور الباحثين في المختبرات المختلفة','اكتشاف تلاعب واسع في بيانات دراسات السلامة المقدَّمة لجهات التسجيل، ما أدى لقبول مواد خطرة في السوق','رغبة الشركات الدوائية في خفض تكاليف الاختبارات','زيادة عدد الخريجين في تخصصات الكيمياء الحيوية وضرورة إيجاد معايير توظيف موحدة'],
+cor:1,exp:'في عام 1975 كشفت هيئة الغذاء والدواء الأمريكية (FDA) عن حالات تلاعب منهجي في بيانات مختبرات سلامة دراسات الأدوية والمبيدات. بعض المختبرات كانت تُقدّم نتائج مزورة أو محسَّنة لاجتياز تقييمات التسجيل. استجابةً لذلك، أصدرت FDA أول لوائح GLP عام 1978، ثم تبنّت OECD مبادئها الدولية عام 1981.'}
+]},
+glp2:{title:'اختبار المحاضرة الثانية — تصميم المختبرات وبيئة العمل الآمنة',questions:[
+{q:'مختبر تشخيصي يستقبل العينات من الباب الرئيسي، وتمر عبر منطقة التجهيز، ثم منطقة الفحص، ثم تُصرَف كنفايات من باب خلفي منفصل تماماً. ما المبدأ التصميمي الذي يجسده هذا المسار؟',
+opts:['التصميم الدائري الذي يوفر مساحة الحركة','مبدأ سير العمل أحادي الاتجاه الذي يمنع تقاطع العينات النظيفة بالملوثة','تقليل عدد الأبواب لخفض تكلفة الإنشاء','الفصل بين الموظفين الإداريين والفنيين فقط'],
+cor:1,exp:'سير العمل أحادي الاتجاه (Unidirectional Workflow) مبدأ تصميمي جوهري يضمن أن العينات والمواد تتحرك دائماً من المنطقة الأنظف إلى الأكثر تلوثاً، ولا تعود أبداً بالاتجاه المعاكس، لمنع التلوث المتبادل بين دفعات العمل المختلفة.'},
+{q:'عند اختيار أرضية لمختبر يتعامل مع مواد كيميائية وعينات بيولوجية، ما الخاصية الأهم التي يجب توفرها؟',
+opts:['لون فاتح يعكس الضوء لتحسين الإضاءة العامة','سطح غير مسامٍ وخالٍ من الفواصل يسهل تطهيره بالكامل','مادة عازلة للصوت لتقليل ضجيج الأجهزة','سجاد يمتص الانسكابات فور حدوثها'],
+cor:1,exp:'الأرضية غير المسامية والخالية من الفواصل أو الشقوق هي المتطلب الأهم، لأنها تمنع تسرب السوائل أو العوامل البيولوجية إلى ما تحتها، وتسمح بتطهير كامل للسطح دون بقايا محتبسة. السجاد ممنوع تماماً في هذا النوع من المختبرات لأنه يمتص الملوثات ولا يمكن تعقيمه.'},
+{q:'باحث يحتاج للتعامل مع مزرعة بكتيرية قد تطلق جسيمات معدية بالهواء أثناء العمل عليها. أي جهاز احتواء هو الخيار الصحيح؟',
+opts:['دولاب الأبخرة الكيميائية القياسي لأنه يسحب الهواء للخارج بقوة','خزانة الأمان الحيوي (BSC) لاحتوائها على فلاتر HEPA تحتجز الجسيمات البيولوجية','أي من الجهازين، لأن كليهما يوفر نفس درجة الحماية','طاولة عمل عادية مع ارتداء قفازين إضافيين للحماية'],
+cor:1,exp:'دولاب الأبخرة الكيميائية يسحب الهواء للخارج دون ترشيحه، وهو غير مناسب إطلاقاً للعمل البيولوجي لأنه قد يُطلق الجسيمات المعدية إلى البيئة الخارجية مباشرة. خزانة الأمان الحيوي مزوَّدة بفلاتر HEPA تحتجز الجسيمات البيولوجية دون تسريبها، وهي الخيار الصحيح الوحيد هنا.'},
+{q:'مختبر مصنَّف BSL-3 يجب أن يُصمَّم بحيث يكون ضغط الهواء بداخله:',
+opts:['أعلى من الممرات المحيطة لمنع دخول الغبار من الخارج','أقل من الممرات المحيطة (ضغط سالب)، بحيث يتجه الهواء دائماً إلى الداخل عند فتح الباب','مساوياً تماماً لضغط الممرات المحيطة لتفادي التيارات الهوائية','متغيراً حسب فصل السنة بين الشتاء والصيف'],
+cor:1,exp:'مختبرات BSL-3 فما فوق تُصمَّم بضغط هواء سالب بحيث يكون الضغط بداخلها أقل من المناطق المحيطة، فيتجه الهواء دائماً من الممر إلى داخل المختبر عند فتح الباب، لا العكس، ما يمنع تسرب أي جسيمات معدية إلى الممرات العامة. هذا عكس مبدأ الضغط الموجب المستخدم في الغرف النظيفة الصناعية التي تحمي المنتج من تلوث خارجي.'},
+{q:'مختبر يخزّن حمض الكبريتيك المركّز بجوار أملاح سيانيد الصوديوم في نفس الخزانة لتوفير المساحة. ما الخطر الرئيسي في هذا الترتيب؟',
+opts:['الخطر منخفض لأن إحدى المادتين صلبة والأخرى سائلة','في حال حدوث تسرب أو انسكاب عرضي يختلط الحمض بالسيانيد فينتج غاز سيانيد الهيدروجين شديد السمية','لا يوجد خطر طالما كل مادة داخل عبوتها المغلقة الأصلية','الخطر الوحيد هو تلف ملصقات العبوات بمرور الوقت'],
+cor:1,exp:'تخزين الأحماض بجوار أملاح السيانيد من أخطر أخطاء تخزين المواد الكيميائية شيوعاً: أي تلامس عرضي بينهما (بسبب كسر عبوة أو تسرب) يُنتج غاز سيانيد الهيدروجين شديد السمية والقاتل حتى بتركيزات منخفضة. قواعد التوافق الكيميائي تُلزم بفصل الأحماض عن السيانيدات في خزانات منفصلة تماماً.'}
+]},
+glp3:{title:'اختبار المحاضرة الثالثة — تصنيف مستويات السلامة الحيوية',questions:[
+{q:'مختبر جامعي يزرع سلالة من E. coli غير ممرضة لأغراض تعليمية بسيطة. ما مستوى السلامة الحيوية الأنسب لهذا النشاط؟',
+opts:['BSL-1، مع عمل على منضدة مفتوحة وحد أدنى من معدات الوقاية','BSL-2، مع استخدام إلزامي لخزانة الأمان الحيوي','BSL-3، لضمان أعلى درجة ممكنة من الحيطة','لا يمكن تحديد المستوى دون معرفة اسم المدينة التي يقع فيها المختبر'],
+cor:0,exp:'العوامل غير الممرضة في البالغين الأصحّاء، مثل سلالات E. coli التعليمية القياسية، تُصنَّف ضمن BSL-1، وهو أبسط المستويات: عمل على منضدة مفتوحة، وحد أدنى من معدات الوقاية، وممارسات ميكروبيولوجية قياسية فقط.'},
+{q:'باحثة تقول: "بما أن هذا الفيروس مصنَّف في مجموعة الخطورة 3 (Risk Group 3)، فإن أي عمل عليه يجب أن يتم حتماً بمستوى BSL-3 دون استثناء." ما التقييم الأدق لهذا الرأي؟',
+opts:['صحيح تماماً؛ رقم مجموعة الخطورة يُترجَم آلياً ومباشرة إلى نفس رقم BSL','غير دقيق؛ فتحديد BSL يعتمد على تقييم مخاطر شامل يشمل طبيعة النشاط والكمية، وقد يُدار نشاط تشخيصي محدود بمستوى أقل بضوابط إضافية','غير صحيح؛ فمجموعة الخطورة لا علاقة لها إطلاقاً بتحديد BSL','صحيح، لكن فقط في المختبرات الحكومية دون الخاصة'],
+cor:1,exp:'مجموعة الخطورة صفة ثابتة في العامل الممرض نفسه، بينما BSL يُحدَّد بتقييم مخاطر شامل يأخذ في الاعتبار طبيعة النشاط الفعلي (تشخيصي محدود أم تكثير للفيروس؟) والكمية وطريقة التعامل، لا رقم مجموعة الخطورة وحده. النشاط قد يُدار أحياناً بمستوى BSL مختلف عن رقم مجموعة الخطورة إذا برّر تقييم المخاطر ذلك مع ضوابط تعويضية.'},
+{q:'ما الفرق الجوهري بين نموذج "المختبر البدلي" (Suit Lab) ونموذج "خط خزانات الفئة الثالثة" في مختبرات BSL-4؟',
+opts:['المختبر البدلي أرخص تكلفة بكثير من خط الخزانات في جميع الحالات','في المختبر البدلي يرتدي الباحث بدلة كاملة موجَبة الضغط ويتعامل مباشرة مع العينة، بينما في خط الخزانات يتم التعامل عبر قفازات مدمجة دون تلامس مباشر إطلاقاً','خط الخزانات مخصَّص فقط للعمل على النباتات، والمختبر البدلي للحيوانات فقط','لا فرق حقيقياً بينهما، والتسمية فقط هي المختلفة'],
+cor:1,exp:'في نموذج المختبر البدلي، يرتدي الباحث بدلة كاملة موجَبة الضغط بإمداد هواء مستقل ويتحرك داخل المختبر متعاملاً مع العينات بشكل شبه مباشر. في نموذج خط الخزانات، يبقى الباحث خارج حيّز الاحتواء تماماً ويتعامل مع العينة فقط عبر قفازات مدمجة في جدار خزانة أمان حيوي من الفئة الثالثة، دون أي تلامس مباشر بينه وبين المادة المُعدية إطلاقاً.'},
+{q:'ما السمة التصميمية التي تُميّز مختبر BSL-3 تحديداً عن BSL-2؟',
+opts:['استخدام قفازات لاتكس بدلاً من القفازات النيتريلية','إلزامية إجراء كل عمل على المادة المُعدية داخل خزانة أمان حيوي، مع مدخل مزدوج الأبواب وضغط هواء سالب','السماح بتناول المشروبات الخفيفة داخل منطقة العمل','عدم الحاجة لأي تدريب خاص للعاملين الجدد'],
+cor:1,exp:'BSL-3 يضيف فوق متطلبات BSL-2: إلزامية تنفيذ كل عمل على المادة المُعدية داخل خزانة أمان حيوي دون استثناء (لا عمل مفتوح على المنضدة كما قد يحدث أحياناً في BSL-2)، بالإضافة إلى مدخل مزدوج الأبواب مع غرفة أمامية، وضغط هواء سالب لا يُعاد تدويره، وتسجيل موثَّق لكل دخول وخروج.'},
+{q:'ما الدرس المؤسسي الأهم المستفاد من حادثة وفاة جانيت باركر بالجدري في برمنغهام عام 1978؟',
+opts:['يجب إغلاق كل المختبرات الجامعية التي تُجري أبحاثاً على الفيروسات فوراً','خطورة العامل الممرض وحدها غير كافية؛ فحتى مؤسسة أكاديمية عريقة قد تفشل إن لم تُطابِق منشأتها الفعلية متطلبات مستوى الاحتواء الذي يستحقه هذا الخطر','الحادثة أثبتت أن نظام BSL غير فعّال ويجب استبداله بالكامل','لا علاقة للحادثة بتصميم المختبرات، فالسبب كان خطأً بشرياً بحتاً لا يتعلق بالمنشأة'],
+cor:1,exp:'أظهرت الحادثة أن تصنيف العامل بخطورة عالية لا يكفي وحده؛ فالمنشأة الفعلية يجب أن تُطابِق فعلياً متطلبات المستوى المطلوب (مدخل مزدوج، فحص دوري لأنظمة التهوية، دُش تعقيم عند الخروج). دفعت هذه الحادثة تحديداً لقرار عالمي بحصر مخزون فيروس الجدري في مختبرَين فقط، كلاهما بمستوى BSL-4 الكامل، بدلاً من الاعتماد على تقييمات متفرقة لكل مؤسسة أكاديمية.'}
+]},
+glp4:{title:'اختبار المحاضرة الرابعة — معدات الوقاية الشخصية وإجراءات السلامة',questions:[
+{q:'مدير سلامة يقترح استبدال مذيب كيميائي شديد الخطورة بآخر أقل خطورة بدلاً من الاكتفاء بتوزيع قفازات إضافية على الفريق. أي مبدأ من التسلسل الهرمي للضوابط يُجسِّد هذا الاقتراح؟',
+opts:['الضوابط الإدارية','الاستبدال (Substitution)، وهو أعلى موثوقية من معدات الوقاية الشخصية','معدات الوقاية الشخصية المتقدمة','الإحلال الكامل للعملية'],
+cor:1,exp:'استبدال مادة خطرة بأخرى أقل خطورة هو مبدأ "الاستبدال" في التسلسل الهرمي للضوابط، ويقع أعلى بكثير من معدات الوقاية الشخصية في الموثوقية، لأنه يُقلّل الخطر عند مصدره بدلاً من الاعتماد على التزام الفرد المستمر بارتداء معدات صحيحة.'},
+{q:'فني مختبر يحتاج للتعامل مع كمية صغيرة من الأسيتون. يفترض أن قفازات النيتريل القياسية (الأكثر استخداماً في المختبر) ستكون كافية. ما التقييم الأدق لهذا الافتراض؟',
+opts:['صحيح تماماً؛ النيتريل يقاوم كل المذيبات العضوية دون استثناء','غير دقيق؛ النيتريل يتحلل بسرعة كبيرة مع الأسيتون تحديداً وقد يحدث اختراق خلال أقل من دقيقة مع القفازات الرقيقة','صحيح جزئياً، فقط إذا كانت الكمية أقل من مليلتر واحد','غير صحيح؛ يجب استخدام قفازات لاتكس حصراً مع أي مذيب عضوي'],
+cor:1,exp:'من أكثر الأخطاء شيوعاً افتراض أن قفاز النيتريل (العام الاستخدام) يناسب كل المواد. الأسيتون تحديداً يُحلّل النيتريل بسرعة، وقد يخترق القفازات الرقيقة خلال أقل من دقيقة. المرجع الصحيح هو دائماً جدول التوافق الكيميائي الخاص بالمادة المحدَّدة، لا العادة المتّبعة.'},
+{q:'ما الترتيب الصحيح لخلع معدات الوقاية بعد الانتهاء من العمل مع مادة معدية؟',
+opts:['الكمامة أولاً، ثم القفازات، ثم المعطف','القفازات أولاً (الأكثر تلوثاً)، ثم المعطف، ثم غسل اليدين، ثم واقي العين، والكمامة أخيراً','المعطف أولاً، ثم واقي العين، ثم القفازات، ثم الكمامة','لا يوجد ترتيب محدد؛ يمكن خلعها بأي تسلسل طالما تُخلع جميعها'],
+cor:1,exp:'ترتيب الخلع يبدأ بأكثر العناصر تلوثاً (القفازات) لتقليل فرصة نقل التلوث لبقية الجسم، ثم المعطف، ثم غسل اليدين، ثم واقي العين، وتُترك الكمامة للنهاية لحماية الجهاز التنفسي حتى آخر لحظة ممكنة. هذا الترتيب معاكس تماماً لترتيب الارتداء وليس عشوائياً.'},
+{q:'ممرضتان أُصيبتا بفيروس إيبولا عام 2014 رغم ارتدائهما معدات وقاية شبه كاملة. ما السبب الجذري الأهم الذي كشفه التحقيق اللاحق؟',
+opts:['المعدات المستخدمة كانت منتهية الصلاحية بالكامل','ثغرة تغطية (رقبة وشعر مكشوفَين) مع نقص تدريب عملي كافٍ على تسلسل الارتداء والخلع الصحيح','رفض الممرضتين ارتداء أي معدات وقاية من الأساس','إصابتهما حدثت خارج المستشفى تماماً ولا علاقة لها بالعمل'],
+cor:1,exp:'كشف التحقيق أن الممرضتين ارتدتا معظم معدات الوقاية لكن مع ثغرة تغطية حقيقية (الرقبة والشعر ظلّا مكشوفَين)، إلى جانب نقص التدريب العملي المتكرر على التسلسل الصحيح للارتداء والخلع تحت إشراف مباشر. هذا يوضح أن "الارتداء شبه الكامل" قد لا يكفي إن وُجدت ثغرة واحدة في نقطة حرجة.'},
+{q:'باحث يرتدي معطف المختبر والقفازات بشكل صحيح، لكنه يخرج بالقفازات نفسها للرد على مكالمة هاتفية في الممر، ثم يعود دون تغييرها. ما المشكلة الأساسية في هذا السلوك؟',
+opts:['لا مشكلة طالما لم يلمس أي مادة كيميائية أثناء المكالمة','نقل التلوث المحتمل إلى أسطح خارج المختبر (الهاتف، مقبض الباب) ثم احتمال إعادته لمنطقة العمل عند العودة','المشكلة الوحيدة هي أن ذلك يبدو غير مهني أمام الزملاء','القفازات مصممة لتحمل هذا النوع من الاستخدام دون أي مشكلة'],
+cor:1,exp:'الخروج من منطقة العمل بقفازات محتملة التلوث ينقل الخطر لأسطح مشتركة (هاتف، مقبض باب) يستخدمها آخرون لا يرتدون وقاية، وقد يُعيد أيضاً تلويثاً عرضياً لمنطقة العمل عند العودة. القاعدة الثابتة: تُخلع القفازات دائماً قبل مغادرة منطقة العمل، ولو لثوانٍ معدودة.'}
+]}
+};
+
+var GLP_FINAL_EXAM={title:'الاختبار النهائي الشامل — ممارسات المعامل الجيدة والسلامة الحيوية',passScore:70,questions:[]};
+window.GLP_COURSE=GLP_COURSE; /* تعريض عالمي — تستخدمه بطاقات الدورات في الصفحة الرئيسية */
+
+function glpGetContent(id){
+var c={};
+
+c['glp1']='<div class="acad-body">'+
+'<div class="acad-igrid" style="margin-bottom:28px">'+
+'<div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">6 أهداف</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي — يصلح لأي مستوى</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">40 دقيقة</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🧪</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">مختبري وتنظيمي</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
+'</div>'+
+
+'<h2>أهداف التعلم</h2>'+
+'<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
+'<ul>'+
+'<li>تعريف ممارسات المعمل الجيد (GLP) بمفهوم مبسط، ومعرفة الفرق بينها وبين أنظمة جودة قريبة منها مثل GMP وGCP وISO/IEC 17025</li>'+
+'<li>التعرف على القصة الحقيقية التي أدت إلى نشأة GLP، وفهم لماذا صيغت هذه القواعد أصلاً وليس كإجراء شكلي</li>'+
+'<li>فهم تعريف السلامة الحيوية بدقة، والتمييز بينها وبين مفهوم قريب لكنه مختلف: الأمن الحيوي (Biosecurity)</li>'+
+'<li>التعرف على المبادئ العشرة الأساسية التي تقوم عليها منظومة GLP الدولية</li>'+
+'<li>فهم مفهومين جوهريين في السلامة الحيوية: تقييم المخاطر، ومبدأ الاحتواء بطبقتيه الأولية والثانوية</li>'+
+'<li>تقدير أهمية GLP والسلامة الحيوية في الصناعات الدوائية والزراعية والغذائية والبيئية حول العالم</li>'+
+'</ul>'+
+
+'<h2>مقدمة: لماذا نحتاج قواعد صارمة داخل المختبر؟</h2>'+
+'<p>تخيّل مختبرين مختلفين يختبران نفس المبيد الكيميائي الجديد على نفس النوع من الفئران، وبنفس الجرعات تقريباً. الأول يصل إلى أن المادة آمنة، والثاني يصل إلى أنها تسبب أضراراً خطيرة على الكبد. أي النتيجتين نصدّق؟ وكيف تقرر هيئة تسجيل الأدوية أو المبيدات في بلدك أي التقريرين تعتمد عليه لحماية الملايين من المستهلكين؟</p>'+
+'<p>الإجابة لا تكمن في "من هو الأذكى علمياً"، بل في سؤال مختلف تماماً: هل كانت التجربة موثّقة بدقة كافية تسمح لأي مفتش مستقل بإعادة تتبع كل خطوة، والتأكد من أن العينات لم تُستبدل، وأن الأجهزة كانت معايَرة، وأن النتائج لم تُعدَّل بعد الحصول عليها؟ هذا بالضبط هو المجال الذي تُعنى به ممارسات المعمل الجيد (Good Laboratory Practice)، بينما تُعنى السلامة الحيوية (Biosafety) بسؤال مختلف وموازٍ: كيف نحمي الباحث نفسه، وزملاءه، والمجتمع من حوله، من أي عامل بيولوجي خطير قد يتعامل معه أثناء هذه التجارب؟</p>'+
+'<p>هذه المحاضرة تضع حجر الأساس لكلا المجالين معاً، قبل أن تتعمّق المحاضرات القادمة في كل تفصيل: من تصميم المختبر، إلى معدات الوقاية، إلى إدارة النفايات، إلى الاستجابة للطوارئ.</p>'+
+
+'<h2>ما هي ممارسات المعمل الجيد (GLP)؟</h2>'+
+'<p>GLP هو نظام إداري وتوثيقي يحدد الشروط التنظيمية التي يجب أن تُخطَّط بموجبها الدراسات المعملية غير السريرية، وتُنفَّذ، وتُراقَب، وتُسجَّل، وتُقرَّر نتائجها، وتُؤرشَف. الهدف الجوهري ليس الحكم على جودة الفرضية العلمية نفسها، بل ضمان أن البيانات الناتجة موثوقة وقابلة للتتبع والتدقيق من أي جهة مستقلة.</p>'+
+'<p>بعبارة أبسط: GLP لا تجيب عن سؤال "هل هذه المادة آمنة؟"، بل تجيب عن سؤال أهم منهجياً: "هل يمكننا أن نثق بالطريقة التي وصلنا بها إلى هذه الإجابة؟" وهذا الفارق دقيق لكنه جوهري؛ فتجربة نُفِّذت بإهمال قد تصل مصادفة إلى نتيجة صحيحة، لكنها تبقى غير موثوقة لأنه لا يمكن التحقق منها أو إعادة إنتاجها بثقة.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 600 190" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="260" height="150" rx="10" fill="rgba(27,107,58,.08)" stroke="#1B6B3A" stroke-width="2"/><text x="150" y="45" text-anchor="middle" font-size="13" font-weight="700" fill="#1B6B3A">تجربة موثَّقة GLP</text><text x="150" y="68" text-anchor="middle" font-size="10.5" fill="#1B6B3A">✓ SOPs معتمدة</text><text x="150" y="86" text-anchor="middle" font-size="10.5" fill="#1B6B3A">✓ أجهزة معايَرة</text><text x="150" y="104" text-anchor="middle" font-size="10.5" fill="#1B6B3A">✓ سجلات كاملة</text><text x="150" y="122" text-anchor="middle" font-size="10.5" fill="#1B6B3A">✓ قابلة للتدقيق</text><text x="150" y="150" text-anchor="middle" font-size="11" font-weight="700" fill="#1B6B3A">→ نتيجة يُوثَق بها</text><rect x="320" y="20" width="260" height="150" rx="10" fill="rgba(224,90,0,.07)" stroke="#e05a00" stroke-width="2"/><text x="450" y="45" text-anchor="middle" font-size="13" font-weight="700" fill="#e05a00">تجربة غير موثَّقة</text><text x="450" y="68" text-anchor="middle" font-size="10.5" fill="#e05a00">✕ لا يوجد SOP</text><text x="450" y="86" text-anchor="middle" font-size="10.5" fill="#e05a00">✕ معايرة غير مؤكدة</text><text x="450" y="104" text-anchor="middle" font-size="10.5" fill="#e05a00">✕ سجلات ناقصة</text><text x="450" y="122" text-anchor="middle" font-size="10.5" fill="#e05a00">✕ غير قابلة للتحقق</text><text x="450" y="150" text-anchor="middle" font-size="11" font-weight="700" fill="#e05a00">→ نتيجة لا يُوثَق بها</text></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">حتى لو تطابقت النتيجتان، الفرق الجوهري هو في إمكانية الوثوق بالطريق الذي وصلت به كل تجربة إلى نتيجتها</div></div><div class="acad-tip"><h3>⚡ نشاط 1 — صح أو خطأ</h3><ol class="ag-ol"><li>GLP تحكم على صحة الفرضية العلمية للتجربة، لا على طريقة توثيقها.</li><li>يمكن لتجربة مُهمَلة التوثيق أن تصل مصادفة إلى نتيجة صحيحة، لكنها تبقى غير موثوقة.</li><li>الهدف الجوهري لـ GLP هو ضمان أن البيانات قابلة للتتبع والتدقيق من أي جهة مستقلة.</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) خطأ — GLP تحكم على موثوقية العملية والتوثيق، لا على صحة الفرضية نفسها. 2) صح. 3) صح.</div></div>'+
+
+'<p>قد يتشابه هذا النظام مع أطر جودة أخرى، لكن لكل منها نطاق مختلف تماماً:</p>'+
+'<div class="acad-twrap">'+
+'<table class="acad-tbl">'+
+'<thead><tr><th>النظام</th><th>ما الذي يركّز عليه</th></tr></thead>'+
+'<tbody>'+
+'<tr><td>GLP</td><td>موثوقية بيانات دراسات السلامة غير السريرية (سمية، تأثير بيئي) قبل تسجيل المادة</td></tr>'+
+'<tr><td>GMP</td><td>جودة تصنيع المنتج النهائي وضمان سلامته للمستهلك في خط الإنتاج</td></tr>'+
+'<tr><td>GCP</td><td>إجراء التجارب السريرية على البشر بأمان أخلاقي وعلمي دقيق</td></tr>'+
+'<tr><td>ISO/IEC 17025</td><td>كفاءة المختبرات التحليلية وصحة نتائج المعايرة والفحص بشكل عام</td></tr>'+
+'<tr><td>السلامة الحيوية</td><td>حماية العاملين والمجتمع والبيئة من المخاطر البيولوجية أثناء العمل</td></tr>'+
+'</tbody></table></div>'+
+'<p>هذه الأنظمة تتكامل ولا تتنافس؛ فمختبر تشخيصي واحد قد يطبّق GLP على دراسات السمية، وGMP على تصنيع الكواشف التي ينتجها، والسلامة الحيوية على تعامله اليومي مع العيّنات المرضية — في آنٍ واحد.</p>'+
+'<div class="acad-tip"><h3>⚡ نشاط 2 — طابق كل نظام بمجاله</h3><p style="margin:0 0 10px;font-size:13px">صِل كل نظام بالوصف الصحيح لمجاله:</p><ol class="ag-ol"><li>GLP — (أ) دراسات السلامة غير السريرية &nbsp;|&nbsp; (ب) تصنيع المنتج النهائي</li><li>GMP — (أ) التجارب السريرية على البشر &nbsp;|&nbsp; (ب) جودة خط الإنتاج</li><li>GCP — (أ) التجارب السريرية على البشر &nbsp;|&nbsp; (ب) كفاءة المعايرة</li><li>ISO/IEC 17025 — (أ) حماية العاملين من الخطر البيولوجي &nbsp;|&nbsp; (ب) كفاءة المختبرات التحليلية</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) أ — دراسات السلامة غير السريرية. 2) ب — جودة خط الإنتاج. 3) أ — التجارب السريرية على البشر. 4) ب — كفاءة المختبرات التحليلية.</div></div>'+
+
+'<h2>كيف وُلدت GLP؟ قصة حقيقية غيّرت المختبرات إلى الأبد</h2>'+
+'<p>لم تُوضع هذه القواعد نظرياً من مكتب بيروقراطي، بل جاءت استجابة مباشرة لفضيحة علمية هزّت الثقة في نتائج المختبرات بأكملها:</p>'+
+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">1974 — أول تصنيف للمخاطر</div><div class="acad-case-val">نشر مركز مكافحة الأمراض الأمريكي (CDC) أول تصنيف للعوامل الممرضة حسب درجة خطورتها، ليكون النواة التي بُنيت عليها لاحقاً فكرة مستويات السلامة الحيوية.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">1975–1977 — اكتشاف الفضيحة</div><div class="acad-case-val">حقّقت هيئة الغذاء والدواء الأمريكية (FDA) في ممارسات مختبر Industrial Bio-Test Laboratories (IBT)، أكبر مزوّد لاختبارات السمية التجارية في أمريكا آنذاك، فوجدت بيانات ملفّقة، وحيوانات نافقة لم تُسجَّل، وسجلات مفقودة في مئات الدراسات المقدَّمة لتسجيل أدوية ومبيدات ومواد كيميائية.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">1976 — أول مسودة رسمية</div><div class="acad-case-val">استجابة لضغط الكونغرس الأمريكي، اقترحت FDA أول مسودة للوائح GLP في نوفمبر 1976.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">1978 — الإصدار الرسمي</div><div class="acad-case-val">نشرت FDA اللائحة النهائية (المعروفة اليوم باسم 21 CFR Part 58) في ديسمبر 1978، لتدخل حيّز التنفيذ الفعلي عام 1979، وتصبح أول تشريع GLP في التاريخ.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">1981 — تدويل القواعد</div><div class="acad-case-val">تبنّت منظمة التعاون الاقتصادي والتنمية (OECD) أول نسخة دولية موحّدة من مبادئ GLP، لتسمح للدول الأعضاء بقبول نتائج اختبارات بعضها البعض دون إعادة الدراسة من الصفر.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">1984 — أول دليل موحّد للسلامة الحيوية</div><div class="acad-case-val">نشر مركز مكافحة الأمراض CDC والمعاهد الوطنية للصحة NIH الأمريكية أول إصدار من دليل "السلامة الحيوية في المختبرات الميكروبيولوجية والطبية الحيوية" (BMBL)، مقدّماً مستويات BSL-1 إلى BSL-4 التي ما زالت هي المرجع العالمي حتى اليوم (وصل الدليل إلى إصداره السادس عام 2020).</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">1997 — تحديث شامل لمبادئ GLP</div><div class="acad-case-val">راجعت OECD مبادئها الأصلية بعد أكثر من عقد ونصف من التطبيق، ووسّعت نطاقها لتغطي مجالات اختبار لم تكن موجودة في السبعينيات.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">2020 — نهج قائم على تقييم المخاطر</div><div class="acad-case-val">أصدرت منظمة الصحة العالمية النسخة الرابعة من دليل السلامة الحيوية المخبرية، منتقلة من قواعد وصفية صارمة إلى نهج مرن قائم على تقييم المخاطر يتناسب مع إمكانات كل مختبر.</div></div>'+
+'</div>'+
+'<div class="acad-tip"><h3>⚡ نشاط 3 — أكمل الفراغ (التسلسل التاريخي)</h3><ol class="ag-ol"><li>اكتشفت FDA فضيحة مختبر IBT بين عامَي ________ و ________.</li><li>نشرت FDA أول لائحة GLP رسمية عام ________.</li><li>تبنّت ________ أول نسخة دولية موحّدة من مبادئ GLP عام 1981.</li><li>وصل دليل BMBL للسلامة الحيوية إلى إصداره السادس عام ________.</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) 1975 و1977. 2) 1978. 3) OECD (منظمة التعاون الاقتصادي والتنمية). 4) 2020.</div></div>'+
+
+'<h2>المبادئ العشرة التي تقوم عليها GLP</h2>'+
+'<p>مهما اختلفت تفاصيل التشريعات بين الدول، تتفق كل أنظمة GLP حول العالم على عشرة محاور أساسية:</p>'+
+
+'<div class="acad-igrid">'+
+'<div class="acad-icard"><span class="acad-icard-ico">🏢</span><div class="acad-icard-lbl">تنظيم المنشأة والعاملين</div><div class="acad-icard-val">مسؤوليات واضحة لكل فرد</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🛡️</span><div class="acad-icard-lbl">برنامج ضمان الجودة</div><div class="acad-icard-val">وحدة مستقلة تراقب الالتزام</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🏗️</span><div class="acad-icard-lbl">المرافق</div><div class="acad-icard-val">تصميم يمنع التلوث المتبادل</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⚙️</span><div class="acad-icard-lbl">الأجهزة والمعايرة</div><div class="acad-icard-val">صيانة ومعايرة دورية موثّقة</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🧫</span><div class="acad-icard-lbl">نظم الاختبار</div><div class="acad-icard-val">توثيق حالة العينات والكائنات</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🧪</span><div class="acad-icard-lbl">المواد المختبَرة والمرجعية</div><div class="acad-icard-val">تحديد الهوية والتركيز والنقاء</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📝</span><div class="acad-icard-lbl">إجراءات التشغيل القياسية</div><div class="acad-icard-val">SOPs معتمدة لكل عملية</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📅</span><div class="acad-icard-lbl">تنفيذ الدراسة</div><div class="acad-icard-val">بروتوكول مُعتمَد قبل البدء</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📊</span><div class="acad-icard-lbl">التقرير النهائي</div><div class="acad-icard-val">توثيق كامل للنتائج والانحرافات</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🗄️</span><div class="acad-icard-lbl">حفظ السجلات</div><div class="acad-icard-val">أرشفة آمنة لسنوات طويلة</div></div>'+
+'</div>'+
+
+'<p><strong>مدير الدراسة (Study Director):</strong> هو الشخص الوحيد المسؤول عن الإدارة العلمية الشاملة للدراسة، وتوقيعه على البروتوكول والتقرير النهائي إلزامي ولا يمكن لأي توقيع آخر أن يعوّضه.</p>'+
+'<p><strong>وحدة ضمان الجودة (QA Unit):</strong> فريق مستقل إدارياً عن فريق تنفيذ الدراسة، مهمته مراجعة الالتزام بالإجراءات بموضوعية تامة، ويرفع تقاريره مباشرة لأعلى مستوى إداري في المؤسسة بعيداً عن أي ضغط تشغيلي.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 600 230" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><rect x="200" y="15" width="200" height="45" rx="8" fill="rgba(27,107,58,.12)" stroke="#1B6B3A" stroke-width="2"/><text x="300" y="43" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1B6B3A">الإدارة العليا للمؤسسة</text><line x1="300" y1="60" x2="150" y2="110" stroke="#1B6B3A" stroke-width="2"/><line x1="300" y1="60" x2="450" y2="110" stroke="#1B6B3A" stroke-width="2" stroke-dasharray="6,4"/><rect x="50" y="110" width="200" height="55" rx="8" fill="var(--bg2)" stroke="#1B6B3A" stroke-width="2"/><text x="150" y="133" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">مدير الدراسة</text><text x="150" y="151" text-anchor="middle" font-size="10" fill="var(--muted)">الإدارة العلمية التشغيلية</text><rect x="350" y="110" width="200" height="55" rx="8" fill="rgba(224,90,0,.08)" stroke="#e05a00" stroke-width="2"/><text x="450" y="133" text-anchor="middle" font-size="12" font-weight="700" fill="#e05a00">وحدة ضمان الجودة QA</text><text x="450" y="151" text-anchor="middle" font-size="10" fill="#e05a00">مستقلة تماماً — لا تخضع لمدير الدراسة</text><line x1="150" y1="165" x2="150" y2="200" stroke="var(--line)" stroke-width="1.5"/><text x="300" y="215" text-anchor="middle" font-size="10.5" fill="var(--muted)">خط منقّط = تقرير QA المباشر للإدارة العليا، متجاوزاً فريق الدراسة</text></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">استقلالية QA عن مدير الدراسة هي ما يمنحها موضوعية الرقابة</div></div><div class="acad-case"><h3 style="margin-top:0">⚡ نشاط 4 — حدد المبدأ المنتهَك</h3><p style="font-size:13px;line-height:1.8;margin:0 0 10px">مختبر أنهى دراسة سمية كاملة، لكن عند المراجعة تبيّن أن جهاز الميزان التحليلي المستخدم لم يخضع لأي معايرة موثَّقة خلال آخر 8 أشهر رغم استخدامه المستمر.</p><ol class="ag-ol"><li>أي من المبادئ العشرة لـ GLP انتُهك هنا بوضوح؟</li><li>ما التداعية المتوقعة على مصداقية نتائج هذه الدراسة تحديداً؟</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) مبدأ "الأجهزة والمعايرة" — الأجهزة يجب أن تخضع لصيانة ومعايرة دورية موثَّقة. 2) أي قياس تم بهذا الميزان خلال الفترة غير المعايَرة يصبح مشكوكاً في دقته، ما قد يُبطل موثوقية نتائج الدراسة بأكملها ويعرضها لرفض الجهة التنظيمية.</div></div>'+
+
+'<div class="acad-tip">'+
+'<h3>متى لا تنطبق GLP؟</h3>'+
+'<ul>'+
+'<li><strong>التجارب السريرية على البشر:</strong> تخضع لممارسات مختلفة تُسمّى GCP (الممارسات السريرية الجيدة)، لا GLP.</li>'+
+'<li><strong>خطوط تصنيع المنتج النهائي:</strong> تخضع لـ GMP، وهي منظومة منفصلة تختص بجودة الإنتاج لا بدراسات السلامة.</li>'+
+'<li><strong>البحث الأكاديمي الاستكشافي البحت:</strong> غالباً لا يخضع لإلزام GLP الرسمي ما لم تكن نتائجه ستُقدَّم لجهة تسجيل تنظيمية، رغم أن كثيراً من المختبرات تتبنّى انضباط GLP طواعية لرفع موثوقية أبحاثها.</li>'+
+'</ul>'+
+'</div>'+
+
+'<h2>ما هي السلامة الحيوية؟</h2>'+
+'<p>السلامة الحيوية (Biosafety) هي مجموعة المبادئ والتقنيات والممارسات التطبيقية التي تمنع التعرّض غير المقصود للعوامل البيولوجية الخطرة، أو انطلاقها العرضي إلى خارج المختبر. جوهرها ركيزتان لا تنفصلان: <strong>تقييم المخاطر</strong> الذي يحدد درجة الخطورة الفعلية، و<strong>الاحتواء</strong> الذي يحبس هذا الخطر داخل حدود آمنة.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:#111"><div style="background:#f2c500;padding:28px 0;text-align:center"><span style="font-size:88px;line-height:1;color:#000">☣</span></div><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;background:var(--bg2);border-top:1px solid var(--line)">الرمز العالمي للخطر الحيوي (Biohazard) — يُستخدم على الحاويات والأبواب والمعدات التي قد تحتوي عوامل ممرضة</div></div>'+
+
+'<p>كثيراً ما يُخلَط بين السلامة الحيوية ومفهوم قريب لكنه مختلف جوهرياً:</p>'+
+'<div class="acad-twrap">'+
+'<table class="acad-tbl">'+
+'<thead><tr><th>المفهوم</th><th>ما الذي يحميه</th></tr></thead>'+
+'<tbody>'+
+'<tr><td>السلامة الحيوية (Biosafety)</td><td>تحمي العاملين والمجتمع والبيئة من التعرّض العرضي غير المقصود للخطر البيولوجي</td></tr>'+
+'<tr><td>الأمن الحيوي (Biosecurity)</td><td>يحمي العوامل البيولوجية ذاتها من الفقد أو السرقة أو سوء الاستخدام المتعمَّد من قِبل أطراف ضارة</td></tr>'+
+'</tbody></table></div>'+
+'<div class="acad-tip"><h3>⚡ نشاط 5 — صنّف الموقف: سلامة حيوية أم أمن حيوي؟</h3><ol class="ag-ol"><li>باحث ينسى ارتداء القفازات أثناء التعامل مع مزرعة بكتيرية.</li><li>شخص غير مصرَّح له يحاول الدخول لتخزين العينات لسرقة عيّنة نادرة.</li><li>عطل في خزانة الأمان الحيوي يؤدي لتسرّب هواء غير مُرشَّح.</li><li>فقدان سجل يوثّق من له صلاحية الوصول لمخزون العينات الحساسة.</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) سلامة حيوية (تعرّض عرضي). 2) أمن حيوي (سوء استخدام متعمَّد). 3) سلامة حيوية (تعرّض عرضي غير مقصود). 4) أمن حيوي (يخص التحكم في الوصول لا التعرّض العرضي).</div></div>'+
+
+'<p>ينبني الاحتواء على طبقتين متكاملتين:</p>'+
+'<ul>'+
+'<li><strong>الاحتواء الأولي:</strong> خط الدفاع الأقرب للعامل مباشرة — معدات الوقاية الشخصية، وخزائن الأمان الحيوي، والممارسات الميكروبيولوجية السليمة.</li>'+
+'<li><strong>الاحتواء الثانوي:</strong> تصميم المبنى نفسه — اتجاه تدفق الهواء، والفلاتر، والأبواب ذاتية الإغلاق، وأنظمة الصرف المعالَجة.</li>'+
+'</ul>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 500 260" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="460" height="220" rx="14" fill="none" stroke="#1B6B3A" stroke-width="2" stroke-dasharray="8,5"/><text x="250" y="42" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1B6B3A">الاحتواء الثانوي — تصميم المبنى (تهوية، ضغط سالب، أبواب)</text><rect x="90" y="65" width="320" height="150" rx="12" fill="rgba(27,107,58,.1)" stroke="#1B6B3A" stroke-width="2"/><text x="250" y="88" text-anchor="middle" font-size="12" font-weight="700" fill="#1B6B3A">الاحتواء الأولي — معدات الوقاية وخزائن الأمان الحيوي</text><circle cx="250" cy="150" r="35" fill="#e05a00" opacity=".85"/><text x="250" y="155" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">العامل</text><text x="250" y="168" text-anchor="middle" font-size="9.5" fill="#fff">الحيوي</text></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">طبقتا الاحتواء تعملان معاً: طبقة أقرب للخطر مباشرة، وطبقة أبعد تحيط بالمبنى كله</div></div>'+
+'<p>وتحدث الإصابات المخبرية غالباً عبر أربعة طرق رئيسية للتعرّض: الاستنشاق (وهو الأخطر لأنه قد يحدث دون أن يشعر به أحد)، والابتلاع، والامتصاص عبر الجلد أو الأغشية المخاطية، والوخز أو الجرح المباشر بأداة ملوَّثة.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><div style="display:flex;flex-wrap:wrap;justify-content:space-around;padding:22px 12px;gap:14px"><div style="text-align:center;min-width:100px"><div style="font-size:34px">👃</div><div style="font-size:12px;font-weight:700;color:var(--ink);margin-top:6px">الاستنشاق</div><div style="font-size:10.5px;color:var(--muted)">الأخطر — غير محسوس</div></div><div style="text-align:center;min-width:100px"><div style="font-size:34px">👄</div><div style="font-size:12px;font-weight:700;color:var(--ink);margin-top:6px">الابتلاع</div><div style="font-size:10.5px;color:var(--muted)">عبر الفم</div></div><div style="text-align:center;min-width:100px"><div style="font-size:34px">🖐️</div><div style="font-size:12px;font-weight:700;color:var(--ink);margin-top:6px">عبر الجلد</div><div style="font-size:10.5px;color:var(--muted)">أو الأغشية المخاطية</div></div><div style="text-align:center;min-width:100px"><div style="font-size:34px">💉</div><div style="font-size:12px;font-weight:700;color:var(--ink);margin-top:6px">الوخز/الجرح</div><div style="font-size:10.5px;color:var(--muted)">بأداة ملوَّثة</div></div></div><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">الطرق الأربع الرئيسية لتعرّض العاملين للعوامل البيولوجية داخل المختبر</div></div>'+
+
+'<h2>نظرة سريعة على ما ستتعلمه في هذا الكورس</h2>'+
+'<p>قبل أن نتعمّق في كل محور على حدة في المحاضرات القادمة، إليك الصورة الكاملة لكيفية ترابطها:</p>'+
+'<div class="acad-igrid">'+
+'<div class="acad-icard"><span class="acad-icard-ico">🏗️</span><div class="acad-icard-lbl">تصميم المختبرات</div><div class="acad-icard-val">بيئة عمل آمنة من الأساس</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🧬</span><div class="acad-icard-lbl">مستويات BSL 1–4</div><div class="acad-icard-val">تصنيف الخطر البيولوجي</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🥽</span><div class="acad-icard-lbl">معدات الوقاية</div><div class="acad-icard-val">خط الدفاع الشخصي الأول</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⚠️</span><div class="acad-icard-lbl">تقييم المخاطر</div><div class="acad-icard-val">قبل أي إجراء معملي</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📄</span><div class="acad-icard-lbl">SOPs والتوثيق</div><div class="acad-icard-val">أساس قابلية التدقيق</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">✅</span><div class="acad-icard-lbl">ضمان وضبط الجودة</div><div class="acad-icard-val">QA وQC جنباً إلى جنب</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">♻️</span><div class="acad-icard-lbl">إدارة النفايات</div><div class="acad-icard-val">من الحاوية حتى التخلّص الآمن</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🚨</span><div class="acad-icard-lbl">الاستجابة للطوارئ</div><div class="acad-icard-val">بروتوكول جاهز قبل وقوع الحادث</div></div>'+
+'</div>'+
+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">دراسة حالة حقيقية</div><div class="acad-case-val">فضيحة Industrial Bio-Test Laboratories</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">التحدي</div><div class="acad-case-val">في أوائل السبعينيات، كانت آلاف دراسات سلامة الأدوية والمبيدات والمواد الكيميائية تُقدَّم لجهات التسجيل دون أي إطار موحّد يضمن مصداقيتها أو قابليتها للتحقق.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الحل</div><div class="acad-case-val">كشف تحقيق فيدرالي أن أكبر مزوّد لاختبارات السمية التجارية في أمريكا كان يُقدّم بيانات مزوَّرة أو ناقصة لمئات المواد، فصاغت FDA أول تشريع GLP رسمي عام 1978، تلتها OECD بمبادئها الدولية عام 1981.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الدرس</div><div class="acad-case-val">النتيجة العلمية وحدها لا تكفي أبداً؛ فبدون توثيق دقيق وتتبّع كامل لكل خطوة، تصبح أي نتيجة عرضة للشك، وقد تُقبل مواد خطرة في السوق أو تُرفض مواد آمنة بسبب بيانات غير موثوقة.</div></div>'+
+'</div>'+
+
+'<div class="acad-err">'+
+'<h3>أخطاء شائعة يقع فيها كثيرون</h3>'+
+'<ul>'+
+'<li><strong>"GLP تعني فقط الحرص والانتباه أثناء العمل":</strong> في الحقيقة GLP نظام إداري وتوثيقي رسمي له متطلبات محددة، وليس مجرد سلوك حذر شخصي مهما كان صادقاً.</li>'+
+'<li><strong>"السلامة الحيوية تهم فقط مختبرات BSL-3 وBSL-4":</strong> كل مستوى بما فيها BSL-1 له متطلبات سلامة حيوية واجبة التطبيق، وأغلب الإصابات المخبرية المسجَّلة تاريخياً وقعت فعلياً في مختبرات BSL-1 وBSL-2 بسبب التهاون في القواعد الأساسية.</li>'+
+'<li><strong>"الأمن الحيوي والسلامة الحيوية مترادفان":</strong> الأول يمنع سوء الاستخدام المتعمَّد أو السرقة، والثاني يمنع التعرّض العرضي غير المقصود — وقد يتوفر أحدهما دون الآخر.</li>'+
+'<li><strong>"الالتزام بـ GLP يعني أن نتيجة التجربة صحيحة علمياً بالضرورة":</strong> GLP تضمن موثوقية العملية والتوثيق، لا تضمن صحة الفرضية العلمية نفسها؛ فتجربة موثّقة بدقة قد تصل رغم ذلك لنتيجة سلبية أو غير حاسمة.</li>'+
+'<li><strong>"شهادة الأيزو تعني تلقائياً الامتثال لـ GLP":</strong> رغم التداخل الجزئي، لكل نظام نطاق ومتطلبات مختلفة، وقد يحصل مختبر على أحدهما دون الآخر.</li>'+
+'</ul>'+
+'</div>'+
+
+'<div class="acad-tip">'+
+'<h3>نصائح للدراسة</h3>'+
+'<ul>'+
+'<li><strong>افهم "لماذا" وراء كل قاعدة:</strong> كل متطلب في GLP، من التوقيع بالحبر الدائم إلى حفظ السجلات القديمة، وُجد لسبب واقعي مرتبط بحادثة تلاعب أو خطأ حدث فعلاً في الماضي — افهم القصة وستحفظ القاعدة بسهولة.</li>'+
+'<li><strong>اربط كل مفهوم بمثال معملي واقعي:</strong> عندما تسمع "احتواء أولي" فكّر في خزانة الأمان الحيوي مباشرة أمامك.</li>'+
+'<li><strong>لا تخلط بين الأنظمة المتشابهة:</strong> ضع جدولاً صغيراً يقارن GLP وGMP وGCP والسلامة الحيوية، وارجع إليه كلما التبس عليك الفرق.</li>'+
+'<li><strong>تابع مصادر رسمية موثوقة:</strong> أدلة OECD وWHO وCDC متاحة مجاناً على الإنترنت وتستحق القراءة المباشرة لاحقاً.</li>'+
+'</ul>'+
+'</div>'+
+'<div class="acad-case"><h3 style="margin-top:0">⚡ نشاط 6 — سيناريو تطبيقي شامل</h3><p style="font-size:13px;line-height:1.8;margin:0 0 10px">شركة تطوّر مبيداً جديداً، وتُجري عليه دراسة سمية لتقديمها لهيئة التسجيل. اكتشف المدقق الداخلي أن مدير الدراسة وقّع البروتوكول، لكن وحدة ضمان الجودة تتبع إدارياً لمدير الدراسة نفسه ولا ترفع تقاريرها لأي جهة أخرى.</p><ol class="ag-ol"><li>ما المشكلة الجوهرية في هذا الترتيب؟</li><li>لماذا تحديداً يشترط GLP استقلالية وحدة ضمان الجودة؟</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) وحدة ضمان الجودة تابعة إدارياً لنفس الشخص الذي تراقب عمله (مدير الدراسة)، ما يُفقدها الاستقلالية والموضوعية اللازمتين لأداء دورها الرقابي. 2) لأن QA التي تخضع لتقييم أو تأثير مدير الدراسة قد تتجنّب الإبلاغ عن مخالفات حقيقية خوفاً من التبعية الإدارية؛ الاستقلالية هي ما يضمن أن الرقابة صادقة وموضوعية.</div></div>'+
+
+'<h2>أهمية GLP والسلامة الحيوية في حياتنا</h2>'+
+
+'<h3>في الصناعات الدوائية</h3>'+
+'<ul>'+
+'<li><strong>ثقة تنظيمية عالمية:</strong> بفضل نظام القبول المتبادل للبيانات بين دول OECD، يمكن لدراسة سمية واحدة مُنفَّذة وفق GLP أن تُقبل في عشرات الدول دون إعادتها.</li>'+
+'<li><strong>حماية المرضى:</strong> دراسات السمية قبل السريرية التي تحدد الجرعة الآمنة لأول تجربة على الإنسان تعتمد كلياً على بيانات GLP موثوقة.</li>'+
+'</ul>'+
+
+'<h3>في الزراعة والمبيدات</h3>'+
+'<ul>'+
+'<li><strong>تسجيل المبيدات:</strong> لا يمكن لأي مبيد جديد أن يدخل السوق دون دراسات سمية وبيئية منفَّذة وفق GLP تثبت أمان استخدامه على المزارعين والمستهلكين والحياة البرية.</li>'+
+'<li><strong>سلامة المهندسين الزراعيين:</strong> مبادئ السلامة الحيوية نفسها تُطبَّق عند التعامل مع مسبّبات أمراض النبات في المختبرات التشخيصية الزراعية.</li>'+
+'</ul>'+
+
+'<h3>في الصناعات الغذائية والبيئية</h3>'+
+'<ul>'+
+'<li><strong>اختبار الإضافات الغذائية:</strong> أي مادة حافظة أو مُحلٍّ صناعي جديد يمر عبر دراسات سمية GLP قبل اعتماده من هيئات الغذاء والدواء حول العالم.</li>'+
+'<li><strong>تقييم الأثر البيئي:</strong> دراسات تحلّل المادة الكيميائية في التربة والماء تخضع لنفس المعايير لضمان دقة تقدير الأثر البيئي طويل المدى.</li>'+
+'</ul>'+
+
+'<h2>ملخص المحاضرة</h2>'+
+'<div class="acad-igrid">'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">GLP</div><div class="acad-icard-val">نظام يضمن موثوقية بيانات دراسات السلامة غير السريرية</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">السلامة الحيوية</div><div class="acad-icard-val">حماية العاملين والبيئة من التعرّض العرضي للخطر البيولوجي</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">التاريخ</div><div class="acad-icard-val">1978 لوائح FDA ← 1981 مبادئ OECD ← 1984 دليل BMBL ← 2020 نهج المخاطر لدى WHO</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">التأثير</div><div class="acad-icard-val">أساس الثقة الدولية في بيانات السلامة عبر كل الصناعات</div></div>'+
+'</div>'+
+
+'<h2>أسئلة للمراجعة</h2>'+
+'<ul>'+
+'<li>ما الفرق الجوهري بين ما تضمنه GLP وما تضمنه GMP؟</li>'+
+'<li>اشرح بكلماتك الخاصة الفرق بين السلامة الحيوية والأمن الحيوي، مع مثال واحد لكل منهما.</li>'+
+'<li>لماذا كانت فضيحة IBT Labs نقطة تحوّل تاريخية، وما الذي كشفته بالضبط؟</li>'+
+'<li>ما الفرق بين الاحتواء الأولي والاحتواء الثانوي؟ اذكر مثالاً واحداً لكل منهما.</li>'+
+'<li>اذكر حالة واحدة لا تنطبق فيها GLP، ووضّح أي نظام آخر ينطبق بدلاً منها.</li>'+
+'</ul>'+
+
+'<div class="acad-refs"><h3>المراجع العلمية</h3>'+
+'<div class="acad-ref"><span class="acad-ref-n">1</span>OECD (1998). OECD Principles on Good Laboratory Practice (as revised in 1997). ENV/MC/CHEM(98)17.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">2</span>U.S. Food and Drug Administration. Code of Federal Regulations Title 21, Part 58 — Good Laboratory Practice for Nonclinical Laboratory Studies.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">3</span>CDC &amp; NIH (2020). Biosafety in Microbiological and Biomedical Laboratories (BMBL), 6th ed.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">4</span>World Health Organization (2020). Laboratory Biosafety Manual, 4th ed.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">5</span>Schneider, K. (1983). Faking It: The Case Against Industrial Bio-Test Laboratories. Amicus Journal.</div>'+
+'</div>'+
+'</div>';
+
+c['glp2']='<div class="acad-body">'+
+'<div class="acad-igrid" style="margin-bottom:28px">'+
+'<div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">6 أهداف</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي — يصلح لأي مستوى</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">40 دقيقة</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🏗️</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">هندسي ومعملي</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
+'</div>'+
+
+'<h2>أهداف التعلم</h2>'+
+'<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
+'<ul>'+
+'<li>فهم مبدأ "التقسيم إلى مناطق" (Zoning) وتطبيقه في تصميم أي مختبر آمن</li>'+
+'<li>التعرف على معايير الأرضيات والأسطح ومواد البناء المناسبة للعمل المعملي</li>'+
+'<li>التمييز بين أنظمة التهوية المختلفة: التهوية العامة، ودواليب الأبخرة الكيميائية، وخزائن الأمان الحيوي، وفروق الضغط</li>'+
+'<li>التعرف على المرافق الأساسية الواجب توفرها: محطات الطوارئ، والمرافق الصحية، ومسارات الإخلاء</li>'+
+'<li>فهم مبادئ تخزين المواد الكيميائية والبيولوجية وتصنيفها حسب التوافق</li>'+
+'<li>تقدير العلاقة المباشرة بين جودة تصميم المختبر والوقاية من الحوادث قبل وقوعها</li>'+
+'</ul>'+
+
+'<h2>مقدمة: التصميم هو خط الدفاع الأول</h2>'+
+'<p>تخيّل مختبرين يُجريان نفس نوع الأبحاث بنفس الأجهزة تقريباً. الأول مُصمَّم بحيث تدخل العينات من باب وتخرج النفايات من باب آخر تماماً، ولا يتقاطع مسارهما أبداً. الثاني عبارة عن غرفة واحدة مفتوحة يمر فيها كل شيء وكل شخص بنفس الممر. أي المختبرين أكثر عرضة لحادثة تلوث متبادل أو تسرب لم يُكتشف إلا بعد فوات الأوان؟</p>'+
+'<p>الإجابة بديهية، لكنها تكشف حقيقة كثيراً ما تُغفَل: تصميم المختبر ليس تفصيلاً معمارياً جمالياً، بل خط الدفاع الأول ضد الحوادث — وهو يعمل قبل أن يرتدي أي شخص قفازاً، وقبل أن يُفتح أي أنبوب اختبار. مختبر مصمَّم بعناية يمنع كثيراً من الأخطاء البشرية من التحوّل إلى حوادث حقيقية، بينما مختبر سيئ التصميم يجعل حتى الباحث الأكثر حرصاً عرضة للخطر.</p>'+
+'<p>هذه المحاضرة تشرح كيف تُترجَم مبادئ GLP والسلامة الحيوية التي تعلّمناها في المحاضرة السابقة إلى جدران وأرضيات وأنظمة تهوية ملموسة.</p>'+
+
+'<h2>مبدأ التقسيم إلى مناطق (Zoning)</h2>'+
+'<p>يقوم تصميم أي مختبر احترافي على تقسيم المساحة إلى مناطق متدرجة الخطورة، بحيث تتحرك العينات والمواد والأشخاص دائماً من المنطقة الأقل خطورة إلى الأكثر خطورة، ولا تعود أبداً بالاتجاه المعاكس دون معالجة أو تعقيم:</p>'+
+'<div class="acad-igrid">'+
+'<div class="acad-icard"><span class="acad-icard-ico">🟢</span><div class="acad-icard-lbl">المنطقة النظيفة</div><div class="acad-icard-val">الاستقبال، المكاتب، غرف الملابس</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🟡</span><div class="acad-icard-lbl">المنطقة الانتقالية</div><div class="acad-icard-val">التجهيز، ارتداء معدات الوقاية</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🔴</span><div class="acad-icard-lbl">منطقة العمل الفعلي</div><div class="acad-icard-val">التعامل المباشر مع العينات الخطرة</div></div>'+
+'</div>'+
+'<p>يُسمّى هذا المبدأ <strong>سير العمل أحادي الاتجاه</strong> (Unidirectional Workflow)، وهو نفس المنطق الذي تعمل به المستشفيات في تصميم غرف العمليات: الدخول من جهة، والخروج من جهة أخرى، دون أن يتقاطع الطريقان. في المختبرات ذات مستويات الاحتواء الأعلى (BSL-3 فما فوق)، تُضاف <strong>غرفة أمامية (Anteroom)</strong> تفصل المنطقة الانتقالية عن منطقة العمل الفعلي، ويمر منها كل شخص لتغيير ملابسه وارتداء معداته قبل الدخول.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 600 160" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><rect x="15" y="40" width="160" height="80" rx="10" fill="rgba(34,153,84,.15)" stroke="#229954" stroke-width="2"/><text x="95" y="75" text-anchor="middle" font-size="12" font-weight="700" fill="#1B6B3A">منطقة نظيفة</text><text x="95" y="92" text-anchor="middle" font-size="9.5" fill="#1B6B3A">استقبال / مكاتب</text><rect x="220" y="40" width="160" height="80" rx="10" fill="rgba(242,197,0,.18)" stroke="#c99700" stroke-width="2"/><text x="300" y="75" text-anchor="middle" font-size="12" font-weight="700" fill="#8a6d00">منطقة انتقالية</text><text x="300" y="92" text-anchor="middle" font-size="9.5" fill="#8a6d00">تجهيز / ارتداء وقاية</text><rect x="425" y="40" width="160" height="80" rx="10" fill="rgba(224,90,0,.12)" stroke="#e05a00" stroke-width="2"/><text x="505" y="75" text-anchor="middle" font-size="12" font-weight="700" fill="#e05a00">منطقة العمل الفعلي</text><text x="505" y="92" text-anchor="middle" font-size="9.5" fill="#e05a00">تعامل مباشر مع الخطر</text><path d="M178 80 L215 80" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#arrow2)"/><path d="M383 80 L420 80" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#arrow2)"/><defs><marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="var(--ink)"/></marker></defs><text x="300" y="145" text-anchor="middle" font-size="10.5" fill="var(--muted)">اتجاه واحد فقط — لا رجوع دون تعقيم</text></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">مبدأ سير العمل أحادي الاتجاه: العينات والأشخاص يتحركون من الأنظف إلى الأكثر خطورة فقط</div></div><div class="acad-tip"><h3>⚡ نشاط 1 — رتّب المناطق بالترتيب الصحيح</h3><p style="margin:0 0 10px;font-size:13px">رتّب هذه المناطق حسب مسار سير العمل الصحيح من الدخول إلى العمل الفعلي:</p><ol class="ag-ol"><li>منطقة العمل الفعلي (التعامل المباشر مع العينات الخطرة)</li><li>المنطقة النظيفة (الاستقبال والمكاتب)</li><li>المنطقة الانتقالية (التجهيز وارتداء الوقاية)</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الترتيب الصحيح:</strong> 2 ← 3 ← 1 (المنطقة النظيفة، ثم الانتقالية، ثم العمل الفعلي). التحرك دائماً باتجاه واحد: من الأنظف إلى الأكثر خطورة، ولا رجوع دون تعقيم كامل.</div></div>'+
+
+'<h2>الأرضيات والأسطح ومواد البناء</h2>'+
+'<p>لا يصلح أي سطح عادي للعمل المعملي؛ فالمواد المستخدمة يجب أن تحقق ثلاثة شروط معاً: مقاومة المواد الكيميائية، وسهولة التطهير الكامل، وعدم وجود فراغات تحتجز الملوثات.</p>'+
+'<ul>'+
+'<li><strong>الأرضيات:</strong> غير مسامية، بلا فواصل أو شقوق، وغالباً ما تكون <strong>مُقوَّسة الحواف (Coved Flooring)</strong> بحيث ترتفع حافة الأرضية لتلتحم بالحائط دون زاوية حادة تحتجز الأوساخ أو السوائل.</li>'+
+'<li><strong>أسطح العمل (Benchtops):</strong> غالباً من الراتنج الإيبوكسي أو الفينولي، لمقاومتها للأحماض والمذيبات والحرارة العالية نسبياً.</li>'+
+'<li><strong>الحوائط:</strong> بطلاء أو تشطيب قابل للغسل الكامل، بلا خامات ماصة مثل الجبس المكشوف أو الخشب غير المعالَج.</li>'+
+'<li><strong>ممنوع تماماً:</strong> السجاد أو أي سطح ماص للسوائل في أي منطقة يُحتمل فيها انسكاب مادة كيميائية أو بيولوجية.</li>'+
+'</ul>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 500 180" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="16" height="130" fill="#c9d6cd"/><text x="30" y="15" text-anchor="middle" font-size="10.5" fill="var(--muted)">الحائط</text><path d="M56 150 L56 130 Q56 110 76 110 L440 110" fill="none" stroke="#1B6B3A" stroke-width="6" stroke-linecap="round"/><line x1="76" y1="110" x2="440" y2="110" stroke="#1B6B3A" stroke-width="6"/><text x="260" y="95" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1B6B3A">الأرضية (سطح مستمر)</text><circle cx="66" cy="122" r="4" fill="#e05a00"/><text x="66" y="160" text-anchor="middle" font-size="10" fill="#e05a00">الحافة المُقوَّسة</text><text x="66" y="172" text-anchor="middle" font-size="9" fill="#e05a00">لا زاوية حادة تحتجز السوائل</text></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">مقطع عرضي للأرضية المُقوَّسة الحواف (Coved Flooring) عند التقائها بالحائط</div></div><div class="acad-case"><h3 style="margin-top:0">⚡ نشاط 2 — اكتشف الخطأ</h3><p style="font-size:13px;line-height:1.8;margin:0 0 10px">مختبر جديد رُكِّبت فيه أرضية سيراميك أنيقة بزوايا حادة عند التقائها بالحائط، وفُرِش جزء من منطقة الاستقبال بسجاد فاخر لإضفاء طابع مريح على المكان.</p><ol class="ag-ol"><li>ما الخطآن التصميميان في هذا الوصف؟</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابة:</strong> الخطأ الأول: الزوايا الحادة بين الأرضية والحائط تحتجز الأوساخ والسوائل ويصعب تطهيرها بالكامل؛ كان يجب استخدام أرضية مُقوَّسة الحواف (Coved Flooring). الخطأ الثاني: السجاد ممنوع تماماً في أي منطقة قد يحدث فيها انسكاب كيميائي أو بيولوجي، حتى في مناطق الاستقبال القريبة من مسارات العمل.</div></div>'+
+
+'<h2>أنظمة التهوية وتدفق الهواء</h2>'+
+'<p>التهوية هي العنصر الأكثر تعقيداً في تصميم المختبر، وتحدد وحدها نجاح أو فشل الاحتواء بأكمله. القاعدة الذهبية العالمية (وفق معيار NFPA 45): هواء المختبرات التي تحتوي مواد كيميائية أو بيولوجية <strong>لا يُعاد تدويره أبداً</strong>، بل يُطرَح للخارج بشكل مستمر.</p>'+
+
+'<div class="acad-twrap">'+
+'<table class="acad-tbl">'+
+'<thead><tr><th>العنصر</th><th>دولاب الأبخرة الكيميائية (Fume Hood)</th><th>خزانة الأمان الحيوي (BSC)</th></tr></thead>'+
+'<tbody>'+
+'<tr><td>الحماية المقدَّمة</td><td>الشخص فقط، من الأبخرة الكيميائية</td><td>الشخص، وأحياناً العينة والبيئة، من الجسيمات البيولوجية</td></tr>'+
+'<tr><td>الفلترة</td><td>لا تُرشِّح الهواء، تطرده مباشرة للخارج</td><td>تستخدم فلاتر HEPA تحتجز الجسيمات الدقيقة</td></tr>'+
+'<tr><td>الاستخدام المناسب</td><td>المذيبات والأحماض والأبخرة المتطايرة</td><td>العينات البيولوجية والمزارع الميكروبية</td></tr>'+
+'<tr><td>المخاطرة عند الخلط بينهما</td><td>لا تحتجز جسيمات معدية — قد تُطلقها للخارج مباشرة</td><td>غير مصمَّمة لأبخرة كيميائية مركّزة قد تتراكم داخلها</td></tr>'+
+'</tbody></table></div>'+
+
+'<p>تلتزم دواليب الأبخرة الكيميائية عالمياً بمعيار سرعة هواء عند الواجهة (Face Velocity) يتراوح بين <strong>80 و120 قدماً في الدقيقة</strong> (وفق ANSI/AIHA Z9.5)، بحيث تكون سريعة بما يكفي لسحب الأبخرة، لكن دون اضطراب زائد يُخرجها من مسارها.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 600 220" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><text x="150" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#1B6B3A">دولاب الأبخرة الكيميائية</text><rect x="60" y="30" width="180" height="130" rx="6" fill="none" stroke="#1B6B3A" stroke-width="2.5"/><line x1="60" y1="150" x2="240" y2="150" stroke="#1B6B3A" stroke-width="4"/><rect x="70" y="35" width="160" height="8" fill="rgba(27,107,58,.3)"/><text x="150" y="55" text-anchor="middle" font-size="9" fill="var(--muted)">الساش الزجاجي</text><path d="M150 70 L150 40" stroke="#0a7ac9" stroke-width="2.5" marker-end="url(#arrow3)"/><text x="150" y="105" text-anchor="middle" font-size="9.5" fill="#0a7ac9">هواء يُطرَح للخارج مباشرة</text><text x="150" y="120" text-anchor="middle" font-size="9.5" fill="#0a7ac9">(بلا ترشيح HEPA)</text><text x="150" y="180" text-anchor="middle" font-size="10" fill="var(--muted)">للأبخرة والمذيبات الكيميائية</text><text x="450" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#e05a00">خزانة الأمان الحيوي</text><rect x="360" y="30" width="180" height="130" rx="6" fill="none" stroke="#e05a00" stroke-width="2.5"/><rect x="370" y="35" width="160" height="10" fill="rgba(224,90,0,.35)"/><text x="450" y="55" text-anchor="middle" font-size="9" fill="var(--muted)">فلتر HEPA علوي</text><path d="M450 70 L430 100" stroke="#0a7ac9" stroke-width="2" marker-end="url(#arrow3)"/><path d="M450 70 L470 100" stroke="#0a7ac9" stroke-width="2" marker-end="url(#arrow3)"/><text x="450" y="120" text-anchor="middle" font-size="9.5" fill="#0a7ac9">تدفق هواء منضبط + HEPA</text><text x="450" y="180" text-anchor="middle" font-size="10" fill="var(--muted)">للعينات البيولوجية والمزارع</text><defs><marker id="arrow3" markerWidth="10" markerHeight="10" refX="5" refY="8" orient="auto"><path d="M0,0 L5,8 L10,0 Z" fill="#0a7ac9"/></marker></defs></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">الفارق الجوهري: دولاب الأبخرة لا يُرشِّح الهواء، بينما خزانة الأمان الحيوي تحتجز الجسيمات بفلاتر HEPA</div></div><div class="acad-tip"><h3>⚡ نشاط 3 — أي جهاز تختار؟</h3><p style="margin:0 0 10px;font-size:13px">لكل موقف التالي، حدد: دولاب الأبخرة الكيميائية أم خزانة الأمان الحيوي؟</p><ol class="ag-ol"><li>تحضير محلول يحتوي على حمض الكبريتيك المركّز.</li><li>زراعة عيّنة بكتيرية قد تُطلق رذاذاً معدياً.</li><li>تبخير مذيب عضوي متطاير أثناء تحضير عيّنة كيميائية.</li><li>التعامل مع عيّنة دم لفحصها بحثاً عن فيروس.</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) دولاب الأبخرة الكيميائية. 2) خزانة الأمان الحيوي. 3) دولاب الأبخرة الكيميائية. 4) خزانة الأمان الحيوي.</div></div>'+
+
+'<p>أما فروق الضغط بين الغرف، فهي عنصر يسهل الخلط فيه رغم أهميته الحاسمة:</p>'+
+'<ul>'+
+'<li><strong>الضغط السالب (Negative Pressure):</strong> يكون ضغط الهواء داخل الغرفة أقل من الممرات المحيطة، فيتجه الهواء دائماً إلى الداخل عند فتح الباب. إلزامي في مختبرات BSL-3 فما فوق لحبس أي جسيمات معدية بالداخل.</li>'+
+'<li><strong>الضغط الموجب (Positive Pressure):</strong> عكسه تماماً؛ يُستخدم في الغرف النظيفة الصناعية وبعض غرف تحضير الأدوية المعقّمة، حيث الهدف حماية المنتج من تلوث خارجي، لا حماية الخارج من الداخل.</li>'+
+'</ul>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 600 190" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><text x="150" y="22" text-anchor="middle" font-size="12.5" font-weight="700" fill="#e05a00">ضغط سالب (BSL-3+)</text><rect x="40" y="35" width="220" height="110" fill="rgba(224,90,0,.08)" stroke="#e05a00" stroke-width="2"/><rect x="0" y="35" width="40" height="110" fill="none" stroke="var(--line)" stroke-width="1.5"/><text x="20" y="95" text-anchor="middle" font-size="9" fill="var(--muted)" transform="rotate(-90 20 95)">الممر</text><path d="M45 90 L85 90" stroke="#e05a00" stroke-width="3" marker-end="url(#arrowN)"/><defs><marker id="arrowN" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#e05a00"/></marker></defs><text x="150" y="105" text-anchor="middle" font-size="10.5" fill="#e05a00">الهواء يدخل للداخل</text><text x="150" y="122" text-anchor="middle" font-size="10.5" fill="#e05a00">لا يخرج أي جسيم للممر</text><text x="450" y="22" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0a7ac9">ضغط موجب (غرف نظيفة)</text><rect x="340" y="35" width="220" height="110" fill="rgba(10,122,201,.08)" stroke="#0a7ac9" stroke-width="2"/><rect x="560" y="35" width="40" height="110" fill="none" stroke="var(--line)" stroke-width="1.5"/><path d="M555 90 L515 90" stroke="#0a7ac9" stroke-width="3" marker-end="url(#arrowP)"/><defs><marker id="arrowP" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#0a7ac9"/></marker></defs><text x="450" y="105" text-anchor="middle" font-size="10.5" fill="#0a7ac9">الهواء يخرج للممر</text><text x="450" y="122" text-anchor="middle" font-size="10.5" fill="#0a7ac9">يمنع دخول تلوث خارجي</text><text x="300" y="170" text-anchor="middle" font-size="10.5" fill="var(--muted)">اتجاه السهم = اتجاه حركة الهواء الفعلي عند فتح الباب</text></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">الضغط السالب يحمي الخارج من الداخل، والضغط الموجب يحمي الداخل من الخارج — عكسان تماماً</div></div>'+
+
+'<div class="acad-tip">'+
+'<h3>لا تخلط بين الاثنين</h3>'+
+'<p>الضغط السالب يحمي <strong>الخارج من الداخل</strong> (مناسب للعمل مع عوامل ممرضة). الضغط الموجب يحمي <strong>الداخل من الخارج</strong> (مناسب لحماية منتج معقّم). استخدام النوع الخاطئ في المكان الخاطئ يُبطل الغرض من التصميم بالكامل، وهو خطأ تصميمي جسيم يصعب تصحيحه بعد الإنشاء.</p>'+
+'</div>'+
+'<div class="acad-tip"><h3>⚡ نشاط 4 — أكمل الفراغ</h3><ol class="ag-ol"><li>في الضغط ________، يتجه الهواء دائماً إلى داخل الغرفة عند فتح الباب.</li><li>الضغط ________ يُستخدم لحماية المنتج من تلوث خارجي في الغرف النظيفة.</li><li>مختبرات ________ فما فوق يجب أن تُصمَّم بضغط هواء سالب إلزامياً.</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) السالب (Negative Pressure). 2) الموجب (Positive Pressure). 3) BSL-3.</div></div>'+
+
+'<h2>المرافق الأساسية ومحطات الطوارئ</h2>'+
+'<p>وفق المعيار الأمريكي ANSI/ISEA Z358.1، يجب أن تكون محطة غسيل العين والدُّش الطارئ في متناول أي شخص خلال <strong>10 ثوانٍ مشياً</strong> (نحو 17 متراً)، بمسار خالٍ من العوائق والأبواب المغلقة، وتوفّر تدفق ماء مستمراً لا يقل عن 15 دقيقة. إلى جانب ذلك، يجب أن يتضمن تصميم أي مختبر:</p>'+
+'<ul>'+
+'<li>مسارات إخلاء واضحة ومعلَّمة، بأبواب تُفتح باتجاه الخروج لا الدخول.</li>'+
+'<li>مآخذ كهرباء وغاز مصمَّمة خصيصاً للاستخدام المعملي، بمفاتيح فصل طوارئ سهلة الوصول.</li>'+
+'<li>أحواض غسيل يدين منفصلة تماماً عن أحواض غسيل الأدوات والعينات.</li>'+
+'<li>طفايات حريق مناسبة لنوع المواد المستخدمة (لا تصلح كل الطفايات لكل أنواع الحرائق).</li>'+
+'</ul>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 400 200" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><circle cx="200" cy="110" r="80" fill="rgba(10,122,201,.08)" stroke="#0a7ac9" stroke-width="2" stroke-dasharray="6,4"/><circle cx="200" cy="110" r="10" fill="#0a7ac9"/><text x="200" y="45" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0a7ac9">نطاق 10 ثوانٍ مشياً (≈17 متراً)</text><text x="200" y="115" text-anchor="middle" font-size="16">🚿</text><text x="200" y="195" text-anchor="middle" font-size="10" fill="var(--muted)">محطة غسيل العين والدُّش الطارئ يجب أن تكون داخل هذا النطاق من أي نقطة خطر</text></svg></div>'+
+
+'<h2>تخزين المواد الكيميائية والبيولوجية</h2>'+
+'<p>مبدأ التخزين الجوهري هو <strong>الفصل حسب التوافق الكيميائي</strong>، لا حسب الحروف الأبجدية أو المساحة المتاحة فقط:</p>'+
+'<ul>'+
+'<li><strong>الأحماض بعيداً عن القواعد وأملاح السيانيد:</strong> أي تلامس عرضي بين حمض وسيانيد يُنتج غاز سيانيد الهيدروجين شديد السمية.</li>'+
+'<li><strong>المؤكسدات بعيداً عن المواد القابلة للاشتعال:</strong> التلامس بينهما قد يُشعل حريقاً عنيفاً دون الحاجة لمصدر لهب خارجي.</li>'+
+'<li><strong>المواد شديدة التفاعل مع الماء:</strong> تُخزَّن في خزانات معزولة تماماً عن أي مصدر رطوبة.</li>'+
+'<li><strong>خزانات اللهب:</strong> خزانات معدنية مقاومة للحريق مخصَّصة للسوائل القابلة للاشتعال حصراً.</li>'+
+'<li><strong>التخزين البارد:</strong> ثلاجات ومجمِّدات (خاصة مجمِّدات −80°م) مزوَّدة بإنذار ومصدر طاقة احتياطي لحماية العينات الحرجة من الفقد عند انقطاع الكهرباء.</li>'+
+'</ul>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 500 220" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="200" height="80" rx="8" fill="rgba(224,90,0,.1)" stroke="#e05a00" stroke-width="2"/><text x="120" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#e05a00">أحماض</text><text x="120" y="75" text-anchor="middle" font-size="10" fill="#e05a00">خزانة منفصلة</text><rect x="280" y="20" width="200" height="80" rx="8" fill="rgba(224,90,0,.1)" stroke="#e05a00" stroke-width="2"/><text x="380" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#e05a00">سيانيدات وقواعد</text><text x="380" y="75" text-anchor="middle" font-size="10" fill="#e05a00">خزانة منفصلة</text><text x="250" y="65" text-anchor="middle" font-size="20" fill="#e05a00">✕</text><text x="250" y="15" text-anchor="middle" font-size="9.5" fill="#e05a00">ممنوع التجاور</text><rect x="20" y="120" width="200" height="80" rx="8" fill="rgba(27,107,58,.08)" stroke="#1B6B3A" stroke-width="2"/><text x="120" y="155" text-anchor="middle" font-size="12" font-weight="700" fill="#1B6B3A">مؤكسدات</text><text x="120" y="175" text-anchor="middle" font-size="10" fill="#1B6B3A">خزانة منفصلة</text><rect x="280" y="120" width="200" height="80" rx="8" fill="rgba(27,107,58,.08)" stroke="#1B6B3A" stroke-width="2"/><text x="380" y="155" text-anchor="middle" font-size="12" font-weight="700" fill="#1B6B3A">قابلة للاشتعال</text><text x="380" y="175" text-anchor="middle" font-size="10" fill="#1B6B3A">خزانة مقاومة للحريق</text><text x="250" y="165" text-anchor="middle" font-size="20" fill="#1B6B3A">✕</text><text x="250" y="115" text-anchor="middle" font-size="9.5" fill="#1B6B3A">ممنوع التجاور</text></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">الفصل حسب التوافق الكيميائي: كل مجموعة متعارضة في خزانة منفصلة تماماً</div></div><div class="acad-case"><h3 style="margin-top:0">⚡ نشاط 5 — حدد الخطر</h3><p style="font-size:13px;line-height:1.8;margin:0 0 10px">فني مختبر يُريد توفير المساحة، فيضع عبوة حمض الكبريتيك المركّز على نفس الرف المعدني الذي يحتوي على عبوة سيانيد الصوديوم، مع الحرص على إغلاق كلتا العبوتين جيداً.</p><ol class="ag-ol"><li>هل هذا الترتيب آمن؟ ولماذا؟</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابة:</strong> غير آمن إطلاقاً، بصرف النظر عن إحكام الإغلاق. قاعدة التوافق الكيميائي تُلزم بفصل الأحماض عن السيانيدات في خزانات منفصلة تماماً، لأن أي تسرب أو انكسار عرضي — مهما كان احتماله ضئيلاً — قد يُنتج غاز سيانيد الهيدروجين شديد السمية. الاعتماد على "إحكام الإغلاق" فقط دون فصل فعلي هو خطأ شائع وخطير.</div></div>'+
+
+'<h2>التحكم في الوصول ومسارات الطوارئ</h2>'+
+'<p>كلما ارتفع مستوى الاحتواء المطلوب، ازدادت صرامة التحكم في من يدخل المختبر ومتى. مختبرات BSL-3 وBSL-4 تستخدم عادة بطاقات دخول إلكترونية وغرفاً أمامية، وسجلاً موثَّقاً لكل دخول وخروج. في المقابل، يجب أن تبقى مسارات الإخلاء دائماً — مهما بلغت صرامة التحكم في الدخول — سهلة ومتاحة للخروج السريع في حالات الطوارئ، لأن تأمين الاحتواء لا يجب أبداً أن يتعارض مع سلامة الأرواح.</p>'+
+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">دراسة حالة حقيقية</div><div class="acad-case-val">تسرّب فيروس سارس من مختبر في بكين، أبريل 2004</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">التحدي</div><div class="acad-case-val">بعد أشهر من احتواء وباء سارس عالمياً، كان معهد أبحاث الفيروسات في بكين يواصل دراسة عيّنات من الفيروس، بعضها في منطقة عالية الاحتواء وبعضها في مختبر عادي مجاور يدرس أمراضاً أخرى.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">ماذا حدث</div><div class="acad-case-val">انتقلت عيّنة من فيروس سارس لم تُعطَّل بالكامل من المنطقة عالية الاحتواء إلى المختبر العادي المجاور، فأصيب باحثان بالعدوى دون علمهما أنهما كانا يتعاملان مع فيروس حي. انتقلت العدوى بعدها عبر جيلين من التواصل الأسري والمجتمعي، ونتج عنها عدة إصابات مؤكدة ووفاة حالة واحدة.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الدرس</div><div class="acad-case-val">لم يكن السبب خطأ في إجراء علمي واحد بقدر ما كان فشلاً في التصميم والفصل بين المناطق: نقل مادة بين مستويي احتواء مختلفين دون تعطيل كامل موثَّق. هذا بالضبط ما يمنعه مبدأ التقسيم إلى مناطق وسير العمل أحادي الاتجاه الذي شرحناه في هذه المحاضرة.</div></div>'+
+'</div>'+
+'<div class="acad-tip"><h3>⚡ نشاط 6 — تأمّل في دراسة الحالة</h3><p style="margin:0 0 10px;font-size:13px">بالرجوع إلى حادثة تسرّب سارس في بكين 2004:</p><ol class="ag-ol"><li>ما المبدأ التصميمي الذي كان يمكنه منع هذه الحادثة لو طُبِّق بصرامة؟</li><li>لو كنت مسؤول سلامة في ذلك المختبر، ما الإجراء الإضافي الذي كنت ستفرضه على نقل أي عيّنة بين مستويات الاحتواء المختلفة؟</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>نقاش:</strong> 1) مبدأ التقسيم إلى مناطق والفصل الصارم بين مستويات الاحتواء — عدم السماح بنقل أي مادة من منطقة عالية الاحتواء إلى منطقة أقل دون توثيق رسمي لاكتمال التعطيل. 2) إجراء قياسي (SOP) يُلزم بتوثيق مكتوب وتوقيع مزدوج يؤكد نجاح التعطيل الكامل قبل أي نقل، مع اختبار عيّنة عشوائية للتأكد قبل مغادرة المنطقة عالية الاحتواء — هذا سؤال مفتوح للنقاش، فقد تجد إجابات إضافية معقولة.</div></div>'+
+
+'<div class="acad-err">'+
+'<h3>أخطاء شائعة يقع فيها كثيرون</h3>'+
+'<ul>'+
+'<li><strong>"أي دولاب بغطاء زجاجي هو دولاب أبخرة آمن":</strong> دولاب الأبخرة الكيميائية وخزانة الأمان الحيوي يبدوان متشابهين ظاهرياً، لكن استخدام أحدهما مكان الآخر يُبطل الحماية المقصودة تماماً.</li>'+
+'<li><strong>"الأرضية النظيفة بصرياً كافية":</strong> سطح يبدو نظيفاً قد يحتوي شقوقاً دقيقة تحتجز ملوثات يستحيل الوصول إليها بالتطهير السطحي.</li>'+
+'<li><strong>"الضغط السالب مطلوب في كل مختبر":</strong> مطلوب تحديداً في BSL-3 فما فوق؛ فرضه في مختبرات لا تحتاجه يهدر الطاقة دون فائدة أمنية حقيقية.</li>'+
+'<li><strong>"التحكم الصارم في الدخول يعني إغلاق مخارج الطوارئ":</strong> أمن الاحتواء لا يجب أبداً أن يمنع الخروج السريع في حالة طارئة؛ فالخلط بين الاثنين قد يكلف أرواحاً.</li>'+
+'</ul>'+
+'</div>'+
+
+'<div class="acad-tip">'+
+'<h3>نصائح للدراسة</h3>'+
+'<ul>'+
+'<li><strong>ارسم المخطط بنفسك:</strong> حاول رسم مسار سير العمل أحادي الاتجاه لمختبر افتراضي؛ هذا التمرين يثبّت مبدأ التقسيم إلى مناطق أفضل من أي حفظ نظري.</li>'+
+'<li><strong>لا تحفظ الأرقام دون سياقها:</strong> رقم "80-120 قدم/دقيقة" لا قيمة له وحده؛ افهم لماذا هذا النطاق تحديداً يوازن بين سحب الأبخرة ومنع الاضطراب.</li>'+
+'<li><strong>اربط كل جهاز بموقعه الصحيح:</strong> كوّن صورة ذهنية لمختبر كامل وحدد أين يقع كل عنصر تعلمته (دولاب الأبخرة، خزانة الأمان الحيوي، محطة الطوارئ).</li>'+
+'</ul>'+
+'</div>'+
+
+'<h2>أهمية تصميم المختبرات في الصناعات المختلفة</h2>'+
+
+'<h3>في الصناعات الدوائية</h3>'+
+'<ul>'+
+'<li><strong>ربط مباشر بـ GMP:</strong> تصميم منشآت تصنيع الأدوية يخضع لمتطلبات صارمة تربط بين تصميم الغرف النظيفة (ضغط موجب) وجودة المنتج النهائي.</li>'+
+'</ul>'+
+
+'<h3>في المختبرات التشخيصية والصحية</h3>'+
+'<ul>'+
+'<li><strong>الفصل بين العينات:</strong> تصميم يمنع اختلاط عينات المرضى المختلفة، ويحمي الفنيين من عينات قد تحمل عوامل معدية غير معروفة بعد.</li>'+
+'</ul>'+
+
+'<h3>في المختبرات البحثية عالية الاحتواء</h3>'+
+'<ul>'+
+'<li><strong>طبقات احتواء متعددة:</strong> مختبرات BSL-3 وBSL-4 تجمع بين تصميم معماري صارم ومعدات وإجراءات، بحيث يعوّض كل عنصر أي قصور محتمل في العناصر الأخرى.</li>'+
+'</ul>'+
+
+'<h2>ملخص المحاضرة</h2>'+
+'<div class="acad-igrid">'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">التقسيم إلى مناطق</div><div class="acad-icard-val">سير عمل أحادي الاتجاه من الأنظف إلى الأكثر خطورة</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">التهوية</div><div class="acad-icard-val">لا يُعاد تدوير الهواء الملوَّث أبداً</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">الضغط</div><div class="acad-icard-val">سالب للاحتواء البيولوجي، موجب لحماية المنتج</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">التخزين</div><div class="acad-icard-val">الفصل حسب التوافق الكيميائي لا المساحة</div></div>'+
+'</div>'+
+
+'<h2>أسئلة للمراجعة</h2>'+
+'<ul>'+
+'<li>ما الفرق بين دولاب الأبخرة الكيميائية وخزانة الأمان الحيوي، ومتى يُستخدم كل منهما؟</li>'+
+'<li>اشرح الفرق بين الضغط السالب والضغط الموجب، مع مثال واحد على استخدام كل منهما.</li>'+
+'<li>ما مبدأ سير العمل أحادي الاتجاه، ولماذا يمنع التلوث المتبادل؟</li>'+
+'<li>اذكر مادتين كيميائيتين يجب فصلهما تماماً عند التخزين، ووضّح سبب الخطر عند اختلاطهما.</li>'+
+'<li>ماذا تعلّمنا من حادثة تسرّب سارس في بكين عام 2004 بخصوص تصميم المختبرات؟</li>'+
+'</ul>'+
+
+'<div class="acad-refs"><h3>المراجع العلمية</h3>'+
+'<div class="acad-ref"><span class="acad-ref-n">1</span>NFPA 45: Standard on Fire Protection for Laboratories Using Chemicals.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">2</span>ANSI/AIHA Z9.5: Laboratory Ventilation.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">3</span>ANSI/ISEA Z358.1: Emergency Eyewash and Shower Equipment.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">4</span>World Health Organization (2020). Laboratory Biosafety Manual, 4th ed. — Monograph: Laboratory Design and Maintenance.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">5</span>Liang, W. et al. (2006). SARS Outbreak in Beijing, 2004. Biomedical and Environmental Sciences, 19, 445-451.</div>'+
+'</div>'+
+'</div>';
+
+c['glp3']='<div class="acad-body">'+
+'<div class="acad-igrid" style="margin-bottom:28px">'+
+'<div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">6 أهداف</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي — يصلح لأي مستوى</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🧬</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">تصنيف وتقييم مخاطر</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
+'</div>'+
+
+'<h2>أهداف التعلم</h2>'+
+'<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
+'<ul>'+
+'<li>فهم المبدأ التراكمي الذي يقوم عليه تصنيف BSL (كل مستوى يشمل متطلبات المستوى الذي قبله)</li>'+
+'<li>التمييز بين "مجموعة الخطورة" (Risk Group) الخاصة بالعامل الممرض و"مستوى السلامة الحيوية" (BSL) الخاص بالمختبر</li>'+
+'<li>التعرف على المتطلبات التفصيلية لكل مستوى من BSL-1 إلى BSL-4: الممارسات والمعدات وتصميم المنشأة</li>'+
+'<li>فهم كيف يُحدَّد المستوى المناسب عبر تقييم مخاطر شامل، لا عبر اسم العامل الممرض وحده</li>'+
+'<li>التعرف على نموذجَي مختبرات BSL-4: المختبر البدلي، ومختبر خط خزانات الفئة الثالثة</li>'+
+'<li>استخلاص الدرس التاريخي من حادثة حقيقية نتجت عن فجوة في تطبيق مستوى الاحتواء المناسب</li>'+
+'</ul>'+
+
+'<h2>مقدمة: لماذا لا يُعامَل كل عامل ممرض بنفس الطريقة؟</h2>'+
+'<p>بكتيريا مستخدمة يومياً في دروس الأحياء الجامعية تُزرَع على منضدة مفتوحة دون أي قلق يُذكر. وفي الطرف الآخر تماماً، فيروس مثل الإيبولا لا يُقترب منه إلا بضع عشرات من المرافق حول العالم، حيث يرتدي الباحث بدلة كاملة معزولة الهواء ويستحم كيميائياً قبل أن يغادر المبنى. بين هذين الطرفين، ثمة تدرّج دقيق ومحكم يحدد بالضبط أي معدات، وأي تصميم مبنى، وأي تدريب يلزم لكل درجة من درجات الخطورة — هذا هو نظام مستويات السلامة الحيوية (Biosafety Levels)، أو ما يُعرف اختصاراً بـ BSL.</p>'+
+'<p>هذه المحاضرة تشرح هذا التدرّج تفصيلياً، من BSL-1 الأبسط إلى BSL-4 الأكثر صرامة، وتوضح كيف يُقرَّر أي مستوى يناسب أي نشاط معملي.</p>'+
+
+'<h2>المبدأ التراكمي: كل مستوى يبني على ما قبله</h2>'+
+'<p>الفكرة الجوهرية التي يقوم عليها نظام BSL بأكمله بسيطة: كل مستوى أعلى <strong>لا يستبدل</strong> متطلبات المستوى الذي قبله، بل <strong>يضيف إليها</strong>. بمعنى أن مختبر BSL-3 يلتزم بكل ما يلتزم به BSL-1 وBSL-2، ثم يضيف طبقات احتواء إضافية فوقها.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 600 220" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="170" width="130" height="35" fill="rgba(34,153,84,.65)" stroke="#1B6B3A" stroke-width="1.5"/><text x="85" y="192" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">BSL-1</text><rect x="160" y="140" width="130" height="65" fill="rgba(242,197,0,.7)" stroke="#c99700" stroke-width="1.5"/><text x="225" y="175" text-anchor="middle" font-size="13" font-weight="700" fill="#5a4600">BSL-2</text><rect x="300" y="95" width="130" height="110" fill="rgba(224,140,0,.75)" stroke="#a35c00" stroke-width="1.5"/><text x="365" y="155" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">BSL-3</text><rect x="440" y="30" width="130" height="175" fill="rgba(196,30,30,.8)" stroke="#8a1414" stroke-width="1.5"/><text x="505" y="120" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">BSL-4</text><text x="300" y="20" text-anchor="middle" font-size="11.5" fill="var(--muted)">كل مستوى يشمل متطلبات المستوى الذي قبله + إضافات جديدة</text></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">التصنيف تراكمي: BSL-4 يحتوي كل متطلبات BSL-1 وBSL-2 وBSL-3 مضافاً إليها طبقات احتواء أقصى</div></div>'+
+'<div class="acad-tip"><h3>⚡ نشاط 1 — أي مستوى BSL؟</h3><p style="margin:0 0 10px;font-size:13px">حدد مستوى السلامة الحيوية الأنسب لكل موقف:</p><ol class="ag-ol"><li>مختبر تعليمي جامعي يزرع بكتيريا E. coli غير ممرضة لتدريب الطلاب.</li><li>مختبر تشخيصي يفحص عيّنات دم قد تحتوي على Staphylococcus aureus.</li><li>مختبر بحثي يدرس عيّنات من فيروس مرتبط بالسل ينتقل عبر الهواء.</li><li>مختبر حكومي متخصص يدرس فيروس إيبولا الحي.</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) BSL-1. 2) BSL-2. 3) BSL-3. 4) BSL-4.</div></div>'+
+
+'<h2>مجموعة الخطورة مقابل مستوى السلامة الحيوية</h2>'+
+'<p>من أكثر النقاط التباساً لدى المبتدئين الخلط بين مفهومين مرتبطين لكنهما مختلفان جوهرياً: <strong>مجموعة الخطورة (Risk Group)</strong> هي تصنيف ثابت للعامل الممرض نفسه بناءً على شدة المرض الذي يسببه وقابليته للانتقال، بينما <strong>مستوى السلامة الحيوية (BSL)</strong> هو مجموعة المتطلبات الفعلية للمختبر الذي يتعامل مع هذا العامل، ويُحدَّد بعد تقييم مخاطر شامل يأخذ في الاعتبار طبيعة النشاط المحدد لا اسم العامل فقط.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 560 170" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="240" height="120" rx="10" fill="rgba(27,107,58,.08)" stroke="#1B6B3A" stroke-width="2"/><text x="140" y="45" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1B6B3A">مجموعة الخطورة (Risk Group)</text><text x="140" y="68" text-anchor="middle" font-size="10" fill="#1B6B3A">صفة ثابتة في العامل الممرض نفسه</text><text x="140" y="86" text-anchor="middle" font-size="10" fill="#1B6B3A">(شدة المرض + قابلية الانتقال)</text><text x="140" y="112" text-anchor="middle" font-size="10" fill="#1B6B3A">مثال: فيروس إيبولا = مجموعة خطورة 4</text><rect x="300" y="20" width="240" height="120" rx="10" fill="rgba(224,90,0,.08)" stroke="#e05a00" stroke-width="2"/><text x="420" y="45" text-anchor="middle" font-size="12.5" font-weight="700" fill="#e05a00">مستوى السلامة الحيوية (BSL)</text><text x="420" y="68" text-anchor="middle" font-size="10" fill="#e05a00">متطلبات المختبر واحتوائه</text><text x="420" y="86" text-anchor="middle" font-size="10" fill="#e05a00">يُحدَّد بتقييم مخاطر شامل للنشاط</text><text x="420" y="112" text-anchor="middle" font-size="10" fill="#e05a00">مثال: عمل تشخيصي محدود عليه قد يُدار بـ BSL-3</text><path d="M262 80 L296 80" stroke="var(--ink)" stroke-width="2" marker-end="url(#arrowRG)"/><defs><marker id="arrowRG" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="var(--ink)"/></marker></defs><text x="280" y="160" text-anchor="middle" font-size="10" fill="var(--muted)">مجموعة الخطورة عامل واحد من عوامل تحديد BSL، وليست المُحدِّد الوحيد</text></svg></div>'+
+'<div class="acad-tip"><h3>⚡ نشاط 2 — صح أو خطأ</h3><ol class="ag-ol"><li>مجموعة الخطورة (Risk Group) صفة ثابتة في العامل الممرض نفسه، بينما BSL يخص متطلبات المختبر.</li><li>اسم العامل الممرض وحده كافٍ دائماً لتحديد مستوى BSL المطلوب دون أي تقييم إضافي.</li><li>يمكن لعمل تشخيصي محدود على عيّنة من عامل مصنَّف في مجموعة خطورة عالية أن يُدار أحياناً بمستوى BSL أقل من رقم المجموعة.</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) صح. 2) خطأ — يُحدَّد BSL عبر تقييم مخاطر شامل يشمل طبيعة النشاط والكمية وطريقة التعامل، لا اسم العامل فقط. 3) صح — كمية العينة ونوع الإجراء (تشخيصي محدود مقابل تكثير الفيروس) يؤثران في القرار النهائي.</div></div>'+
+
+'<h2>BSL-1: المستوى التأسيسي</h2>'+
+'<p>يُستخدم مع عوامل لا تسبب مرضاً في البالغين الأصحّاء، مثل سلالات <em>E. coli</em> غير الممرضة المستخدمة في التعليم والبحث الأساسي. يُسمَح بالعمل على منضدة مفتوحة، ويكفي حد أدنى من معدات الوقاية (قفازات ومعطف مختبر)، ويفصل باب عادي المختبر عن باقي المبنى. الممارسات الميكروبيولوجية القياسية (غسل الأيدي، منع الأكل والشرب، تطهير الأسطح) كافية هنا.</p>'+
+
+'<h2>BSL-2: خطورة معتدلة</h2>'+
+'<p>يُستخدم مع عوامل معتدلة الخطورة مثل <em>Staphylococcus aureus</em> أو بعض الفيروسات المنقولة بالدم. يضيف BSL-2 فوق BSL-1: باباً ذاتي الإغلاق ووصولاً مقيَّداً أثناء العمل، وتدريباً متخصصاً بإشراف باحث كفء، واستخدام خزانة الأمان الحيوي لأي إجراء قد يُنتج رذاذاً أو رذاذاً متطايراً، ويُنصَح فيه بضغط هواء سالب.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 560 160" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="15" width="250" height="130" rx="8" fill="rgba(34,153,84,.08)" stroke="#229954" stroke-width="2"/><text x="145" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#1B6B3A">BSL-1</text><text x="145" y="60" text-anchor="middle" font-size="10" fill="#1B6B3A">✓ منضدة عمل مفتوحة</text><text x="145" y="78" text-anchor="middle" font-size="10" fill="#1B6B3A">✓ باب عادي يفصل عن المبنى</text><text x="145" y="96" text-anchor="middle" font-size="10" fill="#1B6B3A">✓ حد أدنى من معدات الوقاية</text><text x="145" y="114" text-anchor="middle" font-size="10" fill="#1B6B3A">✓ ممارسات ميكروبيولوجية قياسية</text><text x="145" y="132" text-anchor="middle" font-size="9.5" fill="var(--muted)">مثال: E. coli غير الممرضة</text><rect x="290" y="15" width="250" height="130" rx="8" fill="rgba(242,197,0,.1)" stroke="#c99700" stroke-width="2"/><text x="415" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#8a6d00">BSL-2</text><text x="415" y="60" text-anchor="middle" font-size="10" fill="#8a6d00">✓ باب ذاتي الإغلاق ووصول مقيَّد</text><text x="415" y="78" text-anchor="middle" font-size="10" fill="#8a6d00">✓ خزانة أمان حيوي للرذاذ</text><text x="415" y="96" text-anchor="middle" font-size="10" fill="#8a6d00">✓ تدريب متخصص + إشراف كفء</text><text x="415" y="114" text-anchor="middle" font-size="10" fill="#8a6d00">✓ يُنصح بضغط سالب</text><text x="415" y="132" text-anchor="middle" font-size="9.5" fill="var(--muted)">مثال: Staphylococcus aureus</text></svg></div>'+
+
+'<h2>BSL-3: خطورة جدّية عبر الاستنشاق</h2>'+
+'<p>يُستخدم مع عوامل قد تسبب مرضاً خطيراً أو مميتاً عبر الاستنشاق تحديداً، مثل بكتيريا السل أو بعض الفيروسات التنفسية. هنا يصبح الاحتواء أكثر صرامة بشكل ملحوظ: كل عمل على المادة المُعدية يجب أن يتم داخل خزانة أمان حيوي دون استثناء، والمنشأة تتطلب سمات تصميمية خاصة تفصل بوضوح بين المختبر ومحيطه.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 560 210" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><rect x="30" y="20" width="500" height="170" rx="10" fill="none" stroke="#e05a00" stroke-width="2" stroke-dasharray="7,4"/><text x="280" y="15" text-anchor="middle" font-size="12" font-weight="700" fill="#e05a00">BSL-3 — سمات التصميم الأساسية</text><rect x="50" y="40" width="140" height="60" rx="6" fill="rgba(224,90,0,.08)" stroke="#e05a00" stroke-width="1.5"/><text x="120" y="65" text-anchor="middle" font-size="10.5" font-weight="700" fill="#e05a00">مدخل مزدوج الأبواب</text><text x="120" y="82" text-anchor="middle" font-size="9" fill="#e05a00">غرفة أمامية إلزامية</text><rect x="210" y="40" width="140" height="60" rx="6" fill="rgba(224,90,0,.08)" stroke="#e05a00" stroke-width="1.5"/><text x="280" y="65" text-anchor="middle" font-size="10.5" font-weight="700" fill="#e05a00">ضغط هواء سالب</text><text x="280" y="82" text-anchor="middle" font-size="9" fill="#e05a00">هواء لا يُعاد تدويره</text><rect x="370" y="40" width="140" height="60" rx="6" fill="rgba(224,90,0,.08)" stroke="#e05a00" stroke-width="1.5"/><text x="440" y="65" text-anchor="middle" font-size="10.5" font-weight="700" fill="#e05a00">أوتوكلاف تمريري</text><text x="440" y="82" text-anchor="middle" font-size="9" fill="#e05a00">بابان — بلا فتح متزامن</text><rect x="50" y="115" width="140" height="60" rx="6" fill="rgba(224,90,0,.08)" stroke="#e05a00" stroke-width="1.5"/><text x="120" y="140" text-anchor="middle" font-size="10.5" font-weight="700" fill="#e05a00">كل العمل داخل BSC</text><text x="120" y="157" text-anchor="middle" font-size="9" fill="#e05a00">لا عمل مفتوح على المنضدة</text><rect x="210" y="115" width="140" height="60" rx="6" fill="rgba(224,90,0,.08)" stroke="#e05a00" stroke-width="1.5"/><text x="280" y="140" text-anchor="middle" font-size="10.5" font-weight="700" fill="#e05a00">مراقبة طبية للعاملين</text><text x="280" y="157" text-anchor="middle" font-size="9" fill="#e05a00">تسجيل صحي دوري</text><rect x="370" y="115" width="140" height="60" rx="6" fill="rgba(224,90,0,.08)" stroke="#e05a00" stroke-width="1.5"/><text x="440" y="140" text-anchor="middle" font-size="10.5" font-weight="700" fill="#e05a00">تسجيل الدخول والخروج</text><text x="440" y="157" text-anchor="middle" font-size="9" fill="#e05a00">وصول موثَّق لكل شخص</text></svg></div>'+
+'<div class="acad-tip"><h3>⚡ نشاط 3 — أكمل الفراغ (سمات BSL-3)</h3><ol class="ag-ol"><li>يجب أن يكون لمختبر BSL-3 مدخل ________ الأبواب مع غرفة أمامية.</li><li>هواء مختبر BSL-3 يجب أن يكون ________ الضغط ولا يُعاد تدويره.</li><li>يُفضَّل أن يحتوي مختبر BSL-3 على أوتوكلاف بتصميم ________ يفتح على جهتين دون تزامن.</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) مزدوج. 2) سالب (Negative). 3) تمريري (Pass-through).</div></div>'+
+
+'<h2>BSL-4: أقصى درجات الاحتواء</h2>'+
+'<p>يُخصَّص للعوامل الخطرة والنادرة التي تسبب أمراضاً غالباً مميتة ولا يتوفر لها علاج أو لقاح فعّال، مثل فيروسات إيبولا وماربورغ. توجد منشآت BSL-4 غالباً في مبانٍ مستقلة تماماً، بأنظمة إمداد وطرد هواء خاصة بها، ولا يتجاوز عددها عالمياً أكثر من بضع عشرات من المرافق. يُعتمَد فيها أحد نموذجَين رئيسيَّين للعمل:</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:#111"><svg viewBox="0 0 560 190" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="15" width="250" height="160" rx="8" fill="rgba(196,30,30,.12)" stroke="#c41e1e" stroke-width="2"/><text x="145" y="38" text-anchor="middle" font-size="12.5" font-weight="700" fill="#ff8a8a">المختبر البدلي (Suit Lab)</text><text x="145" y="62" text-anchor="middle" font-size="30">🧑‍🚀</text><text x="145" y="90" text-anchor="middle" font-size="10" fill="#ffcaca">بدلة كاملة موجَبة الضغط</text><text x="145" y="106" text-anchor="middle" font-size="10" fill="#ffcaca">بإمداد هواء مستقل</text><text x="145" y="130" text-anchor="middle" font-size="10" fill="#ffcaca">دُش كيميائي إلزامي</text><text x="145" y="146" text-anchor="middle" font-size="10" fill="#ffcaca">عند كل خروج</text><text x="145" y="170" text-anchor="middle" font-size="9" fill="#d99">يسمح بالتعامل المباشر مع العينات</text><rect x="290" y="15" width="250" height="160" rx="8" fill="rgba(196,30,30,.12)" stroke="#c41e1e" stroke-width="2"/><text x="415" y="38" text-anchor="middle" font-size="12.5" font-weight="700" fill="#ff8a8a">مختبر خط الخزانات (Class III)</text><text x="415" y="62" text-anchor="middle" font-size="30">🔒</text><text x="415" y="90" text-anchor="middle" font-size="10" fill="#ffcaca">خزانات أمان حيوي فئة ثالثة</text><text x="415" y="106" text-anchor="middle" font-size="10" fill="#ffcaca">محكمة الإغلاق تماماً</text><text x="415" y="130" text-anchor="middle" font-size="10" fill="#ffcaca">التعامل عبر قفازات مدمجة</text><text x="415" y="146" text-anchor="middle" font-size="10" fill="#ffcaca">في جدار الخزانة</text><text x="415" y="170" text-anchor="middle" font-size="9" fill="#d99">لا تلامس مباشر بين الباحث والعينة إطلاقاً</text></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;background:var(--bg2);border-top:1px solid var(--line)">نموذجان معتمدان لمختبرات BSL-4، يختاران حسب طبيعة العمل والموارد المتاحة</div></div>'+
+
+'<p>وفي كلا النموذجَين، يخضع الباحث لدُش تعقيم كيميائي إلزامي قبل مغادرة المنشأة، مهما كانت مدة العمل قصيرة.</p>'+
+'<div class="acad-tip"><h3>⚡ نشاط 4 — طابق المستوى بالسمة المميِّزة</h3><ol class="ag-ol"><li>BSL-1 — (أ) بدلة كاملة موجَبة الضغط &nbsp;|&nbsp; (ب) عمل على منضدة مفتوحة</li><li>BSL-2 — (أ) خزانة أمان حيوي للرذاذ &nbsp;|&nbsp; (ب) عزل كامل بمبنى مستقل</li><li>BSL-3 — (أ) ضغط سالب ومدخل مزدوج &nbsp;|&nbsp; (ب) حد أدنى من معدات الوقاية</li><li>BSL-4 — (أ) باب عادي يفصل عن المبنى &nbsp;|&nbsp; (ب) بدلة كاملة أو خزانة فئة ثالثة</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) ب — عمل على منضدة مفتوحة. 2) أ — خزانة أمان حيوي للرذاذ. 3) أ — ضغط سالب ومدخل مزدوج. 4) ب — بدلة كاملة أو خزانة فئة ثالثة.</div></div>'+
+
+'<h2>تصاعد معدات الوقاية عبر المستويات الأربعة</h2>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><div style="display:flex;flex-wrap:wrap;justify-content:space-around;padding:20px 10px;gap:10px"><div style="text-align:center;min-width:110px"><div style="font-size:13px;font-weight:700;color:#1B6B3A">BSL-1</div><div style="font-size:24px;margin:6px 0">🥼</div><div style="font-size:9.5px;color:var(--muted)">معطف + قفازات</div></div><div style="text-align:center;min-width:110px"><div style="font-size:13px;font-weight:700;color:#8a6d00">BSL-2</div><div style="font-size:24px;margin:6px 0">🥽</div><div style="font-size:9.5px;color:var(--muted)">+ واقي وجه/عين</div></div><div style="text-align:center;min-width:110px"><div style="font-size:13px;font-weight:700;color:#a35c00">BSL-3</div><div style="font-size:24px;margin:6px 0">😷</div><div style="font-size:9.5px;color:var(--muted)">+ تنفس محمي أحياناً</div></div><div style="text-align:center;min-width:110px"><div style="font-size:13px;font-weight:700;color:#c41e1e">BSL-4</div><div style="font-size:24px;margin:6px 0">🧑‍🚀</div><div style="font-size:9.5px;color:var(--muted)">بدلة كاملة معزولة</div></div></div><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">تصاعد معدات الوقاية الشخصية عبر المستويات الأربعة</div></div>'+
+
+'<div class="acad-twrap">'+
+'<table class="acad-tbl">'+
+'<thead><tr><th>المستوى</th><th>مثال عامل</th><th>أبرز سمة مميِّزة</th></tr></thead>'+
+'<tbody>'+
+'<tr><td>BSL-1</td><td>E. coli غير ممرضة</td><td>منضدة مفتوحة، حد أدنى من الوقاية</td></tr>'+
+'<tr><td>BSL-2</td><td>Staphylococcus aureus</td><td>خزانة أمان حيوي + وصول مقيَّد</td></tr>'+
+'<tr><td>BSL-3</td><td>بكتيريا السل</td><td>ضغط سالب + مدخل مزدوج + كل العمل داخل BSC</td></tr>'+
+'<tr><td>BSL-4</td><td>فيروس إيبولا</td><td>عزل كامل + بدلة ضغط موجب أو خزانة فئة ثالثة</td></tr>'+
+'</tbody></table></div>'+
+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">دراسة حالة حقيقية</div><div class="acad-case-val">آخر وفاة بالجدري في العالم — برمنغهام 1978</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">التحدي</div><div class="acad-case-val">كانت منظمة الصحة العالمية على وشك إعلان القضاء التام على مرض الجدري عالمياً بعد آخر حالة طبيعية في الصومال عام 1977. لم يتبقَّ سوى عدد محدود من المختبرات الأكاديمية حول العالم التي ما زالت تحتفظ بعيّنات حية من الفيروس لأغراض بحثية.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">ماذا حدث</div><div class="acad-case-val">جانيت باركر، مصوّرة طبية بجامعة برمنغهام، كان مكتبها يقع فوق مختبر كان يُجري أبحاثاً على فيروس الجدري الحي. في أغسطس 1978 أُصيبت بالمرض وتُوفيت بعدها بأسابيع، لتصبح آخر شخص يموت بالجدري في التاريخ. خلص التحقيق الرسمي (تقرير Shooter) إلى أن المنشأة لم تكن مؤهلة بالكامل لاحتواء عامل بهذه الخطورة، وأشار إلى احتمال انتقال الفيروس عبر قناة تهوية غير مُحكَمة الصيانة، وإن ظل هذا التفسير محل نقاش علمي لاحق.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الدرس</div><div class="acad-case-val">أدت هذه الحادثة إلى قرار عالمي بحصر كل مخزون فيروس الجدري المتبقي في مختبرَين فقط، كلاهما مجهَّز بمستوى BSL-4 الكامل. الدرس الجوهري: خطورة العامل نفسه لا تكفي؛ فحتى مؤسسة أكاديمية عريقة قد تفشل إن لم تُطابِق منشأتها الفعلية متطلبات المستوى الذي يستحقه هذا الخطر.</div></div>'+
+'</div>'+
+'<div class="acad-case"><h3 style="margin-top:0">⚡ نشاط 5 — اكتشف الخطأ</h3><p style="font-size:13px;line-height:1.8;margin:0 0 10px">مختبر يدرس فيروساً نادراً شديد الخطورة، لكن مبناه قديم: لا يوجد به مدخل مزدوج أو غرفة أمامية، وقناة التهوية المشتركة مع طابق مكتبي مجاور لم تُفحص منذ سنوات، ولا يتوفر دُش تعقيم عند الخروج.</p><ol class="ag-ol"><li>ما المستوى المفترض أن يعمل به هذا المختبر بناءً على خطورة العامل؟</li><li>ما أوجه القصور التي تجعل المنشأة الحالية غير مؤهلة لهذا المستوى؟</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) على الأرجح BSL-3 أو BSL-4 حسب طبيعة الفيروس وقابليته للانتقال. 2) غياب المدخل المزدوج والغرفة الأمامية، ومشاركة نظام تهوية مع مناطق غير محتواة دون فحص دوري، وغياب دُش التعقيم — كل هذه فجوات تصميمية خطيرة تجعل المبنى غير مؤهل للمستوى المطلوب، بصرف النظر عن حرص العاملين فيه.</div></div>'+
+'<div class="acad-tip"><h3>⚡ نشاط 6 — تأمّل في دراسة الحالة</h3><p style="margin:0 0 10px;font-size:13px">بالرجوع إلى حادثة برمنغهام 1978:</p><ol class="ag-ol"><li>ما العلاقة بين هذه الحادثة وقرار حصر عمل مخزون الجدري في مختبرَي BSL-4 فقط عالمياً؟</li><li>لو كنت مسؤول تقييم مخاطر اليوم، ما أول سؤال كنت ستطرحه قبل الموافقة على استمرار أي بحث حي على عامل ممرض نادر الخطورة في منشأة قديمة؟</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>نقاش:</strong> 1) الحادثة كشفت أن حتى منشأة أكاديمية معترف بها يمكن أن تحوي فجوات احتواء قاتلة، فدفع ذلك المجتمع الدولي لحصر العمل على عامل بهذه الخطورة في أقل عدد ممكن من المنشآت الأعلى تجهيزاً (BSL-4) بدلاً من الاعتماد على تقييمات متفرقة لكل مختبر. 2) سؤال معقول: هل تصميم المنشأة الفعلي (لا مجرد النية أو الحرص الشخصي) يستوفي كل سمات المستوى المطلوب فعلياً وبتوثيق تفتيش حديث؟ — هذا سؤال مفتوح، وإجابات معقولة أخرى ممكنة.</div></div>'+
+
+'<div class="acad-err">'+
+'<h3>أخطاء شائعة يقع فيها كثيرون</h3>'+
+'<ul>'+
+'<li><strong>"اسم العامل الممرض وحده يحدد BSL":</strong> في الحقيقة يُحدَّد المستوى عبر تقييم مخاطر شامل يشمل طبيعة النشاط والكمية، لا اسم العامل فقط.</li>'+
+'<li><strong>"BSL-4 دائماً يعني بدلة كاملة":</strong> بعض مرافق BSL-4 تعتمد نموذج خزانات الفئة الثالثة بدلاً من البدلة، وكلاهما معتمَد رسمياً.</li>'+
+'<li><strong>"مستوى أعلى يعني أن العمل أصعب علمياً":</strong> BSL يخص درجة الاحتواء المطلوبة للسلامة، لا مدى تعقيد التجربة العلمية نفسها.</li>'+
+'<li><strong>"BSL-1 لا يحتاج أي احتياط":</strong> حتى BSL-1 يلتزم بممارسات ميكروبيولوجية قياسية إلزامية؛ "الحد الأدنى" لا يعني "صفر احتياطات".</li>'+
+'</ul>'+
+'</div>'+
+
+'<div class="acad-tip">'+
+'<h3>نصائح للدراسة</h3>'+
+'<ul>'+
+'<li><strong>احفظ المبدأ لا الجدول فقط:</strong> إن فهمت أن كل مستوى "يضيف" فوق سابقه، ستستنتج تفاصيل كثيرة منطقياً دون حفظ.</li>'+
+'<li><strong>اربط كل مستوى بمثال واحد تتذكره جيداً:</strong> E. coli لـ BSL-1، السل لـ BSL-3، إيبولا لـ BSL-4.</li>'+
+'<li><strong>لا تخلط بين Risk Group وBSL:</strong> ارجع لمخطط المقارنة كلما التبس عليك الفرق.</li>'+
+'</ul>'+
+'</div>'+
+
+'<h2>أهمية تصنيف BSL في المختبرات المختلفة</h2>'+
+
+'<h3>في المختبرات البحثية</h3>'+
+'<ul>'+
+'<li><strong>تحديد الموارد اللازمة مسبقاً:</strong> معرفة BSL المطلوب من بداية تصميم المشروع يحدد الميزانية والمنشأة والتدريب اللازم قبل بدء أي بحث فعلي.</li>'+
+'</ul>'+
+
+'<h3>في المختبرات التشخيصية</h3>'+
+'<ul>'+
+'<li><strong>التعامل مع عيّنات مجهولة الهوية:</strong> كثير من العيّنات السريرية تُعامَل مبدئياً على أساس BSL-2 حتى تُستبعَد احتمالية وجود عامل أخطر.</li>'+
+'</ul>'+
+
+'<h3>في المختبرات الزراعية والصناعية</h3>'+
+'<ul>'+
+'<li><strong>مسبّبات أمراض النبات والحيوان:</strong> تخضع لتصنيفات مماثلة (مثل ABSL للحيوانات) تحدد احتواء المزارع الميدانية والمختبرات البيطرية.</li>'+
+'</ul>'+
+
+'<h2>ملخص المحاضرة</h2>'+
+'<div class="acad-igrid">'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">المبدأ التراكمي</div><div class="acad-icard-val">كل مستوى يشمل ما قبله + إضافات</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">Risk Group مقابل BSL</div><div class="acad-icard-val">صفة العامل مقابل متطلبات المختبر</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">BSL-4</div><div class="acad-icard-val">نموذج البدلة أو خزانة الفئة الثالثة</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">الدرس التاريخي</div><div class="acad-icard-val">برمنغهام 1978 غيّر إدارة مخزون الجدري عالمياً</div></div>'+
+'</div>'+
+
+'<h2>أسئلة للمراجعة</h2>'+
+'<ul>'+
+'<li>ما الفرق بين مجموعة الخطورة ومستوى السلامة الحيوية، مع مثال واحد يوضّح الفرق؟</li>'+
+'<li>اذكر ثلاث سمات تصميمية تُميّز مختبر BSL-3 عن BSL-2.</li>'+
+'<li>ما الفرق بين نموذجَي مختبر BSL-4 (البدلي وخط الخزانات)؟</li>'+
+'<li>لماذا لا يكفي اسم العامل الممرض وحده لتحديد BSL المناسب؟</li>'+
+'<li>ما الدرس المستفاد من حادثة برمنغهام 1978 بخصوص العلاقة بين خطورة العامل وتصميم المنشأة؟</li>'+
+'</ul>'+
+
+'<div class="acad-refs"><h3>المراجع العلمية</h3>'+
+'<div class="acad-ref"><span class="acad-ref-n">1</span>CDC & NIH (2020). Biosafety in Microbiological and Biomedical Laboratories (BMBL), 6th ed.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">2</span>World Health Organization (2020). Laboratory Biosafety Manual, 4th ed.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">3</span>Shooter, R. A. (1980). Report of the Investigation into the Cause of the 1978 Birmingham Smallpox Occurrence. HMSO.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">4</span>Pallen, M. (2018). The Last Days of Smallpox: Tragedy in Birmingham.</div>'+
+'</div>'+
+'</div>';
+
+c['glp4']='<div class="acad-body">'+
+'<div class="acad-igrid" style="margin-bottom:28px">'+
+'<div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">6 أهداف</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي — يصلح لأي مستوى</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">40 دقيقة</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">🥽</span><div class="acad-icard-lbl">التطبيق</div><div class="acad-icard-val">وقاية شخصية وإجراءات تشغيلية</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">⚡</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div>'+
+'</div>'+
+
+'<h2>أهداف التعلم</h2>'+
+'<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
+'<ul>'+
+'<li>فهم مبدأ التسلسل الهرمي للضوابط (Hierarchy of Controls) ومكانة معدات الوقاية الشخصية كخط دفاع أخير لا أول</li>'+
+'<li>التعرف على الأنواع الرئيسية لمعدات الوقاية الشخصية ووظيفة كل منها</li>'+
+'<li>فهم كيفية اختيار نوع القفاز المناسب حسب التوافق الكيميائي مع المادة المستخدمة</li>'+
+'<li>إتقان التسلسل الصحيح لارتداء وخلع معدات الوقاية (Donning & Doffing)</li>'+
+'<li>التعرف على الأخطاء الشائعة في استخدام معدات الوقاية التي تُبطل فعاليتها عملياً</li>'+
+'<li>تقدير أن معدات الوقاية تُقلّل الخطر ولا تُلغيه، وأنها جزء من نظام أوسع لا بديل عنه</li>'+
+'</ul>'+
+
+'<h2>مقدمة: لماذا لا تكفي معدات الوقاية وحدها؟</h2>'+
+'<p>حين نُفكّر في السلامة المعملية، غالباً ما يقفز إلى الذهن القفاز والكمامة والنظارة الواقية أولاً. لكن هذا الترتيب في التفكير معكوس؛ فمعدات الوقاية الشخصية ليست الحل الأول ولا الأقوى في منظومة السلامة، بل هي آخر طبقة حماية، تُستخدم فقط بعد استنفاد كل الخيارات الأقوى منها. هذه المحاضرة تشرح أين تقع PPE ضمن هذا الترتيب، ثم تتعمّق في أنواعها واختيارها الصحيح والتسلسل السليم لارتدائها وخلعها.</p>'+
+
+'<h2>التسلسل الهرمي للضوابط (Hierarchy of Controls)</h2>'+
+'<p>يرتّب هذا الإطار وسائل الحماية من الأقوى إلى الأضعف في الموثوقية: <strong>الإحلال</strong> (إزالة الخطر تماماً)، ثم <strong>الاستبدال</strong> بمادة أو طريقة أقل خطورة، ثم <strong>الضوابط الهندسية</strong> (خزائن الأمان الحيوي، التهوية)، ثم <strong>الضوابط الإدارية</strong> (SOPs والتدريب وجداول العمل)، وأخيراً <strong>معدات الوقاية الشخصية</strong>.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 500 260" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><polygon points="250,15 320,70 180,70" fill="rgba(27,107,58,.85)" stroke="#1B6B3A" stroke-width="1.5"/><text x="250" y="50" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">الإحلال</text><polygon points="180,70 320,70 355,120 145,120" fill="rgba(34,140,84,.75)" stroke="#1B6B3A" stroke-width="1.5"/><text x="250" y="100" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">الاستبدال بمادة أقل خطورة</text><polygon points="145,120 355,120 390,170 110,170" fill="rgba(80,160,100,.65)" stroke="#1B6B3A" stroke-width="1.5"/><text x="250" y="150" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0d3018">الضوابط الهندسية (BSC، تهوية)</text><polygon points="110,170 390,170 425,215 75,215" fill="rgba(242,197,0,.55)" stroke="#c99700" stroke-width="1.5"/><text x="250" y="197" text-anchor="middle" font-size="10.5" font-weight="700" fill="#5a4600">الضوابط الإدارية (SOPs، تدريب)</text><polygon points="75,215 425,215 455,250 45,250" fill="rgba(224,90,0,.6)" stroke="#e05a00" stroke-width="1.5"/><text x="250" y="238" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">معدات الوقاية الشخصية (PPE)</text></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">PPE هي خط الدفاع الأخير في التسلسل الهرمي للضوابط، لا الأول ولا الأهم وحده</div></div>'+
+'<div class="acad-tip"><h3>⚡ نشاط 1 — صح أو خطأ</h3><ol class="ag-ol"><li>معدات الوقاية الشخصية هي أول وأهم خط دفاع ضد المخاطر المعملية.</li><li>استبدال مادة كيميائية خطرة بأخرى أقل خطورة أعلى في التسلسل الهرمي من معدات الوقاية.</li><li>الضوابط الإدارية مثل SOPs والتدريب أضعف تأثيراً من معدات الوقاية الشخصية.</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) خطأ — PPE هي خط الدفاع الأخير، بعد الإحلال والاستبدال والضوابط الهندسية والإدارية. 2) صح. 3) خطأ — الضوابط الإدارية والهندسية تُعتبر أكثر موثوقية من PPE لأنها لا تعتمد على الالتزام الفردي المستمر.</div></div>'+
+
+'<p>السبب في ترتيب PPE في القاع ليس التقليل من أهميتها، بل أنها الوسيلة الوحيدة في هذا التسلسل التي تعتمد بالكامل على الالتزام البشري المستمر: قفاز يُنسى تغييره، أو كمامة تُرتدى بشكل غير محكم، يُبطلان الحماية فوراً — بخلاف ضابط هندسي كخزانة أمان حيوي تعمل بصرف النظر عن انتباه الفرد لحظة بلحظة.</p>'+
+
+'<h2>اختيار القفازات: التوافق الكيميائي أولاً</h2>'+
+'<p>لا يوجد قفاز واحد يقاوم كل المواد الكيميائية؛ فكل مادة من مواد صناعة القفازات لها نقاط قوة وضعف مختلفة تماماً.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><div style="display:flex;flex-wrap:wrap;justify-content:space-around;padding:18px 10px;gap:10px"><div style="text-align:center;min-width:110px;padding:8px;background:rgba(27,107,58,.07);border-radius:8px"><div style="font-size:12px;font-weight:700;color:#1B6B3A">نيتريل</div><div style="font-size:9px;color:var(--muted);margin-top:4px">زيوت ومذيبات عامة</div><div style="font-size:9px;color:#e05a00;margin-top:2px">✕ يفشل مع الأسيتون</div></div><div style="text-align:center;min-width:110px;padding:8px;background:rgba(27,107,58,.07);border-radius:8px"><div style="font-size:12px;font-weight:700;color:#1B6B3A">لاتكس</div><div style="font-size:9px;color:var(--muted);margin-top:4px">أحماض وقواعد مائية</div><div style="font-size:9px;color:#e05a00;margin-top:2px">✕ حساسية تحسسية</div></div><div style="text-align:center;min-width:110px;padding:8px;background:rgba(27,107,58,.07);border-radius:8px"><div style="font-size:12px;font-weight:700;color:#1B6B3A">نيوبرين</div><div style="font-size:9px;color:var(--muted);margin-top:4px">أحماض وقواعد ومذيبات</div><div style="font-size:9px;color:#1B6B3A;margin-top:2px">✓ مقاومة جيدة عامة</div></div><div style="text-align:center;min-width:110px;padding:8px;background:rgba(224,90,0,.08);border-radius:8px"><div style="font-size:12px;font-weight:700;color:#e05a00">بيوتيل</div><div style="font-size:9px;color:var(--muted);margin-top:4px">غازات وكيتونات وأحماض قوية</div><div style="font-size:9px;color:#1B6B3A;margin-top:2px">✓ الأعلى مقاومة للغازات</div></div></div><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">لا يوجد قفاز واحد يقاوم كل المواد الكيميائية — الاختيار يعتمد على المادة المستخدمة تحديداً</div></div>'+
+'<div class="acad-tip"><h3>⚡ نشاط 3 — طابق المادة بالقفاز المناسب</h3><ol class="ag-ol"><li>الأسيتون (مذيب كيتوني) — (أ) نيتريل &nbsp;|&nbsp; (ب) لاتكس</li><li>عيّنات دم روتينية — (أ) بيوتيل &nbsp;|&nbsp; (ب) نيتريل</li><li>حمض النيتريك المركّز — (أ) بيوتيل &nbsp;|&nbsp; (ب) لاتكس</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابات:</strong> 1) ب — لاتكس (النيتريل يتحلل بسرعة مع الأسيتون خلافاً للاعتقاد الشائع). 2) ب — نيتريل (مقاومة جيدة، خالٍ من مسببات الحساسية). 3) أ — بيوتيل (الأعلى مقاومة للأحماض القوية والغازات).</div></div>'+
+
+'<div class="acad-tip">'+
+'<h3>معلومة قد تُفاجئك</h3>'+
+'<p>قفازات النيتريل — الأكثر استخداماً في المختبرات لأسباب وجيهة (متانة، خلوّها من مسببات حساسية اللاتكس) — تتحلل بسرعة كبيرة عند ملامسة الأسيتون، وقد يحدث اختراق للمادة خلال أقل من دقيقة مع القفازات الرقيقة. هذا مثال دقيق على أهمية مراجعة جدول التوافق الكيميائي قبل افتراض أن "القفاز المعتاد" يكفي لكل مادة.</p>'+
+'</div>'+
+
+'<h2>حماية العين والوجه</h2>'+
+'<p>تختلف درجة الحماية المطلوبة حسب طبيعة الخطر: رذاذ خفيف يحتاج نظارة واقية بسيطة، بينما المواد الكيميائية الحارقة أو خطر الانفجار يستوجب جوجل مانع للتسرب، وربما درعاً كاملاً للوجه فوقه.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><div style="display:flex;flex-wrap:wrap;justify-content:space-around;padding:18px 10px;gap:12px"><div style="text-align:center;min-width:120px"><div style="font-size:30px">👓</div><div style="font-size:11.5px;font-weight:700;color:var(--ink);margin-top:6px">نظارة واقية</div><div style="font-size:9.5px;color:var(--muted)">رذاذ خفيف فقط، بلا حماية جانبية كاملة</div></div><div style="text-align:center;min-width:120px"><div style="font-size:30px">🥽</div><div style="font-size:11.5px;font-weight:700;color:var(--ink);margin-top:6px">جوجل مانع للتسرب</div><div style="font-size:9.5px;color:var(--muted)">إحكام كامل حول العين، للمواد الكيميائية</div></div><div style="text-align:center;min-width:120px"><div style="font-size:30px">🛡️</div><div style="font-size:11.5px;font-weight:700;color:var(--ink);margin-top:6px">درع الوجه الكامل</div><div style="font-size:9.5px;color:var(--muted)">يُستخدم فوق الجوجل، لخطر الانفجار أو الرذاذ الشديد</div></div></div><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">النظارة الطبية العادية ليست معدة وقاية — لا تغني أبداً عن نظارة أو جوجل معتمَد</div></div>'+
+
+'<h2>التسلسل الصحيح للارتداء (Donning)</h2>'+
+'<p>ترتيب ارتداء معدات الوقاية ليس تفصيلاً عشوائياً؛ فالمنطق العام هو الانتقال من العناصر الأقل تلامساً مباشراً مع المخاطر إلى الأكثر التصاقاً بالجلد، بحيث تكون القفازات دائماً آخر ما يُرتدى.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 600 130" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="55" r="30" fill="rgba(27,107,58,.12)" stroke="#1B6B3A" stroke-width="2"/><text x="60" y="62" text-anchor="middle" font-size="20">🥼</text><text x="60" y="105" text-anchor="middle" font-size="10" fill="var(--ink)">1. المعطف</text><path d="M95 55 L145 55" stroke="var(--ink)" stroke-width="2" marker-end="url(#arrD)"/><circle cx="180" cy="55" r="30" fill="rgba(27,107,58,.12)" stroke="#1B6B3A" stroke-width="2"/><text x="180" y="62" text-anchor="middle" font-size="20">😷</text><text x="180" y="105" text-anchor="middle" font-size="10" fill="var(--ink)">2. الكمامة</text><path d="M215 55 L265 55" stroke="var(--ink)" stroke-width="2" marker-end="url(#arrD)"/><circle cx="300" cy="55" r="30" fill="rgba(27,107,58,.12)" stroke="#1B6B3A" stroke-width="2"/><text x="300" y="62" text-anchor="middle" font-size="20">🥽</text><text x="300" y="105" text-anchor="middle" font-size="10" fill="var(--ink)">3. واقي العين</text><path d="M335 55 L385 55" stroke="var(--ink)" stroke-width="2" marker-end="url(#arrD)"/><circle cx="420" cy="55" r="30" fill="rgba(27,107,58,.12)" stroke="#1B6B3A" stroke-width="2"/><text x="420" y="62" text-anchor="middle" font-size="20">🧤</text><text x="420" y="105" text-anchor="middle" font-size="10" fill="var(--ink)">4. القفازات</text><path d="M455 55 L500 55" stroke="var(--ink)" stroke-width="2" marker-end="url(#arrD)"/><circle cx="535" cy="55" r="30" fill="rgba(27,107,58,.2)" stroke="#1B6B3A" stroke-width="2.5"/><text x="535" y="62" text-anchor="middle" font-size="18">✓</text><text x="535" y="105" text-anchor="middle" font-size="9.5" fill="#1B6B3A">جاهز للعمل</text><defs><marker id="arrD" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="var(--ink)"/></marker></defs></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">ترتيب الارتداء: من الأقل تلامساً مع الخطر إلى الأكثر التصاقاً بالجلد — القفازات دائماً أخيراً</div></div>'+
+'<div class="acad-tip"><h3>⚡ نشاط 2 — رتّب تسلسل الارتداء الصحيح</h3><p style="margin:0 0 10px;font-size:13px">رتّب هذه الخطوات بالترتيب الصحيح لارتداء معدات الوقاية:</p><ol class="ag-ol"><li>القفازات</li><li>معطف المختبر</li><li>واقي العين</li><li>الكمامة</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الترتيب الصحيح:</strong> 2 ← 4 ← 3 ← 1 (المعطف، ثم الكمامة، ثم واقي العين، ثم القفازات أخيراً). القاعدة: القفازات آخر ما يُرتدى لأنها أكثر عنصر ملامسة للمواد أثناء العمل.</div></div>'+
+
+'<h2>التسلسل الصحيح للخلع (Doffing)</h2>'+
+'<p>خلع معدات الوقاية أخطر من ارتدائها؛ فمعظم حالات التلوث الذاتي الموثَّقة تحدث أثناء الخلع غير الصحيح، لا أثناء العمل نفسه. القاعدة المعاكسة تماماً لترتيب الارتداء: يبدأ الخلع بأكثر العناصر تلوثاً (القفازات)، وينتهي بحماية الجهاز التنفسي (الكمامة) التي تبقى حتى آخر لحظة ممكنة.</p>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><svg viewBox="0 0 600 130" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="55" r="30" fill="rgba(224,90,0,.15)" stroke="#e05a00" stroke-width="2"/><text x="60" y="62" text-anchor="middle" font-size="20">🧤</text><text x="60" y="105" text-anchor="middle" font-size="10" fill="#e05a00">1. القفازات</text><path d="M95 55 L145 55" stroke="var(--ink)" stroke-width="2" marker-end="url(#arrF)"/><circle cx="180" cy="55" r="30" fill="rgba(224,90,0,.12)" stroke="#e05a00" stroke-width="2"/><text x="180" y="62" text-anchor="middle" font-size="20">🥼</text><text x="180" y="105" text-anchor="middle" font-size="10" fill="#e05a00">2. المعطف</text><path d="M215 55 L265 55" stroke="var(--ink)" stroke-width="2" marker-end="url(#arrF)"/><circle cx="300" cy="55" r="30" fill="rgba(224,90,0,.1)" stroke="#e05a00" stroke-width="2"/><text x="300" y="62" text-anchor="middle" font-size="18">🧼</text><text x="300" y="105" text-anchor="middle" font-size="9.5" fill="#e05a00">3. غسل اليدين</text><path d="M335 55 L385 55" stroke="var(--ink)" stroke-width="2" marker-end="url(#arrF)"/><circle cx="420" cy="55" r="30" fill="rgba(224,90,0,.1)" stroke="#e05a00" stroke-width="2"/><text x="420" y="62" text-anchor="middle" font-size="20">🥽</text><text x="420" y="105" text-anchor="middle" font-size="10" fill="#e05a00">4. واقي العين</text><path d="M455 55 L500 55" stroke="var(--ink)" stroke-width="2" marker-end="url(#arrF)"/><circle cx="535" cy="55" r="30" fill="rgba(224,90,0,.1)" stroke="#e05a00" stroke-width="2"/><text x="535" y="62" text-anchor="middle" font-size="20">😷</text><text x="535" y="105" text-anchor="middle" font-size="10" fill="#e05a00">5. الكمامة</text><defs><marker id="arrF" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="var(--ink)"/></marker></defs></svg><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">ترتيب الخلع عكسي ومختلف: الأكثر تلوثاً (القفازات) أولاً، مع غسل اليدين بينياً، والكمامة أخيراً لحماية الجهاز التنفسي حتى آخر لحظة</div></div>'+
+'<div class="acad-tip"><h3>⚡ نشاط 5 — رتّب تسلسل الخلع الصحيح</h3><p style="margin:0 0 10px;font-size:13px">رتّب هذه الخطوات بالترتيب الصحيح لخلع معدات الوقاية بأمان:</p><ol class="ag-ol"><li>واقي العين</li><li>القفازات</li><li>الكمامة</li><li>غسل اليدين</li><li>معطف المختبر</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الترتيب الصحيح:</strong> 2 ← 5 ← 4 ← 1 ← 3 (القفازات أولاً كأكثر عنصر تلوثاً، ثم المعطف، ثم غسل اليدين، ثم واقي العين، والكمامة أخيراً لحماية الجهاز التنفسي حتى آخر لحظة ممكنة).</div></div>'+
+
+'<div class="acad-case">'+
+'<div class="acad-case-row"><div class="acad-case-lbl">دراسة حالة حقيقية</div><div class="acad-case-val">إصابة ممرضتَين بفيروس إيبولا رغم ارتداء معدات الوقاية — دالاس 2014</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">التحدي</div><div class="acad-case-val">في سبتمبر 2014 شُخِّصت أول حالة إيبولا داخل الولايات المتحدة في أحد مستشفيات دالاس. تولّت ممرضات الرعاية المباشرة للمريض دون تدريب متخصص مسبق على هذا المرض تحديداً، وارتدين معدات وقاية حُدِّدت بشكل مرتجل جزئياً.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">ماذا حدث</div><div class="acad-case-val">أُصيبت ممرضتان ممن اعتنين بالمريض بفيروس إيبولا رغم ارتدائهما معدات وقاية شبه كاملة (عباءة عزل، قفازات مزدوجة، كمامة بواقٍ بلاستيكي، أغطية أحذية مزدوجة). كشف تحقيق لاحق أن رقبة وشعر إحدى الممرضتين ظلّا مكشوفَين، وأن كلتيهما لم تحصلا على تدريب عملي كافٍ أو وقت للتمرّن على تسلسل الارتداء والخلع الصحيح قبل التعامل مع الحالة. تعافت الممرضتان لاحقاً بعد علاج مكثف.</div></div>'+
+'<div class="acad-case-row"><div class="acad-case-lbl">الدرس</div><div class="acad-case-val">ارتداء معدات الوقاية "تقريباً بالكامل" لا يكفي؛ فثغرة تغطية واحدة (كالرقبة المكشوفة)، أو غياب تدريب عملي متكرر على تسلسل الارتداء والخلع، قد يُبطل كل الحماية المقصودة. أدت هذه الحادثة لاحقاً إلى مراجعة شاملة لإرشادات معدات الوقاية من الأمراض شديدة العدوى عالمياً.</div></div>'+
+'</div>'+
+'<div class="acad-case"><h3 style="margin-top:0">⚡ نشاط 6 — تأمّل في دراسة الحالة</h3><p style="font-size:13px;line-height:1.8;margin:0 0 10px">بالرجوع إلى حادثة ممرضتَي دالاس وفيروس إيبولا 2014:</p><ol class="ag-ol"><li>ما نوع الخطأ الذي أدى للإصابة رغم ارتداء معدات وقاية بالكامل تقريباً؟</li><li>لو كنت مسؤول تدريب اليوم، ما الإجراء الذي كنت ستفرضه لمنع تكرار مثل هذا الموقف؟</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>نقاش:</strong> 1) ثغرة في التغطية (الرقبة والشعر ظلّا مكشوفَين) بالإضافة إلى غياب تدريب عملي كافٍ على تسلسل الارتداء والخلع الصحيح — الممرضتان اعتمدتا جزئياً على اجتهاد شخصي دون ممارسة كافية. 2) إجراء معقول: تدريب عملي متكرر بإشراف مباشر (لا نظري فقط) على الارتداء والخلع، مع وجود مراقب مدرَّب (Trained Observer) يتحقق بصرياً من كل خطوة قبل وبعد التعامل مع أي حالة عالية الخطورة — هذا سؤال مفتوح للنقاش، فقد تجد إجابات معقولة أخرى.</div></div>'+
+
+'<h2>أخطاء شائعة تُبطل فعالية معدات الوقاية</h2>'+
+'<div style="margin:20px 0;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--bg2)"><div style="display:flex;flex-wrap:wrap;justify-content:space-around;padding:18px 10px;gap:10px"><div style="text-align:center;min-width:110px"><div style="font-size:26px">🚪🧤</div><div style="font-size:9.5px;color:#e05a00;margin-top:6px">لمس مقبض الباب بالقفاز الملوَّث</div></div><div style="text-align:center;min-width:110px"><div style="font-size:26px">♻️🧤</div><div style="font-size:9.5px;color:#e05a00;margin-top:6px">إعادة استخدام قفاز تخلُّصي</div></div><div style="text-align:center;min-width:110px"><div style="font-size:26px">🍔🧤</div><div style="font-size:9.5px;color:#e05a00;margin-top:6px">الأكل بالقفازات داخل المختبر</div></div><div style="text-align:center;min-width:110px"><div style="font-size:26px">👃🥽</div><div style="font-size:9.5px;color:#e05a00;margin-top:6px">ثغرة مكشوفة (الرقبة/الشعر)</div></div></div><div style="padding:9px 14px;font-size:12.5px;color:var(--muted);text-align:center;border-top:1px solid var(--line)">أربعة أخطاء شائعة تُبطل فعالية معدات الوقاية عملياً رغم ارتدائها</div></div>'+
+'<div class="acad-case"><h3 style="margin-top:0">⚡ نشاط 4 — اكتشف الخطأ</h3><p style="font-size:13px;line-height:1.8;margin:0 0 10px">فنية مختبر انتهت من تحضير عيّنة، فخرجت من المختبر لتُجيب على مكالمة هاتفية في الممر وهي ترتدي نفس القفازات، ثم عادت وواصلت العمل بنفس القفازات دون تغييرها.</p><ol class="ag-ol"><li>ما الخطأ أو الأخطاء في هذا السلوك؟</li></ol><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle(\'show\');this.children[0].style.display=o?\'none\':\'inline-flex\';this.children[1].style.display=o?\'inline-flex\':\'none\'"><span style="display:inline-flex;align-items:center;gap:5px">👁️ إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px">🙈 إخفاء الإجابة</span></button><div class="acad-exp"><strong>الإجابة:</strong> خطآن: أولاً، الخروج من المختبر بالقفازات الملوَّثة يُلوّث الهاتف ومقبض الباب وكل سطح تلمسه، ناقلاً الخطر خارج المختبر. ثانياً، العودة لمواصلة العمل بنفس القفازات دون تغييرها بعد ملامسة أسطح خارجية يُعيد تلويثاً محتملاً إلى العيّنة أو منطقة العمل. القاعدة: تُخلع القفازات دائماً قبل مغادرة منطقة العمل، ولو للحظات.</div></div>'+
+
+'<div class="acad-err">'+
+'<h3>أخطاء إضافية شائعة يقع فيها كثيرون</h3>'+
+'<ul>'+
+'<li><strong>"القفاز السميك دائماً أفضل":</strong> القفاز الأكثر سمكاً يزيد المقاومة الكيميائية لكنه يقلّل البراعة اليدوية، وقد يزيد خطر الأخطاء الميكانيكية في إجراءات دقيقة.</li>'+
+'<li><strong>"نظارتي الطبية الشخصية كافية للوقاية":</strong> النظارات الطبية العادية غير مصمَّمة لمقاومة الرذاذ أو الكسر، ولا تُغني إطلاقاً عن نظارة أو جوجل معتمَد.</li>'+
+'<li><strong>"ارتداء قفازين دائماً أكثر أماناً":</strong> الازدواج مفيد في سياقات محددة (كالتعامل مع عوامل شديدة الخطورة)، لكنه ليس قاعدة عامة، وقد يقلّل الإحساس اللمسي دون فائدة إضافية حقيقية في كل المواقف.</li>'+
+'</ul>'+
+'</div>'+
+
+'<div class="acad-tip">'+
+'<h3>نصائح للدراسة</h3>'+
+'<ul>'+
+'<li><strong>احفظ الترتيب بالمنطق لا بالحفظ الآلي:</strong> ارتداء = الأقل خطورة أولاً؛ خلع = الأكثر تلوثاً أولاً.</li>'+
+'<li><strong>تدرّب عملياً لا نظرياً فقط:</strong> كما أظهرت دراسة الحالة، معرفة الخطوات نظرياً لا تكفي دون ممارسة فعلية متكررة.</li>'+
+'<li><strong>راجع جدول التوافق الكيميائي لكل مادة جديدة:</strong> لا تفترض أن القفاز المعتاد يناسب كل شيء.</li>'+
+'</ul>'+
+'</div>'+
+
+'<h2>أهمية معدات الوقاية في السياقات المهنية المختلفة</h2>'+
+
+'<h3>في المختبرات التشخيصية والطبية</h3>'+
+'<ul>'+
+'<li><strong>التعامل مع عيّنات مجهولة الخطورة:</strong> يُفترض دائماً أعلى درجة حذر ممكنة مع أي عيّنة سريرية حتى تُستبعَد الاحتمالات الخطرة.</li>'+
+'</ul>'+
+
+'<h3>في المختبرات الصناعية والكيميائية</h3>'+
+'<ul>'+
+'<li><strong>اختيار القفاز حسب خط الإنتاج:</strong> منشآت التصنيع الكيميائي تحتاج مراجعة دورية لجداول التوافق الكيميائي مع كل مادة خام جديدة تدخل خط الإنتاج.</li>'+
+'</ul>'+
+
+'<h3>في المختبرات الزراعية والبيطرية</h3>'+
+'<ul>'+
+'<li><strong>التعامل مع عيّنات حيوانية:</strong> تُطبَّق نفس مبادئ الارتداء والخلع عند التعامل مع عيّنات قد تحمل أمراضاً حيوانية المصدر قابلة للانتقال للإنسان.</li>'+
+'</ul>'+
+
+'<h2>ملخص المحاضرة</h2>'+
+'<div class="acad-igrid">'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">التسلسل الهرمي</div><div class="acad-icard-val">PPE آخر خط دفاع، لا الأول</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">اختيار القفاز</div><div class="acad-icard-val">حسب التوافق الكيميائي لا العادة</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">الارتداء والخلع</div><div class="acad-icard-val">ترتيبان مختلفان تماماً ومتعمَّدان</div></div>'+
+'<div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">الدرس التاريخي</div><div class="acad-icard-val">دالاس 2014 — ثغرة تغطية بسيطة كانت كافية للإصابة</div></div>'+
+'</div>'+
+
+'<h2>أسئلة للمراجعة</h2>'+
+'<ul>'+
+'<li>لماذا تُعتبر معدات الوقاية الشخصية آخر طبقة في التسلسل الهرمي للضوابط لا أولها؟</li>'+
+'<li>لماذا يفشل قفاز النيتريل مع الأسيتون رغم أنه القفاز الأكثر استخداماً في المختبرات؟</li>'+
+'<li>لماذا يختلف ترتيب خلع معدات الوقاية عن ترتيب ارتدائها؟</li>'+
+'<li>اذكر خطأً شائعاً واحداً في استخدام معدات الوقاية يقلّل فعاليتها رغم ارتدائها.</li>'+
+'<li>ما الدرس المستفاد من حادثة ممرضتَي دالاس 2014 بخصوص كفاية "ارتداء معدات الوقاية تقريباً بالكامل"؟</li>'+
+'</ul>'+
+
+'<div class="acad-refs"><h3>المراجع العلمية</h3>'+
+'<div class="acad-ref"><span class="acad-ref-n">1</span>NIOSH. Hierarchy of Controls. U.S. CDC.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">2</span>CDC & NIH (2020). Biosafety in Microbiological and Biomedical Laboratories (BMBL), 6th ed.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">3</span>OSHA. Personal Protective Equipment Standards, 29 CFR 1910 Subpart I.</div>'+
+'<div class="acad-ref"><span class="acad-ref-n">4</span>CDC (2014-2015). Guidance on Personal Protective Equipment for Ebola Virus Disease (post-Dallas revision).</div>'+
+'</div>'+
+'</div>';
+
+return c[id]||'<div class="acad-body"><p style="color:var(--muted);text-align:center;padding:40px 0">محتوى هذه المحاضرة قيد الإعداد — يُضاف قريباً.</p></div>';
+}
 
 var TC_COURSE={
 id:'tissue-culture',title:'زراعة الأنسجة النباتية وتطبيقاتها الحديثة',
@@ -28515,6 +29281,7 @@ if(AC_CID==='mol-bio')return mbGetContent(id);
 if(AC_CID==='food-quality')return fqGetContent(id);
 if(AC_CID==='ag-english')return agGetContent(id);
 if(AC_CID==='food-safety')return fsGetContent(id);
+if(AC_CID==='glp')return glpGetContent(id);
 if(AC_CID==='land-reclamation')return lrGetContent(id);
 if(AC_CID==='tissue-culture')return tcGetContent(id);
 if(AC_CID==='pesticide-tech')return ptGetContent(id);
@@ -29566,6 +30333,7 @@ else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note
 else{acSwitchCourse('food-safety');acGo('info',null);}
 });
 }
+else if(id==='glp'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 else if(id==='land-reclamation'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 
 else if(id==='tissue-culture'){
