@@ -2460,6 +2460,32 @@ if(typeof showToast==='function')showToast('تم نسخ الرقم','ok');
 }
 }
 
+/* ── Admin push notification on new payment request ─────────────
+   Fire-and-forget call to a Supabase Edge Function that pushes an
+   FCM notification to the owner's registered device(s), so a new
+   payment request is seen even with the site fully closed. Must
+   never block or affect the student's payment flow — every failure
+   path here is silently swallowed (console-only). See admin.html's
+   "تفعيل إشعارات الدفع" button for the token-registration side. */
+var PAYMENT_ADMIN_PUSH_URL='https://uexnkbspbhgelfmmvgqq.supabase.co/functions/v1/payment-request-push';
+var _AC_PAID_COURSE_LABELS={
+'mol-bio':'تقنيات البيولوجيا الجزيئية',
+'food-safety':'سلامة الغذاء',
+'tissue-culture':'زراعة الأنسجة النباتية وتطبيقاتها الحديثة',
+'pesticide-tech':'تكنولوجيا المبيدات والاستخدام الآمن',
+'feed-mgmt':'إدارة الأعلاف وبرامج التغذية في الإنتاج الحيواني',
+'glp':'ممارسات المعامل الجيدة والسلامة الحيوية'
+};
+function _acNotifyAdminNewPayment(cid,amount,docId){
+try{
+fetch(PAYMENT_ADMIN_PUSH_URL,{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({courseLabel:_AC_PAID_COURSE_LABELS[cid]||cid,amount:amount,docId:docId})
+}).catch(function(e){console.warn('[AdminPush] send failed:',e&&e.message);});
+}catch(e){console.warn('[AdminPush] send skipped:',e&&e.message);}
+}
+
 function acSubmitMbPayment(method){
 method=method||'vodafone_cash';
 var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
@@ -2491,6 +2517,7 @@ paymentMethod:method,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
 }).then(function(docRef){
 try{localStorage.setItem('nb-mol-bio-pending__'+u,'true');}catch(e){}
+_acNotifyAdminNewPayment('mol-bio',_MB_COURSE_PRICE,docRef.id);
 var refDisp=document.getElementById('vcash-pending-ref-display');
 if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  رقم التواصل: '+ref;
 acVcashSetStep('vcash','pending');
@@ -16595,6 +16622,7 @@ status:'pending',
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
 }).then(function(docRef){
 try{localStorage.setItem('nb-feed-mgmt-pending__'+u,'true');}catch(e){}
+_acNotifyAdminNewPayment('feed-mgmt',_FD_COURSE_PRICE,docRef.id);
 var stepPay=document.getElementById('vcash7-step-pay');
 var stepPend=document.getElementById('vcash7-step-pending');
 var refDisp=document.getElementById('vcash7-pending-ref-display');
@@ -16750,6 +16778,7 @@ paymentMethod:method,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
 }).then(function(docRef){
 try{localStorage.setItem('nb-food-safety-pending__'+u,'true');}catch(e){}
+_acNotifyAdminNewPayment('food-safety',_FS_COURSE_PRICE,docRef.id);
 var refDisp=document.getElementById('vcash4-pending-ref-display');
 if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  رقم التواصل: '+ref;
 acVcashSetStep('vcash4','pending');
@@ -16902,6 +16931,7 @@ paymentMethod:method,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
 }).then(function(docRef){
 try{localStorage.setItem('nb-tissue-culture-pending__'+u,'true');}catch(e){}
+_acNotifyAdminNewPayment('tissue-culture',_TC_COURSE_PRICE,docRef.id);
 var refDisp=document.getElementById('vcash5-pending-ref-display');
 if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  رقم التواصل: '+ref;
 acVcashSetStep('vcash5','pending');
@@ -17054,6 +17084,7 @@ paymentMethod:method,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
 }).then(function(docRef){
 try{localStorage.setItem('nb-pesticide-tech-pending__'+u,'true');}catch(e){}
+_acNotifyAdminNewPayment('pesticide-tech',_PT_COURSE_PRICE,docRef.id);
 var refDisp=document.getElementById('vcash6-pending-ref-display');
 if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  رقم التواصل: '+ref;
 acVcashSetStep('vcash6','pending');
@@ -17206,6 +17237,7 @@ paymentMethod:method,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
 }).then(function(docRef){
 try{localStorage.setItem('nb-glp-pending__'+u,'true');}catch(e){}
+_acNotifyAdminNewPayment('glp',_GLP_COURSE_PRICE,docRef.id);
 var refDisp=document.getElementById('vcash8-pending-ref-display');
 if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  رقم التواصل: '+ref;
 acVcashSetStep('vcash8','pending');
