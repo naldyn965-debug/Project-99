@@ -37,9 +37,23 @@ const CORS_HEADERS = {
 
 function initFirebaseAdmin() {
   if (getApps().length) return;
-  const raw = Deno.env.get("FIREBASE_SERVICE_ACCOUNT");
-  if (!raw) throw new Error("FIREBASE_SERVICE_ACCOUNT secret is not set");
-  const serviceAccount = JSON.parse(raw);
+
+  // تقرأ السيكريت الجديد، ولو مش موجود تقرأ السيكريت القديم فوراً
+  const raw = Deno.env.get("FIREBASE_SERVICE_ACCOUNT") || Deno.env.get("GCP_SERVICE_ACCOUNT_JSON");
+  if (!raw) throw new Error("FIREBASE_SERVICE_ACCOUNT or GCP_SERVICE_ACCOUNT_JSON secret is not set");
+
+  let serviceAccount;
+  try {
+    serviceAccount = typeof raw === "string" ? JSON.parse(raw.trim()) : raw;
+  } catch (_e) {
+    throw new Error("Failed to parse Service Account JSON");
+  }
+
+  // تصحيح الأسطر الجديدة في الـ private_key لضمان قبول Firebase له
+  if (serviceAccount.private_key && typeof serviceAccount.private_key === "string") {
+    serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+  }
+
   initializeApp({ credential: cert(serviceAccount) });
 }
 
