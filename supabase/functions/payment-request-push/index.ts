@@ -1,32 +1,7 @@
 // supabase/functions/payment-request-push/index.ts
-//
-// نداء عام (بدون Supabase auth) — بيتنادى من academy-data.js لحظة ما
-// الطالب يبعت طلب دفع، وبيبعت push notification حقيقي لتوكنات الأدمن
-// المسجّلة في Firestore (admin_config/notifications.tokens)، عشان
-// تحس بالطلب حتى لو الموقع قافل عندك تمامًا.
-//
-// الهدف مقصود إنه ثابت (توكنات الأدمن بس) — مفيش أي uid بييجي من
-// الكلاينت بيقدر يوجّه الإشعار لمكان تاني، فأقصى ضرر ممكن لطلب
-// مزيّف هو إشعار وهمي، مش تسريب أو استهداف حساب حد.
-//
-// ── الإعداد (مرة واحدة) ──────────────────────────────────────────
-// 1) عندك Service Account JSON لمشروع Firebase (نفس اللي مستخدم في
-//    academy-broadcast-push على الأغلب — لو اتعمل له rotation قبل
-//    كده حسب سجل المحادثات، استخدم النسخة الحالية بعد الـ rotation):
-//      supabase secrets set FIREBASE_SERVICE_ACCOUNT='<PASTE_JSON_HERE>'
-//
-// 2) الدالة دي المفروض متتنادَاش من طالب مسجّل دخول بحساب Supabase —
-//    هي بتتنادى بـ fetch عادي من المتصفح فقط، فلازم تتنشر بدون
-//    التحقق من الـ JWT بتاع Supabase نفسه (نفس المشكلة اللي واجهتها
-//    قبل كده مع academy-broadcast-push):
-//      supabase functions deploy payment-request-push --no-verify-jwt
-//
-// 3) تأكد إن admin_config/notifications موجود في Firestore وفيه
-//    tokens array — بيتملى أوتوماتيك أول ما تدوس زرار "🔔 إشعارات
-//    الدفع" في admin.html.
 
 import { initializeApp, cert, getApps } from "npm:firebase-admin@12/app";
-import { getFirestore } from "npm:firebase-admin@12/firestore";
+import { initializeFirestore } from "npm:firebase-admin@12/firestore";
 import { getMessaging } from "npm:firebase-admin@12/messaging";
 
 const CORS_HEADERS = {
@@ -38,7 +13,6 @@ const CORS_HEADERS = {
 function initFirebaseAdmin() {
   if (getApps().length) return;
 
-  // تقرأ السيكريت الجديد، ولو مش موجود تقرأ السيكريت القديم فوراً
   const raw = Deno.env.get("FIREBASE_SERVICE_ACCOUNT") || Deno.env.get("GCP_SERVICE_ACCOUNT_JSON");
   if (!raw) throw new Error("FIREBASE_SERVICE_ACCOUNT or GCP_SERVICE_ACCOUNT_JSON secret is not set");
 
@@ -49,7 +23,6 @@ function initFirebaseAdmin() {
     throw new Error("Failed to parse Service Account JSON");
   }
 
-  // تصحيح الأسطر الجديدة في الـ private_key لضمان قبول Firebase له
   if (serviceAccount.private_key && typeof serviceAccount.private_key === "string") {
     serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
   }
@@ -83,7 +56,8 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    const db = getFirestore();
+    // استخدام REST API بدل gRPC لمنع مشكلة الاتصال في Edge Functions
+    const db = initializeFirestore(getApps()[0], { preferRest: true });
     const snap = await db.collection("admin_config").doc("notifications").get();
     const tokens: string[] = (snap.exists && snap.data()?.tokens) || [];
 
@@ -116,8 +90,6 @@ Deno.serve(async (req: Request) => {
       .map((r, i) => (r.success ? null : `${tokens[i].slice(0, 12)}…: ${r.error?.message || "unknown"}`))
       .filter(Boolean) as string[];
 
-    // Prune tokens Firebase reports as dead (unregistered/invalid) so the
-    // admin_config doc doesn't accumulate stale tokens over time.
     const deadTokens = res.responses
       .map((r, i) => (!r.success && (r.error?.code === "messaging/registration-token-not-registered" || r.error?.code === "messaging/invalid-registration-token") ? tokens[i] : null))
       .filter(Boolean) as string[];
