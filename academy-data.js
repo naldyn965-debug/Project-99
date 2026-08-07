@@ -698,7 +698,7 @@ if(h<=0)return m+' دقيقة';
 if(m<=0)return h+' ساعة';
 return h+' ساعة و'+m+' دقيقة'}
 function acIsUnlocked(id){
-if(AC_CID==='feed-mgmt')return true;
+if(AC_CID==='feed-mgmt'||AC_CID==='glp')return true;
 var flat=acFlatLessons();
 var idx=flat.indexOf(id);
 if(idx<=0)return true;
