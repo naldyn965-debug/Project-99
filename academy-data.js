@@ -698,6 +698,7 @@ if(h<=0)return m+' دقيقة';
 if(m<=0)return h+' ساعة';
 return h+' ساعة و'+m+' دقيقة'}
 function acIsUnlocked(id){
+if(AC_CID==='feed-mgmt')return true;
 var flat=acFlatLessons();
 var idx=flat.indexOf(id);
 if(idx<=0)return true;
@@ -921,8 +922,8 @@ var agCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'ag
 '</div>'+
 agBottom+
 '</div></div>';
-var fsBadge=fsStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':fsStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 80%</span>';
-var fsBottom=fsStatus==='paid'?(fsDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+fsPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+fsPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):fsStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">50 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var fsBadge=fsStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':fsStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 90%</span>';
+var fsBottom=fsStatus==='paid'?(fsDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+fsPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+fsPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):fsStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">25 جنيه</span><span class="acad-price-tag">⏳ عرض لمدة يومين فقط</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var foodSafetyCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'food-safety\')" role="button" style="border-color:rgba(217,119,6,.25)">'+
 '<div class="acad-cat-card-top" style="background:#241405 url(\'https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+fsBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -2482,7 +2483,12 @@ fetch(PAYMENT_ADMIN_PUSH_URL,{
 method:'POST',
 headers:{'Content-Type':'application/json'},
 body:JSON.stringify({courseLabel:_AC_PAID_COURSE_LABELS[cid]||cid,amount:amount,docId:docId})
-}).catch(function(e){console.warn('[AdminPush] send failed:',e&&e.message);});
+}).then(function(r){
+return r.text().then(function(t){
+if(!r.ok){console.warn('[AdminPush] server rejected the request — status',r.status,'body:',t);return;}
+console.log('[AdminPush] request accepted, server response:',t);
+});
+}).catch(function(e){console.warn('[AdminPush] send failed (network):',e&&e.message);});
 }catch(e){console.warn('[AdminPush] send skipped:',e&&e.message);}
 }
 
@@ -6621,7 +6627,7 @@ cor:2,exp:'الطرق التقليدية تقارن خصائص عامة قد ت�
    رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
 
 var _FS_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
-var _FS_COURSE_PRICE=50;          /* ← السعر بالجنيه              */
+var _FS_COURSE_PRICE=25;          /* ← السعر بالجنيه              */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
 function acFsStatus(){
@@ -16652,7 +16658,7 @@ window.acSubmitFdPayment=acSubmitFdPayment;
    رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
 
 var _FS_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
-var _FS_COURSE_PRICE=50;          /* ← السعر بالجنيه              */
+var _FS_COURSE_PRICE=25;          /* ← السعر بالجنيه              */
 var _FS_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
