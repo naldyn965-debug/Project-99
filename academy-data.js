@@ -584,7 +584,7 @@ return JSON.parse(raw||'{}')
 function acSave(p){try{localStorage.setItem(acProgKey(),JSON.stringify(p))}catch(e){}acPushCloud(AC_CID,p);}
 /* Clears a specific user's local academy progress (called on logout / account switch) */
 function acClearLocalProgress(targetUid){
-['pest','mol-bio','food-quality','ag-english','food-safety','land-reclamation','tissue-culture'].forEach(function(cid){
+['pest','mol-bio','food-quality','ag-english','food-safety','land-reclamation','tissue-culture','plant-diseases'].forEach(function(cid){
 var pf='nb-'+cid+'-p';
 var key=targetUid?(pf+'__'+targetUid):(pf+'__guest');
 try{localStorage.removeItem(key)}catch(e){}});
@@ -618,7 +618,7 @@ return new Promise(function(resolve){
 try{
 var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
 if(!u||typeof db==='undefined'||!db){resolve();return;}
-var cids=['pest','mol-bio','food-quality','ag-english','food-safety','land-reclamation','tissue-culture'],pending=cids.length;
+var cids=['pest','mol-bio','food-quality','ag-english','food-safety','land-reclamation','tissue-culture','plant-diseases'],pending=cids.length;
 function step(){pending--;if(pending<=0)resolve();}
 cids.forEach(function(cid){
 var key='nb-'+cid+'-p__'+u;
@@ -674,7 +674,7 @@ return arr}
    the next module's first lesson stays locked for 24 hours. */
 var AC_UNIT_GATE_MS=0;
 function acModuleGateMap(){
-if(AC_CID==='land-reclamation')return{};
+if(AC_CID==='land-reclamation'||AC_CID==='plant-diseases')return{};
 var map={};
 for(var i=1;i<AC_COURSE.modules.length;i++){
  var prevLessons=AC_COURSE.modules[i-1].lessons;
@@ -857,6 +857,7 @@ var molPct=_acPctFor('mol-bio',MB_COURSE);var molDone=_acDoneFor('mol-bio');var 
 var fqPct=_acPctFor('food-quality',FQ_COURSE);var fqDone=_acDoneFor('food-quality');
 var agPct=_acPctFor('ag-english',AG_COURSE);var agDone=_acDoneFor('ag-english');var fsPct=_acPctFor('food-safety',FS_COURSE);var fsDone=_acDoneFor('food-safety');var fsStatus=acFsStatus();var agStatus=acAgStatus();
 var lrPct=_acPctFor('land-reclamation',LR_COURSE);var lrDone=_acDoneFor('land-reclamation');
+var pdPct=_acPctFor('plant-diseases',PD_COURSE);var pdDone=_acDoneFor('plant-diseases');
 var tcPct=_acPctFor('tissue-culture',TC_COURSE);var tcDone=_acDoneFor('tissue-culture');var tcStatus=acTcStatus();
 var liveCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pest\')" role="button">'+
 '<div class="acad-cat-card-top" style="background:#071808 url(\'https://images.unsplash.com/photo-1719665269650-5521f31420f3?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat"><span class="acad-pop-badge">'+STAR_ICO+'Free</span></div>'+
@@ -961,6 +962,21 @@ var lrCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'la
 '</div>'+
 lrBottom+
 '</div></div>';
+var pdBadge='<span class="acad-pop-badge">'+STAR_ICO+'Free</span>';
+var pdBottom=(pdDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+pdPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+pdPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>');
+var pdCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'plant-diseases\')" role="button" style="border-color:rgba(220,38,38,.25)">'+
+'<div class="acad-cat-card-top" style="background:#1a0a0a url(\'https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=1200&h=500&q=75\') center/cover no-repeat">'+pdBadge+'</div>'+
+'<div class="acad-cat-card-body">'+
+'<div class="acad-cat-card-kicker" style="color:#dc2626">'+PD_COURSE.kicker+'</div>'+
+'<div class="acad-cat-card-title">'+PD_COURSE.title+'</div>'+
+'<div class="acad-cat-card-desc">'+PD_COURSE.subtitle+'</div>'+
+'<div class="acad-cat-card-meta">'+
+'<span class="acad-chip-pro">'+CLOCK_ICO+PD_COURSE.duration+'</span>'+
+'<span class="acad-chip-pro">'+BARS_ICO+PD_COURSE.level+'</span>'+
+'<span class="acad-chip-pro gold">'+CERT_ICO+'شهادة إتمام</span>'+
+'</div>'+
+pdBottom+
+'</div></div>';
 return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-back" role="button" onclick="showPage(\'home\')">‹ الرئيسية</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
@@ -968,7 +984,7 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-sub">محتوى علمي موثّق باللغة العربية من فريق نبتيكس. اختر دورة لتبدأ رحلة التعلّم.</div>'+
 '</div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
-'<div class="acad-cat-grid">'+liveCard+molBioCard+fqCard+agCard+foodSafetyCard+lrCard+tcCard+'</div>'+
+'<div class="acad-cat-grid">'+liveCard+molBioCard+fqCard+agCard+foodSafetyCard+lrCard+tcCard+pdCard+'</div>'+
 '</div></div>'}
 
 /* ── HOME ─────────────────────────────────────────────────── */
@@ -1073,7 +1089,7 @@ return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
-'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-quality'?' fq':AC_CID==='ag-english'?' ag':AC_CID==='food-safety'?' fs':AC_CID==='land-reclamation'?' lr':AC_CID==='tissue-culture'?' tc':'')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
+'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-quality'?' fq':AC_CID==='ag-english'?' ag':AC_CID==='food-safety'?' fs':AC_CID==='land-reclamation'?' lr':AC_CID==='tissue-culture'?' tc':AC_CID==='plant-diseases'?' pd':'')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
 '<div class="acad-card-body">'+
 '<div class="acad-card-kicker">'+AC_COURSE.kicker+'</div>'+
 '<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
@@ -23281,6 +23297,7 @@ else{acSwitchCourse('food-safety');acGo('info',null);}
 });
 }
 else if(id==='land-reclamation'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
+else if(id==='plant-diseases'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 
 else if(id==='tissue-culture'){
 if(!(typeof currentUser!=='undefined'&&currentUser)){
