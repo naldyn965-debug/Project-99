@@ -1,0 +1,2952 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>معاينة: التطبيقات العملية والمسار المهني — Nabtex Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#1B6B3A;--brand-d:#0f552e;--brand-l:#2d9a58;
+  --brand-xl:#5fc97e;--brand-mist:#eef8f0;--brand-pale:#f5fbf6;
+  --ink:#1e2a24;--ink2:#2c3e32;
+  --slate:#3e5d48;--muted:#6d8f7a;
+  --line:#e2eee5;--line2:#cfe2d4;
+  --bg:#fafef9;--bg2:#f3faf4;--bg3:#ecf5ee;
+  --white:#ffffff;
+  --gold:#c9871a;--gold-l:#e5a343;--gold-pale:#fff6e8;
+  --red:#c0392b;--orange:#e67e22;--green:#27ae60;
+  --card:var(--white);--glass:rgba(250,254,249,.9);
+  --s1:0 1px 3px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.02);
+  --s2:0 4px 12px rgba(0,0,0,0.04),0 2px 4px rgba(0,0,0,0.02);
+  --s3:0 8px 28px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.02);
+  --s4:0 16px 48px rgba(0,0,0,0.08),0 8px 24px rgba(0,0,0,0.04);
+  --s5:0 24px 64px rgba(0,0,0,0.12),0 12px 32px rgba(0,0,0,0.06);
+  --sglow:0 0 0 3px rgba(27,107,58,.12);
+  --f-ui:'Cairo',sans-serif;
+  --f-display:'Cormorant Garamond',serif;
+  --max:1380px;
+  --r1:6px;--r2:10px;--r3:16px;--r4:24px;--rpill:9999px;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --ease-smooth:cubic-bezier(.65,0,.35,1);
+}
+:root {
+      --app-height: 100dvh; /* JS overrides this for standalone */
+      --nav-h: env(safe-area-inset-top, 0px);
+      --bar-h: env(safe-area-inset-bottom, 0px);
+    }
+:root {
+  --mkt-g:       #1a6b3a;
+  --mkt-gd:      #0f4a28;
+  --mkt-gl:      #228a4a;
+  --mkt-gxl:     #2eaa5c;
+  --mkt-gold:    #c9871a;
+  --mkt-goldl:   #e8a020;
+  --mkt-gold-d:  #a06815;
+  --mkt-ease:    cubic-bezier(.23,1,.32,1);
+  --mkt-spring:  cubic-bezier(.34,1.56,.64,1);
+  --mkt-r:       22px;
+  --mkt-rsm:     14px;
+  --mkt-shadow-card: 0 2px 16px rgba(0,0,0,.06), 0 0 0 1px rgba(27,107,58,.07);
+  --mkt-shadow-hover: 0 16px 48px rgba(0,0,0,.16), 0 0 0 1px rgba(27,107,58,.18), 0 4px 16px rgba(27,107,58,.12);
+  --mkt-shadow-gold: 0 4px 24px rgba(201,135,26,.45);
+}
+
+
+
+/* شريط الأكاديمية فيه 3 تبويبات بس، فبيبان ملزوق ناحية واحدة —
+   نوسّطه هنا بدون ما نلمس شريط السوق (اللي بتبويباته الأكتر ممكن يحتاج سكرول) */
+#acad-social-subnav .mkt-subnav-inner {
+  justify-content: center;
+  justify-content: safe center;
+}
+
+#acad-root{min-height:100svh}
+
+.acad-wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+
+
+/* ── Hero ── */
+.acad-hero{background:linear-gradient(150deg,#061610 0%,#0b2e1c 40%,#0f3d25 70%,#081a10 100%);padding:64px 0 56px;color:#fff;position:relative;overflow:hidden}
+
+.acad-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 18% 35%,rgba(46,170,92,.18) 0,transparent 55%),radial-gradient(ellipse 45% 55% at 82% 72%,rgba(27,107,58,.14) 0,transparent 50%);pointer-events:none}
+
+.acad-hero-inner{position:relative;z-index:1;max-width:700px;margin:0 auto;padding:0 24px;text-align:center}
+
+.acad-hero-badge{display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 18px;border-radius:40px;background:rgba(46,170,92,.12);border:1px solid rgba(46,170,92,.3);color:#7de89e;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;width:fit-content;margin:0 auto 20px;backdrop-filter:blur(8px)}
+
+.acad-hero-badge i{width:6px;height:6px;border-radius:50%;background:#7de89e;animation:pulse 2s ease-in-out infinite;display:inline-block}
+
+.acad-hero-title{font-family:var(--f-display);font-size:clamp(2rem,5.5vw,3.8rem);color:#fff;margin-bottom:14px;line-height:1.1;letter-spacing:-.02em}
+
+.acad-hero-sub{font-size:clamp(13px,1.8vw,15px);color:rgba(255,255,255,.55);margin-bottom:32px;line-height:1.85;max-width:520px;margin-left:auto;margin-right:auto}
+
+.acad-hero-stats{display:inline-flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:14px 28px;gap:0}
+
+.acad-hs{flex:1;text-align:center;min-width:80px}
+
+.acad-hs-n{font-family:var(--f-display);font-size:1.8rem;color:#fff;font-weight:700;line-height:1}
+
+.acad-hs-l{font-size:10px;color:rgba(255,255,255,.4);margin-top:4px;letter-spacing:.05em}
+
+.acad-hs-div{width:1px;background:rgba(255,255,255,.1);margin:0 8px}
+
+.acad-hero-back{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;color:rgba(255,255,255,.55);cursor:pointer;width:fit-content;margin:0 auto 18px;transition:color .15s}
+
+.acad-hero-back:hover{color:#fff}
+
+
+/* ── Catalog Grid ── */
+.acad-cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+
+.acad-cat-card{background:var(--card);border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:var(--s3);cursor:pointer;transition:all .25s var(--ease-spring)}
+
+.acad-cat-card:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.1)}
+
+.acad-cat-card-top{height:120px;background:linear-gradient(140deg,#061610,#0f3d25,#1B6B3A);display:flex;align-items:center;justify-content:center;position:relative}
+
+.acad-cat-card-icon{font-size:48px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.4))}
+
+.acad-cat-card-body{padding:22px 24px}
+
+.acad-cat-card-kicker{font-size:10px;font-weight:800;color:var(--brand);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+
+.acad-cat-card-title{font-family:var(--f-display);font-size:1.25rem;color:var(--ink);margin-bottom:8px;line-height:1.25}
+
+.acad-cat-card-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px}
+
+.acad-cat-card-meta{display:flex;flex-wrap:wrap;gap:8px}
+
+.acad-cat-card-cta{margin-top:16px;font-size:13px;font-weight:800;color:var(--brand)}
+
+.acad-price-row{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
+
+.acad-price-old{font-size:13px;color:var(--muted);text-decoration:line-through}
+
+.acad-price-new{font-size:21px;font-weight:800;color:#dc2626}
+
+.acad-price-tag{font-size:11px;font-weight:700;color:#dc2626;background:rgba(220,38,38,.09);padding:3px 10px;border-radius:30px}
+
+.acad-soon-badge{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.92);color:var(--ink);font-size:10px;font-weight:800;padding:4px 10px;border-radius:40px;letter-spacing:.04em}
+
+.acad-cat-card.soon{cursor:pointer;opacity:.72}
+
+.acad-cat-card.soon:hover{opacity:.92;transform:translateY(-2px)}
+
+.acad-cat-card.soon .acad-cat-card-icon{filter:grayscale(.3) drop-shadow(0 6px 16px rgba(0,0,0,.4))}
+
+/* ── Premium Course Card (Pest Control) ───────────────────── */
+.acad-cat-card.premium{position:relative;border:1px solid rgba(201,135,26,.22);box-shadow:0 10px 32px rgba(27,107,58,.1),0 2px 8px rgba(0,0,0,.04);animation:acpEnter .6s var(--ease-out) both}
+
+.acad-cat-card.premium::before{content:'';position:absolute;inset:0;border-radius:24px;padding:1.5px;background:linear-gradient(125deg,rgba(201,135,26,.55),rgba(27,107,58,.15) 35%,rgba(46,170,92,.5) 70%,rgba(201,135,26,.45));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.55;pointer-events:none;transition:opacity .3s;z-index:3}
+
+.acad-cat-card.premium:hover{transform:translateY(-7px);box-shadow:0 26px 56px rgba(27,107,58,.2),0 8px 20px rgba(201,135,26,.12)}
+
+.acad-cat-card.premium:hover::before{opacity:.95}
+
+.acad-cat-card.premium .acad-cat-card-top{height:140px;background:#0c3a23 url('https://images.unsplash.com/photo-1719665269650-5521f31420f3?auto=format&fit=crop&w=900&q=70') center/cover no-repeat;overflow:hidden}
+
+.acad-cat-card.premium .acad-cat-card-top::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,18,12,.62) 0%,rgba(4,18,12,.16) 45%,rgba(4,18,12,.72) 100%)}
+
+.acad-cat-card.premium .acad-icon-badge{position:relative;z-index:2;width:64px;height:64px;border-radius:18px;background:linear-gradient(150deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.28);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);box-shadow:0 8px 24px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.2);transition:transform .4s var(--ease-spring)}
+
+.acad-cat-card.premium:hover .acad-icon-badge{transform:scale(1.08) rotate(-4deg)}
+
+.acad-cat-card.premium .acad-icon-badge svg{width:30px;height:30px;color:#fff;filter:drop-shadow(0 2px 6px rgba(0,0,0,.3))}
+
+.acad-pop-badge{position:absolute;top:14px;left:14px;z-index:4;display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:40px;background:linear-gradient(135deg,#c9871a,#e8a020);color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.04em;box-shadow:0 4px 14px rgba(201,135,26,.45),inset 0 1px 0 rgba(255,255,255,.25)}
+
+.acad-pop-badge svg{width:11px;height:11px;flex-shrink:0}
+
+.acad-cert-ribbon{position:absolute;top:14px;right:14px;z-index:4;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+
+.acad-cert-ribbon svg{width:18px;height:18px;color:#ffd980}
+
+.acad-cat-card.premium .acad-cat-card-meta{gap:7px}
+
+.acad-chip-pro{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:30px;background:var(--brand-mist);color:var(--brand);font-size:11.5px;font-weight:700;transition:all .25s var(--ease-spring)}
+
+.acad-chip-pro svg{width:13px;height:13px;flex-shrink:0;opacity:.85}
+
+.acad-cat-card.premium:hover .acad-chip-pro{background:var(--brand);color:#fff}
+
+.acad-cat-card.premium:hover .acad-chip-pro svg{opacity:1}
+
+.acad-chip-pro.gold{background:var(--gold-pale);color:var(--gold-d,#a06815)}
+
+.acad-cat-card.premium:hover .acad-chip-pro.gold{background:linear-gradient(135deg,#c9871a,#e8a020);color:#fff}
+
+.acad-cat-card.premium .acad-cat-card-cta{display:inline-flex;align-items:center;gap:6px;transition:gap .25s var(--ease-spring)}
+
+.acad-cat-card.premium .acad-cat-card-cta svg{width:13px;height:13px;transition:transform .25s var(--ease-spring)}
+
+.acad-cat-card.premium:hover .acad-cat-card-cta{gap:10px}
+
+.acad-cat-card.premium:hover .acad-cat-card-cta svg{transform:translateX(-3px)}
+.acad-cat-card.premium{overflow:hidden}
+.acad-cat-card.premium::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.05) 50%,transparent 60%);transform:translateX(-120%);transition:transform .7s ease;z-index:2;pointer-events:none}
+.acad-cat-card.premium:hover::after{transform:translateX(120%)}
+
+
+/* ── Course Card ── */
+.acad-course-section{padding:52px 0 72px}
+
+.acad-section-label{font-size:11px;font-weight:800;color:var(--brand);letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+
+.acad-section-title{font-family:var(--f-display);font-size:clamp(1.7rem,3.8vw,2.6rem);color:var(--ink);margin-bottom:8px;letter-spacing:-.02em}
+
+.acad-section-sub{font-size:14px;color:var(--muted);margin-bottom:36px;line-height:1.75}
+
+
+.acad-card{background:var(--card);border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--s3)}
+
+.acad-card-top{height:180px;background:#071808 url('https://images.unsplash.com/photo-1719665269650-5521f31420f3?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat;position:relative;overflow:hidden}
+
+.acad-card-top.mb{background:#0a1220 url('https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+
+.acad-card-top.fq{background:#1a0f00 url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+
+.acad-card-top.ag{background:#061408 url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+
+.acad-card-top.fs{background:#1a0e04 url('https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+
+.acad-card-top.lr{background:#241202 url('https://assets.science.nasa.gov/dynamicimage/assets/science/esd/eo/images/imagerecords/89000/89820/egypt_oli_2017057_detail.jpg?w=1200&h=500&fit=crop') center/cover no-repeat}
+
+.acad-card-top.tc{background:#081e1a url('https://images.unsplash.com/photo-1622210445956-ca3320a5e7c5?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+
+.acad-share-btn{position:absolute;top:14px;left:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(10,30,20,.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s;padding:0;appearance:none;-webkit-appearance:none;font:inherit;outline:none}
+
+.acad-share-btn:hover{background:rgba(10,30,20,.6);transform:translateY(-1px)}
+
+.acad-share-btn:active{transform:scale(.94)}
+
+.acad-card-top::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,18,12,.12) 0%,rgba(4,18,12,.04) 45%,rgba(4,18,12,.5) 100%)}
+
+.acad-card-icon{font-size:72px;color:#fff;filter:drop-shadow(0 6px 20px rgba(0,0,0,.4));position:relative;z-index:1}
+
+.acad-card-body{padding:28px 32px}
+
+.acad-card-kicker{font-size:10px;font-weight:800;color:var(--brand);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+
+.acad-card-title{font-family:var(--f-display);font-size:1.7rem;color:var(--ink);margin-bottom:8px;line-height:1.2}
+
+.acad-card-desc{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:22px}
+
+.acad-card-chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+
+.acad-chip{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:40px;background:var(--bg2);border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--slate)}
+
+.acad-chip-cert{color:var(--gold);background:rgba(201,135,26,.08);border-color:rgba(201,135,26,.2)}
+
+.acad-progress-wrap{margin-bottom:20px}
+
+.acad-prog-label{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px}
+
+.acad-prog-track{height:5px;background:var(--line2);border-radius:5px;overflow:hidden}
+
+.acad-prog-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--brand),#2eaa5c);transition:width .7s cubic-bezier(.16,1,.3,1)}
+
+.acad-start-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:var(--rpill);background:var(--brand);color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:var(--f-ui);box-shadow:0 4px 16px rgba(27,107,58,.3);transition:all .25s var(--ease-spring)}
+
+.acad-start-btn:hover{background:#1e7a42;transform:translateY(-3px);box-shadow:0 10px 28px rgba(27,107,58,.4)}
+
+
+/* ── Modules List on Home ── */
+.acad-modules-preview{margin-top:40px}
+
+.acad-mp-title{font-size:13px;font-weight:800;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+
+.acad-module-block{margin-bottom:20px}
+
+.acad-module-name{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+
+.acad-module-num{width:22px;height:22px;border-radius:50%;background:var(--brand-pale);color:var(--brand);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+.acad-lesson-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--r2);cursor:pointer;transition:all .18s;border:1px solid transparent}
+
+.acad-lesson-row:hover{background:var(--bg2);border-color:var(--line)}
+
+.acad-lesson-row.done{background:rgba(27,107,58,.04)}
+
+.acad-lesson-row.locked{cursor:not-allowed;opacity:.55}
+
+.acad-lesson-row.locked:hover{background:transparent;border-color:transparent}
+
+.acad-lesson-row.locked .acad-lesson-check{background:var(--bg2);color:var(--muted);border-color:var(--line)}
+
+.acad-lesson-check{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .2s}
+
+.acad-lesson-row.done .acad-lesson-check{background:var(--brand);border-color:var(--brand);color:#fff}
+
+.acad-lesson-info{flex:1}
+
+.acad-lesson-name{font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:2px}
+
+.acad-lesson-dur{font-size:11px;color:var(--muted);font-weight:600}
+
+.acad-lesson-arr{font-size:13px;color:var(--muted);transition:transform .15s}
+
+.acad-lesson-row:hover .acad-lesson-arr{transform:translateX(-3px)}
+
+
+/* ── Lesson Page ── */
+.acad-lesson-pg{max-width:780px;margin:0 auto;padding:36px 24px 80px}
+
+.acad-breadcrumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:28px;flex-wrap:wrap}
+
+.acad-breadcrumb span[role=button]{cursor:pointer;transition:color .15s}
+
+.acad-breadcrumb span[role=button]:hover{color:var(--brand)}
+
+.acad-breadcrumb .sep{color:var(--line2);font-size:10px}
+
+.acad-lesson-hdr{margin-bottom:36px;padding-bottom:24px;border-bottom:2px solid var(--line)}
+
+.acad-lesson-kicker{font-size:11px;font-weight:800;color:var(--brand);letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+
+.acad-lesson-h1{font-family:var(--f-display);font-size:clamp(1.55rem,4vw,2.2rem);color:var(--ink);line-height:1.2;margin-bottom:10px}
+
+.acad-lesson-intro-text{font-size:15px;color:var(--muted);line-height:1.8}
+
+.acad-body{font-size:14.5px;line-height:1.9;color:var(--slate)}
+
+.acad-body h2{font-family:var(--f-display);font-size:1.35rem;color:var(--ink);margin:36px 0 14px;padding-bottom:10px;border-bottom:2px solid var(--brand-pale);display:flex;align-items:center;gap:10px}
+
+.acad-body h3{font-size:1.05rem;font-weight:800;color:var(--ink);margin:22px 0 10px}
+
+.acad-body p{margin-bottom:16px}
+
+.acad-body ul{padding-right:22px;margin-bottom:16px}
+
+.acad-body li{margin-bottom:8px;line-height:1.75}
+
+.acad-body strong{color:var(--ink);font-weight:800}
+
+
+/* info cards */
+.acad-igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin:18px 0 26px}
+
+.acad-icard{padding:16px 14px;background:var(--bg2);border:1px solid var(--line);border-radius:16px;text-align:center;transition:all .2s}
+
+.acad-icard:hover{transform:translateY(-2px);box-shadow:var(--s1)}
+
+.acad-icard-ico{font-size:26px;display:block;margin-bottom:8px}
+
+.acad-icard-lbl{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+
+.acad-icard-val{font-size:.95rem;font-weight:700;color:var(--ink);line-height:1.35}
+
+
+/* table */
+.acad-twrap{overflow-x:auto;margin:18px 0 26px;border-radius:16px;border:1px solid var(--line)}
+
+.acad-tbl{width:100%;border-collapse:collapse;font-size:13px}
+
+.acad-tbl thead th{padding:11px 14px;text-align:right;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg2);border-bottom:2px solid var(--line)}
+
+.acad-tbl tbody td{padding:10px 14px;border-bottom:1px solid var(--line);color:var(--ink);line-height:1.55;vertical-align:top}
+
+.acad-tbl tbody tr:last-child td{border-bottom:none}
+
+.acad-tbl tbody tr:hover td{background:var(--bg2)}
+
+
+/* tip / error / case boxes */
+.acad-tip{background:linear-gradient(135deg,rgba(27,107,58,.06),rgba(27,107,58,.02));border:1.5px solid rgba(27,107,58,.2);border-right:4px solid var(--brand);border-radius:18px;padding:22px 24px;margin:28px 0}
+
+.acad-tip h3,.acad-err h3,.acad-case h3{font-size:.95rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
+.acad-tip h3{color:var(--brand)}
+
+.acad-tip ul,.acad-err ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:9px}
+
+.acad-tip li,.acad-err li{position:relative;padding-right:22px;font-size:13.5px;color:var(--slate);line-height:1.6}
+
+.acad-tip li::before{content:"✓";color:var(--brand);font-weight:900;position:absolute;right:0;top:1px}
+
+.acad-tip ol.ag-ol{list-style:none;padding:0;display:flex;flex-direction:column;gap:9px;counter-reset:ag-ol-c}
+
+.acad-tip ol.ag-ol li{counter-increment:ag-ol-c}
+
+.acad-tip ol.ag-ol li::before{content:counter(ag-ol-c)".";color:var(--brand);font-weight:800}
+
+.acad-err{background:rgba(192,57,43,.04);border:1.5px solid rgba(192,57,43,.2);border-right:4px solid var(--red);border-radius:18px;padding:22px 24px;margin:28px 0}
+
+.acad-err h3{color:var(--red)}
+
+.acad-err li::before{content:"✗";color:var(--red);font-weight:900;position:absolute;right:0;top:1px}
+
+.acad-case{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:24px;margin:28px 0}
+
+.acad-case h3{color:var(--ink)}
+
+.acad-case-row{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+
+.acad-case-lbl{font-size:11px;font-weight:800;color:var(--muted);min-width:90px;flex-shrink:0;padding-top:2px;text-transform:uppercase;letter-spacing:.05em}
+
+.acad-case-val{font-size:13.5px;color:var(--ink);line-height:1.6}
+
+.acad-refs{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+
+.acad-refs h3{font-size:.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+
+.acad-ref{position:relative;padding:9px 30px 9px 0;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--slate);line-height:1.55}
+
+.acad-ref:last-child{border-bottom:none}
+
+.acad-ref-n{position:absolute;right:0;top:9px;font-size:10px;font-weight:800;color:var(--brand);background:var(--brand-pale);border-radius:50%;width:19px;height:19px;display:flex;align-items:center;justify-content:center}
+
+
+/* lesson nav */
+.acad-lnav{display:flex;gap:12px;justify-content:space-between;margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+
+.acad-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:var(--rpill);font-size:14px;font-weight:700;border:none;cursor:pointer;font-family:var(--f-ui);transition:all .22s var(--ease-spring)}
+
+.acad-btn-primary{background:var(--brand);color:#fff;box-shadow:0 4px 14px rgba(27,107,58,.28)}
+
+.acad-btn-primary:hover{background:#1e7a42;transform:translateY(-2px);box-shadow:0 8px 22px rgba(27,107,58,.38)}
+
+.acad-btn-ghost{background:var(--bg2);color:var(--ink);border:1.5px solid var(--line)}
+
+.acad-btn-ghost:hover{background:var(--bg3)}
+
+
+/* coming soon */
+.acad-coming{background:var(--bg2);border:1px dashed var(--line2);border-radius:18px;padding:32px 24px;text-align:center;margin:16px 0}
+
+.acad-coming-ico{font-size:36px;margin-bottom:12px}
+
+.acad-coming h4{font-weight:800;color:var(--ink);margin-bottom:6px;font-size:1rem}
+
+.acad-coming p{font-size:13px;color:var(--muted);line-height:1.7}
+
+
+/* ── Quiz ── */
+.acad-quiz-pg{max-width:660px;margin:0 auto;padding:36px 24px 80px}
+
+.acad-quiz-hdr{text-align:center;margin-bottom:32px}
+
+.acad-quiz-title{font-family:var(--f-display);font-size:1.7rem;color:var(--ink);margin-bottom:6px}
+
+.acad-quiz-sub{font-size:13px;color:var(--muted)}
+
+.acad-steps{display:flex;gap:4px;justify-content:center;margin:18px 0 28px}
+
+.acad-step{height:4px;width:36px;border-radius:3px;background:var(--line2);transition:all .3s}
+
+.acad-step.done{background:var(--brand)}
+
+.acad-step.cur{background:var(--brand-l)}
+
+.acad-qcard{background:var(--card);border-radius:22px;border:1px solid var(--line);padding:26px;box-shadow:var(--s2);margin-bottom:16px}
+
+.acad-qnum{font-size:11px;font-weight:800;color:var(--brand);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+
+.acad-qtext{font-size:15px;font-weight:700;color:var(--ink);line-height:1.65;margin-bottom:22px}
+
+.acad-opts{display:flex;flex-direction:column;gap:9px}
+
+.acad-opt{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border-radius:var(--r2);border:1.5px solid var(--line2);cursor:pointer;font-size:13.5px;color:var(--ink);font-weight:600;line-height:1.5;background:var(--bg2);font-family:var(--f-ui);text-align:right;width:100%;transition:all .18s}
+
+.acad-opt:hover:not([disabled]){border-color:var(--brand);background:var(--brand-pale);color:var(--brand)}
+
+.acad-opt.sel{border-color:var(--brand);background:rgba(27,107,58,.09);color:var(--brand)}
+
+.acad-opt.ok{border-color:var(--green);background:rgba(39,174,96,.09);color:var(--green)}
+
+.acad-opt.bad{border-color:var(--red);background:rgba(192,57,43,.07);color:var(--red)}
+
+.acad-opt-lt{width:24px;height:24px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+
+.acad-exp{background:var(--brand-pale);border:1px solid rgba(27,107,58,.2);border-radius:var(--r2);padding:13px 15px;margin-top:14px;font-size:13px;color:var(--brand);line-height:1.7;display:none;animation:fadeSlideUp .28s ease}
+
+.acad-exp.show{display:block}
+
+.acad-quiz-next{display:none;margin:14px auto 0;padding:11px 26px;border-radius:var(--rpill);background:var(--brand);color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;font-family:var(--f-ui);transition:all .22s}
+
+.acad-quiz-next.show{display:flex;align-items:center;gap:8px}
+
+.acad-quiz-next:hover{background:#1e7a42;transform:translateY(-2px)}
+
+
+/* result */
+.acad-result{text-align:center;padding:44px 24px;background:var(--card);border-radius:24px;border:1px solid var(--line);box-shadow:var(--s3)}
+
+.acad-result-score{font-family:var(--f-display);font-size:5rem;color:var(--brand);line-height:1;margin-bottom:6px}
+
+.acad-result-lbl{font-size:13px;color:var(--muted);margin-bottom:20px}
+
+.acad-result-msg{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:24px;line-height:1.6}
+
+.acad-result-acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+
+/* ── Certificate ── */
+.acad-cert-pg{max-width:880px;margin:0 auto;padding:36px 16px 80px}
+
+.acad-cert-frame{background:#dbe4dd;padding:clamp(10px,2.6vw,34px);border-radius:8px;box-shadow:0 14px 44px rgba(20,40,30,.12)}
+
+.acad-cert-card{position:relative;background:#fff;border:1.5px solid #84958d;padding:clamp(26px,5vw,58px) clamp(20px,5.5vw,68px);overflow:hidden;direction:ltr;font-family:'Cormorant Garamond',serif;isolation:isolate}
+
+.acad-cert-watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;pointer-events:none;z-index:0;overflow:hidden}
+
+.acad-cert-watermark span{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:min(58vw,560px);color:#1f5c39;opacity:.05;line-height:1;transform:translateX(12%)}
+
+.acad-cert-row{position:relative;z-index:1;display:flex;align-items:flex-start;gap:clamp(14px,3.4vw,40px)}
+
+.acad-cert-ribbon{flex-shrink:0;width:clamp(56px,8.4vw,104px);margin-top:4px}
+
+.acad-cert-ribbon svg{width:100%;height:auto;display:block}
+
+.acad-cert-main{flex:1;min-width:0}
+
+.acad-cert-titles div{font-size:clamp(1.3rem,3.7vw,2.5rem);font-weight:600;line-height:1.16;letter-spacing:.01em;color:#33453f}
+
+.acad-cert-presented{font-family:'Cairo',sans-serif;font-size:clamp(11.5px,1.15vw,15px);color:#5e6f69;margin:18px 0 10px}
+
+.acad-cert-name{font-family:'Mrs Saint Delafield','Cormorant Garamond',cursive;font-size:clamp(2.1rem,5.6vw,3.5rem);color:#1f5c39;line-height:1.2;outline:none;min-height:1.25em;padding:2px 6px 6px;cursor:text;border-bottom:1.5px solid #c6d2cb;display:block;width:fit-content;max-width:100%}
+
+.acad-cert-name:empty:before{content:attr(data-placeholder);color:#a8bcb4}
+
+.acad-cert-name:focus{border-bottom-color:#1f5c39}
+
+.acad-cert-completed{font-family:'Cairo',sans-serif;font-weight:700;font-size:clamp(12.5px,1.3vw,16px);color:#28352f;line-height:1.65;margin:18px 0 0;max-width:600px}
+
+.acad-cert-recognition{font-family:'Cairo',sans-serif;font-weight:700;font-size:clamp(10.5px,1.08vw,13.5px);color:#1f5c39;line-height:1.75;margin:18px 0 0;max-width:620px}
+
+.acad-cert-footer{position:relative;z-index:1;display:flex;align-items:flex-end;gap:clamp(20px,5vw,60px);margin-top:clamp(24px,4.4vw,46px)}
+
+.acad-cert-footer-col{flex-shrink:0}
+
+.acad-cert-footer-line{border-top:1px solid #84958d;width:clamp(110px,15vw,180px);margin-bottom:8px}
+
+.acad-cert-footer-label{font-family:'Cairo',sans-serif;font-weight:800;font-size:clamp(11.5px,1.15vw,14px);color:#28352f}
+
+.acad-cert-footer-value{font-family:'Cairo',sans-serif;font-size:clamp(10.5px,1.05vw,12.5px);color:#5e6f69;margin-top:3px;letter-spacing:.03em}
+
+.acad-cert-footer-qr{margin-inline-start:auto;display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0}
+
+.acad-cert-qr-box{width:clamp(58px,8vw,96px);height:clamp(58px,8vw,96px);border:1.5px solid #c6d2cb;background:#fff;overflow:hidden}
+
+.acad-cert-qr-box svg{width:100%;height:100%;display:block}
+
+.acad-cert-qr-cap{font-family:'Cairo',sans-serif;font-size:10px;color:#5e6f69;white-space:nowrap}
+
+.acad-cert-edit-hint{font-family:var(--f-ui);font-size:11.5px;color:var(--muted);text-align:center;margin-top:12px}
+
+.acad-cert-acts{display:flex;gap:10px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+
+.acad-cert-row{flex-direction:column;align-items:center;text-align:center}
+
+.acad-cert-ribbon{width:64px;margin:0 auto}
+
+.acad-cert-presented,.acad-cert-completed,.acad-cert-recognition{margin-left:auto;margin-right:auto;text-align:center}
+
+.acad-cert-name{margin:0 auto}
+
+.acad-cert-footer{justify-content:center;text-align:center;flex-wrap:wrap;row-gap:16px}
+
+.acad-cert-footer-line{margin-left:auto;margin-right:auto}
+
+.acad-cert-footer-qr{margin-inline-start:0;flex-basis:100%}
+
+.acad-lesson-pg,.acad-quiz-pg,.acad-cert-pg{padding:20px 14px 60px}
+
+.acad-igrid{grid-template-columns:1fr 1fr}
+
+.acad-igrid.dense{grid-template-columns:1fr}
+
+.acad-lnav{flex-direction:column}
+
+.acad-card-body{padding:20px}
+
+.acad-case-row{flex-direction:column;gap:4px}
+
+.acad-case-lbl{min-width:0}
+
+
+/* ══════════════════════════════════════════════════════════
+   1. HERO — deeper ambiance + entrance animations
+   ══════════════════════════════════════════════════════════ */
+.acad-hero{
+  background:linear-gradient(150deg,#030d08 0%,#071a10 28%,#0a2b18 60%,#050f09 100%) !important;
+}
+
+
+/* Layer 1 — radial orbs: أكثر وضوحاً (opacity مرتفعة) */
+.acad-hero::before{
+  background:
+    radial-gradient(ellipse 68% 60% at 14% 26%, rgba(46,170,92,.58) 0, rgba(46,170,92,.22) 38%, transparent 62%),
+    radial-gradient(ellipse 54% 54% at 86% 78%, rgba(46,170,92,.45) 0, rgba(27,107,58,.18) 40%, transparent 60%),
+    radial-gradient(ellipse 38% 42% at 50% 52%, rgba(18,83,42,.22) 0, transparent 56%) !important;
+  animation:acHeroBreath 8s ease-in-out infinite alternate;
+}
+
+
+/* Layer 2 — bottom glow bar (واضح جداً) */
+.acad-hero::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(46,170,92,.55) 18%,
+    rgba(125,232,158,1)  50%,
+    rgba(46,170,92,.55) 82%,
+    transparent 100%);
+  animation:acHeroLine 3.8s ease-in-out infinite;
+  pointer-events:none;z-index:5;
+  filter:blur(.4px);
+}
+
+
+/* Hero outer glow ring */
+.acad-hero{
+  box-shadow:0 2px 80px rgba(46,170,92,.12),inset 0 -1px 0 rgba(46,170,92,.3) !important;
+}
+
+
+/* Hero inner: slide-up entrance — replays each time page shown */
+.acad-hero-inner{animation:acHeroIn .85s var(--ac-out,cubic-bezier(.16,1,.3,1)) both}
+
+
+/* Badge: pop-in + pulse ring */
+.acad-hero-badge{
+  animation:acBadgePop .8s .1s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) both,
+            acBadgeRing 3.6s 1.2s ease-in-out infinite;
+}
+
+
+/* Title: entrance + soft glow */
+.acad-hero-title{
+  text-shadow:0 0 55px rgba(46,170,92,.16),0 2px 4px rgba(0,0,0,.3);
+  animation:acHeroIn .85s .13s var(--ac-out,cubic-bezier(.16,1,.3,1)) both;
+}
+
+.acad-hero-sub{animation:acHeroIn .85s .23s var(--ac-out,cubic-bezier(.16,1,.3,1)) both}
+
+
+/* Stats: entrance + glass depth */
+.acad-hero-stats{
+  animation:acHeroIn .85s .33s var(--ac-out,cubic-bezier(.16,1,.3,1)) both;
+  backdrop-filter:blur(18px) !important;
+  -webkit-backdrop-filter:blur(18px) !important;
+  background:rgba(255,255,255,.07) !important;
+  border-color:rgba(255,255,255,.14) !important;
+  box-shadow:0 8px 32px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.1);
+}
+
+
+/* Stat numbers: gradient text */
+.acad-hs-n{
+  background:linear-gradient(150deg,#fff 38%,#7de89e 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  display:block;
+}
+
+
+/* Back button: spring nudge */
+.acad-hero-back{transition:color .18s,transform .22s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important}
+
+.acad-hero-back:hover{transform:translateX(-5px);color:#fff !important}
+
+
+/* ══════════════════════════════════════════════════════════
+   2. CATALOG CARDS — premium hover, shimmer, icon spring
+   ══════════════════════════════════════════════════════════ */
+.acad-cat-grid{perspective:1400px}
+
+
+/* Non-premium cards */
+.acad-cat-card:not(.premium){
+  transition:
+    transform    .32s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)),
+    box-shadow   .32s var(--ac-out,cubic-bezier(.16,1,.3,1)),
+    border-color .22s !important;
+  will-change:transform,box-shadow;
+}
+
+.acad-cat-card:not(.premium):hover{
+  transform:translateY(-8px) scale(1.013) !important;
+  box-shadow:
+    0 22px 50px rgba(27,107,58,.14),
+    0 6px 18px rgba(0,0,0,.09),
+    0 0 0 1px rgba(27,107,58,.12) !important;
+  border-color:rgba(27,107,58,.18) !important;
+}
+
+
+/* Image zoom on card hover */
+.acad-cat-card-top{transition:transform .44s var(--ac-out,cubic-bezier(.16,1,.3,1));overflow:hidden}
+
+.acad-cat-card:not(.premium):hover .acad-cat-card-top{transform:scale(1.055)}
+
+
+/* Icon spring */
+.acad-cat-card:not(.premium) .acad-cat-card-icon{
+  transition:transform .42s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)),filter .3s !important;
+  display:inline-block;
+}
+
+.acad-cat-card:not(.premium):hover .acad-cat-card-icon{
+  transform:scale(1.16) translateY(-5px) !important;
+  filter:drop-shadow(0 9px 20px rgba(27,107,58,.38)) !important;
+}
+
+
+/* CTA arrow nudge */
+.acad-cat-card-cta{
+  display:inline-flex;align-items:center;gap:5px;
+  transition:gap .25s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)),color .18s;
+}
+
+.acad-cat-card:hover .acad-cat-card-cta{gap:11px;color:var(--brand)}
+
+  .acad-cat-card:not(.premium){overflow:hidden;position:relative}
+
+  .acad-cat-card:not(.premium)::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(112deg,transparent 38%,rgba(255,255,255,.065) 50%,transparent 62%);
+    transform:translateX(-120%);transition:transform .62s ease;
+    z-index:5;pointer-events:none;
+  }
+
+  .acad-cat-card:not(.premium):hover::after{transform:translateX(120%)}
+
+  .acad-cat-card:active{transform:scale(.97) !important;transition-duration:80ms !important}
+
+
+/* ══════════════════════════════════════════════════════════
+   3. LESSON ROWS — slide, sweep, glow, spring
+   ══════════════════════════════════════════════════════════ */
+.acad-lesson-row{
+  transition:all .22s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important;
+  position:relative;overflow:hidden;
+}
+
+
+/* Inner glow sweep */
+.acad-lesson-row::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(27,107,58,.05),transparent);
+  transform:translateX(-110%);transition:transform .38s ease;pointer-events:none;
+}
+
+.acad-lesson-row:not(.locked):hover::after{transform:translateX(110%)}
+
+
+/* Row: slide left + shadow */
+.acad-lesson-row:not(.locked):hover{
+  transform:translateX(-4px) !important;
+  background:var(--bg2) !important;
+  border-color:rgba(27,107,58,.15) !important;
+  box-shadow:0 2px 14px rgba(27,107,58,.08);
+}
+
+
+/* Lesson name tint */
+.acad-lesson-row:not(.locked):hover .acad-lesson-name{
+  color:var(--brand);transition:color .18s;
+}
+
+
+/* Check circle glow on done */
+.acad-lesson-check{transition:all .26s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important}
+
+.acad-lesson-row.done .acad-lesson-check{
+  box-shadow:0 0 0 4px rgba(27,107,58,.13),0 2px 8px rgba(27,107,58,.24) !important;
+}
+
+
+/* Arrow spring */
+.acad-lesson-arr{transition:transform .22s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important}
+
+.acad-lesson-row:hover .acad-lesson-arr{transform:translateX(-6px) !important}
+
+  .acad-lesson-row:active{transform:scale(.985) !important;transition-duration:80ms !important}
+
+
+/* ══════════════════════════════════════════════════════════
+   4. PROGRESS BARS — shimmer + glow
+   ══════════════════════════════════════════════════════════ */
+.acad-prog-track{
+  height:6px !important;border-radius:6px !important;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.1) !important;
+}
+
+.acad-prog-fill{
+  position:relative !important;
+  overflow:hidden !important;
+  background:linear-gradient(90deg,#1B6B3A 0%,#2eaa5c 55%,#3cd16e 100%) !important;
+  box-shadow:0 0 14px rgba(27,107,58,.45),0 0 4px rgba(46,170,92,.3) !important;
+}
+
+/* Shimmer: translateX بدل left (أسرع وأكثر موثوقية) */
+.acad-prog-fill::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,
+    transparent   0%,
+    rgba(255,255,255,.0)  20%,
+    rgba(255,255,255,.55) 50%,
+    rgba(255,255,255,.0)  80%,
+    transparent   100%);
+  transform:translateX(-100%);
+  animation:acShimmerSlide 2.4s ease-in-out infinite;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   5. BUTTONS — gradient, rim light, spring
+   ══════════════════════════════════════════════════════════ */
+/* Start / enroll button */
+.acad-start-btn{
+  background:linear-gradient(135deg,#196b38 0%,#27a050 60%,#2ebd5e 100%) !important;
+  box-shadow:
+    0 6px 28px rgba(27,107,58,.45),
+    0 2px 8px rgba(27,107,58,.25),
+    0 0 0 1px rgba(46,170,92,.2) !important;
+  transition:all .28s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important;
+  position:relative;overflow:hidden;letter-spacing:.01em;
+}
+
+.acad-start-btn::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:42%;
+  background:linear-gradient(180deg,rgba(255,255,255,.13),transparent);
+  pointer-events:none;border-radius:inherit;
+}
+
+.acad-start-btn:hover{
+  background:linear-gradient(135deg,#165e31,#239048) !important;
+  transform:translateY(-5px) scale(1.01) !important;
+  box-shadow:0 16px 40px rgba(27,107,58,.44),0 4px 12px rgba(0,0,0,.1) !important;
+}
+
+.acad-start-btn:active{transform:translateY(-1px) scale(.99) !important;transition-duration:70ms !important}
+
+.acad-subscribe-btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:14px;margin-top:10px;border:none;border-radius:var(--rpill);
+  font-family:var(--f-ui);font-size:15px;font-weight:800;color:#fff;cursor:pointer;
+  letter-spacing:.01em;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#a8710f 0%,#c9871a 55%,#e5a343 100%);
+  transition:all .28s var(--ac-spring,cubic-bezier(.34,1.56,.64,1));
+  animation:acadGoldGlow 2.2s ease-in-out infinite;
+}
+
+.acad-subscribe-btn::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:42%;
+  background:linear-gradient(180deg,rgba(255,255,255,.24),transparent);
+  pointer-events:none;border-radius:inherit;
+}
+
+.acad-subscribe-btn:hover{
+  transform:translateY(-5px) scale(1.01);animation-play-state:paused;
+  box-shadow:0 16px 40px rgba(201,135,26,.5),0 4px 12px rgba(0,0,0,.12);
+}
+
+.acad-subscribe-btn:active{transform:translateY(-1px) scale(.99);transition-duration:70ms}
+
+  .acad-subscribe-btn:active{transform:scale(.97);transition-duration:80ms}
+
+
+/* Lesson nav buttons */
+.acad-btn{
+  transition:all .22s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important;
+  position:relative;overflow:hidden;
+}
+
+.acad-btn::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at center,rgba(255,255,255,.13),transparent 70%);
+  opacity:0;transition:opacity .2s;pointer-events:none;border-radius:inherit;
+}
+
+.acad-btn:hover::before{opacity:1}
+
+.acad-btn-primary{
+  background:linear-gradient(135deg,#196b38,#27a050) !important;
+  box-shadow:0 4px 16px rgba(27,107,58,.28) !important;
+}
+
+.acad-btn-primary:hover{transform:translateY(-3px) !important;box-shadow:0 10px 28px rgba(27,107,58,.38) !important}
+
+.acad-btn-ghost:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.09)}
+
+  .acad-btn:active,.acad-start-btn:active{transform:scale(.97) !important;transition-duration:80ms !important}
+
+
+/* ══════════════════════════════════════════════════════════
+   6. QUIZ OPTIONS — hover glow, selection, correct/wrong fx
+   ══════════════════════════════════════════════════════════ */
+.acad-opt{
+  transition:all .2s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important;
+  position:relative;overflow:hidden;
+}
+
+.acad-opt::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(27,107,58,.07),transparent);
+  opacity:0;transition:opacity .22s;pointer-events:none;border-radius:inherit;
+}
+
+.acad-opt:hover:not([disabled])::before{opacity:1}
+
+.acad-opt:hover:not([disabled]){
+  transform:translateY(-1px) !important;
+  box-shadow:0 5px 18px rgba(27,107,58,.11) !important;
+}
+
+.acad-opt.sel{
+  transform:scale(1.012) !important;
+  box-shadow:0 5px 20px rgba(27,107,58,.16) !important;
+  border-color:var(--brand) !important;
+}
+
+/* Correct: bounce */
+.acad-opt.ok{
+  animation:acOptOk .38s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important;
+  box-shadow:0 4px 18px rgba(39,174,96,.22) !important;
+}
+
+/* Wrong: shake */
+.acad-opt.bad{
+  animation:acOptBad .4s ease !important;
+  box-shadow:0 4px 14px rgba(192,57,43,.16) !important;
+}
+
+  .acad-opt:active:not([disabled]){transform:scale(.985) !important;transition-duration:80ms !important}
+
+
+/* ══════════════════════════════════════════════════════════
+   7. QUIZ NEXT BUTTON + STEP DOTS
+   ══════════════════════════════════════════════════════════ */
+.acad-quiz-next{
+  background:linear-gradient(135deg,#196b38,#27a050) !important;
+  box-shadow:0 4px 16px rgba(27,107,58,.28) !important;
+  transition:all .22s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important;
+  position:relative;overflow:hidden;
+}
+
+.acad-quiz-next::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.1),transparent 52%);
+  pointer-events:none;border-radius:inherit;
+}
+
+.acad-quiz-next:hover{transform:translateY(-3px) !important;box-shadow:0 10px 28px rgba(27,107,58,.38) !important}
+
+
+/* Step dots */
+.acad-step{transition:all .3s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important}
+
+.acad-step.cur{
+  background:var(--brand) !important;
+  box-shadow:0 2px 10px rgba(27,107,58,.36);
+  transform:scaleX(1.38) scaleY(1.25);
+}
+
+.acad-step.done{background:rgba(27,107,58,.5) !important}
+
+
+/* ══════════════════════════════════════════════════════════
+   8. RESULT PAGE — score entrance + card glow
+   ══════════════════════════════════════════════════════════ */
+.acad-result{position:relative;overflow:hidden}
+
+.acad-result::before{
+  content:'';position:absolute;top:-50%;left:-50%;right:-50%;bottom:-50%;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(27,107,58,.04),transparent);
+  pointer-events:none;
+}
+
+.acad-result-score{
+  text-shadow:0 4px 24px rgba(27,107,58,.22);
+  animation:acScoreIn .55s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) both;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   9. INFO CARDS — hover lift + icon spring
+   ══════════════════════════════════════════════════════════ */
+.acad-icard{
+  transition:all .26s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important;
+  border-color:transparent;
+}
+
+.acad-icard:hover{
+  transform:translateY(-5px) scale(1.02) !important;
+  box-shadow:0 10px 28px rgba(27,107,58,.11),0 2px 8px rgba(0,0,0,.06) !important;
+  border-color:rgba(27,107,58,.15) !important;
+  background:var(--card) !important;
+}
+
+.acad-icard-ico{transition:transform .32s var(--ac-spring,cubic-bezier(.34,1.56,.64,1));display:block}
+
+.acad-icard:hover .acad-icard-ico{transform:scale(1.22) translateY(-3px)}
+
+
+/* ══════════════════════════════════════════════════════════
+   10. MODULE BADGE — color fill on hover
+   ══════════════════════════════════════════════════════════ */
+.acad-module-num{transition:all .24s var(--ac-spring,cubic-bezier(.34,1.56,.64,1))}
+
+.acad-module-block:hover .acad-module-num{
+  background:var(--brand) !important;color:#fff !important;
+  box-shadow:0 2px 10px rgba(27,107,58,.26);transform:scale(1.1);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   11. TIP / ERROR / CASE BOXES — hover slide
+   ══════════════════════════════════════════════════════════ */
+.acad-tip,.acad-err,.acad-case{transition:box-shadow .22s,transform .22s var(--ac-spring,cubic-bezier(.34,1.56,.64,1))}
+
+.acad-tip:hover {box-shadow:0 6px 22px rgba(27,107,58,.1); transform:translateX(-3px)}
+
+.acad-err:hover {box-shadow:0 6px 18px rgba(192,57,43,.09);transform:translateX(-3px)}
+
+.acad-case:hover{box-shadow:0 4px 16px rgba(0,0,0,.06);   transform:translateX(-3px)}
+
+
+/* ══════════════════════════════════════════════════════════
+   12. BREADCRUMB — spring slide
+   ══════════════════════════════════════════════════════════ */
+.acad-breadcrumb span[role=button]{
+  transition:color .18s,transform .2s var(--ac-spring,cubic-bezier(.34,1.56,.64,1));
+  display:inline-block;
+}
+
+.acad-breadcrumb span[role=button]:hover{color:var(--brand) !important;transform:translateX(-4px)}
+
+
+/* ══════════════════════════════════════════════════════════
+   13. EXPLANATION CARD — slide-up entrance
+   ══════════════════════════════════════════════════════════ */
+.acad-exp.show{animation:acExpIn .28s var(--ac-out,cubic-bezier(.16,1,.3,1)) both !important}
+
+
+/* ══════════════════════════════════════════════════════════
+   14. SHARE BUTTON — spring + glow
+   ══════════════════════════════════════════════════════════ */
+.acad-share-btn{transition:all .22s var(--ac-spring,cubic-bezier(.34,1.56,.64,1)) !important}
+
+.acad-share-btn:hover{
+  transform:translateY(-3px) scale(1.09) !important;
+  box-shadow:0 8px 22px rgba(0,0,0,.3) !important;
+  background:rgba(10,30,20,.72) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   15. COMING SOON — hover tint
+   ══════════════════════════════════════════════════════════ */
+.acad-coming{transition:border-color .22s,background .22s}
+
+.acad-coming:hover{
+  border-color:rgba(27,107,58,.28) !important;
+  background:rgba(27,107,58,.025) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   17. STAGGER CARD ENTRANCE — via JS observer
+   ══════════════════════════════════════════════════════════ */
+/* State: hidden (added by JS before observing) */
+.acad-cat-card.ac-hide{opacity:0;transform:translateY(22px)}
+
+/* State: revealed (added by observer) */
+.acad-cat-card.ac-show{
+  opacity:1 !important;transform:translateY(0) !important;
+  transition:opacity .52s var(--ac-out,cubic-bezier(.16,1,.3,1)),
+             transform .52s var(--ac-out,cubic-bezier(.16,1,.3,1)),
+             box-shadow .32s,border-color .22s !important;
+}
+
+  .acad-hero::before,.acad-hero::after,
+  .acad-hero-inner,.acad-hero-badge,
+  .acad-hero-title,.acad-hero-sub,.acad-hero-stats,
+  .acad-prog-fill::after,.acad-result-score{animation:none !important}
+
+
+
+/* ══════════════════════════════════════════════════════════
+   A. PREMIUM TYPOGRAPHY — Cairo 800/900 للعناوين
+   ══════════════════════════════════════════════════════════ */
+
+/* Hero title: أضخم وأجرأ */
+.acad-hero-title{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:900 !important;
+  font-size:clamp(2.2rem,6vw,4.2rem) !important;
+  letter-spacing:-.03em !important;
+  line-height:1.06 !important;
+}
+
+
+/* Section titles: Cairo Black */
+.acad-section-title{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:800 !important;
+  letter-spacing:-.025em !important;
+  font-size:clamp(1.8rem,4vw,2.8rem) !important;
+}
+
+
+/* Course card title: bold */
+.acad-card-title{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:800 !important;
+  font-size:1.75rem !important;
+  letter-spacing:-.02em !important;
+}
+
+
+/* Cat card titles */
+.acad-cat-card-title{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:800 !important;
+  font-size:1.2rem !important;
+  letter-spacing:-.01em !important;
+}
+
+
+/* Lesson page title */
+.acad-lesson-h1{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:800 !important;
+  letter-spacing:-.022em !important;
+}
+
+
+/* Quiz title */
+.acad-quiz-title{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:800 !important;
+  letter-spacing:-.02em !important;
+}
+
+
+/* Module names */
+.acad-module-name{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:800 !important;
+}
+
+
+/* Result score: mammoth weight */
+.acad-result-score{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:900 !important;
+  font-size:5.5rem !important;
+  letter-spacing:-.04em !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   B. HERO PREMIUM — cinematic depth
+   ══════════════════════════════════════════════════════════ */
+.acad-hero{
+  background:
+    linear-gradient(168deg,#020b05 0%,#061410 22%,#0d2b18 50%,#071510 78%,#020905 100%) !important;
+  padding:72px 0 64px !important;
+}
+
+
+/* Badge: richer green + tighter */
+.acad-hero-badge{
+  background:rgba(46,170,92,.14) !important;
+  border-color:rgba(46,170,92,.35) !important;
+  color:#8eedb0 !important;
+  font-size:10px !important;
+  letter-spacing:.16em !important;
+  padding:7px 20px !important;
+}
+
+.acad-hero-badge i{
+  background:radial-gradient(circle,#7de89e,#2eaa5c) !important;
+  box-shadow:0 0 6px rgba(46,170,92,.6);
+}
+
+
+/* Sub text: better contrast */
+.acad-hero-sub{
+  color:rgba(255,255,255,.62) !important;
+  font-size:clamp(14px,1.9vw,16px) !important;
+  line-height:1.9 !important;
+}
+
+
+/* Stats: richer dividers */
+.acad-hs-div{background:rgba(255,255,255,.12) !important;margin:0 16px !important}
+
+.acad-hs-l{
+  font-size:9.5px !important;
+  letter-spacing:.1em !important;
+  color:rgba(255,255,255,.38) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   C. CATALOG CARDS — premium glass & gradient borders
+   ══════════════════════════════════════════════════════════ */
+
+/* Card body: richer spacing + subtle tint */
+.acad-cat-card-body{padding:24px 26px !important}
+
+
+.acad-cat-card-kicker{
+  font-size:9px !important;
+  letter-spacing:.18em !important;
+  font-weight:900 !important;
+  color:var(--brand) !important;
+  margin-bottom:8px !important;
+}
+
+
+.acad-cat-card-desc{
+  font-size:13px !important;
+  line-height:1.8 !important;
+  color:var(--muted) !important;
+}
+
+
+/* Non-premium card: always-on visible glow */
+.acad-cat-card:not(.premium){
+  border:1px solid rgba(27,107,58,.14) !important;
+  box-shadow:
+    0 0 0 1px rgba(27,107,58,.06),
+    0 4px 18px rgba(27,107,58,.1),
+    0 2px 6px rgba(0,0,0,.06) !important;
+}
+
+
+/* Card top: taller, richer overlay */
+.acad-cat-card-top{height:130px !important}
+
+
+/* ══════════════════════════════════════════════════════════
+   D. COURSE CARD (detail view) — editorial feel
+   ══════════════════════════════════════════════════════════ */
+.acad-card{
+  border-radius:32px !important;
+  border:1px solid rgba(27,107,58,.1) !important;
+  box-shadow:
+    0 0 0 1px rgba(27,107,58,.06),
+    0 8px 32px rgba(27,107,58,.08),
+    0 2px 8px rgba(0,0,0,.04) !important;
+}
+
+
+.acad-card-top{height:200px !important}
+
+
+/* Gradient bottom overlay deeper */
+.acad-card-top::after{
+  background:linear-gradient(180deg,
+    rgba(4,18,12,.08) 0%,
+    rgba(4,18,12,.02) 35%,
+    rgba(4,18,12,.6) 100%) !important;
+}
+
+
+.acad-card-body{padding:32px 36px !important}
+
+
+.acad-card-kicker{
+  font-size:9px !important;
+  letter-spacing:.2em !important;
+  font-weight:900 !important;
+  margin-bottom:12px !important;
+}
+
+
+.acad-card-desc{
+  font-size:14.5px !important;
+  line-height:1.85 !important;
+  margin-bottom:26px !important;
+}
+
+
+/* Chip refinement */
+.acad-chip{
+  font-size:11.5px !important;
+  padding:7px 15px !important;
+  border-radius:50px !important;
+  font-weight:700 !important;
+  letter-spacing:.01em !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   E. LESSON ROWS — premium depth
+   ══════════════════════════════════════════════════════════ */
+.acad-lesson-row{
+  padding:14px 18px !important;
+  border-radius:14px !important;
+  margin-bottom:3px !important;
+}
+
+
+/* Done lesson: glowing right bar */
+.acad-lesson-row.done{
+  background:rgba(27,107,58,.06) !important;
+  border-right:3px solid var(--brand) !important;
+  box-shadow:inset 3px 0 12px rgba(27,107,58,.0),
+             3px 0 0 var(--brand) inset,
+             0 2px 12px rgba(27,107,58,.08) !important;
+}
+
+
+/* Check circle: heavier done state */
+.acad-lesson-check{
+  width:30px !important;
+  height:30px !important;
+  border-radius:50% !important;
+}
+
+.acad-lesson-row.done .acad-lesson-check{
+  background:linear-gradient(135deg,#1a7a45,#2eaa5c) !important;
+  border-color:transparent !important;
+}
+
+
+/* Lesson name: heavier */
+.acad-lesson-name{
+  font-size:14px !important;
+  font-weight:700 !important;
+  letter-spacing:-.005em !important;
+}
+
+
+.acad-lesson-dur{
+  font-size:11.5px !important;
+  margin-top:3px !important;
+}
+
+
+/* Module block spacing */
+.acad-module-block{
+  margin-bottom:24px !important;
+  padding-bottom:24px !important;
+  border-bottom:1px solid var(--line) !important;
+}
+
+.acad-module-block:last-child{border-bottom:none !important}
+
+
+/* ══════════════════════════════════════════════════════════
+   F. LESSON PAGE — editorial typography
+   ══════════════════════════════════════════════════════════ */
+.acad-lesson-hdr{
+  border-bottom:2px solid var(--brand-pale) !important;
+  margin-bottom:40px !important;
+  padding-bottom:28px !important;
+}
+
+
+.acad-lesson-kicker{
+  font-size:10px !important;
+  letter-spacing:.2em !important;
+  font-weight:900 !important;
+}
+
+
+.acad-body{
+  font-size:15px !important;
+  line-height:2 !important;
+}
+
+
+.acad-body h2{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:800 !important;
+  font-size:1.4rem !important;
+  letter-spacing:-.015em !important;
+  margin:40px 0 16px !important;
+  padding-bottom:12px !important;
+  border-bottom:2px solid var(--brand-pale) !important;
+}
+
+
+.acad-body h3{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:800 !important;
+  font-size:1.08rem !important;
+  letter-spacing:-.01em !important;
+}
+
+
+/* Tip/error boxes: richer */
+.acad-tip{
+  border-radius:20px !important;
+  border-right:5px solid var(--brand) !important;
+  background:linear-gradient(135deg,rgba(27,107,58,.06),rgba(27,107,58,.02)) !important;
+  padding:24px 26px !important;
+}
+
+.acad-err{
+  border-radius:20px !important;
+  border-right:5px solid var(--red) !important;
+  padding:24px 26px !important;
+}
+
+.acad-case{
+  border-radius:20px !important;
+  padding:26px !important;
+}
+
+
+/* Info cards: richer */
+.acad-icard{
+  border-radius:18px !important;
+  padding:20px 16px !important;
+}
+
+.acad-icard-ico{font-size:30px !important;margin-bottom:10px !important}
+
+.acad-icard-val{font-weight:800 !important;font-size:1rem !important}
+
+
+/* ══════════════════════════════════════════════════════════
+   G. QUIZ — premium feel
+   ══════════════════════════════════════════════════════════ */
+.acad-quiz-pg{padding:40px 24px 80px !important}
+
+
+.acad-quiz-hdr{margin-bottom:36px !important}
+
+
+.acad-quiz-sub{
+  font-size:14px !important;
+  color:var(--muted) !important;
+  margin-top:4px !important;
+}
+
+
+/* Question card: deeper */
+.acad-qcard{
+  border-radius:24px !important;
+  padding:28px !important;
+  border:1px solid rgba(27,107,58,.1) !important;
+  box-shadow:
+    0 4px 20px rgba(27,107,58,.06),
+    0 1px 6px rgba(0,0,0,.04) !important;
+}
+
+
+.acad-qnum{
+  font-size:10px !important;
+  letter-spacing:.18em !important;
+  font-weight:900 !important;
+  margin-bottom:14px !important;
+}
+
+
+.acad-qtext{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:700 !important;
+  font-size:15.5px !important;
+  line-height:1.7 !important;
+  margin-bottom:24px !important;
+}
+
+
+/* Option buttons: premium */
+.acad-opt{
+  padding:15px 18px !important;
+  border-radius:14px !important;
+  font-size:14px !important;
+  font-weight:600 !important;
+  border-width:1.5px !important;
+  line-height:1.55 !important;
+  gap:14px !important;
+}
+
+
+/* Option label circle */
+.acad-opt-lt{
+  width:26px !important;
+  height:26px !important;
+  border-radius:50% !important;
+  font-size:11px !important;
+  font-weight:800 !important;
+  flex-shrink:0 !important;
+}
+
+
+/* Correct state: brighter green fill */
+.acad-opt.ok{
+  background:rgba(27,107,58,.1) !important;
+  border-color:var(--brand) !important;
+  color:#0f6b30 !important;
+}
+
+.acad-opt.ok .acad-opt-lt{
+  background:var(--brand) !important;
+  color:#fff !important;
+  border-color:transparent !important;
+}
+
+
+/* Wrong state: stronger red */
+.acad-opt.bad{
+  background:rgba(192,57,43,.07) !important;
+  border-color:#c0392b !important;
+  color:#9b2218 !important;
+}
+
+.acad-opt.bad .acad-opt-lt{
+  background:#c0392b !important;
+  color:#fff !important;
+  border-color:transparent !important;
+}
+
+
+/* Explanation card */
+.acad-exp{
+  border-radius:16px !important;
+  padding:16px 18px !important;
+  font-size:13.5px !important;
+  line-height:1.8 !important;
+  background:linear-gradient(135deg,rgba(27,107,58,.08),rgba(27,107,58,.04)) !important;
+  border:1.5px solid rgba(27,107,58,.2) !important;
+  color:var(--brand) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   H. BREADCRUMB + NAV — refined
+   ══════════════════════════════════════════════════════════ */
+.acad-breadcrumb{
+  font-size:12.5px !important;
+  letter-spacing:.01em !important;
+  margin-bottom:32px !important;
+}
+
+
+.acad-section-label{
+  font-size:9px !important;
+  letter-spacing:.22em !important;
+  font-weight:900 !important;
+  margin-bottom:12px !important;
+}
+
+
+.acad-section-sub{
+  font-size:15px !important;
+  line-height:1.8 !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   I. PROGRESS — refined labels
+   ══════════════════════════════════════════════════════════ */
+.acad-prog-label{
+  font-size:12px !important;
+  font-weight:800 !important;
+  letter-spacing:.02em !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   J. MODULES PREVIEW title
+   ══════════════════════════════════════════════════════════ */
+.acad-mp-title{
+  font-size:11px !important;
+  letter-spacing:.16em !important;
+  font-weight:900 !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   K. RESULT PAGE — premium
+   ══════════════════════════════════════════════════════════ */
+.acad-result{
+  border-radius:28px !important;
+  border:1px solid rgba(27,107,58,.12) !important;
+  box-shadow:
+    0 8px 32px rgba(27,107,58,.08),
+    0 2px 8px rgba(0,0,0,.04) !important;
+  padding:52px 28px !important;
+}
+
+
+.acad-result-lbl{
+  font-size:12px !important;
+  letter-spacing:.12em !important;
+  font-weight:700 !important;
+  text-transform:uppercase !important;
+}
+
+
+.acad-result-msg{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:700 !important;
+  font-size:16px !important;
+  line-height:1.65 !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   L. DARK MODE — adjusted for premium
+   ══════════════════════════════════════════════════════════ */
+[data-dark] .acad-cat-card:not(.premium){
+  border-color:rgba(46,170,92,.1) !important;
+  box-shadow:0 2px 12px rgba(0,0,0,.3) !important;
+}
+
+[data-dark] .acad-qcard{
+  border-color:rgba(46,170,92,.12) !important;
+  box-shadow:0 4px 20px rgba(0,0,0,.35) !important;
+}
+
+[data-dark] .acad-opt.ok{
+  background:rgba(27,107,58,.18) !important;
+  color:#7de89e !important;
+}
+
+[data-dark] .acad-opt.bad{
+  background:rgba(192,57,43,.15) !important;
+  color:#f08080 !important;
+}
+
+[data-dark] .acad-tip{
+  background:linear-gradient(135deg,rgba(27,107,58,.12),rgba(27,107,58,.05)) !important;
+}
+
+  .acad-card-body{padding:22px !important}
+
+  .acad-cat-card-body{padding:18px 20px !important}
+
+  .acad-qcard{padding:20px 16px !important}
+
+  .acad-hero{padding:52px 0 48px !important}
+
+  .acad-quiz-pg{padding:28px 16px 60px !important}
+
+  .acad-result{padding:36px 20px !important}
+
+
+/* ══════════════════════════════════════════════════════════
+   N. ALWAYS-ON NEON LIGHTING — واضح في كل الأحوال
+   ══════════════════════════════════════════════════════════ */
+
+/* Quiz: selected option neon ring */
+.acad-opt.sel{
+  box-shadow:
+    0 0 0 2px var(--brand),
+    0 0 18px rgba(27,107,58,.25),
+    0 4px 16px rgba(27,107,58,.12) !important;
+}
+
+
+/* Correct option: green neon */
+.acad-opt.ok{
+  box-shadow:
+    0 0 0 2px #27ae60,
+    0 0 20px rgba(39,174,96,.3) !important;
+}
+
+
+/* Wrong option: red neon */
+.acad-opt.bad{
+  box-shadow:
+    0 0 0 2px #c0392b,
+    0 0 18px rgba(192,57,43,.25) !important;
+}
+
+
+/* Score on result: neon green text */
+.acad-result-score{
+  color:var(--brand) !important;
+  filter:drop-shadow(0 0 22px rgba(27,107,58,.45));
+}
+
+
+/* Module num badge: glowing ring when in active module */
+.acad-module-num{
+  box-shadow:0 2px 12px rgba(27,107,58,.15) !important;
+}
+
+
+/* Lesson check: done glow ring — stronger */
+.acad-lesson-row.done .acad-lesson-check{
+  box-shadow:
+    0 0 0 3px rgba(27,107,58,.2),
+    0 0 12px rgba(27,107,58,.3) !important;
+}
+
+
+/* Primary button: always glowing */
+.acad-btn-primary{
+  box-shadow:
+    0 4px 20px rgba(27,107,58,.38),
+    0 0 0 1px rgba(46,170,92,.15) !important;
+}
+
+
+/* Course card (detail): glowing border */
+.acad-card{
+  box-shadow:
+    0 0 0 1px rgba(27,107,58,.1),
+    0 8px 40px rgba(27,107,58,.1),
+    0 2px 10px rgba(0,0,0,.05) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   O. DARK MODE — neon effects أقوى وأوضح
+   ══════════════════════════════════════════════════════════ */
+[data-dark] .acad-cat-card:not(.premium){
+  box-shadow:
+    0 0 0 1px rgba(46,170,92,.15),
+    0 6px 28px rgba(0,0,0,.35),
+    0 2px 8px rgba(46,170,92,.08) !important;
+}
+
+[data-dark] .acad-card{
+  box-shadow:
+    0 0 0 1px rgba(46,170,92,.18),
+    0 8px 40px rgba(0,0,0,.4),
+    0 0 60px rgba(46,170,92,.06) !important;
+}
+
+[data-dark] .acad-start-btn{
+  box-shadow:
+    0 6px 32px rgba(46,170,92,.5),
+    0 0 0 1px rgba(46,170,92,.3) !important;
+}
+
+[data-dark] .acad-btn-primary{
+  box-shadow:
+    0 4px 24px rgba(46,170,92,.45),
+    0 0 0 1px rgba(46,170,92,.2) !important;
+}
+
+[data-dark] .acad-opt.sel{
+  box-shadow:
+    0 0 0 2px var(--brand),
+    0 0 28px rgba(46,170,92,.35) !important;
+}
+
+[data-dark] .acad-opt.ok{
+  box-shadow:
+    0 0 0 2px #2ecc71,
+    0 0 28px rgba(46,170,92,.4) !important;
+}
+
+[data-dark] .acad-opt.bad{
+  box-shadow:
+    0 0 0 2px #e74c3c,
+    0 0 24px rgba(231,76,60,.3) !important;
+}
+
+[data-dark] .acad-hero::before{
+  background:
+    radial-gradient(ellipse 68% 60% at 14% 26%, rgba(46,170,92,.75) 0, rgba(46,170,92,.3) 38%, transparent 62%),
+    radial-gradient(ellipse 54% 54% at 86% 78%, rgba(46,170,92,.6) 0, rgba(27,107,58,.25) 40%, transparent 60%),
+    radial-gradient(ellipse 38% 42% at 50% 52%, rgba(18,83,42,.3) 0, transparent 56%) !important;
+}
+
+[data-dark] .acad-prog-fill{
+  box-shadow:
+    0 0 20px rgba(46,170,92,.6),
+    0 0 8px rgba(46,170,92,.4) !important;
+}
+
+[data-dark] .acad-result-score{
+  filter:drop-shadow(0 0 32px rgba(46,170,92,.6));
+}
+
+
+
+/* ══ MODULE HEADER ══════════════════════════════════════════ */
+.acad-module-block{
+  margin-bottom:40px !important;
+  padding-bottom:0 !important;
+  border-bottom:none !important;
+}
+
+.acad-module-name{
+  font-size:10px !important;
+  font-weight:900 !important;
+  color:var(--muted) !important;
+  letter-spacing:.18em !important;
+  text-transform:uppercase !important;
+  margin-bottom:14px !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  padding:0 2px !important;
+  background:none !important;
+  border:none !important;
+  border-radius:0 !important;
+}
+
+.acad-module-num{
+  width:26px !important;
+  height:26px !important;
+  border-radius:8px !important;
+  background:var(--brand) !important;
+  color:#fff !important;
+  font-size:11px !important;
+  font-weight:900 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex-shrink:0 !important;
+  box-shadow:0 3px 10px rgba(27,107,58,.3) !important;
+  transform:none !important;
+}
+
+/* ══ ROW BASE — بطاقة مستقلة ════════════════════════════════ */
+.acad-lesson-row{
+  display:flex !important;
+  align-items:center !important;
+  gap:14px !important;
+  padding:16px 18px !important;
+  border-radius:16px !important;
+  cursor:pointer !important;
+  background:#fff !important;
+  border:1px solid rgba(0,0,0,.07) !important;
+  box-shadow:0 1px 3px rgba(0,0,0,.04),0 2px 10px rgba(0,0,0,.03) !important;
+  margin-bottom:8px !important;
+  transition:
+    transform .22s cubic-bezier(.34,1.56,.64,1),
+    box-shadow .22s ease,
+    background .18s ease,
+    border-color .18s ease !important;
+  position:relative !important;
+  overflow:hidden !important;
+}
+
+.acad-lesson-row:last-child{ margin-bottom:0 !important }
+
+.acad-lesson-row+.acad-lesson-row{ border-top:none !important }
+
+.acad-lesson-row.done::before{ display:none !important }
+
+/* ── Hover */
+.acad-lesson-row:not(.locked):hover{
+  transform:translateY(-2px) !important;
+  border-color:rgba(27,107,58,.2) !important;
+  box-shadow:0 6px 20px rgba(27,107,58,.1),0 1px 4px rgba(0,0,0,.04) !important;
+}
+
+/* ══ DONE ROW — إضاءة خضراء ناعمة ══════════════════════════ */
+.acad-lesson-row.done{
+  background:rgba(27,107,58,.04) !important;
+  border-color:rgba(27,107,58,.14) !important;
+  box-shadow:0 1px 4px rgba(27,107,58,.06),0 2px 12px rgba(27,107,58,.04) !important;
+}
+
+/* شريط ضوء أخضر من اليمين */
+.acad-lesson-row.done::after{
+  content:'' !important;
+  position:absolute !important;
+  top:16% !important;right:0 !important;bottom:16% !important;
+  width:3px !important;
+  background:linear-gradient(180deg,#3cd16e,#1B6B3A) !important;
+  border-radius:3px 0 0 3px !important;
+  pointer-events:none !important;
+}
+
+.acad-lesson-row.done:hover{
+  background:rgba(27,107,58,.07) !important;
+  border-color:rgba(27,107,58,.22) !important;
+  box-shadow:0 6px 20px rgba(27,107,58,.12),0 1px 4px rgba(27,107,58,.06) !important;
+}
+
+/* ══ CHECK CIRCLE ════════════════════════════════════════════ */
+.acad-lesson-check{
+  width:32px !important;
+  height:32px !important;
+  min-width:32px !important;
+  border-radius:50% !important;
+  border:1.5px solid var(--line2) !important;
+  background:var(--bg2) !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex-shrink:0 !important;
+  transition:all .24s cubic-bezier(.34,1.56,.64,1) !important;
+  box-shadow:none !important;
+}
+
+.acad-lesson-row.done .acad-lesson-check{
+  background:linear-gradient(135deg,#1a7a45,#2eaa5c) !important;
+  border-color:transparent !important;
+  color:#fff !important;
+  box-shadow:0 3px 10px rgba(27,107,58,.32) !important;
+}
+
+.acad-lesson-row.locked .acad-lesson-check{
+  background:var(--bg2) !important;
+  border-color:var(--line) !important;
+  color:var(--muted) !important;
+  box-shadow:none !important;
+}
+
+/* ══ TEXT ════════════════════════════════════════════════════ */
+.acad-lesson-info{ flex:1 !important;min-width:0 !important }
+
+.acad-lesson-name{
+  font-size:14px !important;
+  font-weight:700 !important;
+  color:var(--ink) !important;
+  margin-bottom:4px !important;
+  line-height:1.4 !important;
+  transition:color .18s !important;
+}
+
+.acad-lesson-row.done .acad-lesson-name{ color:var(--brand) !important }
+
+.acad-lesson-row:not(.locked):hover .acad-lesson-name{ color:var(--brand) !important }
+
+.acad-lesson-dur{
+  font-size:12px !important;
+  color:var(--muted) !important;
+  font-weight:600 !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:4px !important;
+}
+
+.acad-lesson-row.done .acad-lesson-dur span{
+  background:none !important;border:none !important;padding:0 !important;
+  font-weight:700 !important;color:var(--brand) !important;
+}
+
+/* ══ ARROW ═══════════════════════════════════════════════════ */
+.acad-lesson-arr{
+  font-size:16px !important;
+  color:var(--line2) !important;
+  width:auto !important;height:auto !important;
+  background:none !important;border:none !important;box-shadow:none !important;
+  flex-shrink:0 !important;
+  transition:color .18s ease,transform .2s cubic-bezier(.34,1.56,.64,1) !important;
+}
+
+.acad-lesson-row:not(.locked):hover .acad-lesson-arr{
+  color:var(--brand) !important;
+  transform:translateX(-4px) !important;
+}
+
+/* ══ LOCKED ══════════════════════════════════════════════════ */
+.acad-lesson-row.locked{ opacity:.42 !important;cursor:not-allowed !important;box-shadow:none !important }
+
+.acad-lesson-row.locked:hover{
+  transform:none !important;background:#fff !important;
+  border-color:rgba(0,0,0,.07) !important;box-shadow:none !important;
+}
+
+  .acad-lesson-row:not(.locked):active{
+    transform:scale(.985) !important;transition-duration:80ms !important;
+  }
+
+/* ══ DARK MODE ══════════════════════════════════════════════ */
+[data-dark] .acad-lesson-row{
+  background:var(--card) !important;
+  border-color:var(--line) !important;
+  box-shadow:0 1px 6px rgba(0,0,0,.25),0 2px 12px rgba(0,0,0,.18) !important;
+}
+
+[data-dark] .acad-lesson-row:not(.locked):hover{
+  background:var(--card) !important;
+  border-color:rgba(46,170,92,.2) !important;
+  box-shadow:0 6px 20px rgba(0,0,0,.3),0 0 0 1px rgba(46,170,92,.15) !important;
+}
+
+[data-dark] .acad-lesson-row.done{
+  background:rgba(27,107,58,.1) !important;
+  border-color:rgba(46,170,92,.15) !important;
+  box-shadow:0 1px 6px rgba(0,0,0,.2),0 0 18px rgba(27,107,58,.07) !important;
+}
+
+[data-dark] .acad-lesson-row.done:hover{
+  background:rgba(27,107,58,.15) !important;
+  border-color:rgba(46,170,92,.25) !important;
+}
+
+[data-dark] .acad-lesson-check{
+  background:rgba(255,255,255,.06) !important;
+  border-color:rgba(255,255,255,.12) !important;
+}
+
+[data-dark] .acad-lesson-row.done .acad-lesson-check{
+  background:linear-gradient(135deg,#1a7a45,#2eaa5c) !important;
+  box-shadow:0 3px 12px rgba(27,107,58,.4) !important;
+}
+
+[data-dark] .acad-lesson-arr{
+  background:none !important;border:none !important;
+  color:rgba(255,255,255,.22) !important;
+}
+
+[data-dark] .acad-lesson-row:not(.locked):hover .acad-lesson-arr{
+  color:var(--brand-xl,#5fc97e) !important;
+}
+
+[data-dark] .acad-lesson-row.done .acad-lesson-dur span{
+  background:none !important;border:none !important;
+}
+
+[data-dark] .acad-module-num{
+  box-shadow:0 3px 12px rgba(27,107,58,.4) !important;
+}
+
+
+
+/* ══ Final exam row — unlocked ══════════════════════════════ */
+.acad-fe-row{
+  display:flex;align-items:center;gap:16px;
+  padding:18px 20px;border-radius:16px;cursor:pointer;
+  background:#fff;
+  border:1.5px solid rgba(201,135,26,.28);
+  box-shadow:0 2px 12px rgba(201,135,26,.1),0 1px 4px rgba(0,0,0,.04);
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s ease,border-color .18s;
+  position:relative;overflow:hidden;
+}
+
+.acad-fe-row::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(201,135,26,.04),rgba(230,160,32,.02));
+  pointer-events:none;
+}
+
+.acad-fe-row:hover{
+  transform:translateY(-3px);
+  border-color:rgba(201,135,26,.5);
+  box-shadow:0 8px 28px rgba(201,135,26,.18),0 2px 8px rgba(0,0,0,.05);
+}
+
+.acad-fe-row:active{transform:scale(.98);transition-duration:80ms}
+
+.acad-fe-row.passed{
+  background:linear-gradient(135deg,rgba(27,107,58,.05),rgba(46,170,92,.02));
+  border-color:rgba(27,107,58,.3);
+  box-shadow:0 2px 14px rgba(27,107,58,.1),0 1px 4px rgba(0,0,0,.04);
+}
+
+.acad-fe-row.passed:hover{
+  border-color:rgba(27,107,58,.5);
+  box-shadow:0 8px 28px rgba(27,107,58,.16),0 2px 8px rgba(0,0,0,.05);
+}
+
+.acad-fe-row.failed{
+  background:linear-gradient(135deg,rgba(224,90,0,.04),rgba(230,160,32,.02));
+  border-color:rgba(224,90,0,.25);
+}
+
+/* ── Score circle ── */
+.acad-fe-circle{
+  width:58px;height:58px;min-width:58px;border-radius:50%;
+  border:2.5px solid rgba(201,135,26,.4);
+  background:linear-gradient(135deg,rgba(201,135,26,.14),rgba(230,160,32,.08));
+  color:#c9871a;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex-shrink:0;gap:1px;
+  transition:all .28s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 3px 12px rgba(201,135,26,.18);
+}
+
+.acad-fe-row.passed .acad-fe-circle{
+  background:linear-gradient(135deg,#1a7a45,#2eaa5c);
+  border-color:transparent;color:#fff;
+  box-shadow:0 4px 16px rgba(27,107,58,.35);
+}
+
+.acad-fe-row.failed .acad-fe-circle{
+  background:linear-gradient(135deg,rgba(224,90,0,.18),rgba(230,160,32,.1));
+  border-color:rgba(224,90,0,.4);color:#e05a00;
+}
+
+.acad-fe-row:hover .acad-fe-circle{transform:scale(1.08)}
+
+.acad-fe-circle-score{
+  font-size:10px;font-weight:900;font-family:'Cairo',sans-serif;
+  line-height:1;margin-top:2px;letter-spacing:-.02em;
+}
+
+/* ── Info ── */
+.acad-fe-row-info{flex:1;min-width:0}
+
+.acad-fe-row-title{
+  font-family:'Cairo',sans-serif;font-size:15px;font-weight:800;
+  color:var(--ink);margin-bottom:4px;letter-spacing:-.01em;line-height:1.3;
+}
+
+.acad-fe-row-sub{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:6px}
+
+.acad-fe-row-status{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12px;font-weight:800;padding:3px 12px;border-radius:30px;
+}
+
+/* ── Arrow ── */
+.acad-fe-row-arr{
+  color:var(--muted);flex-shrink:0;
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1),color .18s;
+}
+
+.acad-fe-row:hover .acad-fe-row-arr{color:var(--brand);transform:translateX(-4px)}
+
+.acad-fe-row.passed:hover .acad-fe-row-arr{color:var(--brand)}
+
+.acad-fe-row.failed:hover .acad-fe-row-arr{color:#e05a00}
+
+/* ── Dark mode ── */
+[data-dark] .acad-fe-row{
+  background:var(--card);border-color:rgba(201,135,26,.32);
+  box-shadow:0 2px 14px rgba(0,0,0,.3);
+}
+
+[data-dark] .acad-fe-row.passed{
+  background:rgba(27,107,58,.12);border-color:rgba(46,170,92,.3);
+}
+
+[data-dark] .acad-fe-row.failed{
+  background:rgba(224,90,0,.08);border-color:rgba(224,90,0,.3);
+}
+
+
+
+/* ══ Final Exam locked state — premium gold design ══════════ */
+.acad-fe-locked{
+  padding:40px 24px 36px;
+  text-align:center;
+  background:linear-gradient(160deg,rgba(201,135,26,.05),rgba(230,160,32,.02));
+  border-top:1px solid rgba(201,135,26,.14);
+  border-radius:0 0 18px 18px;
+  position:relative;
+  overflow:hidden;
+}
+
+.acad-fe-locked::before{
+  content:'';
+  position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:240px;height:120px;
+  background:radial-gradient(ellipse 100% 100% at 50% 100%,rgba(201,135,26,.1),transparent);
+  pointer-events:none;
+}
+
+
+/* Lock icon circle */
+.acad-fe-lock-icon{
+  width:68px;height:68px;
+  border-radius:50%;
+  background:linear-gradient(135deg,rgba(201,135,26,.18),rgba(230,160,32,.1));
+  border:2px solid rgba(201,135,26,.28);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 18px;
+  color:#c9871a;
+  box-shadow:
+    0 6px 22px rgba(201,135,26,.18),
+    0 0 0 6px rgba(201,135,26,.06);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+
+.acad-fe-locked:hover .acad-fe-lock-icon{
+  transform:scale(1.08);
+}
+
+
+/* Gold badge label */
+.acad-fe-lock-badge{
+  display:inline-block;
+  background:rgba(201,135,26,.1);
+  color:#c9871a;
+  font-size:9.5px;font-weight:900;
+  letter-spacing:.15em;text-transform:uppercase;
+  padding:4px 16px;border-radius:30px;
+  border:1px solid rgba(201,135,26,.22);
+  margin-bottom:14px;
+}
+
+
+/* Main title */
+.acad-fe-lock-title{
+  font-family:'Cairo',sans-serif;
+  font-size:18px;font-weight:800;
+  color:var(--ink);
+  margin-bottom:10px;
+  letter-spacing:-.01em;
+}
+
+
+/* Description */
+.acad-fe-lock-msg{
+  font-size:13.5px;color:var(--muted);
+  line-height:1.8;max-width:300px;
+  margin:0 auto 26px;
+}
+
+.acad-fe-lock-msg strong{
+  color:var(--ink);font-weight:800;
+}
+
+
+/* Progress area */
+.acad-fe-lock-prog-wrap{
+  max-width:230px;margin:0 auto;
+}
+
+.acad-fe-lock-pct{
+  font-size:24px;font-weight:900;
+  color:#c9871a;
+  font-family:'Cairo',sans-serif;
+  line-height:1;margin-bottom:10px;
+  letter-spacing:-.02em;
+}
+
+.acad-fe-prog-track{
+  height:8px !important;
+  border-radius:8px !important;
+  background:rgba(201,135,26,.15) !important;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.08) !important;
+}
+
+.acad-fe-prog-fill{
+  height:100% !important;
+  background:linear-gradient(90deg,#c9871a,#e6a020,#f0b030) !important;
+  border-radius:8px !important;
+  transition:width .9s cubic-bezier(.16,1,.3,1) !important;
+  position:relative;overflow:hidden;
+  box-shadow:0 0 8px rgba(201,135,26,.3);
+}
+
+.acad-fe-prog-fill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+  animation:acShimmerSlide 2.4s ease-in-out infinite;
+}
+
+.acad-fe-lock-counts{
+  font-size:11.5px;color:var(--muted);
+  font-weight:600;margin-top:10px;
+}
+
+
+/* ── Dark mode ═══════════════════════════════════════════════ */
+[data-dark] .acad-fe-locked{
+  background:linear-gradient(160deg,rgba(201,135,26,.09),rgba(230,160,32,.04));
+  border-top-color:rgba(201,135,26,.22);
+}
+
+[data-dark] .acad-fe-lock-badge{
+  background:rgba(201,135,26,.15);
+  border-color:rgba(201,135,26,.3);
+}
+
+[data-dark] .acad-fe-lock-msg strong{ color:var(--ink); }
+
+/* Catalog root & card section */
+#acad-root,
+.acad-section{
+  background:transparent !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   C. SUBNAV TABS — pure CSS transitions, zero JS dependency
+   ══════════════════════════════════════════════════════════ */
+#pg-academy .mkt-subnav,
+#acad-social-subnav{
+  background:rgba(255,255,255,.96) !important;
+  backdrop-filter:blur(20px) !important;
+  -webkit-backdrop-filter:blur(20px) !important;
+  border-bottom:1px solid rgba(35,83,71,.07) !important;
+  box-shadow:0 1px 12px rgba(35,83,71,.05) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   D. SECTION HEADERS — clean editorial
+   ══════════════════════════════════════════════════════════ */
+#pg-academy .acad-section-label{
+  color:#8EB69B !important;
+  font-size:9px !important;
+  letter-spacing:.22em !important;
+  font-weight:900 !important;
+}
+
+#pg-academy .acad-section-title{
+  color:#0B2B26 !important;
+  font-size:clamp(1.6rem,4vw,2.4rem) !important;
+}
+
+#pg-academy .acad-section-sub{
+  color:#6b8c84 !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   E. CATALOG GRID
+   ══════════════════════════════════════════════════════════ */
+.acad-cat-grid{
+  gap:22px !important;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr)) !important;
+  perspective:none !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   F. CATALOG CARD BASE — Image 1 style
+   ══════════════════════════════════════════════════════════ */
+.acad-cat-card:not(.premium){
+  background:#fff !important;
+  border:none !important;
+  border-radius:20px !important;
+  box-shadow:
+    0 2px 8px rgba(35,83,71,.06),
+    0 8px 28px rgba(35,83,71,.08) !important;
+  overflow:hidden !important;
+  transition:
+    transform .28s cubic-bezier(.34,1.56,.64,1),
+    box-shadow .28s ease !important;
+  will-change:transform !important;
+}
+
+.acad-cat-card:not(.premium):hover{
+  transform:translateY(-6px) scale(1.01) !important;
+  box-shadow:
+    0 6px 20px rgba(35,83,71,.1),
+    0 20px 50px rgba(35,83,71,.14) !important;
+  border-color:transparent !important;
+}
+
+
+/* ── Card top: taller image area */
+.acad-cat-card:not(.premium) .acad-cat-card-top{
+  height:165px !important;
+  border-radius:0 !important;
+  position:relative !important;
+  overflow:hidden !important;
+}
+
+
+/* Gradient overlay on image */
+.acad-cat-card:not(.premium) .acad-cat-card-top::after{
+  content:'' !important;
+  position:absolute !important;
+  inset:0 !important;
+  background:linear-gradient(180deg,
+    rgba(5,31,32,.15) 0%,
+    rgba(5,31,32,.05) 40%,
+    rgba(5,31,32,.45) 100%) !important;
+  pointer-events:none !important;
+}
+
+
+/* Icon: centered, larger */
+.acad-cat-card:not(.premium) .acad-cat-card-icon{
+  font-size:56px !important;
+  filter:drop-shadow(0 8px 20px rgba(0,0,0,.35)) !important;
+  position:relative !important;
+  z-index:1 !important;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1) !important;
+}
+
+.acad-cat-card:not(.premium):hover .acad-cat-card-icon{
+  transform:scale(1.14) translateY(-4px) !important;
+  filter:drop-shadow(0 12px 28px rgba(0,0,0,.4)) !important;
+}
+
+
+/* Shimmer */
+.acad-cat-card:not(.premium)::after{
+  background:linear-gradient(112deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%) !important;
+}
+
+
+/* ── Card body: clean content */
+.acad-cat-card:not(.premium) .acad-cat-card-body{
+  padding:20px 22px 22px !important;
+}
+
+
+/* Kicker: sage green, airy */
+.acad-cat-card:not(.premium) .acad-cat-card-kicker{
+  color:#8EB69B !important;
+  font-size:9px !important;
+  letter-spacing:.2em !important;
+  font-weight:900 !important;
+  margin-bottom:7px !important;
+}
+
+
+/* Title: dark teal, Cairo Black */
+.acad-cat-card:not(.premium) .acad-cat-card-title{
+  font-family:'Cairo',sans-serif !important;
+  font-weight:800 !important;
+  font-size:1.08rem !important;
+  color:#051F20 !important;
+  margin-bottom:8px !important;
+  line-height:1.3 !important;
+  letter-spacing:-.01em !important;
+}
+
+
+/* Description: muted teal */
+.acad-cat-card:not(.premium) .acad-cat-card-desc{
+  font-size:12.5px !important;
+  color:#6b8c84 !important;
+  line-height:1.75 !important;
+  margin-bottom:16px !important;
+}
+
+
+/* ── Chips: mint style */
+#pg-academy .acad-chip{
+  background:#DAF1DE !important;
+  color:#235347 !important;
+  border-radius:8px !important;
+  font-size:11px !important;
+  font-weight:700 !important;
+  padding:5px 12px !important;
+  border:none !important;
+  transition:background .18s,color .18s !important;
+}
+
+.acad-cat-card:hover .acad-chip{
+  background:#235347 !important;
+  color:#fff !important;
+}
+
+
+/* ── CTA: full teal button */
+.acad-cat-card:not(.premium) .acad-cat-card-cta{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  width:100% !important;
+  background:linear-gradient(135deg,#235347,#2e6b5e) !important;
+  color:#fff !important;
+  padding:11px 20px !important;
+  border-radius:12px !important;
+  font-size:13.5px !important;
+  font-weight:800 !important;
+  margin-top:6px !important;
+  letter-spacing:.01em !important;
+  transition:background .22s,transform .22s,box-shadow .22s !important;
+  box-shadow:0 4px 16px rgba(35,83,71,.25) !important;
+}
+
+.acad-cat-card:not(.premium):hover .acad-cat-card-cta{
+  background:linear-gradient(135deg,#163832,#235347) !important;
+  gap:12px !important;
+  box-shadow:0 6px 22px rgba(35,83,71,.35) !important;
+  transform:none !important;
+  color:#fff !important;
+}
+
+  .acad-cat-card:not(.premium):active .acad-cat-card-cta{
+    transform:scale(.98) !important;
+    transition-duration:80ms !important;
+  }
+
+
+/* ── Soon badge */
+.acad-soon-badge{
+  background:rgba(218,241,222,.92) !important;
+  color:#235347 !important;
+  font-weight:800 !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   G. COMING SOON CARD
+   ══════════════════════════════════════════════════════════ */
+.acad-coming{
+  background:#fff !important;
+  border:1.5px dashed rgba(142,182,155,.5) !important;
+  border-radius:20px !important;
+}
+
+.acad-coming:hover{
+  border-color:rgba(35,83,71,.35) !important;
+  background:#f8fdfa !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   H. STAGGER ENTRANCE — refined
+   ══════════════════════════════════════════════════════════ */
+.acad-cat-card.ac-hide{
+  opacity:0 !important;
+  transform:translateY(18px) !important;
+}
+
+.acad-cat-card.ac-show{
+  opacity:1 !important;
+  transform:translateY(0) !important;
+  transition:
+    opacity .5s cubic-bezier(.16,1,.3,1),
+    transform .5s cubic-bezier(.16,1,.3,1),
+    box-shadow .28s,
+    border-color .18s !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   I. HERO — catalog page background
+   ══════════════════════════════════════════════════════════ */
+.acad-hero{
+  background-image:
+    linear-gradient(
+      165deg,
+      rgba(5,31,32,.88)   0%,
+      rgba(5,31,32,.72)   30%,
+      rgba(11,43,38,.60)  55%,
+      rgba(5,31,32,.75)   80%,
+      rgba(5,31,32,.92)   100%
+    ),
+    url("https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1920&q=80&auto=format&fit=crop") !important;
+  background-size:100% 100%, cover !important;
+  background-position:center, center center !important;
+  background-repeat:no-repeat, no-repeat !important;
+}
+
+
+/* ── Per-course hero backgrounds (same image as catalog card) ── */
+/* Gradient: slightly lighter overlay so photo shows through more */
+.acad-hero--pest{
+  background-image:
+    linear-gradient(165deg,rgba(3,18,6,.90) 0%,rgba(3,18,6,.72) 35%,rgba(3,18,6,.62) 62%,rgba(3,18,6,.88) 100%),
+    url("https://images.unsplash.com/photo-1719665269650-5521f31420f3?auto=format&fit=crop&w=1400&q=75") !important;
+  background-size:100% 100%, cover !important;
+  background-position:center, center !important;
+}
+
+.acad-hero--mol-bio{
+  background-image:
+    linear-gradient(165deg,rgba(4,14,28,.90) 0%,rgba(4,14,28,.72) 35%,rgba(4,14,28,.62) 62%,rgba(4,14,28,.88) 100%),
+    url("https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=1400&q=75") !important;
+  background-size:100% 100%, cover !important;
+  background-position:center, center !important;
+}
+
+.acad-hero--food-quality{
+  background-image:
+    linear-gradient(165deg,rgba(20,12,2,.90) 0%,rgba(20,12,2,.72) 35%,rgba(20,12,2,.62) 62%,rgba(20,12,2,.88) 100%),
+    url("https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1400&q=75") !important;
+  background-size:100% 100%, cover !important;
+  background-position:center, center !important;
+}
+
+.acad-hero--ag-english{
+  background-image:
+    linear-gradient(165deg,rgba(4,16,6,.90) 0%,rgba(4,16,6,.72) 35%,rgba(4,16,6,.62) 62%,rgba(4,16,6,.88) 100%),
+    url("https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=1400&q=75") !important;
+  background-size:100% 100%, cover !important;
+  background-position:center, center !important;
+}
+
+.acad-hero--food-safety{
+  background-image:
+    linear-gradient(165deg,rgba(18,10,2,.90) 0%,rgba(18,10,2,.72) 35%,rgba(18,10,2,.62) 62%,rgba(18,10,2,.88) 100%),
+    url("https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?auto=format&fit=crop&w=1400&q=75") !important;
+  background-size:100% 100%, cover !important;
+  background-position:center, center !important;
+}
+
+.acad-hero--tissue-culture{
+  background-image:
+    linear-gradient(165deg,rgba(4,20,18,.90) 0%,rgba(4,20,18,.72) 35%,rgba(4,20,18,.62) 62%,rgba(4,20,18,.88) 100%),
+    url("https://images.unsplash.com/photo-1622210445956-ca3320a5e7c5?auto=format&fit=crop&w=1400&q=75") !important;
+  background-size:100% 100%, cover !important;
+  background-position:center, center !important;
+}
+
+.acad-hero--land-reclamation{
+  background-image:
+    linear-gradient(165deg,rgba(20,10,2,.90) 0%,rgba(20,10,2,.72) 35%,rgba(20,10,2,.62) 62%,rgba(20,10,2,.88) 100%),
+    url("https://assets.science.nasa.gov/dynamicimage/assets/science/esd/eo/images/imagerecords/89000/89820/egypt_oli_2017057_detail.jpg?w=1400") !important;
+  background-size:100% 100%, cover !important;
+  background-position:center, center !important;
+}
+
+[data-dark] .acad-cat-card:not(.premium){
+  background:#0f2a22 !important;
+  box-shadow:0 2px 12px rgba(0,0,0,.4),0 8px 32px rgba(0,0,0,.3) !important;
+}
+
+[data-dark] .acad-cat-card:not(.premium) .acad-cat-card-title{
+  color:#DAF1DE !important;
+}
+
+[data-dark] .acad-cat-card:not(.premium) .acad-cat-card-desc{
+  color:#8EB69B !important;
+}
+
+[data-dark] #pg-academy .acad-chip{
+  background:rgba(35,83,71,.4) !important;
+  color:#8EB69B !important;
+}
+
+[data-dark] #pg-academy .mkt-subnav,
+[data-dark] #acad-social-subnav{
+  background:rgba(11,22,13,.96) !important;
+  border-bottom-color:rgba(27,107,58,.15) !important;
+  box-shadow:0 1px 16px rgba(0,0,0,.4) !important;
+}
+
+
+/* Catalog cards */
+[data-dark] .acad-cat-card:not(.premium){
+  background:var(--card) !important;
+  border-color:var(--line) !important;
+  box-shadow:0 2px 12px rgba(0,0,0,.35),0 8px 28px rgba(0,0,0,.25) !important;
+}
+
+[data-dark] .acad-cat-card:not(.premium) .acad-cat-card-title{
+  color:var(--ink) !important;
+}
+
+[data-dark] .acad-cat-card:not(.premium) .acad-cat-card-desc{
+  color:var(--slate) !important;
+}
+
+[data-dark] #pg-academy .acad-chip{
+  background:var(--brand-pale) !important;
+  color:var(--brand-xl,#5fc97e) !important;
+}
+
+
+/* Course detail card */
+[data-dark] .acad-card{
+  background:var(--card) !important;
+  border-color:var(--line) !important;
+  box-shadow:0 0 0 1px var(--line),0 8px 32px rgba(0,0,0,.4) !important;
+}
+
+
+/* Buttons */
+[data-dark] .acad-start-btn{
+  box-shadow:0 6px 28px rgba(27,107,58,.4),0 0 0 1px rgba(46,170,92,.2) !important;
+}
+
+[data-dark] .acad-btn-primary{
+  box-shadow:0 4px 20px rgba(27,107,58,.38),0 0 0 1px rgba(46,170,92,.15) !important;
+}
+
+
+/* Quiz */
+[data-dark] .acad-qcard{
+  background:var(--card) !important;
+  border-color:var(--line) !important;
+}
+
+[data-dark] .acad-opt.sel{
+  box-shadow:0 0 0 2px var(--brand),0 0 22px rgba(27,107,58,.3) !important;
+}
+
+[data-dark] .acad-opt.ok{
+  background:rgba(27,107,58,.18) !important;
+  color:var(--brand-xl,#5fc97e) !important;
+  box-shadow:0 0 0 2px #2ecc71,0 0 22px rgba(46,204,113,.3) !important;
+}
+
+[data-dark] .acad-opt.bad{
+  background:rgba(192,57,43,.15) !important;
+  color:#f08080 !important;
+  box-shadow:0 0 0 2px #e74c3c,0 0 18px rgba(231,76,60,.25) !important;
+}
+
+
+/* Tip boxes */
+[data-dark] .acad-tip{
+  background:linear-gradient(135deg,rgba(27,107,58,.12),rgba(27,107,58,.05)) !important;
+  border-color:rgba(27,107,58,.25) !important;
+}
+
+
+/* Hero glow boost in dark */
+[data-dark] .acad-hero::before{
+  background:
+    radial-gradient(ellipse 68% 60% at 14% 26%,rgba(46,170,92,.75) 0,rgba(46,170,92,.3) 38%,transparent 62%),
+    radial-gradient(ellipse 54% 54% at 86% 78%,rgba(46,170,92,.6) 0,rgba(27,107,58,.25) 40%,transparent 60%),
+    radial-gradient(ellipse 38% 42% at 50% 52%,rgba(18,83,42,.3) 0,transparent 56%) !important;
+}
+
+[data-dark] .acad-prog-fill{
+  box-shadow:0 0 18px rgba(46,170,92,.55),0 0 6px rgba(46,170,92,.35) !important;
+}
+
+[data-dark] .acad-result-score{
+  filter:drop-shadow(0 0 28px rgba(46,170,92,.55));
+}
+
+
+/* Lesson rows */
+[data-dark] .acad-module-num{ box-shadow:none !important }
+
+[data-dark] .acad-lesson-row{
+  background:transparent !important;
+  border-bottom-color:var(--line) !important;
+}
+
+[data-dark] .acad-lesson-row.done{
+  background:var(--brand-mist) !important;
+}
+
+[data-dark] .acad-lesson-row:not(.locked):hover{
+  background:var(--brand-pale) !important;
+  border-color:transparent !important;
+  box-shadow:none !important;
+}
+
+[data-dark] .acad-lesson-check{
+  background:transparent !important;
+  border-color:var(--line2) !important;
+}
+
+[data-dark] .acad-lesson-arr{
+  background:none !important;
+  border:none !important;
+  color:var(--line2) !important;
+}
+
+[data-dark] .acad-lesson-row.done .acad-lesson-dur span{
+  background:none !important;
+  border:none !important;
+}
+
+
+/* Coming soon */
+[data-dark] .acad-coming{
+  background:var(--card) !important;
+  border-color:var(--line2) !important;
+}
+
+
+/* Section title in dark */
+[data-dark] #pg-academy .acad-section-title{
+  color:var(--ink) !important;
+}
+
+[data-dark] #pg-academy .acad-section-sub{
+  color:var(--slate) !important;
+}
+
+[data-dark] .acad-coming{
+  background:#0f2a22 !important;
+  border-color:rgba(142,182,155,.2) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   K. NOTIFICATION BELL — dropdown panel, structurally cloned
+      from .mkt-notif-* (marketplace) but re-skinned in the
+      academy forest palette (--ac-*). See academy-notifications
+      feature: bell lives in #acad-social-subnav.
+   ══════════════════════════════════════════════════════════ */
+.ac-notif-badge{
+  position:absolute; top:4px; right:4px;
+  min-width:18px; height:18px; border-radius:9px;
+  background:#ef4444; color:#fff;
+  font-size:10px; font-weight:900;
+  display:flex; align-items:center; justify-content:center;
+  padding:0 5px; line-height:1;
+  box-shadow:0 1px 6px rgba(239,68,68,.5);
+}
+
+
+.acad-cat-card {
+  will-change: transform;
+  transition:
+    transform    .22s var(--ease-spring),
+    box-shadow   .22s ease,
+    border-color .22s ease !important;
+}
+
+.acad-cat-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 20px 56px rgba(0,0,0,.12), 0 8px 20px rgba(0,0,0,.06) !important;
+}
+
+
+/* ── 3. ACADEMY — "نبتيكس أكاديمي" ─────────────────────────── */
+.acad-hero-badge {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 9px !important;
+  padding: 8px 22px !important;
+  border-radius: 100px !important;
+
+  background: rgba(255,255,255,.09) !important;
+  border: 1px solid rgba(255,255,255,.18) !important;
+
+  color: rgba(255,255,255,.92) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+
+  width: fit-content !important;
+  margin: 0 auto 20px !important;
+  backdrop-filter: blur(18px) !important;
+  box-shadow:
+    0 2px 16px rgba(0,0,0,.12),
+    inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+
+/* Academy live dot */
+.acad-hero-badge i {
+  position: relative !important;
+  width: 7px !important; height: 7px !important;
+  border-radius: 50% !important;
+  background: #86efac !important;
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+  animation: none !important; /* Remove old shrink animation */
+}
+
+.acad-hero-badge i::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #86efac;
+  animation: nbLivePing 2.4s ease-out infinite;
+}
+
+
+
+
+  /* Bulletproof horizontal centering for hero content —
+     works regardless of width:fit-content support */
+  .acad-hero-inner{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+  }
+
+  .acad-hero-badge,
+  .acad-hero-back,
+  .acad-hero-stats{
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+
+    .acad-hero-badge,
+    .acad-hero-stats{
+      backdrop-filter:blur(6px) !important;
+      -webkit-backdrop-filter:blur(6px) !important;
+    }
+
+    .acad-hero-badge,
+    .acad-hero-badge i,
+    .acad-hero-badge i::after,
+    .acad-hero::before,
+    .acad-hero::after{
+      animation:none !important;
+    }
+
+
+    /* Stats pill — compact width + guaranteed centering */
+    .acad-hero-stats{
+      width:fit-content !important;
+      max-width:86vw !important;
+      margin:0 auto !important;
+      padding:9px 16px !important;
+    }
+
+    .acad-hs{
+      min-width:58px !important;
+    }
+
+    .acad-hs-n{
+      font-size:1.3rem !important;
+    }
+
+    .acad-hs-l{
+      font-size:9px !important;
+    }
+
+    .acad-hs-div{
+      margin:0 9px !important;
+    }
+
+
+  /* Academy inner scroll panels */
+  .acad-lesson-content,
+  .acad-lessons-list {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 8px)) !important;
+  }
+html,body{background:var(--bg);margin:0;padding:0;font-family:var(--f-ui);}
+.preview-wrap{max-width:820px;margin:0 auto;padding:32px 20px 80px;}
+.preview-banner{background:var(--brand-mist);border:1px solid var(--line2);border-radius:var(--r3);padding:14px 18px;margin-bottom:24px;font-size:13px;color:var(--slate);line-height:1.7}
+.acad-tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.acad-tbl th,.acad-tbl td{border:1px solid var(--line);padding:10px 12px;text-align:right}
+.acad-tbl th{background:var(--bg2);font-weight:800;color:var(--ink)}
+.acad-refs{margin-top:32px;padding-top:18px;border-top:1px solid var(--line)}
+.acad-ref{font-size:12.5px;color:var(--muted);margin-bottom:8px;line-height:1.7}
+.acad-ref-n{display:inline-block;width:18px;height:18px;background:var(--brand-pale);color:var(--brand);border-radius:50%;text-align:center;font-size:10px;line-height:18px;margin-left:6px;font-weight:800}
+</style>
+</head>
+<body>
+<div class="preview-wrap">
+<div class="preview-banner">معاينة مستقلة (Preview) لمحتوى المحاضرة الخامسة عشرة (الأخيرة) — التطبيقات العملية والمسار المهني في الميكروبيولوجيا الغذائية — لأغراض المراجعة فقط، خارج بيئة المنصة الفعلية.</div>
+<div class="acad-body">
+<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">8 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تطبيقي متقدم</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">🧫</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>
+<h2>أهداف التعلم</h2>
+<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>
+<ul><li>تحديد القطاعات الصناعية والمؤسسية الرئيسية التي يعمل بها خريجو الميكروبيولوجيا الغذائية</li><li>وصف الأدوار الوظيفية الشائعة في هذا المجال والفرق الجوهري بين ضبط الجودة (QC) وضمان الجودة (QA)</li><li>شرح دور شهادة PCQI الإلزامية بموجب قانون FSMA وتصحيح مفهوم خاطئ شائع حول طبيعتها القانونية</li><li>التعرف على الجمعيات المهنية الدولية الرئيسية في هذا المجال (IAFP وIFT) ودورها في التطوير المهني</li><li>تقييم المهارات التقنية والشخصية التي يبحث عنها أصحاب العمل فعلياً في هذا التخصص</li><li>تحليل خارطة طريق عملية واقعية للانتقال من طالب إلى محترف في الميكروبيولوجيا الغذائية</li><li>ربط الدروس المستفادة من دراسات الحالة في المحاضرة السابقة بالمسؤوليات اليومية الفعلية لمحترف الجودة</li><li>صياغة خطة تطوير مهني شخصية أولية بناءً على ما تعلمته طوال هذا الكورس</li></ul>
+<h2>مقدمة: من الفصل الدراسي إلى مكان العمل</h2>
+<p style="font-size:12.5px;color:var(--muted);text-align:center;margin:4px 0 20px;font-style:italic">🖼️ صورة مقترحة: مختبر جودة داخل مصنع أغذية، مع أخصائي يراجع تقرير فحص أمام خط إنتاج</p>
+<p>قطعنا معاً رحلة من خمس عشرة محاضرة: من مصادر التلوث الأولى إلى أحدث تقنيات الكشف الجيني، ومن مبادئ الهاسب إلى حالات تفشٍّ حقيقية غيّرت صناعة الغذاء بأكملها. السؤال الطبيعي الآن: أين يذهب كل هذا عملياً؟ هذه المحاضرة الأخيرة لا تقدّم مفهوماً علمياً جديداً بقدر ما تجيب على سؤال عملي بحت: كيف تتحول من طالب أنهى دراسة هذا المحتوى، إلى محترف يُمارس هذه المعرفة يومياً في مكان عمل حقيقي؟</p>
+<div class="acad-tip"><h3>⚡ Activity 1 — Quick Recall — هل تتذكر؟</h3><p>في المحاضرة السابقة، ما الدرس الأهم الذي استخلصناه من حالة Peanut Corporation of America بخصوص العلاقة بين امتلاك أداة علمية (كنتيجة فحص إيجابية) وبين القرار البشري المؤسسي بشأنها؟</p><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('show');this.children[0].style.display=o?'none':'inline-flex';this.children[1].style.display=o?'inline-flex':'none'"><span style="display:inline-flex;align-items:center;gap:5px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M3 3l18 18"/><path d="M10.6 10.6a3 3 0 0 0 4.24 4.24"/><path d="M9.88 5.09A10.94 10.94 0 0 1 12 5c6 0 10 7 10 7a17.6 17.6 0 0 1-3.22 4.1M6.6 6.6C3.7 8.5 2 12 2 12s4 7 10 7c1.5 0 2.9-.3 4.13-.84"/></svg>إخفاء الإجابة</span></button><div class="acad-exp"><strong>امتلاك أفضل الأدوات والمعايير العلمية لا قيمة فعلية له إن غابت النزاهة المؤسسية في تطبيقها؛ فالفجوة بين "معرفة الحقيقة العلمية" و"التصرف بموجبها" هي غالباً أخطر نقطة فشل في أي نظام لسلامة الغذاء — وهذا بالضبط ما يجعل النزاهة المهنية مهارة أساسية لا تقل أهمية عن المعرفة التقنية لأي محترف في هذا المجال، كما سنرى في هذه المحاضرة.</strong></div></div>
+<h2>أين يعمل خريجو الميكروبيولوجيا الغذائية؟</h2>
+<p>تمتد فرص العمل في هذا التخصص عبر قطاعات متنوعة أوسع بكثير مما يتخيله كثير من الطلاب عادة:</p>
+<div class="acad-twrap"><table class="acad-tbl"><thead><tr><th>القطاع</th><th>طبيعة العمل النموذجية</th></tr></thead><tbody><tr><td>مصانع تصنيع الأغذية والمشروبات</td><td>ضبط الجودة اليومي، إدارة خطط الهاسب، الإشراف على برامج التنظيف والتعقيم</td></tr><tr><td>الجهات الرقابية الحكومية</td><td>التفتيش، التحقيق في حالات التفشي، وضع ومراجعة اللوائح الوطنية</td></tr><tr><td>مختبرات الفحص والاعتماد المستقلة</td><td>إجراء الفحوصات الميكروبيولوجية التعاقدية للشركات، واعتماد الأنظمة وفق معايير كـISO 22000</td></tr><tr><td>مراكز البحث والأوساط الأكاديمية</td><td>البحث العلمي، تطوير طرق كشف جديدة، تدريس الجيل القادم من المتخصصين</td></tr><tr><td>شركات الاستشارات وتطوير المكوّنات الغذائية</td><td>تصميم أنظمة سلامة غذاء لعملاء متعددين، تطوير مواد حافظة ومكوّنات وظيفية جديدة</td></tr></tbody></table></div>
+<h2>من ضبط الجودة إلى مدير سلامة الغذاء: خريطة الأدوار الوظيفية</h2>
+<p>يخلط كثيرون بين مصطلحين أساسيين في هذا المجال: ضبط الجودة (Quality Control – QC) وضمان الجودة (Quality Assurance – QA)، رغم أن الفرق بينهما جوهري لفهم طبيعة كل دور وظيفي:</p>
+<div class="acad-twrap"><table class="acad-tbl"><thead><tr><th>المفهوم</th><th>الطبيعة</th><th>مثال على النشاط</th></tr></thead><tbody><tr><td>ضبط الجودة (QC)</td><td>نشاط تفاعلي (Reactive) يركّز على فحص المنتج النهائي أو العينات للتحقق من مطابقتها للمواصفات</td><td>تحليل عينة ميكروبيولوجية من دفعة إنتاج والتحقق من مطابقتها لمعيار محدد</td></tr><tr><td>ضمان الجودة (QA)</td><td>نشاط استباقي (Proactive) يركّز على تصميم الأنظمة والإجراءات نفسها لمنع حدوث المشكلة أصلاً</td><td>تصميم خطة هاسب كاملة للمصنع، أو تدقيق الالتزام بإجراءات التشغيل الموحدة</td></tr></tbody></table></div>
+<p>عملياً، يبدأ كثير من المتخصصين مسيرتهم في أدوار ضبط الجودة (كفني مختبر أو محلل ميكروبيولوجي)، قبل أن ينتقلوا تدريجياً — مع اكتساب الخبرة — إلى أدوار ضمان الجودة الأوسع نطاقاً (كمنسق هاسب، أو أخصائي شؤون تنظيمية، أو مدير سلامة غذاء يشرف على المنظومة كاملة).</p>
+<h2>الشهادة الإلزامية: PCQI</h2>
+<p>بموجب قانون تحديث سلامة الغذاء (FSMA) الذي ناقشناه في المحاضرة الرابعة عشرة، تشترط لائحة "الممارسات التصنيعية الجيدة الحالية وتحليل المخاطر والضوابط الوقائية القائمة على المخاطر للغذاء البشري" (21 CFR Part 117) أن يكون لدى كل منشأة غذائية خاضعة للتنظيم الفيدرالي الأمريكي "فرد مؤهل للضوابط الوقائية" (Preventive Controls Qualified Individual – PCQI) واحد على الأقل، مسؤول عن إعداد خطة سلامة الغذاء والإشراف عليها والتحقق من فاعلية الضوابط الوقائية ومراجعة السجلات.</p>
+<div class="acad-err"><h3>خطأ شائع</h3><ul><li><strong>"PCQI شهادة رسمية تصدرها إدارة الغذاء والدواء الأمريكية (FDA) بعد اجتياز امتحان معتمد":</strong> خطأ شائع يستحق التوضيح؛ فإدارة الغذاء والدواء لا تُصدر أي "شهادة" باسم PCQI على الإطلاق. المصطلح الدقيق هو "فرد مؤهل"، وليس "فرد معتمد"، وتتحقق هذه الأهلية إما عبر إتمام تدريب معياري معترف به من FDA (كمنهج تحالف الضوابط الوقائية لسلامة الغذاء FSPCA)، أو عبر خبرة عملية مكافئة توثق حصول الفرد على معرفة مماثلة بطريقة أخرى؛ فالقانون يركّز على الكفاءة الفعلية المثبتة، لا على وجود ورقة اعتماد رسمية بعينها من جهة حكومية واحدة.</li></ul></div>
+<div class="acad-tip"><h3>⚡ Activity 2 — True or False — صح أو خطأ</h3><p>"كل شخص يعمل في منشأة أغذية أمريكية خاضعة لقانون FSMA يجب أن يحصل شخصياً على تأهيل PCQI الخاص به."</p><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('show');this.children[0].style.display=o?'none':'inline-flex';this.children[1].style.display=o?'inline-flex':'none'"><span style="display:inline-flex;align-items:center;gap:5px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M3 3l18 18"/><path d="M10.6 10.6a3 3 0 0 0 4.24 4.24"/><path d="M9.88 5.09A10.94 10.94 0 0 1 12 5c6 0 10 7 10 7a17.6 17.6 0 0 1-3.22 4.1M6.6 6.6C3.7 8.5 2 12 2 12s4 7 10 7c1.5 0 2.9-.3 4.13-.84"/></svg>إخفاء الإجابة</span></button><div class="acad-exp"><strong>خطأ — يكفي أن يكون لدى المنشأة فرد مؤهل واحد أو أكثر (PCQI) مسؤول عن إعداد خطة سلامة الغذاء والإشراف عليها، وليس شرطاً أن يحمل كل موظف هذا التأهيل شخصياً؛ ويمكن لفرد مؤهل واحد أن يشرف على أكثر من موقع تصنيع تابع لنفس المنشأة أو الشركة في بعض الحالات.</strong></div></div>
+<h2>شهادات مهنية أخرى تستحق المتابعة</h2>
+<p>إلى جانب PCQI الإلزامية، توجد شهادات مهنية اختيارية راسخة تعزز فرص التوظيف والتخصص في هذا المجال:</p>
+<div class="acad-twrap"><table class="acad-tbl"><thead><tr><th>الشهادة</th><th>الجهة المانحة</th><th>التركيز</th></tr></thead><tbody><tr><td>تدريب الهاسب المعتمد</td><td>التحالف الدولي للهاسب (International HACCP Alliance)، تأسس عام 1994</td><td>تصميم وتطبيق خطط الهاسب وفق منهج تدريبي موحد ومعترف به دولياً</td></tr><tr><td>مدقق رئيسي معتمد لـISO 22000</td><td>هيئات اعتماد دولية متخصصة</td><td>تدقيق أنظمة إدارة سلامة الغذاء وفق المعيار الدولي الذي درسناه في المحاضرة العاشرة</td></tr><tr><td>مدقق جودة معتمد (CQA)</td><td>الجمعية الأمريكية للجودة (ASQ)</td><td>مبادئ تدقيق الجودة العامة القابلة للتطبيق عبر صناعات متعددة، منها الغذاء</td></tr></tbody></table></div>
+<div class="acad-case"><div class="acad-case-row"><div class="acad-case-lbl">ملاحظة زمنية مهمة</div><div class="acad-case-val">أطلق معهد تكنولوجيا الأغذية (IFT) عام 2013 شهادة "عالم غذاء معتمد" (Certified Food Scientist – CFS) كشهادة عالمية شاملة لمحترفي علوم الأغذية. لكن أعلن المعهد أنه سيوقف هذا البرنامج تدريجياً بحلول عام 2029 (مع إغلاق باب التقديم للامتحانات في ديسمبر 2026) نتيجة انخفاض مستمر في الإقبال عليه. هذه ليست مجرد حاشية عابرة، بل تذكير مهم بأن مشهد الشهادات المهنية نفسه يتطور ويتغير باستمرار — تماماً كما تطورت تقنيات الكشف الميكروبي التي درسناها في المحاضرة الثالثة عشرة — فالمتابعة الدورية لما هو معتمد وقائم فعلياً في سوق العمل أهم من حفظ قائمة شهادات ثابتة لا تتغير.</div></div></div>
+<div class="acad-tip"><h3>⚡ Activity 3 — Fill in the blank — أكمل الفراغ</h3><p>النشاط الذي يركّز على فحص المنتج النهائي للتحقق من مطابقته للمواصفات يُسمى ___ (اختصاره QC)، بينما النشاط الاستباقي الذي يركّز على تصميم الأنظمة والإجراءات نفسها لمنع حدوث المشكلة أصلاً يُسمى ___ (اختصاره QA).</p><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('show');this.children[0].style.display=o?'none':'inline-flex';this.children[1].style.display=o?'inline-flex':'none'"><span style="display:inline-flex;align-items:center;gap:5px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M3 3l18 18"/><path d="M10.6 10.6a3 3 0 0 0 4.24 4.24"/><path d="M9.88 5.09A10.94 10.94 0 0 1 12 5c6 0 10 7 10 7a17.6 17.6 0 0 1-3.22 4.1M6.6 6.6C3.7 8.5 2 12 2 12s4 7 10 7c1.5 0 2.9-.3 4.13-.84"/></svg>إخفاء الإجابة</span></button><div class="acad-exp"><strong>ضبط الجودة (Quality Control) / ضمان الجودة (Quality Assurance).</strong></div></div>
+<h2>الجمعيات المهنية الدولية: IAFP وIFT</h2>
+<p>الانضمام إلى جمعية مهنية متخصصة، حتى كطالب أو عضو مبتدئ، من أهم خطوات بناء شبكة علاقات مهنية والبقاء على اطلاع بمستجدات المجال. تأسست الجمعية الدولية لحماية الغذاء (IAFP) عام 1911 ومقرها مدينة دي موين بولاية آيوا الأمريكية، وتضم اليوم آلاف الأعضاء من أكثر من 50 دولة، برسالة معلنة هي "النهوض بسلامة الغذاء عالمياً"، وتنظّم مؤتمراً سنوياً كبيراً يُعدّ من أهم ملتقيات المتخصصين في هذا المجال حول العالم. أما معهد تكنولوجيا الأغذية (IFT)، فتأسس عام 1939 ومقره مدينة شيكاغو، ويجمع محترفين من الصناعة والأوساط الأكاديمية والجهات الحكومية عبر عشرات الدول، ويُصدر مجلة Food Technology المرجعية في هذا المجال إلى جانب برامج التطوير المهني والتصديق.</p>
+<h2>المهارات التي يبحث عنها أصحاب العمل فعلياً</h2>
+<p>أظهرت دراسة أكاديمية استقصائية شملت 29 خبيراً من الأوساط الأكاديمية والحكومية والصناعية، هدفت لتحديد الكفايات الأساسية المطلوبة في مناهج سلامة الغذاء الجامعية، أن أصحاب العمل يشيرون بشكل متكرر إلى فجوات محددة لدى الخريجين الجدد رغم إلمامهم بالمحتوى العلمي النظري: ضعف مهارات التفكير النقدي، وحاجة لتدريب إضافي في اللوائح الحكومية والتنظيمية، وضعف في استخدام الأساليب الإحصائية، وصعوبة في تطبيق المعرفة النظرية على مواقف عملية واقعية. هذا يعني عملياً أن التفوق في هذا المجال لا يتطلب فقط إتقان المحتوى العلمي الذي درسناه طوال هذا الكورس، بل أيضاً القدرة على تطبيقه بذهنية تحليلية أمام موقف واقعي غامض وغير مثالي — تماماً كما تدربنا عليه في تحليل دراسات الحالة الثلاث بالمحاضرة السابقة.</p>
+<div class="acad-tip"><h3>⚡ Activity 4 — Matching — مطابقة</h3><p>طابق كل شهادة أو جمعية بالجهة أو السمة الأدق المرتبطة بها:</p><ol class="ag-ol"><li>PCQI</li><li>IAFP</li><li>International HACCP Alliance</li></ol><p>أ. تأسست عام 1994 لتوحيد تدريب واعتماد الهاسب &nbsp;&nbsp; ب. أهلية إلزامية بموجب FSMA وليست شهادة رسمية من FDA &nbsp;&nbsp; ج. جمعية مهنية تأسست عام 1911 ومقرها آيوا</p><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('show');this.children[0].style.display=o?'none':'inline-flex';this.children[1].style.display=o?'inline-flex':'none'"><span style="display:inline-flex;align-items:center;gap:5px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M3 3l18 18"/><path d="M10.6 10.6a3 3 0 0 0 4.24 4.24"/><path d="M9.88 5.09A10.94 10.94 0 0 1 12 5c6 0 10 7 10 7a17.6 17.6 0 0 1-3.22 4.1M6.6 6.6C3.7 8.5 2 12 2 12s4 7 10 7c1.5 0 2.9-.3 4.13-.84"/></svg>إخفاء الإجابة</span></button><div class="acad-exp"><strong>Answer: 1-ب، 2-ج، 3-أ.</strong></div></div>
+<h2>من الطالب إلى المحترف: خارطة طريق عملية</h2>
+<div class="acad-twrap"><table class="acad-tbl"><thead><tr><th>المرحلة</th><th>الخطوة العملية الموصى بها</th></tr></thead><tbody><tr><td>أثناء الدراسة</td><td>التقديم على تدريب صيفي (Internship) في مختبر أو مصنع أغذية؛ الانضمام كعضو طالب في جمعية كـIFT أو IAFP للاستفادة من رسوم عضوية مخفضة وفرص التواصل المبكر</td></tr><tr><td>عند التخرج مباشرة</td><td>التقديم على أدوار مبتدئة كفني ضبط جودة أو محلل مختبر ميكروبيولوجي، لبناء خبرة عملية يومية مباشرة بالمفاهيم النظرية</td></tr><tr><td>خلال أول 1-3 سنوات مهنية</td><td>اكتساب خبرة عملية متنوعة، والحصول على تدريب هاسب معتمد من جهة معترف بها كالتحالف الدولي للهاسب</td></tr><tr><td>بعد اكتساب خبرة كافية</td><td>التخصص (كمدقق ISO 22000، أو أخصائي شؤون تنظيمية، أو العمل كـPCQI للمنشأة) أو الانتقال لدور إشرافي أوسع كمدير جودة أو سلامة غذاء</td></tr></tbody></table></div>
+<h2>المصطلحات العلمية الأساسية</h2>
+<div class="acad-twrap"><table class="acad-tbl"><thead><tr><th>المصطلح</th><th>المعنى</th></tr></thead><tbody><tr><td>QC — ضبط الجودة</td><td>نشاط تفاعلي يركّز على فحص المنتج النهائي أو العينات للتحقق من مطابقتها للمواصفات</td></tr><tr><td>QA — ضمان الجودة</td><td>نشاط استباقي يركّز على تصميم الأنظمة والإجراءات لمنع حدوث المشكلة من الأساس</td></tr><tr><td>PCQI — الفرد المؤهل للضوابط الوقائية</td><td>دور إلزامي بموجب FSMA، مسؤول عن إعداد خطة سلامة الغذاء والإشراف عليها في المنشأة</td></tr><tr><td>IAFP / IFT</td><td>جمعيتان مهنيتان دوليتان رئيسيتان في مجال سلامة الغذاء وعلوم الأغذية</td></tr></tbody></table></div>
+<h2>أمثلة تطبيقية من الواقع</h2>
+<ul><li><strong>المسار المزدوج للتخصص:</strong> كثير من كبار مديري سلامة الغذاء في الشركات العالمية بدأوا مسيرتهم كفنيي مختبر أو محللي جودة مبتدئين، ثم تدرّجوا عبر سنوات من الخبرة العملية المباشرة والتدريب المعتمد (كالهاسب وISO 22000) نحو أدوار إدارية وإشرافية أوسع، لا عبر شهادة أكاديمية إضافية وحدها.</li><li><strong>قيمة العضوية المبكرة في الجمعيات المهنية:</strong> يحصل الطلاب عادة على خصومات كبيرة في رسوم عضوية جمعيات كـIAFP وIFT، وعلى فرص مباشرة لحضور مؤتمراتها السنوية وبناء شبكة تواصل مهنية قبل التخرج بسنوات، وهي فرصة كثيراً ما لا يستغلها الطلاب رغم انخفاض تكلفتها الفعلية.</li></ul>
+<h2>للقراءة والاستزادة: رحلة اكتملت، ومسيرة تبدأ الآن</h2>
+<p>حين بدأنا هذا الكورس بمقدمة شاملة إلى الميكروبيولوجيا الغذائية وأهميتها، كان الهدف بناء صورة كاملة لعلم يقف عند تقاطع الأحياء الدقيقة والكيمياء والهندسة والقانون والأخلاق المهنية معاً. رأينا كيف تنمو الميكروبات وتفسد الغذاء وتسبب المرض، وكيف نحفظه ونراقبه ونحدد معاييره الدولية، وكيف تتطور أدوات كشفه بسرعة غير مسبوقة، وأخيراً كيف تفشل — وتُصلَح — الأنظمة التي بُنيت أصلاً لحمايتنا منه جميعاً.</p>
+<p>مهنة الميكروبيولوجيا الغذائية، كما رأينا عبر حالات Jack in the Box وPCA وألمانيا 2011، ليست مجرد وظيفة مخبرية روتينية؛ إنها مسؤولية مباشرة عن صحة أشخاص حقيقيين لن تقابلهم أبداً، تتخذ نيابة عنهم قرارات دقيقة يومياً قد تبدو تقنية بحتة لكنها تحمل وزناً إنسانياً حقيقياً. هذا الوعي بالمسؤولية، لا مجرد إتقان المحتوى العلمي وحده، هو ما يفصل فعلياً بين من يمارس هذا التخصص كوظيفة، ومن يمارسه كمهنة يفخر بها.</p>
+<h2>الأنشطة التفاعلية</h2>
+<div class="acad-tip"><h3>⚡ Activity 5 — Career Scenario — سيناريو مهني</h3><p>خريج جديد في الميكروبيولوجيا الغذائية يتردد بين قبول وظيفة فنية مباشرة كمحلل ضبط جودة في مصنع أغذية، أو الانتظار للتقديم على وظيفة إدارية أعلى مستوى لا تتطلب خبرة ميدانية سابقة حسب إعلان الوظيفة. بناءً على خارطة الطريق المهنية التي درسناها، ما النصيحة الأصح علمياً وعملياً، ولماذا تحديداً؟</p><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('show');this.children[0].style.display=o?'none':'inline-flex';this.children[1].style.display=o?'inline-flex':'none'"><span style="display:inline-flex;align-items:center;gap:5px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M3 3l18 18"/><path d="M10.6 10.6a3 3 0 0 0 4.24 4.24"/><path d="M9.88 5.09A10.94 10.94 0 0 1 12 5c6 0 10 7 10 7a17.6 17.6 0 0 1-3.22 4.1M6.6 6.6C3.7 8.5 2 12 2 12s4 7 10 7c1.5 0 2.9-.3 4.13-.84"/></svg>إخفاء الإجابة</span></button><div class="acad-exp"><strong>الأصح غالباً قبول الدور الفني المباشر أولاً؛ فالخبرة العملية اليومية المباشرة بالمفاهيم النظرية (كتفسير نتائج الفحص الفعلية، والتعامل مع ضغط الجدول الزمني للإنتاج) هي بالضبط الفجوة التي أظهرت الدراسات الأكاديمية أنها الأكثر افتقاداً لدى الخريجين الجدد، وهي أساس بناء المصداقية والخبرة اللازمة للانتقال لاحقاً لدور إشرافي أو إداري أوسع بثقة حقيقية، لا بمعرفة نظرية فقط دون سند عملي يدعمها.</strong></div></div>
+<div class="acad-tip"><h3>⚡ Activity 6 — Reflection Scenario — سيناريو تأملي</h3><p>بعد دراسة حالة PCA في المحاضرة السابقة، تخيّل نفسك في موقع مدير جودة تضغط عليه الإدارة العليا لتجاوز نتيجة فحص إيجابية بسبب موعد شحن ضيق. ما المهارات أو المعارف المحددة التي درستها طوال هذا الكورس (لا الأخلاقية العامة فقط) التي تمنحك أساساً علمياً موثوقاً لرفض هذا الطلب بثقة تقنية، لا شعور شخصي فقط؟</p><button class="acad-btn acad-btn-ghost" style="padding:7px 16px;font-size:12.5px;margin-top:10px" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('show');this.children[0].style.display=o?'none':'inline-flex';this.children[1].style.display=o?'inline-flex':'none'"><span style="display:inline-flex;align-items:center;gap:5px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>إظهار الإجابة</span><span style="display:none;align-items:center;gap:5px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M3 3l18 18"/><path d="M10.6 10.6a3 3 0 0 0 4.24 4.24"/><path d="M9.88 5.09A10.94 10.94 0 0 1 12 5c6 0 10 7 10 7a17.6 17.6 0 0 1-3.22 4.1M6.6 6.6C3.7 8.5 2 12 2 12s4 7 10 7c1.5 0 2.9-.3 4.13-.84"/></svg>إخفاء الإجابة</span></button><div class="acad-exp"><strong>عدة أسس علمية محددة درسناها تدعم هذا الموقف مباشرة: معرفتك بمعنى c=0 وm=0 في خطط أخذ العينات (المحاضرة الثانية عشرة) تعني أن أي وحدة عينة إيجابية واحدة تكفي علمياً لرفض الدفعة كاملة دون استثناء لأي اعتبار زمني؛ ومعرفتك بالإرث القانوني لحالة PCA (المحاضرة الرابعة عشرة) تعني أنك تدرك أن المسؤولية القانونية قد تقع عليك شخصياً كمتخذ قرار لا على الشركة فقط؛ وفهمك لدورك كـPCQI (إن كنت كذلك) يعني أن التحقق من فاعلية الضوابط الوقائية جزء موثّق من مسؤوليتك القانونية المباشرة، لا مجرد رأي شخصي قابل للتفاوض.</strong></div></div>
+<h2>اختبار سريع</h2>
+<p>توجّه الآن إلى اختبار المحاضرة أسفل الصفحة، ويتكوّن من خمسة أسئلة تطبيقية تقيس فهمك للأدوار الوظيفية والشهادات المهنية والمهارات المطلوبة فعلياً في سوق العمل.</p>
+<h2>التكليف الختامي</h2>
+<p>بصفته التكليف الختامي لهذا الكورس بأكمله: اكتب خطة تطوير مهني شخصية من نصف صفحة إلى صفحة كاملة، تحدد فيها القطاع الذي يجذبك أكثر من بين القطاعات التي درسناها في هذه المحاضرة، والشهادة المهنية الأولى التي تخطط للسعي إليها ولماذا اخترتها تحديداً، ومهارة واحدة على الأقل من المهارات التي حددتها الدراسات الأكاديمية كفجوة شائعة (التفكير النقدي، اللوائح التنظيمية، الإحصاء، التطبيق العملي) تخطط للعمل على تقويتها في السنة القادمة.</p>
+<h2>ملخص المحاضرة</h2>
+<div class="acad-igrid"><div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">القطاعات</div><div class="acad-icard-val">التصنيع، الجهات الرقابية، المختبرات المستقلة، البحث الأكاديمي، الاستشارات</div></div><div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">QC مقابل QA</div><div class="acad-icard-val">ضبط الجودة تفاعلي يفحص المنتج، وضمان الجودة استباقي يصمم النظام</div></div><div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">PCQI</div><div class="acad-icard-val">أهلية إلزامية بموجب FSMA، وليست شهادة رسمية تصدرها FDA</div></div><div class="acad-icard"><span class="acad-icard-ico">📌</span><div class="acad-icard-lbl">الفجوة الحقيقية</div><div class="acad-icard-val">التفكير النقدي والتطبيق العملي، لا المحتوى النظري وحده، هما ما يميّز المحترف</div></div></div>
+<h2>أهم النقاط الواجب تذكرها</h2>
+<ul><li>✓ فرص العمل في هذا التخصص تمتد عبر التصنيع والرقابة الحكومية والمختبرات المستقلة والبحث الأكاديمي والاستشارات، لا التصنيع وحده.</li><li>✓ ضبط الجودة (QC) نشاط تفاعلي يفحص المنتج، بينما ضمان الجودة (QA) نشاط استباقي يصمم النظام نفسه لمنع المشكلة من الأساس.</li><li>✓ PCQI أهلية إلزامية بموجب FSMA وليست شهادة رسمية تصدرها FDA؛ يكفي وجود فرد مؤهل واحد على مستوى المنشأة لا كل موظف.</li><li>✓ الانضمام المبكر لجمعيات مهنية كـIAFP (تأسست 1911) وIFT (تأسست 1939) يبني شبكة تواصل وفرصاً مهنية حقيقية قبل التخرج.</li><li>✓ الفجوة الأكبر لدى الخريجين الجدد ليست في المحتوى العلمي غالباً، بل في التفكير النقدي والتطبيق العملي على مواقف واقعية غامضة.</li></ul>
+<h2>خاتمة الكورس</h2>
+<p>بهذه المحاضرة، تصل رحلتنا معاً عبر خمس عشرة محاضرة في الميكروبيولوجيا الغذائية إلى ختامها. بدأنا بسؤال بسيط: لماذا يهم أصلاً أن نفهم الكائنات الدقيقة في غذائنا؟ وانتهينا بصورة متكاملة لعلم حي يتقاطع فيه البحث المخبري الدقيق مع القانون والأخلاق والمسؤولية المهنية اليومية. المعرفة التي بنيتها هنا ليست نهاية المطاف، بل نقطة انطلاق: فالميدان يتطور باستمرار كما رأينا في محاضرة التقنيات الحديثة، والمعايير تتغير كما رأينا في محاضرة المواصفات الدولية، وحتى مشهد الشهادات المهنية نفسه يتجدد كما رأينا للتو في هذه المحاضرة. الثابت الوحيد الذي لن يتغير هو المسؤولية الأساسية لهذا التخصص: حماية صحة أشخاص حقيقيين عبر علم دقيق وممارسة نزيهة. نتمنى لك التوفيق في الخطوة التالية من مسيرتك المهنية.</p>
+<div class="acad-refs"><h3>المراجع العلمية</h3><div class="acad-ref"><span class="acad-ref-n">1</span>Johnston, L.M., Wiedmann, M., Orta-Ramirez, A., Oliver, H.F., Nightingale, K.K., Moore, C.M., Stevenson, C.D., & Jaykus, L.A. (2014). Identification of core competencies for an undergraduate food safety curriculum using a modified Delphi approach. <em>Journal of Food Science Education</em>, 13(1), 12-21.</div><div class="acad-ref"><span class="acad-ref-n">2</span>U.S. Food and Drug Administration (FDA). <em>Frequently Asked Questions on the Food Safety Modernization Act (FSMA)</em>: Preventive Controls Qualified Individual.</div><div class="acad-ref"><span class="acad-ref-n">3</span>International Association for Food Protection (IAFP). <em>About IAFP: History and Mission</em>. Des Moines, Iowa.</div><div class="acad-ref"><span class="acad-ref-n">4</span>Institute of Food Technologists (IFT). <em>Our Story</em>. Chicago, Illinois.</div><div class="acad-ref"><span class="acad-ref-n">5</span>International HACCP Alliance. <em>History and Mission</em>. Established 1994.</div></div>
+</div>
+</div>
+</body>
+</html>
