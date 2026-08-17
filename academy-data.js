@@ -16035,6 +16035,75 @@ return '<svg viewBox="'+(vb||'0 0 400 170')+'" style="width:100%;height:auto;dis
 function biPlay(cx,cy,r){
 return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#fff" opacity="0.92"/><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#7c3aed" stroke-width="2"/><path d="M'+(cx-r*0.32)+' '+(cy-r*0.45)+'L'+(cx-r*0.32)+' '+(cy+r*0.45)+'L'+(cx+r*0.5)+' '+cy+'Z" fill="#7c3aed"/>';
 }
+function biIDE(id,title,task,starter){
+return '<div style="border:1px solid var(--line);border-radius:var(--r3);margin:20px 0;overflow:hidden">'+
+'<div style="padding:12px 16px;border-bottom:1px solid var(--line);background:var(--bg2)">'+
+'<div style="font-weight:800;font-size:13.5px;color:var(--fg);margin-bottom:4px">💻 '+title+'</div>'+
+'<div style="font-size:12.5px;color:var(--muted);line-height:1.7">'+task+'</div>'+
+'</div>'+
+'<textarea id="bi-code-'+id+'" dir="ltr" spellcheck="false" style="width:100%;box-sizing:border-box;min-height:170px;padding:14px 16px;border:none;background:#1e293b;color:#e2e8f0;font-family:monospace;font-size:13px;line-height:1.65;resize:vertical;direction:ltr;text-align:left;display:block">'+starter+'</textarea>'+
+'<div style="padding:10px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--bg2)">'+
+'<button id="bi-btn-'+id+'" onclick="biRunIDE(\''+id+'\')" style="padding:7px 18px;font-size:12.5px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700">▶ تشغيل الكود</button>'+
+'<span style="font-size:11px;color:var(--muted)">أول تشغيل في الصفحة قد يستغرق بضع ثوانٍ لتحميل بايثون</span>'+
+'</div>'+
+'<pre id="bi-out-'+id+'" dir="ltr" style="margin:0;padding:14px 16px;background:#0f172a;color:#94a3b8;font-family:monospace;font-size:12.5px;white-space:pre-wrap;word-break:break-word;min-height:22px;text-align:left">اضغط "تشغيل الكود" لرؤية الناتج هنا</pre>'+
+'</div>';
+}
+function biRunIDE(id){
+var codeEl=document.getElementById('bi-code-'+id);
+var outEl=document.getElementById('bi-out-'+id);
+var btnEl=document.getElementById('bi-btn-'+id);
+if(!codeEl||!outEl)return;
+btnEl.disabled=true;
+outEl.style.color='#94a3b8';
+outEl.textContent='...جارٍ التشغيل';
+function runNow(){
+try{
+var lines=[];
+window.pyodide.setStdout({batched:function(s){lines.push(s);}});
+window.pyodide.runPython(codeEl.value);
+outEl.textContent=lines.length?lines.join('\n'):'(لا يوجد ناتج مطبوع — تأكَّد من استخدام print())';
+outEl.style.color='#94a3b8';
+}catch(e){
+outEl.textContent='خطأ:\n'+e.message;
+outEl.style.color='#f87171';
+}
+btnEl.disabled=false;
+}
+if(window.pyodide){runNow();return;}
+if(window._biPyodideLoading){
+window._biPyodideQueue=window._biPyodideQueue||[];
+window._biPyodideQueue.push(runNow);
+return;
+}
+window._biPyodideLoading=true;
+outEl.textContent='...جارٍ تحميل بيئة بايثون (أول مرة فقط)';
+var s=document.createElement('script');
+s.src='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js';
+s.onload=function(){
+window.loadPyodide().then(function(py){
+window.pyodide=py;
+window._biPyodideLoading=false;
+runNow();
+var q=window._biPyodideQueue||[];
+window._biPyodideQueue=[];
+q.forEach(function(fn){fn();});
+}).catch(function(){
+outEl.textContent='تعذَّر تحميل بيئة بايثون. تأكَّد من اتصالك بالإنترنت وحاول مرة أخرى.';
+outEl.style.color='#f87171';
+btnEl.disabled=false;
+window._biPyodideLoading=false;
+});
+};
+s.onerror=function(){
+outEl.textContent='تعذَّر تحميل بيئة بايثون. تأكَّد من اتصالك بالإنترنت وحاول مرة أخرى.';
+outEl.style.color='#f87171';
+btnEl.disabled=false;
+window._biPyodideLoading=false;
+};
+document.head.appendChild(s);
+}
+window.biRunIDE=biRunIDE; /* تعريض عالمي — يستدعيه onclick داخل المحتوى المُدرَج */
 
 var BI_COURSE={
 id:'bioinformatics',title:'Bioinformatics',
@@ -17644,6 +17713,11 @@ biImg('مخطط انسيابي بسيط يُظهر سهماً دائرياً (ي
 '<div class="acad-tip"><h3>4 — التوصيل</h3><p>صِل كل مفهوم برمجي باستخدامه في Bioinformatics:</p><ol class="ag-ol"><li>الحلقة التكرارية (Loop)</li><li>الشرط (Conditional)</li><li>الدالة (Function)</li><li>المتغيِّر</li></ol><p>A. يخزِّن قطعة بيانات واحدة، كتسلسل DNA، تحت اسم لاستخدامها لاحقاً &nbsp;&nbsp; B. يكرِّر عملية تلقائياً عبر عناصر كثيرة، كل تسلسل في ملف &nbsp;&nbsp; C. يتخذ قراراً تلقائياً استناداً إلى البيانات، كتشذيب قاعدة أقل من عتبة جودة &nbsp;&nbsp; D. يُغلِّف سلسلة من الخطوات في عملية واحدة قابلة لإعادة الاستخدام ولها اسم</p>'+biToggleBtn()+'<div class="acad-exp"><strong>الإجابة: 1-B، 2-C، 3-D، 4-A.</strong></div></div>'+
 '<div class="acad-tip"><h3>5 — صح أم خطأ</h3><ol class="ag-ol"><li>النص البرمجي الذي يعمل بالكامل دون إنتاج أي رسالة خطأ مضمون الصحة علمياً.</li><li>يمكن أيضاً تشغيل خوارزمية BLAST الأساسية نفسها المستخدَمة على موقع NCBI عبر سطر الأوامر، وهذا ما تستخدمه فعلياً معظم مسارات عمل Bioinformatics واسعة النطاق.</li></ol>'+biToggleBtn()+'<div class="acad-exp"><strong>الإجابات: 1 — خطأ (العمل دون أخطاء لا يضمن صحة المخرجات بيولوجياً). 2 — صح (تُشغِّل BLAST+ الخاصة بسطر الأوامر الخوارزمية نفسها التي يستخدمها الموقع، لكن يمكن أتمتتها على نطاق واسع).</strong></div></div>'+
 '<div class="acad-tip"><h3>6 — سيناريو معملي</h3><p>يكتب باحث نصاً برمجياً لترجمة 50,000 تسلسل DNA تلقائياً من تجميع جينوم جديد. يعمل النص البرمجي بنجاح دون أخطاء، لكن زميلاً يلاحظ لاحقاً أن كثيراً من "البروتينات" الناتجة تحتوي على كودونات توقف مبكِّرة في مواضع غير معقولة بيولوجياً. ما التفسير الأرجح، وما الذي ينبغي أن يفعله الباحث؟</p>'+biToggleBtn()+'<div class="acad-exp"><strong>إجابة نموذجية: على الأرجح استخدم النص البرمجي إطار القراءة الخاطئ، أو بدأ الترجمة من الموضع الخاطئ، لبعض التسلسلات على الأقل — وهو خطأ منطقي لا ينتج أي رسالة خطأ، بما أن الكود ما يزال يعمل وينتج مخرجات، لكنها مخرجات غير صحيحة بيولوجياً فقط. ينبغي أن يفحص الباحث يدوياً عيّنة من النتائج مقابل جينات معروفة، باستخدام BLAST مثلاً، للتأكد من أن الترجمات منطقية بيولوجياً، ثم يصحِّح منطق إطار القراءة في النص البرمجي قبل الوثوق بالمُخرَج الكامل.</strong></div></div>'+
+'<h2>تمرين برمجي عملي</h2>'+
+'<p>الوقت الآن لتطبيق ما درسته فعلياً بالكود، لا بالقراءة فقط. المحرر التالي يُشغِّل بايثون حقيقياً داخل هذه الصفحة — عدِّل الكود، ثم اضغط "تشغيل الكود" لترى الناتج الفعلي فوراً. التمارين الثلاثة متدرِّجة، وكل منها يبني على سابقه، تماماً كما تُبنى نصوص Bioinformatics البرمجية الحقيقية خطوة فوق خطوة.</p>'+
+biIDE('ex1','تمرين 1 — عدّ القواعد (أساسي)','التسلسل التالي مُعطى في المتغيّر <code>seq</code>. أكمل الحلقة التكرارية بحيث تحسب عدد كل قاعدة (A وT وG وC) داخل القاموس <code>counts</code>. شغِّل الكود كما هو أولاً لترى أن كل العدّادات تبقى صفراً، ثم استبدل <code>pass</code> بالسطر الصحيح.','seq = "ATGCGATCGTAGCATGGCTA"\ncounts = {"A": 0, "T": 0, "G": 0, "C": 0}\n\nfor base in seq:\n    # TODO: زوِّد قيمة القاعدة الحالية (base) في القاموس counts بمقدار 1\n    pass\n\nprint(counts)')+
+biIDE('ex2','تمرين 2 — حساب نسبة GC% (متوسط)','بعد أن أصبح لديك عدد كل قاعدة، أكمل حساب نسبة GC% = (عدد G + عدد C) ÷ الطول الكلي × 100. هذه النسبة نفسها التي استخدمناها في المخطط البركاني بالمحاضرة 6.','seq = "ATGCGATCGTAGCATGGCTA"\ncounts = {"A": 0, "T": 0, "G": 0, "C": 0}\nfor base in seq:\n    counts[base] += 1\n\n# TODO: احسب gc_percent = (عدد G + عدد C) / الطول الكلي × 100\ngc_percent = 0\n\nprint("GC% =", round(gc_percent, 2))')+
+biIDE('ex3','تمرين 3 — أتمتة على عدة تسلسلات (متقدِّم)','هذا التمرين يحاكي بالضبط فكرة الفيديو أعلاه: بدلاً من معالجة تسلسل واحد يدوياً، اكتب حلقة تكرارية تمرّ على كل الجينات في القاموس <code>sequences</code> وتطبع اسم كل جين مع نسبة GC% الخاصة به — تماماً كما يعالج نص برمجي حقيقي مجلداً كاملاً من ملفات FASTA دفعة واحدة.','sequences = {\n    "gene_1": "ATGCGATCGTAGCATGGCTA",\n    "gene_2": "GGGCCCATGATCGGGCCCAA",\n    "gene_3": "ATATATATGCGCGCATATAT",\n}\n\ndef gc_content(s):\n    g = s.count("G")\n    c = s.count("C")\n    return round((g + c) / len(s) * 100, 2)\n\n# TODO: مرّ على كل عنصر في sequences واطبع اسم الجين ثم نسبة GC% الخاصة به\nfor name, seq in sequences.items():\n    pass')+
 '<h2>اختبار سريع</h2>'+
 '<p>بعد أن راجعت المفاهيم الأساسية لهذه المحاضرة، توجَّه إلى اختبار المحاضرة أدناه، الذي يضم خمسة أسئلة قائمة على سيناريوهات تختبر قدرتك على التفكير بشكل صحيح في الأتمتة والممارسة الحاسوبية، لا مجرد استرجاع التعريفات.</p>'+
 '<h2>الواجب</h2>'+
