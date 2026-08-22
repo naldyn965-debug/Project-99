@@ -806,20 +806,31 @@ else if(AC.view==='cert')root.innerHTML=acRenderCert();
    is shown, so an admin-approved payment reflects instantly instead of
    waiting for the user to click into the course (which was previously the
    only place the local cache got refreshed). Purely additive: falls back
-   to the existing cached badges if anything here fails or is unavailable. */
+   to the existing cached badges if anything here fails or is unavailable.
+   Covers all 10 paid courses (previously only mol-bio + food-safety were
+   wired in here, which is why other courses' cards stayed stuck on "قيد
+   الانتظار" after admin approval until the student opened the course). */
 function acRefreshCatalogStatuses(){
 try{
 if(!(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid))return;
-var before=(typeof acMbStatus==='function'?acMbStatus():'')+'|'+(typeof acFsStatus==='function'?acFsStatus():'');
+var before=(typeof acMbStatus==='function'?acMbStatus():'')+'|'+(typeof acFqStatus==='function'?acFqStatus():'')+'|'+(typeof acAgStatus==='function'?acAgStatus():'')+'|'+(typeof acFsStatus==='function'?acFsStatus():'')+'|'+(typeof acFdStatus==='function'?acFdStatus():'')+'|'+(typeof acTcStatus==='function'?acTcStatus():'')+'|'+(typeof acPtStatus==='function'?acPtStatus():'')+'|'+(typeof acGlpStatus==='function'?acGlpStatus():'')+'|'+(typeof acFmbStatus==='function'?acFmbStatus():'')+'|'+(typeof acPdStatus==='function'?acPdStatus():'');
 var pending=0,done=function(){
 pending--;
 if(pending===0){
-var after=(typeof acMbStatus==='function'?acMbStatus():'')+'|'+(typeof acFsStatus==='function'?acFsStatus():'');
+var after=(typeof acMbStatus==='function'?acMbStatus():'')+'|'+(typeof acFqStatus==='function'?acFqStatus():'')+'|'+(typeof acAgStatus==='function'?acAgStatus():'')+'|'+(typeof acFsStatus==='function'?acFsStatus():'')+'|'+(typeof acFdStatus==='function'?acFdStatus():'')+'|'+(typeof acTcStatus==='function'?acTcStatus():'')+'|'+(typeof acPtStatus==='function'?acPtStatus():'')+'|'+(typeof acGlpStatus==='function'?acGlpStatus():'')+'|'+(typeof acFmbStatus==='function'?acFmbStatus():'')+'|'+(typeof acPdStatus==='function'?acPdStatus():'');
 if(after!==before&&AC.view==='catalog')acR();
 }
 };
 if(typeof acCheckMbAccess==='function'){pending++;acCheckMbAccess(function(){done()});}
+if(typeof acCheckFqAccess==='function'){pending++;acCheckFqAccess(function(){done()});}
+if(typeof acCheckAgAccess==='function'){pending++;acCheckAgAccess(function(){done()});}
 if(typeof acCheckFsAccess==='function'){pending++;acCheckFsAccess(function(){done()});}
+if(typeof acCheckFdAccess==='function'){pending++;acCheckFdAccess(function(){done()});}
+if(typeof acCheckTcAccess==='function'){pending++;acCheckTcAccess(function(){done()});}
+if(typeof acCheckPtAccess==='function'){pending++;acCheckPtAccess(function(){done()});}
+if(typeof acCheckGlpAccess==='function'){pending++;acCheckGlpAccess(function(){done()});}
+if(typeof acCheckFmbAccess==='function'){pending++;acCheckFmbAccess(function(){done()});}
+if(typeof acCheckPdAccess==='function'){pending++;acCheckPdAccess(function(){done()});}
 }catch(e){}
 }
 
