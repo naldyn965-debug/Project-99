@@ -993,8 +993,8 @@ var lrCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'la
 '</div>'+
 lrBottom+
 '</div></div>';
-var ptBadge=ptStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':ptStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 90%</span>';
-var ptBottom=ptStatus==='paid'?(ptDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+ptPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+ptPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):ptStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">25 جنيه</span><span class="acad-price-tag">⏳ عرض لمدة يومين فقط</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var ptBadge=ptStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':ptStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 72%</span>';
+var ptBottom=ptStatus==='paid'?(ptDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+ptPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+ptPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):ptStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">70 جنيه</span><span class="acad-price-tag">⏳ عرض لمدة يومين فقط</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var ptCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pesticide-tech\')" role="button" style="border-color:rgba(194,65,12,.25)">'+
 '<div class="acad-cat-card-top" style="background:#2a1206 url(\'https://images.unsplash.com/photo-1715360378677-d6375ac03dbf?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+ptBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -2546,8 +2546,14 @@ var refId=isIP?'vcash-ip-ref':'vcash-ref';
 var btnId=isIP?'vcash-ip-submit-btn':'vcash-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+if(isIP){
+if(!phone||phone.length<3){
+if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
+}
+}else{
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
+}
 }
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
@@ -17583,8 +17589,14 @@ var refId=isIP?'vcash4-ip-ref':'vcash4-ref';
 var btnId=isIP?'vcash4-ip-submit-btn':'vcash4-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+if(isIP){
+if(!phone||phone.length<3){
+if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
+}
+}else{
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
+}
 }
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
@@ -17736,8 +17748,14 @@ var refId=isIP?'vcash5-ip-ref':'vcash5-ref';
 var btnId=isIP?'vcash5-ip-submit-btn':'vcash5-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+if(isIP){
+if(!phone||phone.length<3){
+if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
+}
+}else{
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
+}
 }
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
@@ -17784,7 +17802,7 @@ window.acSubmitTcPayment=acSubmitTcPayment;
    رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
 
 var _PT_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
-var _PT_COURSE_PRICE=25;          /* ← السعر بالجنيه              */
+var _PT_COURSE_PRICE=70;          /* ← السعر بالجنيه              */
 var _PT_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
@@ -17889,8 +17907,14 @@ var refId=isIP?'vcash6-ip-ref':'vcash6-ref';
 var btnId=isIP?'vcash6-ip-submit-btn':'vcash6-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+if(isIP){
+if(!phone||phone.length<3){
+if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
+}
+}else{
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
+}
 }
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
@@ -18042,8 +18066,14 @@ var refId=isIP?'vcash8-ip-ref':'vcash8-ref';
 var btnId=isIP?'vcash8-ip-submit-btn':'vcash8-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+if(isIP){
+if(!phone||phone.length<3){
+if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
+}
+}else{
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
+}
 }
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
@@ -18194,8 +18224,14 @@ var refId=isIP?'vcash9-ip-ref':'vcash9-ref';
 var btnId=isIP?'vcash9-ip-submit-btn':'vcash9-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+if(isIP){
+if(!phone||phone.length<3){
+if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
+}
+}else{
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
+}
 }
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
@@ -18346,8 +18382,14 @@ var refId=isIP?'vcash10-ip-ref':'vcash10-ref';
 var btnId=isIP?'vcash10-ip-submit-btn':'vcash10-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+if(isIP){
+if(!phone||phone.length<3){
+if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
+}
+}else{
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
+}
 }
 if(!ref||ref.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
