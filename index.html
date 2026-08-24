@@ -5394,6 +5394,7 @@ body.modal-open { overflow: hidden; }
 .acad-card-top.fd{background:#1a1002 url('https://images.unsplash.com/photo-1752219346775-fe086c57081b?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.fmb{background:#0a1220 url('https://images.unsplash.com/photo-1631557677599-ee5fe0b3440b?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.pd{background:#2a0808 url('https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+.acad-card-top.bi{background:#1e1033 url('https://images.unsplash.com/photo-1643780668909-580822430155?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-share-btn{position:absolute;top:14px;left:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(10,30,20,.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s;padding:0;appearance:none;-webkit-appearance:none;font:inherit;outline:none}
 .acad-share-btn:hover{background:rgba(10,30,20,.6);transform:translateY(-1px)}
 .acad-share-btn:active{transform:scale(.94)}
@@ -7648,6 +7649,13 @@ body.modal-open { overflow: hidden; }
   background-size:100% 100%, cover !important;
   background-position:center, center !important;
 }
+.acad-hero--bioinformatics{
+  background-image:
+    linear-gradient(165deg,rgba(30,16,51,.90) 0%,rgba(30,16,51,.72) 35%,rgba(30,16,51,.62) 62%,rgba(30,16,51,.88) 100%),
+    url("https://images.unsplash.com/photo-1643780668909-580822430155?auto=format&fit=crop&w=1400&q=75") !important;
+  background-size:100% 100%, cover !important;
+  background-position:center, center !important;
+}
 
 /* ══════════════════════════════════════════════════════════
    J. DARK MODE
@@ -8785,6 +8793,7 @@ const App = {
     if(typeof FEED_COURSE!=='undefined') reg.push({cid:'feed-mgmt',      course:FEED_COURSE, icon:'🐄', grad:'linear-gradient(135deg,#92400e,#451a03)', paid:false, img:'https://images.unsplash.com/photo-1752219346775-fe086c57081b?auto=format&fit=crop&w=900&q=70'});
     if(typeof FMB_COURSE!=='undefined') reg.push({cid:'food-microbiology',course:FMB_COURSE, icon:'🔬', grad:'linear-gradient(135deg,#2563eb,#0a1a3a)', paid:true, price:70, oldPrice:250, img:'https://images.unsplash.com/photo-1631557677599-ee5fe0b3440b?auto=format&fit=crop&w=900&q=70'});
     if(typeof PD_COURSE!=='undefined') reg.push({cid:'plant-diseases',    course:PD_COURSE, icon:'🦠', grad:'linear-gradient(135deg,#dc2626,#7f1d1d)', paid:true, price:70, oldPrice:250, img:'https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=900&q=70'});
+    if(typeof BI_COURSE!=='undefined') reg.push({cid:'bioinformatics',    course:BI_COURSE, icon:'💻', grad:'linear-gradient(135deg,#7c3aed,#4c1d95)', paid:false, img:'https://images.unsplash.com/photo-1643780668909-580822430155?auto=format&fit=crop&w=900&q=70'});
     return reg;
   },
 
