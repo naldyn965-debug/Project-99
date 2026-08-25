@@ -759,7 +759,7 @@ function acGo(view,lid){
 /* Free-preview teaser: the course info page, and its "first lecture free"
    deep-link, stay reachable without login — but only for the monetized
    courses this applies to. Every other view/course keeps the guard below. */
-var acFreeTeaser=(view==='info'||(view==='lesson'&&lid&&acFlatLessons()[0]===lid))&&(AC_CID==='mol-bio'||AC_CID==='food-safety'||AC_CID==='tissue-culture'||AC_CID==='pesticide-tech'||AC_CID==='feed-mgmt'||AC_CID==='glp'||AC_CID==='food-microbiology'||AC_CID==='plant-diseases');
+var acFreeTeaser=(view==='info'||(view==='lesson'&&lid&&acFlatLessons()[0]===lid))&&(AC_CID==='mol-bio'||AC_CID==='food-safety'||AC_CID==='tissue-culture'||AC_CID==='pesticide-tech'||AC_CID==='feed-mgmt'||AC_CID==='glp'||AC_CID==='food-microbiology'||AC_CID==='plant-diseases'||AC_CID==='bioinformatics');
 if(view!=='catalog'&&!acFreeTeaser&&!(typeof currentUser!=='undefined'&&currentUser)){
  if(typeof showToast==='function')showToast('سجّل الدخول أو أنشئ حساباً جديداً للبدء في الدورة','inf');
  if(typeof openAuth==='function')openAuth('login');
@@ -876,7 +876,7 @@ var ptPct=_acPctFor('pesticide-tech',PT_COURSE);var ptDone=_acDoneFor('pesticide
 var feedPct=_acPctFor('feed-mgmt',FEED_COURSE);var feedDone=_acDoneFor('feed-mgmt');var feedStatus=acFdStatus();
 var fmbPct=_acPctFor('food-microbiology',FMB_COURSE);var fmbDone=_acDoneFor('food-microbiology');var fmbStatus=acFmbStatus();
 var pdPct=_acPctFor('plant-diseases',PD_COURSE);var pdDone=_acDoneFor('plant-diseases');var pdStatus=acPdStatus();
-var biPct=_acPctFor('bioinformatics',BI_COURSE);var biDone=_acDoneFor('bioinformatics');
+var biPct=_acPctFor('bioinformatics',BI_COURSE);var biDone=_acDoneFor('bioinformatics');var biStatus=acBiStatus();
 var liveCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pest\')" role="button">'+
 '<div class="acad-cat-card-top" style="background:#071808 url(\'https://images.unsplash.com/photo-1719665269650-5521f31420f3?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat"><span class="acad-pop-badge">'+STAR_ICO+'Free</span></div>'+
 '<div class="acad-cat-card-body">'+
@@ -1055,8 +1055,8 @@ var pdCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pl
 '</div>'+
 pdBottom+
 '</div></div>';
-var biBadge='<span class="acad-pop-badge">'+STAR_ICO+'Free</span>';
-var biBottom=(biDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+biPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+biPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>');
+var biBadge=biStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':biStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">🔥 خصم 50%</span>';
+var biBottom=biStatus==='paid'?(biDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+biPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+biPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):biStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">500 جنيه</span><span class="acad-price-new">250 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var biCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'bioinformatics\')" role="button" style="border-color:rgba(124,58,237,.25)">'+
 '<div class="acad-cat-card-top" style="background:#1e1033 url(\'https://images.unsplash.com/photo-1643780668909-580822430155?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+biBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -1258,7 +1258,7 @@ return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner
 '</div></div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-card">'+
-'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-safety'?' fs':AC_CID==='pesticide-tech'?' pt':AC_CID==='feed-mgmt'?' fd':AC_CID==='glp'?' glp':AC_CID==='food-microbiology'?' fmb':AC_CID==='plant-diseases'?' pd':' tc')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
+'<div class="acad-card-top'+(AC_CID==='mol-bio'?' mb':AC_CID==='food-safety'?' fs':AC_CID==='pesticide-tech'?' pt':AC_CID==='feed-mgmt'?' fd':AC_CID==='glp'?' glp':AC_CID==='food-microbiology'?' fmb':AC_CID==='plant-diseases'?' pd':AC_CID==='bioinformatics'?' bi':' tc')+'"><button type="button" class="acad-share-btn" data-action="share-academy" aria-label="مشاركة الدورة">'+acIco('share',17)+'</button></div>'+
 '<div class="acad-card-body">'+
 '<div class="acad-card-title">'+AC_COURSE.title+'</div>'+
 '<div class="acad-card-desc">'+AC_COURSE.description+'</div>'+
@@ -31674,6 +31674,11 @@ if(st==='paid'){acSwitchCourse('plant-diseases');acGo('home',null);if(typeof sho
 else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowPdPayModal('rejected');}
 else acShowPdPayModal(st);
 });
+else if(cid==='bioinformatics')acCheckBiAccess(function(st,note){
+if(st==='paid'){acSwitchCourse('bioinformatics');acGo('home',null);if(typeof showToast==='function')showToast('✅ أنت مشترك بالفعل في هذه الدورة','ok');}
+else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowBiPayModal('rejected');}
+else acShowBiPayModal(st);
+});
 }
 
 /* ── Public API ───────────────────────────────────────────── */
@@ -31794,7 +31799,19 @@ else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note
 else{acSwitchCourse('food-microbiology');acGo('info',null);}
 });
 }
-else if(id==='bioinformatics'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
+else if(id==='bioinformatics'){
+if(!(typeof currentUser!=='undefined'&&currentUser)){
+/* Guest — no forced login anymore: show the free info/preview page instead. */
+acSwitchCourse('bioinformatics');acGo('info',null);
+return;
+}
+acCheckBiAccess(function(st,note){
+if(st==='paid'){acSwitchCourse('bioinformatics');resume?NAcademy.openFirst():acGo('home',null);}
+else if(st==='pending'){acShowBiPayModal('pending');}
+else if(st==='rejected'){if(typeof showToast==='function')showToast('❌ '+(note||'تم رفض طلبك السابق — يمكنك إعادة المحاولة'),'err');acShowBiPayModal('rejected');}
+else{acSwitchCourse('bioinformatics');acGo('info',null);}
+});
+}
 },
 subscribeNow:function(){
 var cid=AC_CID;
@@ -35166,7 +35183,7 @@ var c={};
 
 c['bi1']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي — يصلح لأي مستوى</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi1','مقدمة في Bioinformatics')+
+biVideo('agNv1AMMs78','مقدمة في Bioinformatics')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>تعريف Bioinformatics بكلمات بسيطة، والتمييز بينها وبين مجالات قريبة منها مثل البيولوجيا الحاسوبية والجينوميات</li><li>شرح الفكرة الجوهرية القائلة إن التسلسلات البيولوجية يمكن تمثيلها وتحليلها كمعلومات رقمية، المتجذرة في المبدأ المركزي للبيولوجيا الجزيئية</li><li>سرد أهم المحطات التاريخية التي شكَّلت Bioinformatics من خمسينيات القرن الماضي حتى اليوم</li><li>تفسير لماذا تُعَد Bioinformatics تخصصاً استراتيجياً عالي التأثير مقارنةً بالمناهج المعملية وحدها</li><li>تصنيف مجالات التطبيق الرئيسية للمعلوماتية الحيوية عبر الطب والزراعة وبيولوجيا التطور والصناعة</li><li>تصحيح أكثر المفاهيم الخاطئة شيوعاً عن Bioinformatics، بما في ذلك الخلط بينها وبين التكنولوجيا الحيوية أو افتراض أنها لا تتطلب أي معرفة بيولوجية</li><li>وصف خارطة طريق هذه الدورة، من مصادر البيانات وتحليل التسلسلات إلى التطبيقات القائمة على الذكاء الاصطناعي</li></ul>'+
@@ -35257,7 +35274,7 @@ biImg('باحث ينظر إلى متصفح جينوم أو محاذاة تسلس
 
 c['bi2']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi2','قواعد البيانات البيولوجية ومصادر المعلومات')+
+biVideo('wmd4RXZ_8xk','قواعد البيانات البيولوجية ومصادر المعلومات')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>تعريف ماهية قاعدة البيانات البيولوجية، وشرح سبب أهمية مصادر البيانات المركزية</li><li>التمييز بين قواعد البيانات الأولية (التسلسلات الخام) وقواعد البيانات الثانوية (المنسَّقة والموصَّفة)</li><li>تحديد قواعد بيانات النيوكليوتيدات الرئيسية (GenBank وENA وDDBJ) ووصف تعاون INSDC القائم وراءها</li><li>تحديد UniProt كقاعدة البيانات الرئيسية للبروتين، وبنك بيانات البروتين (PDB) كقاعدة البيانات الرئيسية للبنى</li><li>شرح دور قواعد البيانات المتخصِّصة مثل Ensembl (متصفح الجينوم) وKEGG (المسارات)</li><li>تفسير رقم دخول قاعدة البيانات (Accession Number) ووصف كيفية استرجاع سجل تسلسل</li><li>اختيار قاعدة البيانات الأنسب لسؤال بحثي معيَّن</li></ul>'+
@@ -35373,7 +35390,7 @@ biImg('رسم مقسَّم الشاشة يعرض عارض بنية بروتين 
 
 c['bi3']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi3','تحليل تسلسلات DNA وRNA والبروتين')+
+biVideo('H1JQ5XyniXI','تحليل تسلسلات DNA وRNA والبروتين')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>قراءة تسلسل FASTA خام وتحديد تركيبه الأساسي وتنسيقه</li><li>حساب محتوى GC وتفسيره، وشرح دلالته البيولوجية</li><li>توليد الشريط المتمِّم والمتممة العكسية لتسلسل DNA</li><li>شرح الطبيعة الثلاثية للشفرة الوراثية، وترجمة تسلسل باستخدام جدول الكودونات</li><li>تحديد إطارات القراءة المفتوحة (ORFs) عبر إطارات القراءة الستة الممكنة جميعها</li><li>شرح تآزن الكودونات، وتصحيح المفاهيم الخاطئة الشائعة حول عالمية الشفرة الوراثية</li><li>إدراك سبب استخدام المتخصصين في Bioinformatics أدوات قياسية لهذه العمليات بدلاً من إجرائها يدوياً على نطاق واسع</li></ul>'+
@@ -35476,7 +35493,7 @@ biImg('رسم يوضح تسلسل DNA مع ثلاثة إطارات قراءة م
 
 c['bi4']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi4','محاذاة التسلسلات (BLAST والمحاذاة المتعددة للتسلسلات)')+
+biVideo('TJQUzneXL1c','محاذاة التسلسلات (BLAST والمحاذاة المتعددة للتسلسلات)')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>شرح سبب كون محاذاة التسلسلات الأداة الأساسية لكشف التماثل واستنتاج الوظيفة</li><li>التمييز بين المحاذاة الشاملة والمحاذاة الموضعية، وتحديد متى تُستخدَم كل منهما</li><li>شرح كيفية تشكيل مصفوفة الاستبدال وعقوبات الفجوات لدرجة المحاذاة</li><li>وصف كيفية اختلاف نهج "البذرة والتمديد" الاستكشافي في BLAST عن خوارزمية محاذاة شاملة</li><li>تفسير الإحصاءات الرئيسية في نتيجة BLAST: قيمة E، والدرجة البتية (Bit Score)، ونسبة التطابق، وتغطية الاستعلام</li><li>شرح ما تضيفه المحاذاة المتعددة للتسلسلات (MSA) بخلاف المحاذاة الثنائية، وتحديد أدوات MSA الشائعة</li><li>اختيار برنامج BLAST المناسب لسؤال بحثي معيَّن</li></ul>'+
@@ -35584,7 +35601,7 @@ biRealNote('هذا بالضبط أول رقم يقرأه أي محلِّل بي�
 
 c['bi5']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi5','تجميع الجينوم والتوصيف الجيني (Genome Annotation)')+
+biVideo('PH0ohmQC77c','تجميع الجينوم والتوصيف الجيني (Genome Annotation)')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>شرح سبب ضرورة تجميع الجينوم، بالنظر إلى قيود تقنية التسلسل الحالية</li><li>تعريف مصطلحات التجميع الأساسية: القراءة (Read)، والتغطية (العمق)، والقطعة المتصلة (Contig)، والسقالة (Scaffold)</li><li>شرح مفهوم k-mer وكيف يعيد تجميع الرسم البياني من نوع de Bruijn بناء جينوم من شظايا متداخلة</li><li>تفسير مقاييس جودة التجميع القياسية، خصوصاً N50، وشرح ما تخبرك به وما لا تخبرك به</li><li>التمييز بين التوصيف البنيوي (إيجاد الجينات) والتوصيف الوظيفي (تحديد الوظيفة المحتملة)</li><li>التمييز بين نهجَي التنبؤ بالجينات: من الصفر (Ab Initio) والقائم على التماثل</li><li>تحديد أدوات التجميع والتوصيف الشائعة وأدوارها في مسار عمل مشروع جينوم</li></ul>'+
@@ -35679,7 +35696,7 @@ biImg('تسلسل DNA طويل مجمَّع مع عدة مقاطع مميَّز�
 
 c['bi6']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi6','تحليل التعبير الجيني وعلم النسخ الجيني (Transcriptomics)')+
+biVideo('hADRJgxqzwM','تحليل التعبير الجيني وعلم النسخ الجيني (Transcriptomics)')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>التمييز بين الجينوم (الثابت) والترانسكريبتوم (الديناميكي)، وشرح سبب أهمية هذا التمييز</li><li>شرح التحول التاريخي من تقنية المصفوفات الدقيقة (Microarrays) إلى RNA-seq، ولماذا أصبحت RNA-seq النهج السائد</li><li>وصف الخطوات الأساسية لمسار عمل RNA-seq النموذجي، من القراءات الخام إلى عدد تعبير جيني</li><li>شرح سبب وجوب تطبيع أعداد القراءات الخام، ووصف طرق التطبيع الشائعة</li><li>تفسير نتيجة تعبير تفاضلي، بما يشمل التغيُّر المضاعَف والدلالة الإحصائية</li><li>شرح سبب ضرورة تصحيح الاختبارات المتعددة عند تحليل آلاف الجينات في آن واحد</li><li>تحديد تطبيقات واقعية لتحليل التعبير الجيني في الطب والزراعة والبحث الأساسي</li></ul>'+
@@ -35776,7 +35793,7 @@ biRealNote('لاحظ أن log2 Fold Change جاء سالباً هذه المرة
 
 c['bi7']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi7','علم البروتيوم (Proteomics) والتنبؤ ببنية البروتين')+
+biVideo('vgLCdNNG6nQ','علم البروتيوم (Proteomics) والتنبؤ ببنية البروتين')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>تعريف علم البروتيوم وشرح سبب ضرورة دراسة البروتينات مباشرة حتى بعد التحليل الترانسكريبتومي</li><li>وصف مسار العمل الأساسي القائم على المطيافية الكتلية المستخدَم لتحديد البروتينات في عيّنة وقياسها كمياً</li><li>التمييز بين المستويات الأربعة لبنية البروتين: الأولية والثانوية والثالثية والرباعية</li><li>التمييز بين طرق التحديد التجريبي للبنية وطرق التنبؤ الحاسوبي بالبنية</li><li>شرح الفرق بين النمذجة بالتماثل والتنبؤ من الصفر (Ab Initio) بالبنية</li><li>شرح ما غيَّره AlphaFold في التنبؤ ببنية البروتين، وتحديد قيوده الرئيسية</li><li>تحديد تطبيقات واقعية لعلم البروتيوم والتنبؤ بالبنية في الطب والزراعة وتصميم الأدوية</li></ul>'+
@@ -35877,7 +35894,7 @@ biImg('رسم توضيحي بمخطط شريطي لبنية بروتين مطو�
 
 c['bi8']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi8','التحليل التطوري وBioinformatics التطورية')+
+biVideo('6ssKfgImai0','التحليل التطوري وBioinformatics التطورية')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>تعريف التحليل التطوري (Phylogenetics) وشرح كيفية استخدام بيانات التسلسل الجزيئي لإعادة بناء العلاقات التطورية</li><li>التمييز بين المتماثلات المتعامدة والمتماثلات المتوازية، وشرح سبب كون هذا التمييز حاسماً لتحليل تطوري دقيق</li><li>شرح كيف تُستخدَم المحاذاة المتعددة للتسلسلات كنقطة بداية لبناء شجرة تطورية</li><li>التمييز بين طرق بناء الشجرة القائمة على المسافة والقائمة على الصفات</li><li>تفسير المكوِّنات الأساسية لشجرة تطورية، بما يشمل العُقَد والفروع والسلالات (Clades) وقيم دعم البوتستراب</li><li>تصحيح المفاهيم الخاطئة الشائعة حول قراءة الأشجار التطورية وتفسيرها</li><li>تحديد تطبيقات واقعية للتحليل التطوري في الصحة العامة وحفظ الأنواع والبحث التطوري</li></ul>'+
@@ -35973,7 +35990,7 @@ biImg('مخطط شجرة تطورية موسومة يُظهر الأطراف و�
 
 c['bi9']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi9','تحليل بيانات التسلسل من الجيل التالي (NGS)')+
+biVideo('Zb8hilgioNI','تحليل بيانات التسلسل من الجيل التالي (NGS)')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>شرح التحوُّل النموذجي من تسلسل سانجر إلى التسلسل من الجيل التالي (NGS)، ولماذا أتاح توليد بيانات متوازٍ هائل</li><li>التمييز بين تقنيات التسلسل بالقراءات القصيرة والطويلة، وتحديد نقاط قوة كل منها والمقايضات المرتبطة بها</li><li>قراءة تنسيق ملف FASTQ وتفسيره، بما يشمل درجات جودة Phred</li><li>شرح سبب حاجة قراءات التسلسل الخام إلى ضبط جودة وتشذيب قبل التحليل اللاحق</li><li>وصف كيف تقوم بيانات NGS بتحليلات تجميع الجينوم وRNA-seq والتحليل التطوري التي جرى تناولها سابقاً في هذا المقرر</li><li>تحديد تطبيقات إضافية قائمة على NGS تتجاوز تجميع الجينوم وتحليل التعبير، كالتسلسل الموجَّه والتسلسل الجينومي البيئي</li><li>تقييم جودة قراءة تسلسل باستخدام اصطلاحات درجة Phred</li></ul>'+
@@ -36068,7 +36085,7 @@ biRealNote('هذا التحقق البسيط — أن طول سطر التسلس
 
 c['bi10']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">45 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi10','Bioinformatics البنيوية والنمذجة الجزيئية')+
+biVideo('vwH0mpCYg4g','Bioinformatics البنيوية والنمذجة الجزيئية')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>شرح ما تضيفه Bioinformatics البنيوية بخلاف تحديد أو التنبؤ ببنية بروتين ثابتة واحدة</li><li>وصف كيفية استخدام RMSD لمحاذاة بنيتَي بروتين بنيوياً ومقارنتهما</li><li>شرح كيف تُصنَّف البروتينات إلى عائلات بنيوية باستخدام قواعد بيانات مثل SCOP وCATH</li><li>وصف المبدأ الأساسي للالتحام الجزيئي ودوره في تصميم الأدوية القائم على البنية</li><li>شرح سبب استخدام محاكاة الديناميكا الجزيئية لدراسة سلوك البروتين بخلاف بنية ثابتة واحدة</li><li>التمييز بين نهجَي الالتحام الجامد والمرن، وتحديد مقايضات كل منهما</li><li>تحديد تطبيقات واقعية للمعلوماتية الحيوية البنيوية في تصميم الأدوية، وهندسة البروتين، والبحث الأساسي</li></ul>'+
@@ -36155,7 +36172,7 @@ biImg('جزيء صغير وملوَّن على شكل قطعة أحجية ينج
 
 c['bi11']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">40 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi11','الجينوميات الوظيفية وتحليل المسارات الحيوية')+
+biVideo('gLVHeJK4O4k','الجينوميات الوظيفية وتحليل المسارات الحيوية')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>تعريف الجينوميات الوظيفية وشرح سبب عدم كفاية فهم جين أو بروتين بمعزل عن غيره غالباً</li><li>وصف إطار وجودية الجين (GO) وفئاته الأساسية الثلاث لوصف وظيفة الجين</li><li>شرح كيف تنظِّم قواعد بيانات المسارات مثل KEGG الجينات في شبكات بيولوجية وظيفية</li><li>شرح منطق تحليل الإثراء المساري وغرضه، بالبناء على نتائج التعبير التفاضلي</li><li>التمييز بين تحليل التمثيل الزائد وتحليل إثراء مجموعة الجينات (GSEA)</li><li>وصف شبكات تفاعل بروتين-بروتين (PPI) ومفهوم البروتينات المحورية</li><li>تحديد تطبيقات واقعية للجينوميات الوظيفية في بحث الأمراض واكتشاف الأدوية وبيولوجيا الأنظمة</li></ul>'+
@@ -36248,7 +36265,7 @@ biRealNote('هذا بالضبط ما تفعله أداة ORA حقيقية كخط
 
 c['bi12']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi12','أدوات Bioinformatics وأساسيات البرمجة')+
+biVideo('8I41wsftneo','أدوات Bioinformatics وأساسيات البرمجة')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>شرح سبب كون مهارات البرمجة أساسية للمعلوماتية الحيوية بخلاف ما يمكن أن توفِّره أدوات الويب بالنقر والتأشير</li><li>تحديد لغات البرمجة الأساسية المستخدَمة في Bioinformatics ونقاط قوة كل منها</li><li>وصف مفاهيم البرمجة الأساسية ذات الصلة بـBioinformatics: المتغيرات، والحلقات التكرارية، والشروط، والدوال</li><li>شرح كيف يمكن لنص برمجي أتمتة مهمة معلوماتية حيوية متكررة على نطاق واسع</li><li>وصف دور سطر الأوامر وأدوات Unix الأساسية في العمل اليومي بـBioinformatics</li><li>شرح الغرض من التحكم في الإصدارات وإمكانية إعادة الإنتاج في البيولوجيا الحاسوبية</li><li>تحديد كيف ترتبط البرمجة بكل تحليل جرى تناوله سابقاً في هذا المقرر وتُمكِّنه</li></ul>'+
@@ -36349,7 +36366,7 @@ biRealNote('هذا جوهر الأتمتة التي تتحدَّث عنها هذ
 
 c['bi13']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi13','الذكاء الاصطناعي والتعلم الآلي في Bioinformatics')+
+biVideo('sDRQWv1_P0Y','الذكاء الاصطناعي والتعلم الآلي في Bioinformatics')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>تعريف التعلم الآلي وشرح كيف يختلف عن الأساليب التقليدية القائمة على قواعد مبرمَجة صراحة</li><li>التمييز بين التعلم الخاضع للإشراف وغير الخاضع للإشراف، وتحديد أمثلة من Bioinformatics لكل منهما</li><li>شرح ماهية التعلم العميق والشبكات العصبية، ودورهما في اختراقات مثل AlphaFold</li><li>شرح سبب ضرورة تقسيم بيانات التدريب/الاختبار، ووصف مشكلة فرط التلاؤم</li><li>تحديد التطبيقات الرئيسية للتعلم الآلي في Bioinformatics بخلاف التنبؤ ببنية البروتين</li><li>شرح تحدي قابلية التفسير "للصندوق الأسود" في التعلم العميق ولماذا يهم للثقة البيولوجية</li><li>تقييم ادعاء تعلُّم آلي بشكل نقدي، مميِّزاً القدرة الحقيقية عن المبالغة الدعائية</li></ul>'+
@@ -36455,7 +36472,7 @@ biRealNote('هذا بالضبط ما يمنع النموذج من "حفظ" بي�
 
 c['bi14']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">تأسيسي وتطبيقي</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">40 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi14','التطبيقات الطبية والزراعية والصناعية للمعلوماتية الحيوية')+
+biVideo('DsAjDT77uec','التطبيقات الطبية والزراعية والصناعية للمعلوماتية الحيوية')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>شرح كيف يستخدم الطب الدقيق المعلومات الجينومية لتوجيه قرارات سريرية فردية</li><li>وصف كيفية دمج مسار تشخيص سريري حقيقي لـNGS واستدعاء المتغيرات والتوصيف والتعلم الآلي</li><li>شرح كيف يسرِّع الانتخاب الجينومي التربية الزراعية مقارنةً بالانتخاب التقليدي القائم على الصفات الظاهرية</li><li>وصف مفهوم البانجينوم ولماذا يكون جينوم مرجعي واحد غير كافٍ غالباً لنوع ما</li><li>شرح كيف تجتمع Bioinformatics البنيوية والتطور الموجَّه لهندسة إنزيمات صناعية</li><li>تحديد كيف تستخدم البيولوجيا التركيبية التصميم الحاسوبي قبل البناء الفعلي</li><li>إدراك كيف تتقارب كل تقنية جرى تناولها تقريباً في هذا المقرر في تطبيقات واقعية وعبر قطاعات متعددة</li></ul>'+
@@ -36554,7 +36571,7 @@ biImg('شاشة حاسوب تعرض مخططاً لأجزاء دارة جيني�
 
 c['bi15']='<div class="acad-body">'+
 '<div class="acad-igrid" style="margin-bottom:28px"><div class="acad-icard"><span class="acad-icard-ico">🎯</span><div class="acad-icard-lbl">أهداف المحاضرة</div><div class="acad-icard-val">7 أهداف</div></div><div class="acad-icard"><span class="acad-icard-ico">📖</span><div class="acad-icard-lbl">مستوى المحاضرة</div><div class="acad-icard-val">ختامية — تدمج المقرر بأكمله</div></div><div class="acad-icard"><span class="acad-icard-ico">⏱</span><div class="acad-icard-lbl">مدة القراءة</div><div class="acad-icard-val">50 دقيقة</div></div><div class="acad-icard"><span class="acad-icard-ico">💻</span><div class="acad-icard-lbl">الأنشطة</div><div class="acad-icard-val">6 أنشطة تفاعلية</div></div></div>'+
-biVideo('PENDING_bi15','تطبيقات عملية ودراسات حالة واقعية')+
+biVideo('kW6_PmwKEFw','تطبيقات عملية ودراسات حالة واقعية')+
 '<h2>أهداف التعلم</h2>'+
 '<p>بنهاية هذه المحاضرة ستكون قادراً على:</p>'+
 '<ul><li>تتبُّع كيفية اجتماع تقنيات معلوماتية حيوية متعددة ضمن دراسة حالة واقعية واحدة، من البيانات الخام إلى نتيجة قابلة للتطبيق</li><li>تحليل الاستجابة الجينومية لـSARS-CoV-2 كدراسة حالة تدمج التسلسل والمحاذاة والتحليل التطوري وتصميم اللقاحات القائم على البنية</li><li>تحليل دراسة حالة في طب الأورام الدقيق تدمج التسلسل وتحليل المتغيرات واختيار العلاج الموجَّه</li><li>شرح كيف تطوَّر إرث مشروع الجينوم البشري إلى عصر البانجينوم البشري الحديث</li><li>تحديد التقنيات المحدَّدة من المقرر التي ستكون مطلوبة لمعالجة مشكلة معلوماتية حيوية جديدة وغير مألوفة</li><li>التأمل في المبادئ البيولوجية والحاسوبية المتكررة التي تربط كل محاضرة في هذا المقرر</li><li>تحديد خطوات تالية واقعية لمواصلة بناء مهارات Bioinformatics بعد هذا المقرر</li></ul>'+
@@ -36636,5 +36653,164 @@ biImg('مخطط لخلية ورمية مع منطقة جين واحدة مميَ
 '</div>';
 
 return c[id]||null}
+
+
+/* ── Bioinformatics Payment Logic (mirrors PD structure — 500 EGP, 50% off -> 250 EGP) ── */
+
+var _BI_COURSE_PRICE=250;          /* ← السعر بالجنيه — السعر الأصلي 500 جنيه — بعد خصم 50% */
+var _BI_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
+var _BI_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
+
+/* Returns locally-cached status: 'paid' | 'pending' | 'none' */
+function acBiStatus(){
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+if(!u)return 'none';
+try{
+if(localStorage.getItem('nb-bi-access__'+u)==='paid')return 'paid';
+if(localStorage.getItem('nb-bi-pending__'+u)==='true')return 'pending';
+}catch(e){}
+return 'none';
+}
+window.acBiStatus=acBiStatus; /* تعريض عالمي — يستخدمه كاروسيل الكورسات في الرئيسية */
+
+/* Async check against Firestore, updates local cache */
+function acCheckBiAccess(cb){
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+if(!u){cb('none');return;}
+var cacheKey='nb-bi-access__'+u;
+try{if(localStorage.getItem(cacheKey)==='paid'){cb('paid');return;}}catch(e){}
+/* Check users/{uid}.paidCourses first */
+db.collection('users').doc(u).get().then(function(snap){
+var data=snap.exists?snap.data():{};
+if(data.paidCourses&&data.paidCourses.indexOf('bioinformatics')>-1){
+try{localStorage.setItem(cacheKey,'paid');}catch(e){}
+cb('paid');return;
+}
+/* Check course_payments for pending/approved */
+db.collection('course_payments').where('uid','==',u).get().then(function(qs){
+if(qs.empty){cb('none');return;}
+var docs=qs.docs.filter(function(d){return d.data().courseId==='bioinformatics';});
+if(!docs.length){cb('none');return;}
+var st=docs[0].data().status;
+if(st==='approved'){
+try{localStorage.setItem(cacheKey,'paid');}catch(e){}
+cb('paid');
+}else if(st==='rejected'){
+try{localStorage.removeItem('nb-bi-pending__'+u);}catch(e){}
+cb('rejected',docs[0].data().rejectionNote||'');
+}else{
+try{localStorage.setItem('nb-bi-pending__'+u,'true');}catch(e){}
+cb('pending');
+}
+}).catch(function(){cb('none');});
+}).catch(function(){cb('none');});
+}
+
+function acShowBiPayModal(mode){
+var el=document.getElementById('vcash11-overlay');if(!el)return;
+document.getElementById('vcash11-number').textContent=_BI_VCASH_NUM;
+document.getElementById('vcash11-price-display').textContent=_BI_COURSE_PRICE+' جنيه';
+document.getElementById('vcash11-method-price-display').textContent=_BI_COURSE_PRICE+' جنيه';
+document.getElementById('vcash11-ip-price-display').textContent=_BI_COURSE_PRICE+' جنيه';
+acVcashRenderInstapayInfo('vcash11',_BI_INSTAPAY_INFO);
+if(mode==='pending'){
+acVcashSetStep('vcash11','pending');
+}else{
+acVcashSetStep('vcash11','method');
+var ph=document.getElementById('vcash11-phone');var rf=document.getElementById('vcash11-ref');
+if(ph)ph.value='';if(rf)rf.value='';
+var iph=document.getElementById('vcash11-ip-phone');var irf=document.getElementById('vcash11-ip-ref');
+if(iph)iph.value='';if(irf)irf.value='';
+var btn=document.getElementById('vcash11-submit-btn');
+if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
+var ibtn=document.getElementById('vcash11-ip-submit-btn');
+if(ibtn){ibtn.disabled=false;ibtn.textContent='أرسل طلب التفعيل';}
+}
+el.classList.add('on');
+document.body.classList.add('modal-open');
+}
+
+function acCloseBiPayModal(){
+var el=document.getElementById('vcash11-overlay');
+if(el)el.classList.remove('on');
+document.body.classList.remove('modal-open');
+}
+
+function acCopyVcash11Num(){
+var num=document.getElementById('vcash11-number');if(!num)return;
+var val=num.textContent;
+if(navigator.clipboard){
+navigator.clipboard.writeText(val).then(function(){
+if(typeof showToast==='function')showToast('تم نسخ رقم فودافون كاش','ok');
+}).catch(function(){});
+}else{
+try{
+var ta=document.createElement('textarea');ta.value=val;
+document.body.appendChild(ta);ta.select();
+document.execCommand('copy');document.body.removeChild(ta);
+if(typeof showToast==='function')showToast('تم نسخ الرقم','ok');
+}catch(e){}
+}
+}
+
+function acSubmitBiPayment(method){
+method=method||'vodafone_cash';
+var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUser.uid:null;
+if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أولاً','err');return;}
+var isIP=method==='instapay';
+var phoneId=isIP?'vcash11-ip-phone':'vcash11-phone';
+var refId=isIP?'vcash11-ip-ref':'vcash11-ref';
+var btnId=isIP?'vcash11-ip-submit-btn':'vcash11-submit-btn';
+var phone=(document.getElementById(phoneId).value||'').trim();
+var ref=(document.getElementById(refId).value||'').trim();
+if(isIP){
+if(!phone||phone.length<3){
+if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
+}
+}else{
+if(!phone||phone.length<10){
+if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
+}
+}
+if(!ref||ref.length<10){
+if(typeof showToast==='function')showToast('برجاء إدخال رقم هاتفك الشخصي','err');return;
+}
+var btn=document.getElementById(btnId);
+if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
+db.collection('course_payments').add({
+uid:u,
+email:(currentUser&&currentUser.email)||'',
+phone:phone,
+transactionRef:ref,
+courseId:'bioinformatics',
+amount:_BI_COURSE_PRICE,
+currency:'EGP',
+status:'pending',
+paymentMethod:method,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+}).then(function(docRef){
+try{localStorage.setItem('nb-bi-pending__'+u,'true');}catch(e){}
+_acNotifyAdminNewPayment('bioinformatics',_BI_COURSE_PRICE,docRef.id);
+var refDisp=document.getElementById('vcash11-pending-ref-display');
+if(refDisp)refDisp.textContent='رقم الطلب: '+docRef.id.substring(0,14)+'…  |  رقم التواصل: '+ref;
+acVcashSetStep('vcash11','pending');
+if(typeof showToast==='function')showToast('تم إرسال طلبك — سيُفعَّل الكورس خلال لحظات','ok');
+/* Re-render catalog card if visible */
+if(typeof acR==='function'&&typeof AC!=='undefined'&&AC.view==='catalog')acR();
+}).catch(function(e){
+console.error('[VCash11] code:',e&&e.code,'|',e);
+if(btn){btn.disabled=false;btn.textContent='أرسل طلب التفعيل';}
+var _msg='خطأ في الإرسال — أعد المحاولة';
+if(e&&(e.code==='permission-denied'||e.code==='PERMISSION_DENIED'))
+  _msg='خطأ في الصلاحيات — تواصل مع الدعم';
+else if(e&&(e.code==='unavailable'||e.code==='deadline-exceeded'||e.code==='network-request-failed'))
+  _msg='خطأ في الاتصال — تحقق من الإنترنت وأعد المحاولة';
+if(typeof showToast==='function')showToast(_msg,'err');
+});
+}
+
+window.acCloseBiPayModal=acCloseBiPayModal;
+window.acCopyVcash11Num=acCopyVcash11Num;
+window.acSubmitBiPayment=acSubmitBiPayment;
 
 }();
