@@ -893,8 +893,8 @@ var liveCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'
 (pestDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+pestPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+pestPct+'%"></div></div></div>':
 '<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>')+
 '</div></div>';
-var mbBadge=mbStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':mbStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 72%</span>';
-var mbBottom=mbStatus==='paid'?(molDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+molPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+molPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):mbStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">70 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var mbBadge=mbStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':mbStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 52%</span>';
+var mbBottom=mbStatus==='paid'?(molDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+molPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+molPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):mbStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">120 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var molBioCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'mol-bio\')" role="button" style="border-color:rgba(59,130,246,.25)">'+
 '<div class="acad-cat-card-top" style="background:#0a1c33 url(\'https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+mbBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -937,8 +937,8 @@ var agCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'ag
 '</div>'+
 agBottom+
 '</div></div>';
-var fsBadge=fsStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':fsStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 80%</span>';
-var fsBottom=fsStatus==='paid'?(fsDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+fsPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+fsPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):fsStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">50 جنيه</span><span class="acad-price-tag">⏳ عرض لمدة يومين فقط</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var fsBadge=fsStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':fsStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 60%</span>';
+var fsBottom=fsStatus==='paid'?(fsDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+fsPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+fsPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):fsStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">100 جنيه</span><span class="acad-price-tag">⏳ عرض لمدة يومين فقط</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var foodSafetyCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'food-safety\')" role="button" style="border-color:rgba(217,119,6,.25)">'+
 '<div class="acad-cat-card-top" style="background:#241405 url(\'https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+fsBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -952,8 +952,8 @@ var foodSafetyCard='<div class="acad-cat-card premium" onclick="NAcademy.openCou
 '</div>'+
 fsBottom+
 '</div></div>';
-var glpBadge=glpStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':glpStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 67%</span>';
-var glpBottom=glpStatus==='paid'?(glpDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+glpPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+glpPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):glpStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">150 جنيه</span><span class="acad-price-new">50 جنيه</span><span class="acad-price-tag">⏳ عرض لمدة يومين فقط</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var glpBadge=glpStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':glpStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 33%</span>';
+var glpBottom=glpStatus==='paid'?(glpDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+glpPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+glpPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):glpStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">150 جنيه</span><span class="acad-price-new">100 جنيه</span><span class="acad-price-tag">⏳ عرض لمدة يومين فقط</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var glpCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'glp\')" role="button" style="border-color:rgba(15,85,170,.25)">'+
 '<div class="acad-cat-card-top" style="background:#0b1a2e url(\'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+glpBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -967,8 +967,8 @@ var glpCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'g
 '</div>'+
 glpBottom+
 '</div></div>';
-var tcBadge=tcStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':tcStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 67%</span>';
-var tcBottom=tcStatus==='paid'?(tcDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+tcPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+tcPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):tcStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">150 جنيه</span><span class="acad-price-new">50 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var tcBadge=tcStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':tcStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 33%</span>';
+var tcBottom=tcStatus==='paid'?(tcDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+tcPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+tcPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):tcStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">150 جنيه</span><span class="acad-price-new">100 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var tcCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'tissue-culture\')" role="button" style="border-color:rgba(13,148,136,.25)">'+
 '<div class="acad-cat-card-top" style="background:#0a2e2a url(\'https://images.unsplash.com/photo-1622210445956-ca3320a5e7c5?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+tcBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -997,8 +997,8 @@ var lrCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'la
 '</div>'+
 lrBottom+
 '</div></div>';
-var ptBadge=ptStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':ptStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 72%</span>';
-var ptBottom=ptStatus==='paid'?(ptDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+ptPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+ptPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):ptStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">70 جنيه</span><span class="acad-price-tag">⏳ عرض لمدة يومين فقط</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var ptBadge=ptStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':ptStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 52%</span>';
+var ptBottom=ptStatus==='paid'?(ptDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+ptPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+ptPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):ptStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">120 جنيه</span><span class="acad-price-tag">⏳ عرض لمدة يومين فقط</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var ptCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'pesticide-tech\')" role="button" style="border-color:rgba(194,65,12,.25)">'+
 '<div class="acad-cat-card-top" style="background:#2a1206 url(\'https://images.unsplash.com/photo-1715360378677-d6375ac03dbf?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+ptBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -1027,8 +1027,8 @@ var feedCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'
 '</div>'+
 feedBottom+
 '</div></div>';
-var fmbBadge=fmbStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':fmbStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 72%</span>';
-var fmbBottom=fmbStatus==='paid'?(fmbDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+fmbPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+fmbPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):fmbStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">70 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var fmbBadge=fmbStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':fmbStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 52%</span>';
+var fmbBottom=fmbStatus==='paid'?(fmbDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+fmbPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+fmbPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):fmbStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">120 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var fmbCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'food-microbiology\')" role="button" style="border-color:rgba(37,99,235,.25)">'+
 '<div class="acad-cat-card-top" style="background:#0a1220 url(\'https://images.unsplash.com/photo-1631557677599-ee5fe0b3440b?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+fmbBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -1042,8 +1042,8 @@ var fmbCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'f
 '</div>'+
 fmbBottom+
 '</div></div>';
-var pdBadge=pdStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':pdStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 72%</span>';
-var pdBottom=pdStatus==='paid'?(pdDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+pdPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+pdPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):pdStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">70 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var pdBadge=pdStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':pdStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 52%</span>';
+var pdBottom=pdStatus==='paid'?(pdDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+pdPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+pdPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):pdStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">120 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var pdCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'plant-diseases\')" role="button" style="border-color:rgba(220,38,38,.25)">'+
 '<div class="acad-cat-card-top" style="background:#2a0808 url(\'https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+pdBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -1072,8 +1072,8 @@ var biCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'bi
 '</div>'+
 biBottom+
 '</div></div>';
-var ldBadge=ldStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':ldStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 72%</span>';
-var ldBottom=ldStatus==='paid'?(ldDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+ldPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+ldPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):ldStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">70 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
+var ldBadge=ldStatus==='paid'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#16a34a,#2eaa5c)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px"><polyline points="20 6 9 17 4 12"/></svg> مشترك</span>':ldStatus==='pending'?'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b)">⏳ قيد المراجعة</span>':'<span class="acad-pop-badge" style="background:linear-gradient(135deg,#dc2626,#f97316)">🔥 خصم 52%</span>';
+var ldBottom=ldStatus==='paid'?(ldDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+ldPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+ldPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>'):ldStatus==='pending'?'<div class="vcash-card-pending"><span>⏳</span> جارٍ مراجعة طلب الدفع — يُفعَّل خلال لحظات</div>':'<div class="acad-price-row"><span class="acad-price-old">250 جنيه</span><span class="acad-price-new">120 جنيه</span><span class="acad-price-tag">⏳ لفترة محدودة</span></div><div class="acad-cat-card-cta">اشترك الآن '+ARROW_ICO+'</div>';
 var ldCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'landscape-design\')" role="button" style="border-color:rgba(22,101,52,.25)">'+
 '<div class="acad-cat-card-top" style="background:#0a2410 url(\'https://images.unsplash.com/photo-1761637822930-fb1c1a3df94d?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+ldBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
@@ -2439,7 +2439,7 @@ window.acVcashResetReceipt=acVcashResetReceipt;
    رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
 
 var _MB_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
-var _MB_COURSE_PRICE=70;          /* ← السعر بالجنيه              */
+var _MB_COURSE_PRICE=120;          /* ← السعر بالجنيه              */
 var _MB_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
@@ -6714,7 +6714,7 @@ cor:2,exp:'الطرق التقليدية تقارن خصائص عامة قد ت�
    رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
 
 var _FS_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
-var _FS_COURSE_PRICE=50;          /* ← السعر بالجنيه              */
+var _FS_COURSE_PRICE=100;          /* ← السعر بالجنيه              */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
 function acFsStatus(){
@@ -17537,7 +17537,7 @@ window.acSubmitFdPayment=acSubmitFdPayment;
    رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
 
 var _FS_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
-var _FS_COURSE_PRICE=50;          /* ← السعر بالجنيه              */
+var _FS_COURSE_PRICE=100;          /* ← السعر بالجنيه              */
 var _FS_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
@@ -17696,7 +17696,7 @@ window.acSubmitFsPayment=acSubmitFsPayment;
    رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
 
 var _TC_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
-var _TC_COURSE_PRICE=50;          /* ← السعر بالجنيه              */
+var _TC_COURSE_PRICE=100;          /* ← السعر بالجنيه              */
 var _TC_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
@@ -17855,7 +17855,7 @@ window.acSubmitTcPayment=acSubmitTcPayment;
    رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
 
 var _PT_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
-var _PT_COURSE_PRICE=70;          /* ← السعر بالجنيه              */
+var _PT_COURSE_PRICE=120;          /* ← السعر بالجنيه              */
 var _PT_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
@@ -18014,7 +18014,7 @@ window.acSubmitPtPayment=acSubmitPtPayment;
    رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
 
 var _GLP_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
-var _GLP_COURSE_PRICE=50;          /* ← السعر بالجنيه              */
+var _GLP_COURSE_PRICE=100;          /* ← السعر بالجنيه              */
 var _GLP_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
@@ -18171,7 +18171,7 @@ window.acSubmitGlpPayment=acSubmitGlpPayment;
 
 /* ── Food Microbiology Payment (same price/discount as Molecular Biology) ── */
 
-var _FMB_COURSE_PRICE=70;          /* ← السعر بالجنيه — مطابق لكورس البيولوجيا الجزيئية */
+var _FMB_COURSE_PRICE=120;          /* ← السعر بالجنيه — مطابق لكورس البيولوجيا الجزيئية */
 var _FMB_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
 var _FMB_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
@@ -18329,7 +18329,7 @@ window.acSubmitFmbPayment=acSubmitFmbPayment;
 
 /* ── Plant Diseases Payment Logic (mirrors FMB — same price/discount) ── */
 
-var _PD_COURSE_PRICE=70;          /* ← السعر بالجنيه — مطابق لكورس الميكروبيولوجيا الغذائية */
+var _PD_COURSE_PRICE=120;          /* ← السعر بالجنيه — مطابق لكورس الميكروبيولوجيا الغذائية */
 var _PD_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
 var _PD_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
@@ -24200,6 +24200,21 @@ var m=Math.floor(sec/60),s=sec%60;
 return m+':'+(s<10?'0':'')+s;
 }
 
+/* fix: نسخة JS احتياطية لقاعدة #pg-academy:has(...) في CSS — على متصفحات
+   لا تدعم :has() (فايرفوكس قبل 121، Safari قبل 15.4، وِب-فيوهات أندرويد قديمة)
+   كانت قاعدة :has() تفشل بصمت فتبقى will-change:transform شغالة على .page
+   وتحبس position:fixed بتاع الفيديو (fake-fullscreen أو sticky) جوه صندوق
+   الصفحة الطويل بدل الشاشة الفعلية — وده اللي بيظهر كصفحة فاضية عند الزوم.
+   هذه الدالة تفرض نفس النتيجة يدوياً بصرف النظر عن دعم :has(). */
+function _tcSyncPgEscape(){
+try{
+var pg=document.getElementById('pg-academy');
+if(!pg)return;
+var active=!!document.querySelector('.tc-player.tc-fake-fs,.tc-player.tc-stuck');
+pg.style.willChange=active?'auto':'';
+}catch(e){}
+}
+
 function _tcBuildPlayer(wrap){
 wrap.classList.add('tc-ready');
 var iframe=wrap.querySelector('iframe');
@@ -24398,6 +24413,7 @@ if(wrap.classList.contains('tc-fake-fs')){
 wrap.classList.remove('tc-fake-fs');
 document.body.style.overflow='';
 fsBtn.innerHTML=acIco('expand',15);
+_tcSyncPgEscape();
 tcSyncSticky();
 return;
 }
@@ -24407,6 +24423,7 @@ return;
 }
 function _tcFallbackFs(){
 wrap.classList.add('tc-fake-fs');
+_tcSyncPgEscape();
 document.body.style.overflow='hidden';
 fsBtn.innerHTML=acIco('compress',15);
 }
@@ -24461,6 +24478,7 @@ return n?n.getBoundingClientRect().height:64;
 function tcStickOn(rect){
 tcStuck=true;
 wrap.classList.add('tc-stuck');
+_tcSyncPgEscape();
 tcSpacer.style.height=rect.height+'px';
 tcSpacer.style.display='block';
 wrap.style.cssText=origStyle+';position:fixed;top:'+tcNavH()+'px;left:'+rect.left+'px;width:'+rect.width+'px;height:'+rect.height+'px;padding-bottom:0;z-index:60';
@@ -24470,6 +24488,7 @@ tcStuck=false;
 tcSpacer.style.display='none';
 wrap.setAttribute('style',origStyle);
 wrap.classList.remove('tc-stuck');
+_tcSyncPgEscape();
 }
 function tcSyncSticky(){
 if(wrap.classList.contains('tc-fake-fs'))return;
@@ -37263,7 +37282,7 @@ cor:2,exp:'الحل المتوازن يخصص الشجيرات الكثيفة ل
    رقم فودافون كاش: غيّر القيمة أدناه برقمك الفعلي                */
 
 var _LD_VCASH_NUM='01095282573'; /* ← غيّر هنا برقم فودافون كاش */
-var _LD_COURSE_PRICE=70;           /* ← السعر بالجنيه              */
+var _LD_COURSE_PRICE=120;           /* ← السعر بالجنيه              */
 var _LD_INSTAPAY_INFO={handle:'',mobile:'01095282573',iban:''}; /* ← يملأها المالك: معرّف/موبايل/IBAN — اترك أي حقل فارغاً لإخفائه */
 
 /* Returns locally-cached status: 'paid' | 'pending' | 'none' */
