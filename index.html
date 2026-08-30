@@ -4167,6 +4167,7 @@ body.modal-open { overflow: hidden; }
     <div class="nav-links">
       <!-- تم نقل الرئيسية / مزرعتي / السوق / الأكاديمية للشريط السفلي -->
       <a href="#" class="nl" id="nl-goals" onclick="showPage('goals');return false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-left:5px;flex-shrink:0"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>أهداف المنصة</a>
+      <a href="#" class="nl" onclick="showPage('privacy');return false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-left:5px;flex-shrink:0"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>سياسة الخصوصية</a>
     </div>
     <div class="nav-actions" id="nav-actions">
       <button class="nav-icon-btn" id="thm-btn" title="تبديل المظهر" aria-label="تبديل المظهر">
@@ -4230,6 +4231,7 @@ body.modal-open { overflow: hidden; }
   <div class="mob-menu" id="mob-menu">
     <!-- تم نقل الرئيسية / مزرعتي / السوق / الأكاديمية للشريط السفلي -->
     <a href="#" class="nl" onclick="showPage('goals');closeMob();return false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>أهداف المنصة</a>
+    <a href="#" class="nl" onclick="showPage('privacy');closeMob();return false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>سياسة الخصوصية</a>
     <!-- زرار تحميل التطبيق: Android → مباشر | iOS → تعليمات -->
     <a href="#" class="nl nb-dl-btn" id="mob-install-app" onclick="closeMob();setTimeout(openPwaModal,180);return false">
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><path d="M12 2v13"/><path d="M7 11l5 5 5-5"/><path d="M3 19h18"/></svg>حمّل تطبيق نبتيكس
@@ -17805,6 +17807,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash-submit-btn" onclick="acSubmitMbPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -17837,6 +17841,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash-ip-phone" type="text" placeholder="example@instapay">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash-ip-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash-ip-submit-btn" onclick="acSubmitMbPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -17896,6 +17902,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash2-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash2-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash2-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash2-submit-btn" onclick="acSubmitFqPayment()">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -17956,6 +17964,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash3-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash3-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash3-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash3-submit-btn" onclick="acSubmitAgPayment()">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18043,6 +18053,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash4-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash4-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash4-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash4-submit-btn" onclick="acSubmitFsPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18075,6 +18087,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash4-ip-phone" type="text" placeholder="example@instapay">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash4-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash4-ip-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash4-ip-submit-btn" onclick="acSubmitFsPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18161,6 +18175,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash5-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash5-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash5-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash5-submit-btn" onclick="acSubmitTcPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18193,6 +18209,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash5-ip-phone" type="text" placeholder="example@instapay">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash5-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash5-ip-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash5-ip-submit-btn" onclick="acSubmitTcPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18279,6 +18297,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash6-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash6-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash6-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash6-submit-btn" onclick="acSubmitPtPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18311,6 +18331,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash6-ip-phone" type="text" placeholder="example@instapay">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash6-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash6-ip-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash6-ip-submit-btn" onclick="acSubmitPtPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18397,6 +18419,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash8-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash8-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash8-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash8-submit-btn" onclick="acSubmitGlpPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18429,6 +18453,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash8-ip-phone" type="text" placeholder="example@instapay">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash8-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash8-ip-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash8-ip-submit-btn" onclick="acSubmitGlpPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18515,6 +18541,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash7-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash7-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash7-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash7-submit-btn" onclick="acSubmitFdPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18547,6 +18575,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash7-ip-phone" type="text" placeholder="example@instapay">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash7-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash7-ip-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash7-ip-submit-btn" onclick="acSubmitFdPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18634,6 +18664,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash9-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash9-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash9-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash9-submit-btn" onclick="acSubmitFmbPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18666,6 +18698,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash9-ip-phone" type="text" placeholder="example@instapay">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash9-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash9-ip-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash9-ip-submit-btn" onclick="acSubmitFmbPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18751,6 +18785,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash10-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash10-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash10-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash10-submit-btn" onclick="acSubmitPdPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18783,6 +18819,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash10-ip-phone" type="text" placeholder="example@instapay">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash10-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash10-ip-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash10-ip-submit-btn" onclick="acSubmitPdPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18869,6 +18907,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash11-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash11-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash11-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash11-submit-btn" onclick="acSubmitBiPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18901,6 +18941,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash11-ip-phone" type="text" placeholder="example@instapay">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash11-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash11-ip-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash11-ip-submit-btn" onclick="acSubmitBiPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -18988,6 +19030,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash12-phone" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash12-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash12-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash12-submit-btn" onclick="acSubmitLdPayment('vodafone_cash')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -19020,6 +19064,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input class="vcash-field" id="vcash12-ip-phone" type="text" placeholder="example@instapay">
         <div class="vcash-field-lbl">رقم هاتفك الشخصي</div>
         <input class="vcash-field" id="vcash12-ip-ref" type="tel" placeholder="مثال: 01012345678" maxlength="11" inputmode="numeric">
+        <div class="vcash-field-lbl">كود المسوّق (اختياري)</div>
+        <input class="vcash-field" id="vcash12-ip-refcode" type="text" placeholder="اتركه فارغاً لو معندكش كود" style="text-transform:uppercase">
         <button class="vcash-btn-primary" id="vcash12-ip-submit-btn" onclick="acSubmitLdPayment('instapay')">أرسل طلب التفعيل</button>
         <div class="vcash-note">سيتم مراجعة طلبك خلال لحظات وتفعيل الكورس تلقائياً</div>
       </div>
@@ -21222,8 +21268,8 @@ document.querySelectorAll('.vcash-overlay').forEach(_watch);
   <div class="nb-cb-wrap">
     <p class="nb-cb-text">🍪 نستخدم ملفات تعريف الارتباط الضرورية لتشغيل المنصة وحفظ تفضيلاتك. راجع <a href="#" onclick="showPage('privacy');return false">سياسة الخصوصية</a> لمزيد من التفاصيل.</p>
     <div class="nb-cb-btns">
-      <button class="nb-cb-btn nb-cb-necessary" onclick="_nbCookieConsent('necessary')">الأساسية فقط</button>
-      <button class="nb-cb-btn nb-cb-accept" onclick="_nbCookieConsent('all')">قبول الكل</button>
+      <button class="nb-cb-btn nb-cb-necessary" onclick="_nbCookieNecessaryOnly()">الأساسية فقط</button>
+      <button class="nb-cb-btn nb-cb-accept" onclick="_nbCookieAcceptAll()">قبول الكل</button>
     </div>
   </div>
 </div>
@@ -21239,6 +21285,23 @@ document.querySelectorAll('.vcash-overlay').forEach(_watch);
     var el=document.getElementById('nb-cookie-banner');
     if(el)el.classList.remove('show');
     if(choice==='all')initFbPixel();
+  };
+  window._nbCookieAcceptAll=function(){
+    _nbCookieConsent('all');
+    if(typeof showToast==='function')showToast('تم قبول جميع ملفات تعريف الارتباط ✅','ok');
+  };
+  window._nbCookieNecessaryOnly=function(){
+    _nbCookieConsent('necessary');
+    /* حذف دفاعي لأي كوكيز غير ضرورية قد تكون اتحطت من مصدر خارجي — يضمن إن اختيار "الأساسية فقط" له أثر فعلي حقيقي */
+    try{
+      document.cookie.split(';').forEach(function(c){
+        var name=c.split('=')[0].trim();
+        if(name && !/^(nb-|__session)/.test(name)){
+          document.cookie=name+'=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+        }
+      });
+    }catch(e){}
+    if(typeof showToast==='function')showToast('تم تفعيل الملفات الضرورية فقط 🔒','ok');
   };
   document.addEventListener('DOMContentLoaded',function(){
     var consent=null;

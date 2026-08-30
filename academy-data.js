@@ -2580,9 +2580,11 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash-ip-phone':'vcash-phone';
 var refId=isIP?'vcash-ip-ref':'vcash-ref';
+var refcodeId=isIP?'vcash-ip-refcode':'vcash-refcode';
 var btnId=isIP?'vcash-ip-submit-btn':'vcash-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+var refCode=(document.getElementById(refcodeId).value||'').trim().toUpperCase();
 if(isIP){
 if(!phone||phone.length<3){
 if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
@@ -2598,6 +2600,7 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم هات�
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
+referralCode:refCode||null,
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -2726,6 +2729,7 @@ var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUs
 if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أولاً','err');return;}
 var phone=(document.getElementById('vcash2-phone').value||'').trim();
 var ref=(document.getElementById('vcash2-ref').value||'').trim();
+var refCode=(document.getElementById('vcash2-refcode').value||'').trim().toUpperCase();
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
 }
@@ -2735,6 +2739,7 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم هات�
 var btn=document.getElementById('vcash2-submit-btn');
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
+referralCode:refCode||null,
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -3022,6 +3027,7 @@ var u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.uid)?currentUs
 if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أولاً','err');return;}
 var phone=(document.getElementById('vcash3-phone').value||'').trim();
 var ref=(document.getElementById('vcash3-ref').value||'').trim();
+var refCode=(document.getElementById('vcash3-refcode').value||'').trim().toUpperCase();
 if(!phone||phone.length<10){
 if(typeof showToast==='function')showToast('برجاء إدخال رقم الهاتف المُرسِل','err');return;
 }
@@ -3031,6 +3037,7 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم هات�
 var btn=document.getElementById('vcash3-submit-btn');
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
+referralCode:refCode||null,
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -17479,9 +17486,11 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash7-ip-phone':'vcash7-phone';
 var refId=isIP?'vcash7-ip-ref':'vcash7-ref';
+var refcodeId=isIP?'vcash7-ip-refcode':'vcash7-refcode';
 var btnId=isIP?'vcash7-ip-submit-btn':'vcash7-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+var refCode=(document.getElementById(refcodeId).value||'').trim().toUpperCase();
 if(isIP){
 if(!phone||phone.length<3){
 if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
@@ -17497,6 +17506,7 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم هات�
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
+referralCode:refCode||null,
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -17639,9 +17649,11 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash4-ip-phone':'vcash4-phone';
 var refId=isIP?'vcash4-ip-ref':'vcash4-ref';
+var refcodeId=isIP?'vcash4-ip-refcode':'vcash4-refcode';
 var btnId=isIP?'vcash4-ip-submit-btn':'vcash4-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+var refCode=(document.getElementById(refcodeId).value||'').trim().toUpperCase();
 if(isIP){
 if(!phone||phone.length<3){
 if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
@@ -17657,6 +17669,7 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم هات�
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
+referralCode:refCode||null,
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -17798,9 +17811,11 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash5-ip-phone':'vcash5-phone';
 var refId=isIP?'vcash5-ip-ref':'vcash5-ref';
+var refcodeId=isIP?'vcash5-ip-refcode':'vcash5-refcode';
 var btnId=isIP?'vcash5-ip-submit-btn':'vcash5-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+var refCode=(document.getElementById(refcodeId).value||'').trim().toUpperCase();
 if(isIP){
 if(!phone||phone.length<3){
 if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
@@ -17816,6 +17831,7 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم هات�
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
+referralCode:refCode||null,
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -17957,9 +17973,11 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash6-ip-phone':'vcash6-phone';
 var refId=isIP?'vcash6-ip-ref':'vcash6-ref';
+var refcodeId=isIP?'vcash6-ip-refcode':'vcash6-refcode';
 var btnId=isIP?'vcash6-ip-submit-btn':'vcash6-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+var refCode=(document.getElementById(refcodeId).value||'').trim().toUpperCase();
 if(isIP){
 if(!phone||phone.length<3){
 if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
@@ -17975,6 +17993,7 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم هات�
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
+referralCode:refCode||null,
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -18116,9 +18135,11 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash8-ip-phone':'vcash8-phone';
 var refId=isIP?'vcash8-ip-ref':'vcash8-ref';
+var refcodeId=isIP?'vcash8-ip-refcode':'vcash8-refcode';
 var btnId=isIP?'vcash8-ip-submit-btn':'vcash8-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+var refCode=(document.getElementById(refcodeId).value||'').trim().toUpperCase();
 if(isIP){
 if(!phone||phone.length<3){
 if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
@@ -18134,6 +18155,7 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم هات�
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
+referralCode:refCode||null,
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -18274,9 +18296,11 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash9-ip-phone':'vcash9-phone';
 var refId=isIP?'vcash9-ip-ref':'vcash9-ref';
+var refcodeId=isIP?'vcash9-ip-refcode':'vcash9-refcode';
 var btnId=isIP?'vcash9-ip-submit-btn':'vcash9-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+var refCode=(document.getElementById(refcodeId).value||'').trim().toUpperCase();
 if(isIP){
 if(!phone||phone.length<3){
 if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
@@ -18292,6 +18316,7 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم هات�
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
+referralCode:refCode||null,
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -18432,9 +18457,11 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash10-ip-phone':'vcash10-phone';
 var refId=isIP?'vcash10-ip-ref':'vcash10-ref';
+var refcodeId=isIP?'vcash10-ip-refcode':'vcash10-refcode';
 var btnId=isIP?'vcash10-ip-submit-btn':'vcash10-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+var refCode=(document.getElementById(refcodeId).value||'').trim().toUpperCase();
 if(isIP){
 if(!phone||phone.length<3){
 if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
@@ -18450,6 +18477,7 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم هات�
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
+referralCode:refCode||null,
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -36845,9 +36873,11 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash11-ip-phone':'vcash11-phone';
 var refId=isIP?'vcash11-ip-ref':'vcash11-ref';
+var refcodeId=isIP?'vcash11-ip-refcode':'vcash11-refcode';
 var btnId=isIP?'vcash11-ip-submit-btn':'vcash11-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+var refCode=(document.getElementById(refcodeId).value||'').trim().toUpperCase();
 if(isIP){
 if(!phone||phone.length<3){
 if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
@@ -36863,6 +36893,7 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم هات�
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
+referralCode:refCode||null,
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,
@@ -37384,9 +37415,11 @@ if(!u){if(typeof showToast==='function')showToast('سجّل الدخول أول�
 var isIP=method==='instapay';
 var phoneId=isIP?'vcash12-ip-phone':'vcash12-phone';
 var refId=isIP?'vcash12-ip-ref':'vcash12-ref';
+var refcodeId=isIP?'vcash12-ip-refcode':'vcash12-refcode';
 var btnId=isIP?'vcash12-ip-submit-btn':'vcash12-submit-btn';
 var phone=(document.getElementById(phoneId).value||'').trim();
 var ref=(document.getElementById(refId).value||'').trim();
+var refCode=(document.getElementById(refcodeId).value||'').trim().toUpperCase();
 if(isIP){
 if(!phone||phone.length<3){
 if(typeof showToast==='function')showToast('برجاء إدخال اسم حساب انستاباي','err');return;
@@ -37402,6 +37435,7 @@ if(typeof showToast==='function')showToast('برجاء إدخال رقم هات�
 var btn=document.getElementById(btnId);
 if(btn){btn.disabled=true;btn.textContent='جاري الإرسال...';}
 db.collection('course_payments').add({
+referralCode:refCode||null,
 uid:u,
 email:(currentUser&&currentUser.email)||'',
 phone:phone,

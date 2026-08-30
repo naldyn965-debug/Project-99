@@ -399,6 +399,12 @@ body::before{content:'';position:fixed;inset:0;
         </div>
         <button class="broadcast-open-btn" onclick="openBroadcastModal()">📢 إرسال إشعار</button>
       </div>
+      <div class="sidebar-courses">
+        <div class="courses-heading">💼 مبيعات المسوّقين بالعمولة</div>
+        <div id="marketer-sales">
+          <div style="text-align:center;opacity:.35;font-size:12px;padding:6px 0">جاري التحميل...</div>
+        </div>
+      </div>
       <div class="sidebar-footer">
         <div class="sidebar-user-badge">
           <div class="sidebar-user-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
@@ -720,6 +726,48 @@ function updateStats() {
   document.getElementById('stat-rejected').textContent = rejected;
   document.getElementById('stat-revenue').textContent  = revenue + ' ج';
   updateEnrollments();
+  updateMarketers();
+}
+
+/* ── Marketer commission sales report ────────────── */
+function updateMarketers() {
+  var el = document.getElementById('marketer-sales');
+  if (!el) return;
+
+  var byCode = {};
+  allPayments.forEach(function(p) {
+    if (!p.referralCode) return;
+    var code = p.referralCode;
+    if (!byCode[code]) byCode[code] = { approved: 0, pending: 0, revenue: 0 };
+    if (p.status === 'approved') {
+      byCode[code].approved++;
+      byCode[code].revenue += (p.amount || 0);
+    } else if (p.status === 'pending') {
+      byCode[code].pending++;
+    }
+  });
+
+  var codes = Object.keys(byCode);
+  if (!codes.length) {
+    el.innerHTML = '<div style="text-align:center;opacity:.35;font-size:12px;padding:6px 0">لا يوجد مبيعات بكود مسوّق حتى الآن</div>';
+    return;
+  }
+
+  codes.sort(function(a, b) { return byCode[b].revenue - byCode[a].revenue; });
+
+  el.innerHTML = codes.map(function(code) {
+    var d = byCode[code];
+    var sub = [];
+    if (d.approved) sub.push('✅ ' + d.approved + ' عملية');
+    if (d.pending)  sub.push('⏳ ' + d.pending + ' معلّق');
+    return '<div class="course-enroll-row">' +
+      '<div>' +
+        '<div class="course-enroll-name">' + code + '</div>' +
+        '<div class="course-enroll-pending">' + sub.join(' · ') + '</div>' +
+      '</div>' +
+      '<div class="course-enroll-count">' + d.revenue + '<span style="font-size:9px;opacity:.6;display:block;font-weight:600">جنيه</span></div>' +
+    '</div>';
+  }).join('');
 }
 
 /* ── Studying Listener (academy_progress) ────────── */
