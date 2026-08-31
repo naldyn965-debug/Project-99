@@ -552,6 +552,12 @@ body::before{content:'';position:fixed;inset:0;
       <div class="mkdt-empty">جاري التحميل...</div>
     </div>
     <button class="mkdt-settle-btn" id="mkdt-settle-btn" onclick="askSettleMarketer()">✅ تم تصفية حساب المسوّق</button>
+
+    <div class="mkdt-days-title" style="margin-top:22px">🔗 دمج مع كود مسوّق آخر (لو نفس الشخص كتب اسمه بشكل مختلف)</div>
+    <select class="broadcast-select" id="mkdt-merge-target">
+      <option value="">اختر الكود اللي هيتضم له...</option>
+    </select>
+    <button class="mkdt-settle-btn" id="mkdt-merge-btn" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);margin-top:10px" onclick="askMergeMarketer()">🔗 دمج الكودين</button>
   </div>
 </div>
 
@@ -827,8 +833,20 @@ var currentMarketerCode = null;
 function openMarketerDetail(code) {
   currentMarketerCode = code;
   document.getElementById('mkdt-title').textContent = '💼 ' + code;
+  populateMergeDropdown(code);
   document.getElementById('marketer-detail-overlay').classList.add('on');
   renderMarketerDetail();
+}
+
+function populateMergeDropdown(currentCode) {
+  var allCodes = {};
+  allPayments.forEach(function(p) {
+    if (p.referralCode) allCodes[p.referralCode] = true;
+  });
+  var others = Object.keys(allCodes).filter(function(c) { return c !== currentCode; }).sort();
+  var sel = document.getElementById('mkdt-merge-target');
+  sel.innerHTML = '<option value="">اختر الكود اللي هيتضم له...</option>' +
+    others.map(function(c) { return '<option value="' + c.replace(/"/g,'&quot;') + '">' + c + '</option>'; }).join('');
 }
 
 function closeMarketerDetail() {
@@ -908,6 +926,37 @@ async function doSettleMarketer(code, docIds) {
   await batch.commit();
   closeMarketerDetail();
   showToast('تم تصفية حساب ' + code + ' بنجاح ✅', 'ok');
+}
+
+function askMergeMarketer() {
+  if (!currentMarketerCode) return;
+  var target = document.getElementById('mkdt-merge-target').value;
+  if (!target) { showToast('اختر الكود اللي هيتضم له الأول', 'err'); return; }
+
+  var fromCode = currentMarketerCode;
+  var docIds = allPayments.filter(function(p) { return p.referralCode === fromCode; }).map(function(p) { return p._id; });
+  if (!docIds.length) return;
+
+  pendingAction = { type: 'merge-marketer', fromCode: fromCode, toCode: target, docIds: docIds };
+  document.getElementById('confirm-ico').textContent   = '🔗';
+  document.getElementById('confirm-title').textContent = 'دمج الكودين';
+  document.getElementById('confirm-msg').textContent   =
+    'هيتم نقل كل عمليات "' + fromCode + '" (' + docIds.length + ' عملية) لتنضم تحت كود "' + target +
+    '" بشكل نهائي، متضمنة أي عمليات مُصفّاة من قبل. الإجراء ده لا يمكن التراجع عنه تلقائياً.';
+  document.getElementById('confirm-note').style.display = 'none';
+  document.getElementById('confirm-ok-btn').textContent = '🔗 تأكيد الدمج';
+  document.getElementById('confirm-ok-btn').style.background = 'linear-gradient(135deg,#3b82f6,#1d4ed8)';
+  document.getElementById('confirm-overlay').classList.add('on');
+}
+
+async function doMergeMarketer(fromCode, toCode, docIds) {
+  const batch = db.batch();
+  docIds.forEach(function(docId) {
+    batch.update(db.collection('course_payments').doc(docId), { referralCode: toCode });
+  });
+  await batch.commit();
+  closeMarketerDetail();
+  showToast('تم دمج "' + fromCode + '" داخل "' + toCode + '" بنجاح 🔗', 'ok');
 }
 
 /* ── Studying Listener (academy_progress) ────────── */
@@ -1296,6 +1345,8 @@ async function confirmAction() {
       await doSendBroadcast(pendingAction);
     } else if (pendingAction.type === 'settle-marketer') {
       await doSettleMarketer(pendingAction.code, pendingAction.docIds);
+    } else if (pendingAction.type === 'merge-marketer') {
+      await doMergeMarketer(pendingAction.fromCode, pendingAction.toCode, pendingAction.docIds);
     } else {
       const note = (document.getElementById('confirm-note').value || '').trim();
       await doReject(pendingAction.docId, note);
@@ -1304,7 +1355,7 @@ async function confirmAction() {
   } catch(e) {
     showToast('خطأ: ' + e.message, 'err');
     btn.disabled = false;
-    const labels = { approve: '✅ قبول وتفعيل', reject: '❌ رفض الطلب', delete: '🗑️ حذف نهائياً', 'send-notif': '📤 تأكيد الإرسال', 'settle-marketer': '✅ تأكيد التصفية' };
+    const labels = { approve: '✅ قبول وتفعيل', reject: '❌ رفض الطلب', delete: '🗑️ حذف نهائياً', 'send-notif': '📤 تأكيد الإرسال', 'settle-marketer': '✅ تأكيد التصفية', 'merge-marketer': '🔗 تأكيد الدمج' };
     btn.textContent = labels[pendingAction.type] || 'تأكيد';
   }
 }
