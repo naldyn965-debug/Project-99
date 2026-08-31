@@ -558,6 +558,8 @@ body::before{content:'';position:fixed;inset:0;
       <option value="">اختر الكود اللي هيتضم له...</option>
     </select>
     <button class="mkdt-settle-btn" id="mkdt-merge-btn" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);margin-top:10px" onclick="askMergeMarketer()">🔗 دمج الكودين</button>
+
+    <button class="mkdt-settle-btn" id="mkdt-delete-btn" style="background:transparent;border:1.5px solid rgba(239,68,68,.3);color:#f87171;margin-top:18px" onclick="askDeleteMarketer()">🗑️ حذف هذا المسوّق</button>
   </div>
 </div>
 
@@ -959,6 +961,36 @@ async function doMergeMarketer(fromCode, toCode, docIds) {
   showToast('تم دمج "' + fromCode + '" داخل "' + toCode + '" بنجاح 🔗', 'ok');
 }
 
+function askDeleteMarketer() {
+  if (!currentMarketerCode) return;
+  var code = currentMarketerCode;
+  var docIds = allPayments.filter(function(p) { return p.referralCode === code; }).map(function(p) { return p._id; });
+  if (!docIds.length) return;
+
+  pendingAction = { type: 'delete-marketer', code: code, docIds: docIds };
+  document.getElementById('confirm-ico').textContent   = '🗑️';
+  document.getElementById('confirm-title').textContent = 'حذف المسوّق ' + code;
+  document.getElementById('confirm-msg').textContent   =
+    'هيتشال كود "' + code + '" من ' + docIds.length + ' عملية بيع، فيختفي المسوّق ده من القائمة نهائياً. ' +
+    'عمليات البيع والمبالغ نفسها هتفضل موجودة في إيراداتك — بس هتفقد ربطها بهذا المسوّق تحديداً، ولا يمكن التراجع عن الحذف.';
+  document.getElementById('confirm-note').style.display = 'none';
+  document.getElementById('confirm-ok-btn').textContent = '🗑️ تأكيد الحذف';
+  document.getElementById('confirm-ok-btn').style.background = 'var(--rejected)';
+  document.getElementById('confirm-overlay').classList.add('on');
+}
+
+async function doDeleteMarketer(code, docIds) {
+  const batch = db.batch();
+  docIds.forEach(function(docId) {
+    batch.update(db.collection('course_payments').doc(docId), {
+      referralCode: firebase.firestore.FieldValue.delete()
+    });
+  });
+  await batch.commit();
+  closeMarketerDetail();
+  showToast('تم حذف المسوّق ' + code + ' 🗑️', 'ok');
+}
+
 /* ── Studying Listener (academy_progress) ────────── */
 function startStudyingListener() {
   if (studyingUnsubscribe) { studyingUnsubscribe(); studyingUnsubscribe = null; }
@@ -1347,6 +1379,8 @@ async function confirmAction() {
       await doSettleMarketer(pendingAction.code, pendingAction.docIds);
     } else if (pendingAction.type === 'merge-marketer') {
       await doMergeMarketer(pendingAction.fromCode, pendingAction.toCode, pendingAction.docIds);
+    } else if (pendingAction.type === 'delete-marketer') {
+      await doDeleteMarketer(pendingAction.code, pendingAction.docIds);
     } else {
       const note = (document.getElementById('confirm-note').value || '').trim();
       await doReject(pendingAction.docId, note);
@@ -1355,7 +1389,7 @@ async function confirmAction() {
   } catch(e) {
     showToast('خطأ: ' + e.message, 'err');
     btn.disabled = false;
-    const labels = { approve: '✅ قبول وتفعيل', reject: '❌ رفض الطلب', delete: '🗑️ حذف نهائياً', 'send-notif': '📤 تأكيد الإرسال', 'settle-marketer': '✅ تأكيد التصفية', 'merge-marketer': '🔗 تأكيد الدمج' };
+    const labels = { approve: '✅ قبول وتفعيل', reject: '❌ رفض الطلب', delete: '🗑️ حذف نهائياً', 'send-notif': '📤 تأكيد الإرسال', 'settle-marketer': '✅ تأكيد التصفية', 'merge-marketer': '🔗 تأكيد الدمج', 'delete-marketer': '🗑️ تأكيد الحذف' };
     btn.textContent = labels[pendingAction.type] || 'تأكيد';
   }
 }
