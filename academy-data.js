@@ -31851,6 +31851,7 @@ else{acSwitchCourse('glp');acGo('info',null);}
 });
 }
 else if(id==='land-reclamation'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
+else if(id==='biofertilizers-professional'){acSwitchCourse(id);resume?NAcademy.openFirst():acGo('home',null);}
 else if(id==='plant-diseases'){
 if(!(typeof currentUser!=='undefined'&&currentUser)){
 /* Guest — no forced login anymore: show the free info/preview page instead. */
