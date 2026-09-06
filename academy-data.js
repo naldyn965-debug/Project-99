@@ -1087,6 +1087,22 @@ var ldCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'la
 '</div>'+
 ldBottom+
 '</div></div>';
+var bfPct=_acPctFor('biofertilizers-professional',BF_COURSE);var bfDone=_acDoneFor('biofertilizers-professional');
+var bfBadge='<span class="acad-pop-badge">'+STAR_ICO+'Free</span>';
+var bfBottom=(bfDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+bfPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+bfPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>');
+var bfCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'biofertilizers-professional\')" role="button" style="border-color:rgba(5,150,105,.25)">'+
+'<div class="acad-cat-card-top" style="background:#062018">'+bfBadge+'</div>'+
+'<div class="acad-cat-card-body">'+
+'<div class="acad-cat-card-kicker" style="color:#059669">'+BF_COURSE.kicker+'</div>'+
+'<div class="acad-cat-card-title">'+BF_COURSE.title+'</div>'+
+'<div class="acad-cat-card-desc">'+BF_COURSE.subtitle+'</div>'+
+'<div class="acad-cat-card-meta">'+
+'<span class="acad-chip-pro">'+CLOCK_ICO+BF_COURSE.duration+'</span>'+
+'<span class="acad-chip-pro">'+BARS_ICO+BF_COURSE.level+'</span>'+
+'<span class="acad-chip-pro gold">'+CERT_ICO+'شهادة إتمام</span>'+
+'</div>'+
+bfBottom+
+'</div></div>';
 return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-back" role="button" onclick="showPage(\'home\')">‹ الرئيسية</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
@@ -1094,7 +1110,7 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-sub">محتوى علمي موثّق باللغة العربية من فريق نبتيكس. اختر دورة لتبدأ رحلة التعلّم.</div>'+
 '</div></div>'+
 '<div class="acad-course-section"><div class="acad-wrap">'+
-'<div class="acad-cat-grid">'+liveCard+molBioCard+fqCard+agCard+foodSafetyCard+glpCard+lrCard+tcCard+ptCard+feedCard+fmbCard+pdCard+biCard+ldCard+'</div>'+
+'<div class="acad-cat-grid">'+liveCard+molBioCard+fqCard+agCard+foodSafetyCard+glpCard+lrCard+tcCard+ptCard+feedCard+fmbCard+pdCard+biCard+ldCard+bfCard+'</div>'+
 '</div></div>'}
 
 /* ── HOME ─────────────────────────────────────────────────── */
