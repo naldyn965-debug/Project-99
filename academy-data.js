@@ -872,9 +872,13 @@ window.acIco=acIco; /* تعريض عالمي — يستخدمه renderUnifiedHom
    purchase/login logic — clicking into a path just filters the same
    Course Cards built by acBuildCatalogCards() below. To add a course to
    a path later, append its existing Course ID to that path's `courses`
-   array — nothing else needs to change. ── */
+   array — nothing else needs to change. 'الشعبة العامة' uses the
+   'ALL' sentinel instead of a fixed list, so it always shows every
+   current AND future course automatically (it just mirrors
+   AC_CATALOG_ORDER below — no manual edit needed when a course is added). ── */
+var AC_CATALOG_ORDER=['pest','mol-bio','food-quality','ag-english','food-safety','glp','land-reclamation','tissue-culture','pesticide-tech','feed-mgmt','food-microbiology','plant-diseases','bioinformatics','landscape-design'];
 var AC_LEARNING_PATHS=[
-{id:'general',title:'الشعبة العامة',desc:'كورسات عامة تناسب كل المهتمين بالزراعة',color:'#1B6B3A',img:'https://images.unsplash.com/photo-1719665269650-5521f31420f3?auto=format&fit=crop&w=900&q=70',courses:['ag-english','bioinformatics']},
+{id:'general',title:'الشعبة العامة',desc:'كل كورسات نبتيكس أكاديمي في مكان واحد',color:'#1B6B3A',img:'https://images.unsplash.com/photo-1719665269650-5521f31420f3?auto=format&fit=crop&w=900&q=70',courses:'ALL'},
 {id:'biotech',title:'التكنولوجيا الحيوية',desc:'من البيولوجيا الجزيئية إلى ممارسات المعامل الجيدة',color:'#2563eb',img:'https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=900&q=70',courses:['mol-bio','glp']},
 {id:'plant-production',title:'الإنتاج النباتي',desc:'زراعة الأنسجة النباتية وتصميم المناظر الطبيعية',color:'#16a34a',img:'https://images.unsplash.com/photo-1622210445956-ca3320a5e7c5?auto=format&fit=crop&w=900&q=70',courses:['tissue-culture','landscape-design']},
 {id:'animal-production',title:'الإنتاج الحيواني',desc:'إدارة الأعلاف وبرامج التغذية للثروة الحيوانية',color:'#92400e',img:'https://images.unsplash.com/photo-1752219346775-fe086c57081b?auto=format&fit=crop&w=900&q=70',courses:['feed-mgmt']},
@@ -887,7 +891,7 @@ var AC_LEARNING_PATHS=[
 function acRenderLearningPathsSection(){
 var PARROW='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
 var cards=AC_LEARNING_PATHS.map(function(p){
-var cnt=p.courses.length;
+var cnt=(p.courses==='ALL')?AC_CATALOG_ORDER.length:p.courses.length;
 var cntLabel=cnt===1?'كورس واحد':(cnt===2?'كورسان':cnt+' كورسات');
 return '<div class="acad-path-card" onclick="NAcademy.openPath(\''+p.id+'\')" role="button">'+
 '<div class="acad-path-card-top" style="background-image:url(\''+p.img+'\')"></div>'+
@@ -911,7 +915,8 @@ var path=null;
 for(var i=0;i<AC_LEARNING_PATHS.length;i++)if(AC_LEARNING_PATHS[i].id===pathId){path=AC_LEARNING_PATHS[i];break}
 if(!path)return acRenderCatalog();
 var CARDS=acBuildCatalogCards();
-var grid=path.courses.map(function(id){return CARDS[id]||''}).join('');
+var ids=(path.courses==='ALL')?AC_CATALOG_ORDER:path.courses;
+var grid=ids.map(function(id){return CARDS[id]||''}).join('');
 return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-back" role="button" onclick="NAcademy.goCatalog()">‹ الأكاديمية</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
@@ -927,7 +932,6 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
    the shared card map so acRenderPathView() can reuse the same cards. */
 function acRenderCatalog(){
 var CARDS=acBuildCatalogCards();
-var ORDER=['pest','mol-bio','food-quality','ag-english','food-safety','glp','land-reclamation','tissue-culture','pesticide-tech','feed-mgmt','food-microbiology','plant-diseases','bioinformatics','landscape-design'];
 return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-back" role="button" onclick="showPage(\'home\')">‹ الرئيسية</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
@@ -936,7 +940,7 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '</div></div>'+
 acRenderLearningPathsSection()+
 '<div class="acad-course-section"><div class="acad-wrap">'+
-'<div class="acad-cat-grid">'+ORDER.map(function(id){return CARDS[id]||''}).join('')+'</div>'+
+'<div class="acad-cat-grid">'+AC_CATALOG_ORDER.map(function(id){return CARDS[id]||''}).join('')+'</div>'+
 '</div></div>'}
 
 /* Builds every catalog Course Card (id → HTML string). Body unchanged
