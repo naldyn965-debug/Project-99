@@ -6359,20 +6359,26 @@ body.modal-open { overflow: hidden; }
 .acad-path-card-desc{font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:12px}
 .acad-path-card-meta{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:14px}
 .acad-path-card-cta{
+  position:relative;
   display:inline-flex;align-items:center;gap:6px;
   padding:9px 18px;border-radius:999px;
   background:var(--pc);color:#fff;
   font-size:12.5px;font-weight:800;
   box-shadow:0 4px 14px var(--pc-g),0 1px 2px rgba(0,0,0,.1);
   transition:transform .25s var(--ease-spring,cubic-bezier(.34,1.56,.64,1)),box-shadow .25s;
+}
+.acad-path-card-cta::after{
+  content:'';position:absolute;inset:-7px;z-index:-1;
+  border-radius:inherit;background:var(--pc);
+  filter:blur(11px);pointer-events:none;
   animation:acPathCtaGlow 2.6s ease-in-out infinite;
 }
 .acad-path-card-cta svg{width:13px;height:13px;transition:transform .25s var(--ease-spring,cubic-bezier(.34,1.56,.64,1))}
 .acad-path-card:hover .acad-path-card-cta{gap:10px;transform:translateY(-2px);box-shadow:0 8px 22px var(--pc-g)}
 .acad-path-card:hover .acad-path-card-cta svg{transform:translateX(-3px)}
 @keyframes acPathCtaGlow{
-  0%,100%{box-shadow:0 4px 14px var(--pc-g),0 1px 2px rgba(0,0,0,.1)}
-  50%{box-shadow:0 4px 24px var(--pc-g),0 1px 2px rgba(0,0,0,.1)}
+  0%,100%{opacity:.35;transform:scale(1)}
+  50%{opacity:.75;transform:scale(1.08)}
 }
 .acad-path-empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px}
 @media(max-width:600px){
