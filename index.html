@@ -6415,16 +6415,21 @@ body.modal-open { overflow: hidden; }
     });
   }
 
-  /* Hook showPage */
-  var _orig=window.showPage;
-  if(typeof _orig==='function'){
-    window.showPage=function(pg){
-      _orig.apply(this,arguments);
-      if(pg==='academy')setTimeout(acObserve,160);
-    };
-  }
-  /* Also fire if page already visible on load */
+  /* Hook showPage — deferred to DOMContentLoaded: this <script> tag is
+     parsed/run earlier in the document than the real `function showPage`
+     declaration further down, so window.showPage was still undefined at
+     this point and the wrap below used to silently no-op. Waiting for
+     DOMContentLoaded guarantees showPage already exists (all synchronous
+     scripts, including its declaration, have run by then). */
   document.addEventListener('DOMContentLoaded',function(){
+    var _orig=window.showPage;
+    if(typeof _orig==='function'){
+      window.showPage=function(pg){
+        _orig.apply(this,arguments);
+        if(pg==='academy')setTimeout(acObserve,160);
+      };
+    }
+    /* Also fire if page already visible on load */
     var pg=document.getElementById('pg-academy');
     if(pg&&getComputedStyle(pg).display!=='none')setTimeout(acObserve,200);
   });
