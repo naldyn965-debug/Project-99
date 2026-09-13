@@ -19995,6 +19995,19 @@ button,
       padding:32px 0 26px !important;
     }
   }
+
+  /* Gap to the section right after the catalog hero ("المسارات
+     التعليمية"). Sibling-scoped (.acad-hero--catalog + ...) so only
+     THIS section-section is affected — the identical .acad-course-section
+     class used on Learning-Path pages is untouched. */
+  .acad-hero--catalog + .acad-course-section{
+    padding-top:28px !important;
+  }
+  @media(max-width:600px){
+    .acad-hero--catalog + .acad-course-section{
+      padding-top:22px !important;
+    }
+  }
 </style>
 
 <!-- ── BOTTOM CLEARANCE FIX ──
