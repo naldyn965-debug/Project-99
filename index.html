@@ -20080,6 +20080,20 @@ body {
 .nav-actions .btn-nav-o     { display: none !important; }
 .ham                        { display: flex !important; }
 
+/* ─── HIDE PROFILE AVATAR IN TOP NAV ─────────────────────────────
+   Profile access already exists via the bottom nav (ملفي) and
+   logout via the hamburger menu (#mobLogout), so the avatar icon
+   here is redundant. Kept in the DOM (display:none only) rather
+   than removed: the login/logout script sets
+   #userMenu.style.display='block'/'none' directly with no null
+   check, so deleting the element would throw on every auth change.
+   This override just always wins over that inline style. The other
+   nav-icon-btn buttons (theme, bell) and their gap/alignment are
+   untouched — removing this one from the flex row lets them sit
+   together normally.
+─────────────────────────────────────────────────────────────────── */
+#userMenu                   { display: none !important; }
+
 /* ─── DOWNLOAD APP BUTTON in mob-menu ───────────────────────────
    يبان بشكل مختلف عن روابط التنقل العادية
 ─────────────────────────────────────────────────────────────────── */
