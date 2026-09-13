@@ -6323,13 +6323,13 @@ body.modal-open { overflow: hidden; }
    17. STAGGER CARD ENTRANCE — via JS observer
    ══════════════════════════════════════════════════════════ */
 /* State: hidden (added by JS before observing) */
-.acad-cat-card.ac-hide,.acad-path-card.ac-hide{opacity:0;transform:translateY(22px)}
+.acad-cat-card.ac-hide,.acad-path-card.ac-hide{opacity:0;transform:translateY(22px);will-change:opacity,transform}
 /* State: revealed (added by observer) */
 .acad-cat-card.ac-show,.acad-path-card.ac-show{
   opacity:1 !important;transform:translateY(0) !important;
   transition:opacity .52s var(--ac-out,cubic-bezier(.16,1,.3,1)),
-             transform .52s var(--ac-out,cubic-bezier(.16,1,.3,1)),
-             box-shadow .32s,border-color .22s !important;
+             transform .52s var(--ac-out,cubic-bezier(.16,1,.3,1)) !important;
+  will-change:opacity,transform;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -6394,8 +6394,9 @@ body.modal-open { overflow: hidden; }
   var io=new IntersectionObserver(function(entries){
     entries.forEach(function(e){
       var el=e.target,d=+(el.dataset.acD||0);
+      if(el._acT)clearTimeout(el._acT);
       if(e.isIntersecting){
-        setTimeout(function(){
+        el._acT=setTimeout(function(){
           el.classList.remove('ac-hide');
           el.classList.add('ac-show');
         },d);
