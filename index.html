@@ -6432,6 +6432,16 @@ body.modal-open { overflow: hidden; }
         if(pg==='academy')setTimeout(acObserve,160);
       };
     }
+    /* Also hook NAcademy.openPath so the same entrance animation plays on
+       the course cards (.acad-cat-card) rendered inside each of the 7
+       learning paths, not just the top-level path cards. */
+    if(window.NAcademy&&typeof window.NAcademy.openPath==='function'){
+      var _origOpenPath=window.NAcademy.openPath;
+      window.NAcademy.openPath=function(){
+        _origOpenPath.apply(this,arguments);
+        setTimeout(acObserve,160);
+      };
+    }
     /* Also fire if page already visible on load */
     var pg=document.getElementById('pg-academy');
     if(pg&&getComputedStyle(pg).display!=='none')setTimeout(acObserve,200);
