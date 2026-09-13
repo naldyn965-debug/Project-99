@@ -879,7 +879,7 @@ window.acIco=acIco; /* تعريض عالمي — يستخدمه renderUnifiedHom
 var AC_CATALOG_ORDER=['pest','mol-bio','food-quality','ag-english','food-safety','glp','land-reclamation','tissue-culture','pesticide-tech','feed-mgmt','food-microbiology','plant-diseases','bioinformatics','landscape-design'];
 var AC_LEARNING_PATHS=[
 {id:'general',title:'الشعبة العامة',desc:'كل كورسات نبتيكس أكاديمي في مكان واحد',color:'#1B6B3A',img:'https://images.unsplash.com/photo-1719665269650-5521f31420f3?auto=format&fit=crop&w=900&q=70',courses:'ALL'},
-{id:'biotech',title:'التكنولوجيا الحيوية',desc:'من البيولوجيا الجزيئية إلى ممارسات المعامل الجيدة',color:'#2563eb',img:'https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=900&q=70',courses:['mol-bio','glp']},
+{id:'biotech',title:'التكنولوجيا الحيوية',desc:'من البيولوجيا الجزيئية إلى ممارسات المعامل الجيدة',color:'#2563eb',img:'https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=900&q=70',courses:['mol-bio','glp','bioinformatics']},
 {id:'plant-production',title:'الإنتاج النباتي',desc:'زراعة الأنسجة النباتية وتصميم المناظر الطبيعية',color:'#16a34a',img:'https://images.unsplash.com/photo-1622210445956-ca3320a5e7c5?auto=format&fit=crop&w=900&q=70',courses:['tissue-culture','landscape-design']},
 {id:'animal-production',title:'الإنتاج الحيواني',desc:'إدارة الأعلاف وبرامج التغذية للثروة الحيوانية',color:'#92400e',img:'https://images.unsplash.com/photo-1752219346775-fe086c57081b?auto=format&fit=crop&w=900&q=70',courses:['feed-mgmt']},
 {id:'plant-protection',title:'وقاية النبات',desc:'تشخيص وإدارة أمراض وآفات النبات ومكافحتها',color:'#dc2626',img:'https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=900&q=70',courses:['plant-diseases','pest','pesticide-tech']},
@@ -901,7 +901,7 @@ return '<div class="acad-path-card" onclick="NAcademy.openPath(\''+p.id+'\')" ro
 '<div class="acad-path-card-meta">'+cntLabel+'</div>'+
 '<div class="acad-path-card-cta" style="color:'+p.color+'">استكشف المسار '+PARROW+'</div>'+
 '</div></div>'}).join('');
-return '<div class="acad-course-section" style="padding-bottom:8px"><div class="acad-wrap">'+
+return '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-section-title">المسارات التعليمية</div>'+
 '<div class="acad-path-grid">'+cards+'</div>'+
 '</div></div>'}
@@ -917,7 +917,7 @@ if(!path)return acRenderCatalog();
 var CARDS=acBuildCatalogCards();
 var ids=(path.courses==='ALL')?AC_CATALOG_ORDER:path.courses;
 var grid=ids.map(function(id){return CARDS[id]||''}).join('');
-return '<div class="acad-hero"><div class="acad-hero-inner">'+
+return '<div class="acad-hero acad-hero--path-'+path.id+'"><div class="acad-hero-inner">'+
 '<div class="acad-hero-back" role="button" onclick="NAcademy.goCatalog()">‹ الأكاديمية</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
 '<div class="acad-hero-title">'+path.title+'</div>'+
@@ -927,21 +927,20 @@ return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-cat-grid">'+(grid||'<div class="acad-path-empty">لا توجد كورسات في هذا المسار حالياً</div>')+'</div>'+
 '</div></div>'}
 
-/* Thin wrapper: hero + Learning Paths section + the full course grid,
-   in the original order — identical output to before, just built from
-   the shared card map so acRenderPathView() can reuse the same cards. */
+/* Thin wrapper: hero + Learning Paths section only. The flat course
+   grid that used to render here was removed on request — courses now
+   surface exclusively through their Learning Path (المسارات التعليمية),
+   including 'الشعبة العامة' which covers every course via the 'ALL'
+   sentinel. acBuildCatalogCards()/AC_CATALOG_ORDER are unused here now
+   but stay intact for acRenderPathView() below, which still needs them. */
 function acRenderCatalog(){
-var CARDS=acBuildCatalogCards();
 return '<div class="acad-hero"><div class="acad-hero-inner">'+
 '<div class="acad-hero-back" role="button" onclick="showPage(\'home\')">‹ الرئيسية</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
 '<div class="acad-hero-title">دوراتنا التعليمية</div>'+
 '<div class="acad-hero-sub">محتوى علمي موثّق باللغة العربية من فريق نبتيكس. اختر دورة لتبدأ رحلة التعلّم.</div>'+
 '</div></div>'+
-acRenderLearningPathsSection()+
-'<div class="acad-course-section"><div class="acad-wrap">'+
-'<div class="acad-cat-grid">'+AC_CATALOG_ORDER.map(function(id){return CARDS[id]||''}).join('')+'</div>'+
-'</div></div>'}
+acRenderLearningPathsSection()}
 
 /* Builds every catalog Course Card (id → HTML string). Body unchanged
    from the original acRenderCatalog() — only the ending changed from
