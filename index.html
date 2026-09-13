@@ -6392,20 +6392,24 @@ body.modal-open { overflow: hidden; }
   if(!window.IntersectionObserver)return;
   var io=new IntersectionObserver(function(entries){
     entries.forEach(function(e){
-      var el=e.target,d=+(el.dataset.acD||0);
+      var el=e.target;
       if(el._acT)clearTimeout(el._acT);
       if(e.isIntersecting){
+        var d=el.dataset.acSeen?0:+(el.dataset.acD||0);
         el._acT=setTimeout(function(){
           requestAnimationFrame(function(){
             requestAnimationFrame(function(){
               el.classList.remove('ac-hide');
               el.classList.add('ac-show');
+              el.dataset.acSeen='1';
             });
           });
         },d);
       }else{
-        el.classList.remove('ac-show');
-        el.classList.add('ac-hide');
+        el._acT=setTimeout(function(){
+          el.classList.remove('ac-show');
+          el.classList.add('ac-hide');
+        },220);
       }
     });
   },{threshold:.1,rootMargin:'0px 0px -32px 0px'});
