@@ -19960,19 +19960,16 @@ button,
      Course-page and Learning-Path heroes (.acad-hero--<courseId> /
      .acad-hero--path-<id>) are untouched. Placed after all academy
      hero styles so it wins the cascade; no existing rule is altered.
+     The breadcrumb (.acad-hero-back) and badge (.acad-hero-badge)
+     were removed from this hero's markup entirely, so no override
+     for them is needed here anymore.
 ─────────────────────────────────────── -->
 <style id="nb-acad-catalog-hero-compact">
   .acad-hero.acad-hero--catalog{
-    padding:40px 0 32px !important;
-  }
-  .acad-hero--catalog .acad-hero-back{
-    margin-bottom:12px !important;
-  }
-  .acad-hero--catalog .acad-hero-badge{
-    margin-bottom:14px !important;
+    padding:34px 0 28px !important;
   }
   .acad-hero--catalog .acad-hero-title{
-    font-size:clamp(1.7rem,4.6vw,2.6rem) !important;
+    font-size:clamp(1.6rem,4.2vw,2.4rem) !important;
     margin-bottom:10px !important;
   }
   .acad-hero--catalog .acad-hero-sub{
@@ -19981,7 +19978,7 @@ button,
   }
   @media(max-width:600px){
     .acad-hero.acad-hero--catalog{
-      padding:32px 0 26px !important;
+      padding:26px 0 22px !important;
     }
   }
 

@@ -935,8 +935,6 @@ return '<div class="acad-hero acad-hero--path-'+path.id+'"><div class="acad-hero
    but stay intact for acRenderPathView() below, which still needs them. */
 function acRenderCatalog(){
 return '<div class="acad-hero acad-hero--catalog"><div class="acad-hero-inner">'+
-'<div class="acad-hero-back" role="button" onclick="showPage(\'home\')">‹ الرئيسية</div>'+
-'<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
 '<div class="acad-hero-title">دوراتنا التعليمية</div>'+
 '<div class="acad-hero-sub">محتوى علمي موثّق باللغة العربية من فريق نبتيكس. اختر دورة لتبدأ رحلة التعلّم.</div>'+
 '</div></div>'+
