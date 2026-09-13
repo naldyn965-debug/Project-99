@@ -6393,20 +6393,23 @@ body.modal-open { overflow: hidden; }
   if(!window.IntersectionObserver)return;
   var io=new IntersectionObserver(function(entries){
     entries.forEach(function(e){
-      if(!e.isIntersecting)return;
       var el=e.target,d=+(el.dataset.acD||0);
-      setTimeout(function(){
-        el.classList.remove('ac-hide');
-        el.classList.add('ac-show');
-      },d);
-      io.unobserve(el);
+      if(e.isIntersecting){
+        setTimeout(function(){
+          el.classList.remove('ac-hide');
+          el.classList.add('ac-show');
+        },d);
+      }else{
+        el.classList.remove('ac-show');
+        el.classList.add('ac-hide');
+      }
     });
   },{threshold:.1,rootMargin:'0px 0px -32px 0px'});
 
   function acObserve(){
-    var cards=document.querySelectorAll('#pg-academy .acad-cat-card:not(.ac-show), #pg-academy .acad-path-card:not(.ac-show)');
+    var cards=document.querySelectorAll('#pg-academy .acad-cat-card, #pg-academy .acad-path-card');
     cards.forEach(function(c,i){
-      if(!c.classList.contains('ac-hide')){
+      if(!c.classList.contains('ac-hide')&&!c.classList.contains('ac-show')){
         c.classList.add('ac-hide');
         c.dataset.acD=i*75;
       }
