@@ -9213,6 +9213,7 @@ const App = {
 
   _renderUnifiedHome(cnt){
     var name = (currentUser && (currentUser.displayName || currentUser.email.split('@')[0])) || '';
+    var firstName = name ? name.trim().split(/\s+/)[0] : '';
     var nbInitials = _nbAvatarInitials(currentUser && currentUser.displayName) || (name?name.trim().charAt(0).toUpperCase():'N');
     var avatarHTML = (currentUser && currentUser.photoURL)
       ? '<img decoding="async" src="'+currentUser.photoURL+'" alt="'+name+'" class="nb-h2-avatar-img">'
@@ -9236,7 +9237,7 @@ const App = {
       '<div class="nb-h2-hero-motif" aria-hidden="true"><svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><path d="M-20 320C40 260 55 205 38 145C22 88 58 45 118 -8" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M38 145C38 145 88 133 116 92" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M58 195C58 195 98 188 122 156" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M345 305C303 244 322 183 362 141C393 107 382 58 340 16" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M362 141C362 141 320 134 294 98" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>'+
       '<div class="nb-h2-top">'+
         '<div class="nb-h2-greet-wrap">'+
-          '<div class="nb-h2-greet">👋 '+this._nbGreetWord()+(name?'، '+name:'')+'</div>'+
+          '<div class="nb-h2-greet">👋 '+this._nbGreetWord()+(firstName?'، '+firstName:'')+'</div>'+
           '<div class="nb-h2-greet-sub">تعلّم في أي وقت وأي مكان</div>'+
         '</div>'+
         '<div class="nb-h2-avatar" onclick="showPage(\'profile\')" role="button" aria-label="ملفي الشخصي">'+avatarHTML+'</div>'+
