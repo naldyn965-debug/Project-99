@@ -899,7 +899,7 @@ return '<div class="acad-path-card" onclick="NAcademy.openPath(\''+p.id+'\')" ro
 '<div class="acad-path-card-title">'+p.title+'</div>'+
 '<div class="acad-path-card-desc">'+p.desc+'</div>'+
 '<div class="acad-path-card-meta">'+cntLabel+'</div>'+
-'<div class="acad-path-card-cta" style="--pc:'+p.color+';--pc-g:'+p.color+'55">استكشف المسار '+PARROW+'</div>'+
+'<div class="acad-path-card-cta" style="--pc:'+p.color+';--pc-g:'+p.color+'40">استكشف المسار '+PARROW+'</div>'+
 '</div></div>'}).join('');
 return '<div class="acad-course-section"><div class="acad-wrap">'+
 '<div class="acad-section-title">المسارات التعليمية</div>'+
