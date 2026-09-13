@@ -6408,17 +6408,16 @@ body.modal-open { overflow: hidden; }
 (function(){
   if(!window.IntersectionObserver)return;
   var io=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
+    entries.forEach(function(e,i){
       var el=e.target;
       if(el._acT)clearTimeout(el._acT);
       if(e.isIntersecting){
-        var d=el.dataset.acSeen?0:+(el.dataset.acD||0);
+        var d=Math.min(i*70,280);
         el._acT=setTimeout(function(){
           requestAnimationFrame(function(){
             requestAnimationFrame(function(){
               el.classList.remove('ac-hide');
               el.classList.add('ac-show');
-              el.dataset.acSeen='1';
             });
           });
         },d);
@@ -6433,10 +6432,9 @@ body.modal-open { overflow: hidden; }
 
   function acObserve(){
     var cards=document.querySelectorAll('#pg-academy .acad-cat-card, #pg-academy .acad-path-card');
-    cards.forEach(function(c,i){
+    cards.forEach(function(c){
       if(!c.classList.contains('ac-hide')&&!c.classList.contains('ac-show')){
         c.classList.add('ac-hide');
-        c.dataset.acD=i*75;
       }
       /* one rAF so hide paint lands before observer fires */
       requestAnimationFrame(function(){io.observe(c);});
