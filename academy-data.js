@@ -878,13 +878,13 @@ window.acIco=acIco; /* تعريض عالمي — يستخدمه renderUnifiedHom
    AC_CATALOG_ORDER below — no manual edit needed when a course is added). ── */
 var AC_CATALOG_ORDER=['pest','mol-bio','food-quality','ag-english','food-safety','glp','land-reclamation','tissue-culture','pesticide-tech','feed-mgmt','food-microbiology','plant-diseases','bioinformatics','landscape-design'];
 var AC_LEARNING_PATHS=[
-{id:'general',title:'الشعبة العامة',desc:'كل كورسات نبتيكس أكاديمي في مكان واحد',color:'#1B6B3A',img:'https://images.unsplash.com/photo-1719665269650-5521f31420f3?auto=format&fit=crop&w=900&q=70',courses:'ALL'},
-{id:'biotech',title:'التكنولوجيا الحيوية',desc:'من البيولوجيا الجزيئية إلى ممارسات المعامل الجيدة',color:'#2563eb',img:'https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=900&q=70',courses:['mol-bio','glp','bioinformatics']},
-{id:'plant-production',title:'الإنتاج النباتي',desc:'زراعة الأنسجة النباتية وتصميم المناظر الطبيعية',color:'#16a34a',img:'https://images.unsplash.com/photo-1622210445956-ca3320a5e7c5?auto=format&fit=crop&w=900&q=70',courses:['tissue-culture','landscape-design']},
-{id:'animal-production',title:'الإنتاج الحيواني',desc:'إدارة الأعلاف وبرامج التغذية للثروة الحيوانية',color:'#92400e',img:'https://images.unsplash.com/photo-1752219346775-fe086c57081b?auto=format&fit=crop&w=900&q=70',courses:['feed-mgmt']},
-{id:'plant-protection',title:'وقاية النبات',desc:'تشخيص وإدارة أمراض وآفات النبات ومكافحتها',color:'#dc2626',img:'https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=900&q=70',courses:['plant-diseases','pest','pesticide-tech']},
-{id:'food-science',title:'علوم الأغذية',desc:'سلامة وجودة الغذاء والميكروبيولوجيا الغذائية',color:'#d97706',img:'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=900&q=70',courses:['food-safety','food-quality','food-microbiology']},
-{id:'soil-water',title:'علوم الأراضي والمياه',desc:'استصلاح الأراضي وبرامج التسميد والري',color:'#b45309',img:'https://assets.science.nasa.gov/dynamicimage/assets/science/esd/eo/images/imagerecords/89000/89820/egypt_oli_2017057_detail.jpg?w=1200&h=500&fit=crop',courses:['land-reclamation']}
+{id:'general',title:'الشعبة العامة',desc:'كل كورسات نبتيكس أكاديمي في مكان واحد',color:'#1B6B3A',img:'https://images.unsplash.com/photo-1719178006695-e0e36780adac?auto=format&fit=crop&w=900&q=70',courses:'ALL'},
+{id:'biotech',title:'التكنولوجيا الحيوية',desc:'من البيولوجيا الجزيئية إلى ممارسات المعامل الجيدة',color:'#2563eb',img:'https://images.unsplash.com/photo-1614935151651-0bea6508db6b?auto=format&fit=crop&w=900&q=70',courses:['mol-bio','glp','bioinformatics']},
+{id:'plant-production',title:'الإنتاج النباتي',desc:'زراعة الأنسجة النباتية وتصميم المناظر الطبيعية',color:'#16a34a',img:'https://images.unsplash.com/photo-1593590908928-268bcf40aad9?auto=format&fit=crop&w=900&q=70',courses:['tissue-culture','landscape-design']},
+{id:'animal-production',title:'الإنتاج الحيواني',desc:'إدارة الأعلاف وبرامج التغذية للثروة الحيوانية',color:'#92400e',img:'https://images.unsplash.com/photo-1573731281021-d1cc573b3310?auto=format&fit=crop&w=900&q=70',courses:['feed-mgmt']},
+{id:'plant-protection',title:'وقاية النبات',desc:'تشخيص وإدارة أمراض وآفات النبات ومكافحتها',color:'#dc2626',img:'https://images.unsplash.com/photo-1620055494738-248ba57ed714?auto=format&fit=crop&w=900&q=70',courses:['plant-diseases','pest','pesticide-tech']},
+{id:'food-science',title:'علوم الأغذية',desc:'سلامة وجودة الغذاء والميكروبيولوجيا الغذائية',color:'#d97706',img:'https://images.unsplash.com/photo-1684259498786-ffaf1ec5c5e8?auto=format&fit=crop&w=900&q=70',courses:['food-safety','food-quality','food-microbiology']},
+{id:'soil-water',title:'علوم الأراضي والمياه',desc:'استصلاح الأراضي وبرامج التسميد والري',color:'#b45309',img:'https://images.unsplash.com/photo-1692369584496-3216a88f94c1?auto=format&fit=crop&w=900&q=70',courses:['land-reclamation']}
 ];
 
 /* Renders the "المسارات التعليمية" section shown at the top of the catalog. */
