@@ -934,7 +934,7 @@ return '<div class="acad-hero acad-hero--path-'+path.id+'"><div class="acad-hero
    sentinel. acBuildCatalogCards()/AC_CATALOG_ORDER are unused here now
    but stay intact for acRenderPathView() below, which still needs them. */
 function acRenderCatalog(){
-return '<div class="acad-hero"><div class="acad-hero-inner">'+
+return '<div class="acad-hero acad-hero--catalog"><div class="acad-hero-inner">'+
 '<div class="acad-hero-back" role="button" onclick="showPage(\'home\')">‹ الرئيسية</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
 '<div class="acad-hero-title">دوراتنا التعليمية</div>'+

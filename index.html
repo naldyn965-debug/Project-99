@@ -19965,6 +19965,38 @@ button,
   }
 </style>
 
+<!-- ── ACADEMY CATALOG HERO — size reduction (additive) ──
+     Scoped ONLY to the catalog/landing hero ("دوراتنا التعليمية")
+     via the .acad-hero--catalog class added in acRenderCatalog().
+     Course-page and Learning-Path heroes (.acad-hero--<courseId> /
+     .acad-hero--path-<id>) are untouched. Placed after all academy
+     hero styles so it wins the cascade; no existing rule is altered.
+─────────────────────────────────────── -->
+<style id="nb-acad-catalog-hero-compact">
+  .acad-hero.acad-hero--catalog{
+    padding:40px 0 32px !important;
+  }
+  .acad-hero--catalog .acad-hero-back{
+    margin-bottom:12px !important;
+  }
+  .acad-hero--catalog .acad-hero-badge{
+    margin-bottom:14px !important;
+  }
+  .acad-hero--catalog .acad-hero-title{
+    font-size:clamp(1.7rem,4.6vw,2.6rem) !important;
+    margin-bottom:10px !important;
+  }
+  .acad-hero--catalog .acad-hero-sub{
+    font-size:clamp(12px,1.6vw,14px) !important;
+    margin-bottom:0 !important;
+  }
+  @media(max-width:600px){
+    .acad-hero.acad-hero--catalog{
+      padding:32px 0 26px !important;
+    }
+  }
+</style>
+
 <!-- ── BOTTOM CLEARANCE FIX ──
      Ensures no page content is hidden behind the bottom nav.
      Applies at every screen size now that the bottom nav is always visible.
