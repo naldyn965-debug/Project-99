@@ -7660,6 +7660,20 @@ body.modal-open { overflow: hidden; }
   }
 }
 
+/* ── Academy subnav scroll behavior: slides up and tucks under
+   the navbar on scroll-down, reveals with a smooth animation on
+   scroll-up or when back at the top of the page. Scoped strictly
+   to the single #acad-social-subnav element by ID — the shared
+   .mkt-subnav/.mkt-tab classes used by the marketplace page are
+   completely untouched. Toggled by JS further down this page. ── */
+#acad-social-subnav{
+  transition: transform .34s var(--mkt-ease);
+  will-change: transform;
+}
+#acad-social-subnav.ac-subnav-hidden{
+  transform: translateY(-100%);
+}
+
 /* ══════════════════════════════════════════════════════════
    D. SECTION HEADERS — clean editorial
    ══════════════════════════════════════════════════════════ */
@@ -8656,6 +8670,38 @@ body.modal-open { overflow: hidden; }
         }
       };
     }
+  })();
+  </script>
+
+  <!-- ── Academy Subnav: hide on scroll-down, reveal on scroll-up ──
+       Standalone scroll listener, purely additive — does not modify
+       _scroll() or any other existing function. Gated by the
+       existing global `currentPage`, so it has zero effect while
+       any other page is open. ─────────────────────────────────── -->
+  <script>
+  (function(){
+    var _subnav=document.getElementById('acad-social-subnav');
+    if(!_subnav)return;
+    var _lastY=window.scrollY||0;
+    var _TOP=8;    /* px — treated as "top of page" → always shown */
+    var _DELTA=6;  /* px — ignores tiny/jittery scroll movements */
+    window.addEventListener('scroll',function(){
+      if(currentPage!=='academy')return;
+      var y=window.scrollY||0;
+      if(y<=_TOP){
+        _subnav.classList.remove('ac-subnav-hidden');
+        _lastY=y;
+        return;
+      }
+      var diff=y-_lastY;
+      if(diff>_DELTA){
+        _subnav.classList.add('ac-subnav-hidden');
+        _lastY=y;
+      } else if(diff<-_DELTA){
+        _subnav.classList.remove('ac-subnav-hidden');
+        _lastY=y;
+      }
+    },{passive:true});
   })();
   </script>
 
