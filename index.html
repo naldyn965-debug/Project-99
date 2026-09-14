@@ -19586,15 +19586,21 @@ button, [role="button"] { cursor: pointer; }
   pointer-events: none;
   border-radius: 28px;
 
-  /* Premium glass — light mode */
-  background: rgba(255,255,255,.93);
-  backdrop-filter: blur(32px) saturate(200%) brightness(108%);
-  -webkit-backdrop-filter: blur(32px) saturate(200%) brightness(108%);
+  /* Premium glass — light mode. Pulled more translucent (was .93)
+     so the page shows through and the bar reads as floating glass
+     rather than a solid card that blends into a light background.
+     A soft outer rim + inner top highlight give it a defined edge
+     so it stays visually distinct against light content behind it. */
+  background: rgba(255,255,255,.72);
+  border: 1px solid rgba(255,255,255,.55);
+  backdrop-filter: blur(36px) saturate(210%) brightness(112%);
+  -webkit-backdrop-filter: blur(36px) saturate(210%) brightness(112%);
 
-  /* Soft floating shadow — premium, not heavy */
+  /* Deeper lift shadow + glass rim highlight — premium separation */
   box-shadow:
-    0 8px 30px rgba(0,0,0,.12),
-    0 2px 8px  rgba(0,0,0,.06);
+    0 14px 40px rgba(0,0,0,.16),
+    0 4px 12px  rgba(0,0,0,.08),
+    inset 0 1px 0 rgba(255,255,255,.55);
 
   /* Real cutout for the raised center button — punches an actual
      transparent hole through the shell (glass, background, shadow),
@@ -19619,14 +19625,17 @@ button, [role="button"] { cursor: pointer; }
           mask-size: 600px 120px;
 }
 
-/* Dark mode shell */
+/* Dark mode shell — same glass treatment: more translucent, subtle
+   rim highlight, deeper lift shadow for separation from dark content */
 [data-dark] #nb-bottom-nav::before {
-  background: rgba(7,16,9,.92);
-  backdrop-filter: blur(36px) saturate(160%) brightness(80%);
-  -webkit-backdrop-filter: blur(36px) saturate(160%) brightness(80%);
+  background: rgba(7,16,9,.78);
+  border: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(38px) saturate(170%) brightness(82%);
+  -webkit-backdrop-filter: blur(38px) saturate(170%) brightness(82%);
   box-shadow:
-    0 8px 30px rgba(0,0,0,.45),
-    0 2px 8px  rgba(0,0,0,.3);
+    0 14px 40px rgba(0,0,0,.5),
+    0 4px 12px  rgba(0,0,0,.32),
+    inset 0 1px 0 rgba(255,255,255,.06);
 }
 
 /* PWA install banner/FAB offset above the bottom nav — applies at every screen size */
