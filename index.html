@@ -19586,21 +19586,24 @@ button, [role="button"] { cursor: pointer; }
   pointer-events: none;
   border-radius: 28px;
 
-  /* Premium glass — light mode. Pulled more translucent (was .93)
-     so the page shows through and the bar reads as floating glass
-     rather than a solid card that blends into a light background.
-     A soft outer rim + inner top highlight give it a defined edge
-     so it stays visually distinct against light content behind it. */
-  background: rgba(255,255,255,.72);
-  border: 1px solid rgba(255,255,255,.55);
-  backdrop-filter: blur(36px) saturate(210%) brightness(112%);
-  -webkit-backdrop-filter: blur(36px) saturate(210%) brightness(112%);
+  /* Premium glass — light mode. A border tinted white only reads
+     against a darker/colored backdrop — over a plain white page it
+     vanishes (this was the bug: the whole bar disappeared over
+     white content). The rim needs to be a neutral dark-based
+     hairline instead, so the edge is visible no matter what's
+     scrolled behind the bar, plus a touch more base opacity so the
+     glass doesn't wash out to invisible against white. */
+  background: rgba(255,255,255,.8);
+  border: 1px solid rgba(15,23,18,.10);
+  backdrop-filter: blur(36px) saturate(200%) brightness(105%);
+  -webkit-backdrop-filter: blur(36px) saturate(200%) brightness(105%);
 
-  /* Deeper lift shadow + glass rim highlight — premium separation */
+  /* Deeper lift shadow + glass rim highlight — premium separation,
+     independent of the backdrop's own color */
   box-shadow:
-    0 14px 40px rgba(0,0,0,.16),
-    0 4px 12px  rgba(0,0,0,.08),
-    inset 0 1px 0 rgba(255,255,255,.55);
+    0 16px 44px rgba(0,0,0,.18),
+    0 4px 14px  rgba(0,0,0,.10),
+    inset 0 1px 0 rgba(255,255,255,.6);
 
   /* Real cutout for the raised center button — punches an actual
      transparent hole through the shell (glass, background, shadow),
