@@ -21160,12 +21160,12 @@ var AcNotif = {
     var panel = document.getElementById('ac-notif-panel');
     if (!panel) return;
     this.list_open = !panel.classList.contains('open');
-    panel.classList.toggle('open', this.list_open);
     if (this.list_open) {
       this._render();
       clearTimeout(this._dwellTimer);
       this._dwellTimer = setTimeout(function(){ AcNotif._markAllRead(); }, 1500);
     }
+    panel.classList.toggle('open', this.list_open);
   },
 
   _iconFor: function(type){
