@@ -19565,6 +19565,27 @@ button, [role="button"] { cursor: pointer; }
   max-width: 520px;
   z-index: 450;
 
+  /* GPU compositing layer */
+  transform: translateX(-50%) translateZ(0);
+  will-change: transform;
+  contain: layout style;
+}
+
+/* ── Shell layer (background/blur/shadow + real notch cutout) ──
+   Painted on ::before, behind the actual content, instead of on
+   #nb-bottom-nav directly — a mask on the nav element itself would
+   clip ANY descendant that renders outside its box, including the
+   raised center button, which overflows 26px above this shell by
+   design. Keeping the mask scoped to this shell only clips the
+   shell, never the button. */
+#nb-bottom-nav::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 28px;
+
   /* Premium glass — light mode */
   background: rgba(255,255,255,.93);
   backdrop-filter: blur(32px) saturate(200%) brightness(108%);
@@ -19575,30 +19596,22 @@ button, [role="button"] { cursor: pointer; }
     0 8px 30px rgba(0,0,0,.12),
     0 2px 8px  rgba(0,0,0,.06);
 
-  /* Fully rounded — floating pill, not docked to the edge */
-  border-radius: 28px;
-
   /* Real cutout for the raised center button — punches an actual
-     transparent hole through the bar (glass, background, shadow),
+     transparent hole through the shell (glass, background, shadow),
      rather than painting a matching-color circle on top. Reads
      correctly over any backdrop: dark mode, scrolled content, etc.
      "white" (not black) is used for the opaque stop so the mask
      resolves correctly whether a browser treats it as alpha- or
-     luminance-based. Same size/position as before: 78px circle
-     centered 9px from the bar's top edge. */
+     luminance-based. 78px circle centered 9px from the bar's top
+     edge — same size/position the old color-matched circle used. */
   -webkit-mask-image: radial-gradient(circle 39px at 50% 9px, transparent 0 39px, #fff 41px);
           mask-image: radial-gradient(circle 39px at 50% 9px, transparent 0 39px, #fff 41px);
   -webkit-mask-repeat: no-repeat;
           mask-repeat: no-repeat;
-
-  /* GPU compositing layer */
-  transform: translateX(-50%) translateZ(0);
-  will-change: transform;
-  contain: layout style;
 }
 
 /* Dark mode shell */
-[data-dark] #nb-bottom-nav {
+[data-dark] #nb-bottom-nav::before {
   background: rgba(7,16,9,.92);
   backdrop-filter: blur(36px) saturate(160%) brightness(80%);
   -webkit-backdrop-filter: blur(36px) saturate(160%) brightness(80%);
@@ -19743,11 +19756,11 @@ button, [role="button"] { cursor: pointer; }
    matches the reference bottom-nav layout.
 ───────────────────────────────────────────── */
 /* ── Notch behind the raised center button ──────
-   The real cutout lives on #nb-bottom-nav itself (see the
-   mask-image rule in the "Outer shell" block above) — it's a
-   true masked hole now, not a color-matched circle, so the
-   button reads as physically seated into the bar rather than
-   placed on top of it.
+   The real cutout lives on #nb-bottom-nav::before (the shell
+   layer in the "Outer shell" block above), not on this button —
+   it's a true masked hole, not a color-matched circle, and it's
+   scoped to the shell specifically so it never clips this button,
+   which overflows above the shell by design.
 ───────────────────────────────────────────── */
 
 .nb-nav-item.nb-center-item {
