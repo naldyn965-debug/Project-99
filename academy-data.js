@@ -892,7 +892,7 @@ function acRenderLearningPathsSection(){
 var PARROW='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
 var cards=AC_LEARNING_PATHS.map(function(p){
 var cnt=(p.courses==='ALL')?AC_CATALOG_ORDER.length:p.courses.length;
-var cntLabel=cnt===1?'كورس واحد':(cnt===2?'كورسان':cnt+' كورسات');
+var cntLabel=cnt===1?'كورس واحد':(cnt===2?'كورسان':(cnt>=11?cnt+' كورس':cnt+' كورسات'));
 return '<div class="acad-path-card" onclick="NAcademy.openPath(\''+p.id+'\')" role="button">'+
 '<div class="acad-path-card-top" style="background-image:url(\''+p.img+'\')"></div>'+
 '<div class="acad-path-card-body">'+
