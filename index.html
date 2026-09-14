@@ -10070,16 +10070,6 @@ document.getElementById('thm-btn').addEventListener('click', function() {
   this.classList.toggle('is-dark', !isDark);
 });
 
-// ======================== RIPPLE EFFECT ========================
-document.addEventListener('click',e=>{
-  const btn=e.target.closest('button:not(.nb-nav-item),.pcard,.cat-card');if(!btn)return;
-  const r=document.createElement('span');r.className='rip';
-  const rc=btn.getBoundingClientRect();const sz=Math.max(rc.width,rc.height)*2;
-  r.style.cssText=`width:${sz}px;height:${sz}px;left:${e.clientX-rc.left-sz/2}px;top:${e.clientY-rc.top-sz/2}px`;
-  btn.style.position='relative';btn.style.overflow='hidden';btn.appendChild(r);
-  setTimeout(()=>r.remove(),750);
-});
-
 // ======================== HAPTIC FEEDBACK ========================
 function _haptic(type='light'){
   if(!navigator.vibrate)return;
@@ -20206,61 +20196,12 @@ body {
 <!-- ── PREMIUM JAVASCRIPT LAYER ── -->
 <script id="nb-premium-js">
 /* Nabtex Premium UI/UX — JS Layer
-   ١. Ripple Effect (event delegation — zero DOM queries per click)
-   ٢. Bottom Nav Sync مع showPage
-   ٣. iOS momentum scroll للحاويات القابلة للتمرير
-   ٤. Keyboard-safe focus ring
+   ١. Bottom Nav Sync مع showPage
+   ٢. iOS momentum scroll للحاويات القابلة للتمرير
+   ٣. Keyboard-safe focus ring
 */
 (function () {
   'use strict';
-
-  /* ══ 1. RIPPLE ═══════════════════════════════════════════ */
-  function spawnRipple(e) {
-    var el = e.target.closest(
-      'button:not(.nb-nav-item), .nl, .hpill, .sc-qt, .sp-chip, .nb-h2-course-card'
-    );
-    if (!el || el.disabled) return;
-
-    /* Light ripple on coloured backgrounds, brand tint on white */
-    var isDark = el.matches(
-      '.btn-hero-p, .btn-goal, .btn-sub, #registerBtn, .nb-nav-item, .nb-h2-profile-btn, .nb-h2-search-btn'
-    );
-    var color = isDark
-      ? 'rgba(255,255,255,.22)'
-      : 'rgba(27,107,58,.13)';
-
-    var rect = el.getBoundingClientRect();
-    /* Use pageX/Y to account for scroll */
-    var cX = e.clientX !== undefined ? e.clientX : rect.left + rect.width  / 2;
-    var cY = e.clientY !== undefined ? e.clientY : rect.top  + rect.height / 2;
-    var size = Math.max(rect.width, rect.height) * 2.4;
-    var x = cX - rect.left - size / 2;
-    var y = cY - rect.top  - size / 2;
-
-    /* Ensure host has position:relative (for elements not covered by CSS above) */
-    if (window.getComputedStyle(el).position === 'static') {
-      el.style.position = 'relative';
-    }
-
-    var wave = document.createElement('span');
-    wave.className = 'nb-ripple-wave';
-    wave.style.cssText =
-      'width:'  + size + 'px;' +
-      'height:' + size + 'px;' +
-      'left:'   + x    + 'px;' +
-      'top:'    + y    + 'px;' +
-      'background:' + color + ';';
-
-    el.appendChild(wave);
-
-    /* Self-clean after animation */
-    wave.addEventListener('animationend', function () {
-      if (wave.parentNode) wave.parentNode.removeChild(wave);
-    }, { once: true });
-  }
-
-  document.addEventListener('pointerdown', spawnRipple, { passive: true });
-
 
   /* ══ 2. BOTTOM NAV SYNC + SLIDING PILL ══════════════════════ */
   var _bnItems   = null;   /* cached NodeList */
