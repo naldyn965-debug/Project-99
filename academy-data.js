@@ -887,6 +887,16 @@ var AC_LEARNING_PATHS=[
 {id:'soil-water',title:'علوم الأراضي والمياه',desc:'استصلاح الأراضي وبرامج التسميد والري',color:'#b45309',img:'https://images.unsplash.com/photo-1692369584496-3216a88f94c1?auto=format&fit=crop&w=900&q=70',courses:['land-reclamation']}
 ];
 
+/* True if course `cid` belongs to learning path `pathId` ('ALL' paths — i.e.
+   'الشعبة العامة' — contain every course). Used to safely route the course
+   page's back button to the path the learner actually came from. */
+function acPathContainsCourse(pathId,cid){
+var p=null;
+for(var i=0;i<AC_LEARNING_PATHS.length;i++)if(AC_LEARNING_PATHS[i].id===pathId){p=AC_LEARNING_PATHS[i];break}
+if(!p)return false;
+return p.courses==='ALL'||p.courses.indexOf(cid)>-1;
+}
+
 /* Renders the "المسارات التعليمية" section shown at the top of the catalog. */
 function acRenderLearningPathsSection(){
 var PARROW='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
@@ -1262,7 +1272,7 @@ var acDurNum=acDurNumM?acDurNumM[0]:AC_COURSE.duration;
 var acDurUnit=String(AC_COURSE.duration).replace(/^\d+\s*/,'')||'مدة الدورة';
 
 return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner">'+
-'<div class="acad-hero-back" role="button" onclick="NAcademy.goCatalog()">‹ كل الدورات</div>'+
+'<div class="acad-hero-back" role="button" onclick="NAcademy.goBackFromCourse()">‹ كل الدورات</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
 '<div class="acad-hero-title">'+AC_COURSE.title+'</div>'+
 '<div class="acad-hero-sub">'+AC_COURSE.heroSub+'</div>'+
@@ -1338,7 +1348,7 @@ var acDurNum=acDurNumM?acDurNumM[0]:AC_COURSE.duration;
 var acDurUnit=String(AC_COURSE.duration).replace(/^\d+\s*/,'')||'مدة الدورة';
 
 return '<div class="acad-hero acad-hero--'+AC_CID+'"><div class="acad-hero-inner">'+
-'<div class="acad-hero-back" role="button" onclick="NAcademy.goCatalog()">‹ كل الدورات</div>'+
+'<div class="acad-hero-back" role="button" onclick="NAcademy.goBackFromCourse()">‹ كل الدورات</div>'+
 '<div class="acad-hero-badge"><i></i> نبتيكس أكاديمي</div>'+
 '<div class="acad-hero-title">'+AC_COURSE.title+'</div>'+
 '<div class="acad-hero-sub">'+AC_COURSE.heroSub+'</div>'+
@@ -31853,6 +31863,10 @@ getCurrentCourseId:function(){return AC_CID},
 getCurrentCourseInfo:function(){return acCertCourseInfo(AC_CID)},
 goHome:function(){acGo('home',null)},
 goCatalog:function(){acGo('catalog',null)},
+goBackFromCourse:function(){
+if(AC.pathId&&acPathContainsCourse(AC.pathId,AC_CID)){acGo('path',AC.pathId);}
+else{acGo('catalog',null);}
+},
 openPath:function(id){acGo('path',id)},
 openCourse:function(id,resume){
 /* Shared course link opened while logged out: acGo()/the mol-bio & food-safety
