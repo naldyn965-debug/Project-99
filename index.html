@@ -19683,6 +19683,35 @@ button, [role="button"] { cursor: pointer; }
   position: relative;
 }
 
+/* ── Ambient light pooling into the center notch ───────────────
+   Soft blurred radial glow sitting behind the raised button, as
+   if light were spilling up through the shell's cutout. Painted
+   as ::before on the row (first thing in paint order) so it never
+   sits above the pill or the nav buttons; pointer-events disabled
+   so it never intercepts taps. Intensifies with a slow pulse only
+   while the Academy button is the active page. */
+.nb-nav-inner::before {
+  content: '';
+  position: absolute;
+  top: -34px;
+  left: 50%;
+  width: 132px;
+  height: 92px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at 50% 28%, rgba(95,201,126,.32) 0%, rgba(95,201,126,0) 72%);
+  filter: blur(7px);
+  opacity: .75;
+  pointer-events: none;
+  transition: opacity .35s ease, background .35s ease;
+}
+[data-dark] .nb-nav-inner::before {
+  background: radial-gradient(circle at 50% 28%, rgba(45,154,88,.5) 0%, rgba(45,154,88,0) 72%);
+}
+.nb-nav-inner:has(.nb-center-item.active)::before {
+  opacity: 1;
+  animation: nbGlowPulse 2.6s ease-in-out infinite;
+}
+
 /* ── Sliding background pill ──────────────
    JS writes: transform & width on each nav switch.
    Spring curve: overshoot then settle = satisfying feel.
@@ -19810,6 +19839,16 @@ button, [role="button"] { cursor: pointer; }
    which overflows above the shell by design.
 ───────────────────────────────────────────── */
 
+@keyframes nbGlowPulse {
+  0%, 100% { opacity: .85; transform: translateX(-50%) scale(1); }
+  50%      { opacity: 1;   transform: translateX(-50%) scale(1.08); }
+}
+@keyframes nbCenterPop {
+  0%   { transform: translateX(-50%) scale(.82) rotate(-6deg); }
+  55%  { transform: translateX(-50%) scale(1.10) rotate(3deg); }
+  100% { transform: translateX(-50%) scale(1) rotate(0deg); }
+}
+
 .nb-nav-item.nb-center-item {
   min-height: 52px;
   overflow: visible;
@@ -19825,40 +19864,65 @@ button, [role="button"] { cursor: pointer; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(155deg, var(--ink2) 0%, var(--ink) 100%);
+  overflow: hidden;
+  background: linear-gradient(150deg, var(--ink2) 0%, var(--ink) 70%, var(--brand-d) 140%);
   color: var(--white);
   border: 3px solid var(--white);
   box-shadow:
+    0 0 0 6px rgba(255,255,255,.22),
     0 14px 28px rgba(15,23,18,.30),
     0 4px 10px rgba(15,23,18,.18),
     inset 0 1px 1px rgba(255,255,255,.22),
     inset 0 -2px 3px rgba(0,0,0,.25);
   transition: transform .2s var(--ease-spring), background .25s ease, box-shadow .25s ease;
 }
-.nb-center-circle svg { width: 22px; height: 22px; }
+/* Glossy top sheen + bottom rim shadow — glassy "sphere" feel.
+   Painted as pseudo-layers (not new markup) so the real icon child
+   stays crisp above them; overflow:hidden clips both to the circle. */
+.nb-center-circle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(165deg, rgba(255,255,255,.4) 0%, rgba(255,255,255,0) 50%);
+  pointer-events: none;
+}
+.nb-center-circle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 -7px 10px rgba(0,0,0,.22), inset 0 2px 2px rgba(255,255,255,.14);
+  pointer-events: none;
+}
+.nb-center-circle svg { width: 22px; height: 22px; position: relative; z-index: 1; }
 .nb-nav-item.nb-center-item:active .nb-center-circle {
   transform: translateX(-50%) scale(.92);
 }
 .nb-nav-item.nb-center-item.active .nb-center-circle {
-  background: linear-gradient(155deg, var(--brand-l) 0%, var(--brand) 55%, var(--brand-d) 100%);
+  background: linear-gradient(150deg, var(--brand-l) 0%, var(--brand) 55%, var(--brand-d) 100%);
   box-shadow:
+    0 0 0 6px rgba(45,154,88,.28),
     0 14px 30px rgba(15,85,46,.38),
     0 4px 10px rgba(15,85,46,.22),
     inset 0 1px 1px rgba(255,255,255,.30),
     inset 0 -2px 3px rgba(0,0,0,.20);
+  animation: nbCenterPop .5s var(--ease-spring);
 }
 [data-dark] .nb-center-circle {
-  background: linear-gradient(155deg, var(--brand-l) 0%, var(--brand) 55%, var(--brand-d) 100%);
+  background: linear-gradient(150deg, var(--brand-l) 0%, var(--brand) 55%, var(--brand-d) 100%);
   border-color: rgba(255,255,255,.22);
   box-shadow:
+    0 0 0 6px rgba(45,154,88,.22),
     0 14px 30px rgba(0,0,0,.55),
     0 4px 12px rgba(0,0,0,.35),
     inset 0 1px 1px rgba(255,255,255,.16),
     inset 0 -2px 3px rgba(0,0,0,.30);
 }
 [data-dark] .nb-nav-item.nb-center-item.active .nb-center-circle {
-  background: linear-gradient(155deg, var(--brand-xl) 0%, var(--brand-l) 55%, var(--brand) 100%);
+  background: linear-gradient(150deg, var(--brand-xl) 0%, var(--brand-l) 55%, var(--brand) 100%);
   box-shadow:
+    0 0 0 6px rgba(95,201,126,.30),
     0 14px 32px rgba(0,0,0,.60),
     0 4px 12px rgba(0,0,0,.40),
     inset 0 1px 1px rgba(255,255,255,.22),
