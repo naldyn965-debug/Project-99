@@ -8700,19 +8700,50 @@ body.modal-open { overflow: hidden; }
        تفضل زي ما هي. ── */
     var _TRANSFORM_MS=340; /* matches #acad-social-subnav's transform transition duration */
     var _hidden=false;
+
+    /* ── تعويض قفزة السكرول ───────────────────────────────────────
+       شيل/رجّع الشريط من الـ flow (زي ما فوق) بيغيّر ارتفاع الصفحة
+       فوق الهيرو لحظيًا. من غير تعويض، المتصفح بيسيب scrollY زي ما
+       هو والمحتوى اللي تحته (الهيرو) بينزلق فجأة بمقدار ارتفاع
+       الشريط — وده اللي كان بيبين إن الهيرو "بيختفي" فجأة وقت
+       السكرول. _compensate بتعوّض بنفس المقدار لحظيًا (scroll-behavior:
+       auto مؤقتًا عشان التعويض نفسه مايتحركش بالأنيميشن الناعم
+       العام)، و_scrollAdj بيتراكم فيه صافي التعويض المُطبَّق فعليًا
+       (مش المطلوب — عشان لو المتصفح قصّ القيمة عند أعلى الصفحة يفضل
+       الحساب مظبوط) عشان مقارنات y تحت تفضل مبنية على سكرول المستخدم
+       الحقيقي بس. hideBar/showBar أصلاً idempotent (بيتجاهلوا نداء
+       مكرر لو الحالة زي ما هي)، فمفيش داعي لأي قفل إضافي على حدث
+       السكرول. ── */
+    var _scrollAdj=0;
+    function _compensate(delta){
+      if(!delta)return;
+      var html=document.documentElement;
+      var before=window.scrollY||0;
+      var prevBehavior=html.style.scrollBehavior;
+      html.style.scrollBehavior='auto';
+      window.scrollBy(0,delta);
+      html.style.scrollBehavior=prevBehavior;
+      _scrollAdj+=(window.scrollY||0)-before;
+    }
+
     function hideBar(){
       _subnav.classList.add('ac-subnav-hidden');
       if(!_hidden){
         _hidden=true;
         setTimeout(function(){
-          if(_hidden)_subnav.style.display='none';
+          if(_hidden){
+            var h=_subnav.offsetHeight;
+            _subnav.style.display='none';
+            _compensate(-h);
+          }
         },_TRANSFORM_MS);
       }
     }
     function showBar(){
       if(_subnav.style.display==='none'){
         _subnav.style.display='';
-        void _subnav.offsetHeight; /* force reflow so the reveal still animates from -100% */
+        var h=_subnav.offsetHeight; /* also forces reflow so the reveal still animates from -100% */
+        _compensate(h);
       }
       _subnav.classList.remove('ac-subnav-hidden');
       _hidden=false;
@@ -8725,6 +8756,7 @@ body.modal-open { overflow: hidden; }
       var isActive=_pgAcademy.classList.contains('active');
       if(isActive&&!_wasActive){
         _armed=false;
+        _scrollAdj=0;
         hideBar();
       }
       _wasActive=isActive;
@@ -8732,7 +8764,7 @@ body.modal-open { overflow: hidden; }
 
     window.addEventListener('scroll',function(){
       if(currentPage!=='academy')return;
-      var y=window.scrollY||0;
+      var y=(window.scrollY||0)-_scrollAdj;
       if(y>_HIDE_AT){
         _armed=true;
         hideBar();
