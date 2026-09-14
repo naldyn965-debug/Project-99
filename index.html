@@ -19578,6 +19578,19 @@ button, [role="button"] { cursor: pointer; }
   /* Fully rounded — floating pill, not docked to the edge */
   border-radius: 28px;
 
+  /* Real cutout for the raised center button — punches an actual
+     transparent hole through the bar (glass, background, shadow),
+     rather than painting a matching-color circle on top. Reads
+     correctly over any backdrop: dark mode, scrolled content, etc.
+     "white" (not black) is used for the opaque stop so the mask
+     resolves correctly whether a browser treats it as alpha- or
+     luminance-based. Same size/position as before: 78px circle
+     centered 9px from the bar's top edge. */
+  -webkit-mask-image: radial-gradient(circle 39px at 50% 9px, transparent 0 39px, #fff 41px);
+          mask-image: radial-gradient(circle 39px at 50% 9px, transparent 0 39px, #fff 41px);
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+
   /* GPU compositing layer */
   transform: translateX(-50%) translateZ(0);
   will-change: transform;
@@ -19730,24 +19743,12 @@ button, [role="button"] { cursor: pointer; }
    matches the reference bottom-nav layout.
 ───────────────────────────────────────────── */
 /* ── Notch behind the raised center button ──────
-   A circle painted in the page's own background color, seated
-   right on the bar's top edge — it "erases" a soft bite out of
-   the bar so the raised button reads as nested into it, not
-   just floating on top of it.
+   The real cutout lives on #nb-bottom-nav itself (see the
+   mask-image rule in the "Outer shell" block above) — it's a
+   true masked hole now, not a color-matched circle, so the
+   button reads as physically seated into the bar rather than
+   placed on top of it.
 ───────────────────────────────────────────── */
-#nb-bottom-nav::before {
-  content: '';
-  position: absolute;
-  top: 9px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 78px;
-  height: 78px;
-  border-radius: 50%;
-  background: var(--bg);
-  z-index: 0;
-  pointer-events: none;
-}
 
 .nb-nav-item.nb-center-item {
   min-height: 52px;
