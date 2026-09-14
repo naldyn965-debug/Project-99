@@ -8690,21 +8690,32 @@ body.modal-open { overflow: hidden; }
     var _wasActive=_pgAcademy.classList.contains('active');
 
     /* لما الشريط مخفي، لسه بياخد مساحته في الصفحة (مجرد transform)،
-       فبيسيب فراغ فاضي بين الـ navbar والهيرو. بنقفل المساحة دي بهامش
-       سالب بارتفاعه الحقيقي (مقاس ديناميكياً عشان يشتغل صح مهما اتغير
-       الارتفاع)، ويترجع تاني لما الشريط يظهر. ── */
-    var _marginClosed=false;
+       فبيسيب فراغ فاضي بين الـ navbar والهيرو. الحل الأول كان بهامش
+       سالب متحرك بالتزامن مع الـ transform، بس ده سبب تعارض بصري أثناء
+       السكرول الفعلي (margin بيعمل reflow والـ transform بيتحرك على
+       الـ GPU، فمابيفضلوش متزامنين تمامًا). الحل ده بيشيل الشريط من
+       الـ flow خالص (display:none) بعد ما ينتهي انزلاقه لفوق تمامًا —
+       فمفيش أي تعارض وقت الأنيميشن نفسها، والمساحة بتتقفل بعدها بلحظة.
+       عند الإظهار، بيترجع للـ flow قبل ما ينزلق لتحت عشان الأنيميشن
+       تفضل زي ما هي. ── */
+    var _TRANSFORM_MS=340; /* matches #acad-social-subnav's transform transition duration */
+    var _hidden=false;
     function hideBar(){
-      if(!_marginClosed){
-        _subnav.style.marginBottom='-'+_subnav.offsetHeight+'px';
-        _marginClosed=true;
-      }
       _subnav.classList.add('ac-subnav-hidden');
+      if(!_hidden){
+        _hidden=true;
+        setTimeout(function(){
+          if(_hidden)_subnav.style.display='none';
+        },_TRANSFORM_MS);
+      }
     }
     function showBar(){
+      if(_subnav.style.display==='none'){
+        _subnav.style.display='';
+        void _subnav.offsetHeight; /* force reflow so the reveal still animates from -100% */
+      }
       _subnav.classList.remove('ac-subnav-hidden');
-      _subnav.style.marginBottom='';
-      _marginClosed=false;
+      _hidden=false;
     }
 
     /* لحظة دخول صفحة الأكاديمية (أي طريقة دخول: نافبار سفلي، رابط
