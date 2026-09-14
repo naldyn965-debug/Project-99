@@ -7667,8 +7667,8 @@ body.modal-open { overflow: hidden; }
    .mkt-subnav/.mkt-tab classes used by the marketplace page are
    completely untouched. Toggled by JS further down this page. ── */
 #acad-social-subnav{
-  transition: transform .34s var(--mkt-ease);
-  will-change: transform;
+  transition: transform .34s var(--mkt-ease), margin-bottom .34s var(--mkt-ease);
+  will-change: transform, margin-bottom;
 }
 #acad-social-subnav.ac-subnav-hidden{
   transform: translateY(-100%);
@@ -8689,8 +8689,23 @@ body.modal-open { overflow: hidden; }
     var _HIDE_AT=40;       /* px — hides once scrolled past this (gap avoids edge jitter) */
     var _wasActive=_pgAcademy.classList.contains('active');
 
-    function hideBar(){ _subnav.classList.add('ac-subnav-hidden'); }
-    function showBar(){ _subnav.classList.remove('ac-subnav-hidden'); }
+    /* لما الشريط مخفي، لسه بياخد مساحته في الصفحة (مجرد transform)،
+       فبيسيب فراغ فاضي بين الـ navbar والهيرو. بنقفل المساحة دي بهامش
+       سالب بارتفاعه الحقيقي (مقاس ديناميكياً عشان يشتغل صح مهما اتغير
+       الارتفاع)، ويترجع تاني لما الشريط يظهر. ── */
+    var _marginClosed=false;
+    function hideBar(){
+      if(!_marginClosed){
+        _subnav.style.marginBottom='-'+_subnav.offsetHeight+'px';
+        _marginClosed=true;
+      }
+      _subnav.classList.add('ac-subnav-hidden');
+    }
+    function showBar(){
+      _subnav.classList.remove('ac-subnav-hidden');
+      _subnav.style.marginBottom='';
+      _marginClosed=false;
+    }
 
     /* لحظة دخول صفحة الأكاديمية (أي طريقة دخول: نافبار سفلي، رابط
        مشاركة، زرار رجوع المتصفح) بيتحقق منها بمراقبة الـ class نفسه
