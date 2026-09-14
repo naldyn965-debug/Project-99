@@ -10186,6 +10186,15 @@ document.getElementById('thm-btn').addEventListener('click', function() {
   this.classList.toggle('is-dark', !isDark);
 });
 
+// Fix: إزالة التركيز البصري (outline) من أيقونات النافبار بعد الضغط عليها،
+// عشان مايفضلش شكل الأيقونة "مضاء" بعد التنفيذ (مشكلة focus-visible على الموبايل)
+['ham', 'thm-btn', 'nav-notif-btn', 'userAvatarBtn'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('click', function(e) {
+    if (e.detail !== 0) this.blur();
+  });
+});
+
 // ======================== HAPTIC FEEDBACK ========================
 function _haptic(type='light'){
   if(!navigator.vibrate)return;
