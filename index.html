@@ -19450,6 +19450,18 @@ document.addEventListener('DOMContentLoaded', function() {
       </span>
       <span class="nb-lbl">مزرعتي</span>
     </button>
+    <!-- Academy — raised center button -->
+    <button class="nb-nav-item nb-center-item" data-page="academy"
+            onclick="showPage('academy');window.scrollTo(0,0);" aria-label="الأكاديمية">
+      <span class="nb-center-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true" focusable="false">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+      </span>
+    </button>
     <!-- Market -->
     <button class="nb-nav-item" data-page="market"
             onclick="showPage('market')" aria-label="السوق الزراعي">
@@ -19463,19 +19475,6 @@ document.addEventListener('DOMContentLoaded', function() {
         </svg>
       </span>
       <span class="nb-lbl">السوق</span>
-    </button>
-    <!-- Academy -->
-    <button class="nb-nav-item" data-page="academy"
-            onclick="showPage('academy');window.scrollTo(0,0);" aria-label="الأكاديمية">
-      <span class="nb-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
-             aria-hidden="true" focusable="false">
-          <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/>
-          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-        </svg>
-      </span>
-      <span class="nb-lbl">الأكاديمية</span>
     </button>
     <!-- Profile -->
     <button class="nb-nav-item" data-page="profile"
@@ -19727,6 +19726,45 @@ button, [role="button"] { cursor: pointer; }
 .nb-nav-item:active .nb-ico {
   transform: translateY(0) scale(1) !important;
   transition: transform .16s ease-out !important;
+}
+
+/* ── RAISED CENTER BUTTON (Academy) ──────────────
+   Floats above the bar in a filled circle, no label —
+   matches the reference bottom-nav layout.
+───────────────────────────────────────────── */
+.nb-nav-item.nb-center-item {
+  min-height: 52px;
+  overflow: visible;
+}
+.nb-center-circle {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  color: var(--white);
+  box-shadow: 0 10px 22px rgba(0,0,0,.25), 0 3px 8px rgba(0,0,0,.15);
+  transition: transform .2s var(--ease-spring), background .2s ease;
+}
+.nb-center-circle svg { width: 22px; height: 22px; }
+.nb-nav-item.nb-center-item:active .nb-center-circle {
+  transform: translateX(-50%) scale(.92);
+}
+.nb-nav-item.nb-center-item.active .nb-center-circle {
+  background: var(--brand);
+}
+[data-dark] .nb-center-circle {
+  background: var(--brand);
+  box-shadow: 0 10px 22px rgba(0,0,0,.5), 0 3px 8px rgba(0,0,0,.3);
+}
+[data-dark] .nb-nav-item.nb-center-item.active .nb-center-circle {
+  background: var(--brand-l);
 }
 .nb-nav-item:active .nb-lbl {
   transform: translateY(0) !important;
@@ -20347,7 +20385,14 @@ body {
       btn.setAttribute('aria-current', isActive ? 'page' : 'false');
       if (isActive) activeEl = btn;
     });
-    moveSlidePill(activeEl);
+    /* Raised center button (Academy) is already visually distinct —
+       don't slide the pill under it, just hide it instead. */
+    if (activeEl && activeEl.classList.contains('nb-center-item')) {
+      var pill = document.getElementById('nb-slide-pill');
+      if (pill) pill.style.opacity = '0';
+    } else {
+      moveSlidePill(activeEl);
+    }
   }
 
   /* Wrap showPage once — preserves all original logic */
