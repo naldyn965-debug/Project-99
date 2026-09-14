@@ -8673,33 +8673,45 @@ body.modal-open { overflow: hidden; }
   })();
   </script>
 
-  <!-- ── Academy Subnav: hide on scroll-down, reveal on scroll-up ──
-       Standalone scroll listener, purely additive — does not modify
-       _scroll() or any other existing function. Gated by the
-       existing global `currentPage`, so it has zero effect while
-       any other page is open. ─────────────────────────────────── -->
+  <!-- ── Academy Subnav: hidden on every entry, hidden during normal
+       scrolling, reveals only once the user scrolls back up to the
+       very top ── Standalone + additive: a MutationObserver watches
+       #pg-academy's own class attribute to detect entry (no existing
+       function, incl. showPage, is wrapped or modified), then a
+       scroll listener gated by `currentPage` handles reveal/hide. -->
   <script>
   (function(){
     var _subnav=document.getElementById('acad-social-subnav');
-    if(!_subnav)return;
-    var _lastY=window.scrollY||0;
-    var _TOP=8;    /* px — treated as "top of page" → always shown */
-    var _DELTA=6;  /* px — ignores tiny/jittery scroll movements */
+    var _pgAcademy=document.getElementById('pg-academy');
+    if(!_subnav||!_pgAcademy)return;
+    var _armed=false;      /* true only after scrolling down away from the top once */
+    var _SHOW_AT=8;        /* px — must be back at the very top to reveal */
+    var _HIDE_AT=40;       /* px — hides once scrolled past this (gap avoids edge jitter) */
+    var _wasActive=_pgAcademy.classList.contains('active');
+
+    function hideBar(){ _subnav.classList.add('ac-subnav-hidden'); }
+    function showBar(){ _subnav.classList.remove('ac-subnav-hidden'); }
+
+    /* لحظة دخول صفحة الأكاديمية (أي طريقة دخول: نافبار سفلي، رابط
+       مشاركة، زرار رجوع المتصفح) بيتحقق منها بمراقبة الـ class نفسه
+       بدل ما نغلّف showPage — أأمن ومايعتمدش على ترتيب تحميل السكريبتات. */
+    new MutationObserver(function(){
+      var isActive=_pgAcademy.classList.contains('active');
+      if(isActive&&!_wasActive){
+        _armed=false;
+        hideBar();
+      }
+      _wasActive=isActive;
+    }).observe(_pgAcademy,{attributes:true,attributeFilter:['class']});
+
     window.addEventListener('scroll',function(){
       if(currentPage!=='academy')return;
       var y=window.scrollY||0;
-      if(y<=_TOP){
-        _subnav.classList.remove('ac-subnav-hidden');
-        _lastY=y;
-        return;
-      }
-      var diff=y-_lastY;
-      if(diff>_DELTA){
-        _subnav.classList.add('ac-subnav-hidden');
-        _lastY=y;
-      } else if(diff<-_DELTA){
-        _subnav.classList.remove('ac-subnav-hidden');
-        _lastY=y;
+      if(y>_HIDE_AT){
+        _armed=true;
+        hideBar();
+      } else if(_armed&&y<=_SHOW_AT){
+        showBar();
       }
     },{passive:true});
   })();
