@@ -19825,24 +19825,44 @@ button, [role="button"] { cursor: pointer; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--ink);
+  background: linear-gradient(155deg, var(--ink2) 0%, var(--ink) 100%);
   color: var(--white);
-  box-shadow: 0 10px 22px rgba(0,0,0,.25), 0 3px 8px rgba(0,0,0,.15);
-  transition: transform .2s var(--ease-spring), background .2s ease;
+  border: 3px solid var(--white);
+  box-shadow:
+    0 14px 28px rgba(15,23,18,.30),
+    0 4px 10px rgba(15,23,18,.18),
+    inset 0 1px 1px rgba(255,255,255,.22),
+    inset 0 -2px 3px rgba(0,0,0,.25);
+  transition: transform .2s var(--ease-spring), background .25s ease, box-shadow .25s ease;
 }
 .nb-center-circle svg { width: 22px; height: 22px; }
 .nb-nav-item.nb-center-item:active .nb-center-circle {
   transform: translateX(-50%) scale(.92);
 }
 .nb-nav-item.nb-center-item.active .nb-center-circle {
-  background: var(--brand);
+  background: linear-gradient(155deg, var(--brand-l) 0%, var(--brand) 55%, var(--brand-d) 100%);
+  box-shadow:
+    0 14px 30px rgba(15,85,46,.38),
+    0 4px 10px rgba(15,85,46,.22),
+    inset 0 1px 1px rgba(255,255,255,.30),
+    inset 0 -2px 3px rgba(0,0,0,.20);
 }
 [data-dark] .nb-center-circle {
-  background: var(--brand);
-  box-shadow: 0 10px 22px rgba(0,0,0,.5), 0 3px 8px rgba(0,0,0,.3);
+  background: linear-gradient(155deg, var(--brand-l) 0%, var(--brand) 55%, var(--brand-d) 100%);
+  border-color: rgba(255,255,255,.22);
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.55),
+    0 4px 12px rgba(0,0,0,.35),
+    inset 0 1px 1px rgba(255,255,255,.16),
+    inset 0 -2px 3px rgba(0,0,0,.30);
 }
 [data-dark] .nb-nav-item.nb-center-item.active .nb-center-circle {
-  background: var(--brand-l);
+  background: linear-gradient(155deg, var(--brand-xl) 0%, var(--brand-l) 55%, var(--brand) 100%);
+  box-shadow:
+    0 14px 32px rgba(0,0,0,.60),
+    0 4px 12px rgba(0,0,0,.40),
+    inset 0 1px 1px rgba(255,255,255,.22),
+    inset 0 -2px 3px rgba(0,0,0,.28);
 }
 .nb-nav-item:active .nb-lbl {
   transform: translateY(0) !important;
