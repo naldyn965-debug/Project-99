@@ -8220,13 +8220,16 @@ body.modal-open { overflow: hidden; }
 }
 /* جرس النافبار (#nav-notif-btn) دائري بـ overflow:hidden من .nav-icon-btn،
    وده بيقص طرف الشارة الدائرية فتطلع بشكل ممزّق بدل دائرة نضيفة. مقصورة
-   على الـ id ده بس عشان تفضل .nav-icon-btn (زر الثيم/الأفاتار) زي ما هي. */
-#nav-notif-btn{ overflow:visible; }
+   على الـ id ده بس عشان تفضل .nav-icon-btn (زر الثيم/الأفاتار) زي ما هي.
+   بنشيل مظهر الزرار الأصلي (-webkit-appearance) كمان لأن سفاري أحياناً
+   بيفضل يقصّ محتوى الـ <button> على شكله الدائري حتى مع overflow:visible،
+   طول ما شكله الافتراضي (native) لسه شغال. */
+#nav-notif-btn{ overflow:visible !important; -webkit-appearance:none; appearance:none; }
 /* الشارة كانت متمركزة (top/right:4px) جوه دايرة 38px صغيرة فبتغطي شكل
    الجرس نفسه. بنبعدها لطرف الزرار في السياق ده بس (نافبار)، من غير ما
    نلمس .ac-notif-badge الأصلية المشتركة مع جرس تبويب إشعارات الأكاديمية
    (تاب أعرض، مش متأثر بنفس المشكلة). */
-#nav-notif-btn .ac-notif-badge{ top:-3px; right:-3px; }
+#nav-notif-btn .ac-notif-badge{ top:-3px; right:-3px; z-index:3; }
 .ac-notif-panel{
   --ac-900:#051F20;
   --ac-700:#163832;
