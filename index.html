@@ -10072,7 +10072,7 @@ document.getElementById('thm-btn').addEventListener('click', function() {
 
 // ======================== RIPPLE EFFECT ========================
 document.addEventListener('click',e=>{
-  const btn=e.target.closest('button,.pcard,.cat-card');if(!btn)return;
+  const btn=e.target.closest('button:not(.nb-nav-item),.pcard,.cat-card');if(!btn)return;
   const r=document.createElement('span');r.className='rip';
   const rc=btn.getBoundingClientRect();const sz=Math.max(rc.width,rc.height)*2;
   r.style.cssText=`width:${sz}px;height:${sz}px;left:${e.clientX-rc.left-sz/2}px;top:${e.clientY-rc.top-sz/2}px`;
