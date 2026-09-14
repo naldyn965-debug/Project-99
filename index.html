@@ -19628,6 +19628,27 @@ button, [role="button"] { cursor: pointer; }
           mask-size: 600px 120px;
 }
 
+/* ── Curve edge — light mode ──────────────────────────────────
+   #nb-bottom-nav::before's `border` only traces the box's own
+   straight rectangular edge; the mask erases that border wherever
+   the notch cuts through, so the curve around the button was left
+   with no visible edge of its own — it just faded into whatever
+   was behind it. This layer draws only the curve's stroke (same
+   path as the mask, traced as a line instead of a hole), positioned
+   identically, so the edge continues seamlessly from the straight
+   border, around the button, and back. */
+#nb-bottom-nav::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZD0iTTI1MCwwQzI3MCwwIDI3MCw0OCAzMDAsNDhDMzMwLDQ4IDMzMCwwIDM1MCwwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMTUsMjMsMTgsLjE2KSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPgo=");
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: 600px 120px;
+}
+
 /* Dark mode shell — same glass treatment: more translucent, subtle
    rim highlight, deeper lift shadow for separation from dark content */
 [data-dark] #nb-bottom-nav::before {
@@ -19639,6 +19660,11 @@ button, [role="button"] { cursor: pointer; }
     0 14px 40px rgba(0,0,0,.5),
     0 4px 12px  rgba(0,0,0,.32),
     inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+/* Curve edge — dark mode counterpart */
+[data-dark] #nb-bottom-nav::after {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZD0iTTI1MCwwQzI3MCwwIDI3MCw0OCAzMDAsNDhDMzMwLDQ4IDMzMCwwIDM1MCwwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsLjE0KSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPgo=");
 }
 
 /* PWA install banner/FAB offset above the bottom nav — applies at every screen size */
