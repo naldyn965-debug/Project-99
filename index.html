@@ -20594,7 +20594,7 @@ body {
     /* Reposition pill on resize (orientation change, etc.) */
     window.addEventListener('resize', function () {
       var active = document.querySelector('#nb-bottom-nav .nb-nav-item.active');
-      if (active) moveSlidePill(active);
+      if (active && !active.classList.contains('nb-center-item')) moveSlidePill(active);
     }, { passive: true });
 
     /* iOS momentum scroll for long scrollable containers */
