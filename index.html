@@ -19684,32 +19684,42 @@ button, [role="button"] { cursor: pointer; }
 }
 
 /* ── Ambient light pooling into the center notch ───────────────
-   Soft blurred radial glow sitting behind the raised button, as
-   if light were spilling up through the shell's cutout. Painted
-   as ::before on the row (first thing in paint order) so it never
-   sits above the pill or the nav buttons; pointer-events disabled
-   so it never intercepts taps. Intensifies with a slow pulse only
-   while the Academy button is the active page. */
+   Soft diffused glow sitting behind the raised button, as if
+   light were spilling up through the shell's cutout. A bright
+   near-white core fading through a hint of brand green into full
+   transparency reads as an actual light source rather than a flat
+   colored patch. Painted as ::before on the row (first thing in
+   paint order) so it never sits above the pill or the nav
+   buttons; pointer-events disabled so it never intercepts taps.
+   Intensifies with a slow, gentle pulse only while the Academy
+   button is the active page. */
 .nb-nav-inner::before {
   content: '';
   position: absolute;
-  top: -34px;
+  top: -42px;
   left: 50%;
-  width: 132px;
-  height: 92px;
+  width: 176px;
+  height: 116px;
   transform: translateX(-50%);
-  background: radial-gradient(circle at 50% 28%, rgba(95,201,126,.32) 0%, rgba(95,201,126,0) 72%);
-  filter: blur(7px);
-  opacity: .75;
+  background: radial-gradient(ellipse 58px 40px at 50% 36%,
+                rgba(255,255,255,.5) 0%,
+                rgba(95,201,126,.20) 45%,
+                rgba(95,201,126,0) 80%);
+  filter: blur(16px);
+  opacity: .55;
   pointer-events: none;
   transition: opacity .35s ease, background .35s ease;
 }
 [data-dark] .nb-nav-inner::before {
-  background: radial-gradient(circle at 50% 28%, rgba(45,154,88,.5) 0%, rgba(45,154,88,0) 72%);
+  background: radial-gradient(ellipse 58px 40px at 50% 36%,
+                rgba(200,255,220,.4) 0%,
+                rgba(45,154,88,.32) 45%,
+                rgba(45,154,88,0) 80%);
+  opacity: .5;
 }
 .nb-nav-inner:has(.nb-center-item.active)::before {
-  opacity: 1;
-  animation: nbGlowPulse 2.6s ease-in-out infinite;
+  opacity: .8;
+  animation: nbGlowPulse 3.2s ease-in-out infinite;
 }
 
 /* ── Sliding background pill ──────────────
@@ -19840,8 +19850,8 @@ button, [role="button"] { cursor: pointer; }
 ───────────────────────────────────────────── */
 
 @keyframes nbGlowPulse {
-  0%, 100% { opacity: .85; transform: translateX(-50%) scale(1); }
-  50%      { opacity: 1;   transform: translateX(-50%) scale(1.08); }
+  0%, 100% { opacity: .8; transform: translateX(-50%) scale(1); }
+  50%      { opacity: 1;  transform: translateX(-50%) scale(1.04); }
 }
 @keyframes nbCenterPop {
   0%   { transform: translateX(-50%) scale(.82) rotate(-6deg); }
@@ -19869,7 +19879,7 @@ button, [role="button"] { cursor: pointer; }
   color: var(--white);
   border: 3px solid var(--white);
   box-shadow:
-    0 0 0 6px rgba(255,255,255,.22),
+    0 0 18px 2px rgba(255,255,255,.28),
     0 14px 28px rgba(15,23,18,.30),
     0 4px 10px rgba(15,23,18,.18),
     inset 0 1px 1px rgba(255,255,255,.22),
@@ -19902,7 +19912,7 @@ button, [role="button"] { cursor: pointer; }
 .nb-nav-item.nb-center-item.active .nb-center-circle {
   background: linear-gradient(150deg, var(--brand-l) 0%, var(--brand) 55%, var(--brand-d) 100%);
   box-shadow:
-    0 0 0 6px rgba(45,154,88,.28),
+    0 0 20px 2px rgba(45,154,88,.35),
     0 14px 30px rgba(15,85,46,.38),
     0 4px 10px rgba(15,85,46,.22),
     inset 0 1px 1px rgba(255,255,255,.30),
@@ -19913,7 +19923,7 @@ button, [role="button"] { cursor: pointer; }
   background: linear-gradient(150deg, var(--brand-l) 0%, var(--brand) 55%, var(--brand-d) 100%);
   border-color: rgba(255,255,255,.22);
   box-shadow:
-    0 0 0 6px rgba(45,154,88,.22),
+    0 0 18px 2px rgba(45,154,88,.30),
     0 14px 30px rgba(0,0,0,.55),
     0 4px 12px rgba(0,0,0,.35),
     inset 0 1px 1px rgba(255,255,255,.16),
@@ -19922,7 +19932,7 @@ button, [role="button"] { cursor: pointer; }
 [data-dark] .nb-nav-item.nb-center-item.active .nb-center-circle {
   background: linear-gradient(150deg, var(--brand-xl) 0%, var(--brand-l) 55%, var(--brand) 100%);
   box-shadow:
-    0 0 0 6px rgba(95,201,126,.30),
+    0 0 22px 2px rgba(95,201,126,.38),
     0 14px 32px rgba(0,0,0,.60),
     0 4px 12px rgba(0,0,0,.40),
     inset 0 1px 1px rgba(255,255,255,.22),
