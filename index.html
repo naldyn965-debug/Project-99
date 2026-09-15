@@ -10017,7 +10017,7 @@ function showPage(pg,opts={}){
   if(pg==='farm')document.getElementById('nl-farm')?.classList.add('active');
   if(pg==='market'){document.getElementById('nl-market')?.classList.add('active'); MKT.onPageEnter();}
   if(pg==='profile' && currentUser && typeof loadUserProfile==='function')loadUserProfile();
-  if(pg==='profile' && !currentUser){
+  if(pg==='profile' && !auth.currentUser){
     // انتظار Firebase لمرة واحدة قبل اعتبار المستخدم زائرًا (تفادي race condition)
     const _pgAuthUnsub=auth.onAuthStateChanged(function(user){
       _pgAuthUnsub();
