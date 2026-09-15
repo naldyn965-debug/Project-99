@@ -17862,8 +17862,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!_hadController) { _hadController = true; return; } /* first install — skip reload */
         if (window._nabtexSwReloading) return;
         window._nabtexSwReloading = true;
-        LOG('🔄 SW updated — reloading in 2s...');
-        setTimeout(function () { window.location.reload(); }, 2000);
+        LOG('🔄 SW updated — will reload once tab is idle...');
+        function _nbReloadWhenHidden() {
+          if (document.hidden) { window.location.reload(); }
+          else { document.addEventListener('visibilitychange', _nbReloadWhenHidden, { once: true }); }
+        }
+        setTimeout(_nbReloadWhenHidden, 2000);
       });
 
       /* SW message listener registered above via BG_SYNC block */
