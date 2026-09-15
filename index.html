@@ -19732,13 +19732,15 @@ button, [role="button"] { cursor: pointer; }
   top: 6px;
   bottom: 6px;
   width: 20%;       /* JS overwrites to exact item width */
-  border-radius: 16px;
+  border-radius: var(--rpill);
   pointer-events: none;
   z-index: 0;
   opacity: 0;       /* Invisible until JS runs */
 
-  /* Light mode pill */
-  background: var(--brand-pale);
+  /* Light mode pill — soft translucent brand wash, not a solid
+     opaque fill, so it reads as a glass accent instead of a flat
+     white sticker sitting on top of the frosted bar */
+  background: rgba(27,107,58,.09);
 
   /* Smooth settle — no overshoot (GPU-safe: transform + width only) */
   transition:
@@ -19748,7 +19750,7 @@ button, [role="button"] { cursor: pointer; }
 }
 
 [data-dark] #nb-slide-pill {
-  background: rgba(27,107,58,.22);
+  background: rgba(95,201,126,.16);
 }
 
 /* ── Nav item ────────────────────────────── */
