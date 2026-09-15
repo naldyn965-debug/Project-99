@@ -19696,17 +19696,18 @@ button, [role="button"] { cursor: pointer; }
 .nb-nav-inner::before {
   content: '';
   position: absolute;
-  top: -44px;
+  top: -28px;
   left: 50%;
-  width: 184px;
-  height: 122px;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse 62px 44px at 50% 36%,
-                rgba(255,255,255,.55) 0%,
-                rgba(95,201,126,.18) 38%,
-                rgba(95,201,126,0) 58%);
-  filter: blur(18px);
-  opacity: .52;
+  width: 120px;
+  height: 80px;
+  transform: translateX(-50%) translateZ(0);
+  will-change: opacity, transform;
+  background: radial-gradient(ellipse 36px 22px at 50% 40%,
+                rgba(255,255,255,.5) 0%,
+                rgba(95,201,126,.16) 40%,
+                rgba(95,201,126,0) 62%);
+  filter: blur(10px);
+  opacity: .48;
   pointer-events: none;
   transition: opacity .35s ease, background .35s ease;
 }
