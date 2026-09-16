@@ -180,7 +180,15 @@ img{display:block;max-width:100%}
 /* ═══════════════════════════════════════════
    LOADER
 ═══════════════════════════════════════════ */
-#ldr{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--brand-d);overflow:hidden}
+#ldr{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+/* ── iOS 27 / Safari — Liquid Glass status-bar fix ─────────────────
+   #ldr كان fixed + background مباشر على نفس العنصر؛ ده بالظبط الـ
+   pattern اللي Safari (26+) بيفحصه على عناصر fixed/sticky القريبة من
+   حافة الشاشة عشان يحدد tint/blur الـ status bar بتاعه، فكان بيطبّع
+   حتة "زجاج" ضبابي فوق شاشة التحميل. الحل: نفس اللون بس على ::before
+   خلفي — الـ pseudo-elements مش بتتقرأ من خوارزمية Safari، فـ #ldr
+   نفسه يفضل شفاف من وجهة نظرها. مفيش أي تغيير في الشكل الظاهر. */
+#ldr::before{content:'';position:absolute;inset:0;z-index:-1;background:var(--brand-d)}
 #ldr .l-logo{font-family:var(--f-display);font-size:52px;color:#fff;letter-spacing:.04em;opacity:0;transform:translateY(20px);animation:ldIn .8s .2s var(--ease-out) forwards}
 #ldr .l-tag{font-size:12px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;margin-top:8px;opacity:0;animation:ldIn .8s .5s var(--ease-out) forwards}
 #ldr .l-line{width:0;height:2px;background:linear-gradient(90deg,var(--brand-xl),var(--gold-l));margin-top:32px;animation:lLine 1.8s .4s var(--ease-out) forwards;border-radius:2px}
@@ -19509,6 +19517,9 @@ document.addEventListener('DOMContentLoaded', function() {
 html {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  /* iOS 27/Safari fallback tint لو ملقاش عنصر fixed مؤهل فوق —
+     من غيرها ممكن يرجع أبيض افتراضي حتى في الوضع الغامق */
+  background-color: var(--bg);
 }
 /* Refined scrollbar — thin & auto-fade */
 ::-webkit-scrollbar         { width: 3px; height: 3px; }
