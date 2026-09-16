@@ -19454,10 +19454,10 @@ document.addEventListener('DOMContentLoaded', function() {
       </span>
       <span class="nb-lbl">مزرعتي</span>
     </button>
-    <!-- Academy — raised center button -->
-    <button class="nb-nav-item nb-center-item" data-page="academy"
-            onclick="showPage('academy');window.scrollTo(0,0);" aria-label="الأكاديمية">
-      <span class="nb-center-circle">
+    <!-- Academy (الكورسات) -->
+    <button class="nb-nav-item" data-page="academy"
+            onclick="showPage('academy');window.scrollTo(0,0);" aria-label="الكورسات">
+      <span class="nb-ico">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
              aria-hidden="true" focusable="false">
@@ -19465,6 +19465,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <path d="M6 12v5c3 3 9 3 12 0v-5"/>
         </svg>
       </span>
+      <span class="nb-lbl">الكورسات</span>
     </button>
     <!-- Market -->
     <button class="nb-nav-item" data-page="market"
@@ -19609,58 +19610,6 @@ button, [role="button"] { cursor: pointer; }
     0 4px 14px  rgba(0,0,0,.10),
     inset 0 1px 0 rgba(255,255,255,.6);
 
-  /* Real cutout for the raised center button — punches an actual
-     transparent hole through the shell (glass, background, shadow),
-     rather than painting a matching-color circle on top. Reads
-     correctly over any backdrop: dark mode, scrolled content, etc.
-     A plain circle radial-gradient meets the flat top edge at a
-     sharp, non-tangent angle (a visible "kink"). This SVG mask traces
-     the opening as a true circular arc blended into the flat top edge
-     by two short cubic-bezier connectors — tangent-matched by
-     construction (verified numerically) at every join. The arc is
-     centered on the BUTTON's own center (10px below this shell's top,
-     not on the flat edge itself — the button sits mostly below the
-     bar) with radius 36 (button's 28px radius + 8px clearance), so the
-     gap around the button is uniform on all sides; centering the arc
-     on the flat edge instead left almost no clearance on the sides and
-     made the button look like it was touching/overlapping the curve.
-     A dense sampled-polyline version of this same curve also rendered
-     with a visible cusp at the bottom on real devices (mask
-     rasterization doesn't anti-alias many short line segments as
-     smoothly as true curve/arc commands) — arcs and beziers are native
-     primitives, so this is genuinely smooth rather than approximated.
-     Roughly the same overall opening size/reach as the old circle
-     (100px wide at the top edge, ~46px deep); fixed-px mask-size keeps
-     it pixel-consistent regardless of the bar's own responsive width. */
-  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMCwwSDYwMFYxMjBIMFogTTI1MCwwIEMyNjkuMjUsMCAyNTkuMjcsMTIuNzYgMjY5LjQ3LDI5LjA4IEEzNiwzNiAwIDAgMCAzMzAuNTMsMjkuMDggQzM0MC43MywxMi43NiAzMzAuNzUsMCAzNTAsMFoiLz48L3N2Zz4=");
-          mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMCwwSDYwMFYxMjBIMFogTTI1MCwwIEMyNjkuMjUsMCAyNTkuMjcsMTIuNzYgMjY5LjQ3LDI5LjA4IEEzNiwzNiAwIDAgMCAzMzAuNTMsMjkuMDggQzM0MC43MywxMi43NiAzMzAuNzUsMCAzNTAsMFoiLz48L3N2Zz4=");
-  -webkit-mask-repeat: no-repeat;
-          mask-repeat: no-repeat;
-  -webkit-mask-position: 50% 0;
-          mask-position: 50% 0;
-  -webkit-mask-size: 600px 120px;
-          mask-size: 600px 120px;
-}
-
-/* ── Curve edge — light mode ──────────────────────────────────
-   #nb-bottom-nav::before's `border` only traces the box's own
-   straight rectangular edge; the mask erases that border wherever
-   the notch cuts through, so the curve around the button was left
-   with no visible edge of its own — it just faded into whatever
-   was behind it. This layer draws only the curve's stroke (same
-   path as the mask, traced as a line instead of a hole), positioned
-   identically, so the edge continues seamlessly from the straight
-   border, around the button, and back. */
-#nb-bottom-nav::after {
-  content: '';
-  position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZD0iTTI1MCwwIEMyNjkuMjUsMCAyNTkuMjcsMTIuNzYgMjY5LjQ3LDI5LjA4IEEzNiwzNiAwIDAgMCAzMzAuNTMsMjkuMDggQzM0MC43MywxMi43NiAzMzAuNzUsMCAzNTAsMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDE1LDIzLDE4LC4xNikiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=");
-  background-repeat: no-repeat;
-  background-position: 50% 0;
-  background-size: 600px 120px;
 }
 
 /* Dark mode shell — same glass treatment: more translucent, subtle
@@ -19676,10 +19625,6 @@ button, [role="button"] { cursor: pointer; }
     inset 0 1px 0 rgba(255,255,255,.06);
 }
 
-/* Curve edge — dark mode counterpart */
-[data-dark] #nb-bottom-nav::after {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZD0iTTI1MCwwIEMyNjkuMjUsMCAyNTkuMjcsMTIuNzYgMjY5LjQ3LDI5LjA4IEEzNiwzNiAwIDAgMCAzMzAuNTMsMjkuMDggQzM0MC43MywxMi43NiAzMzAuNzUsMCAzNTAsMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LC4xNCkiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=");
-}
 
 /* PWA install banner/FAB offset above the bottom nav — applies at every screen size */
 #pwa-install-banner { bottom: calc(90px + env(safe-area-inset-bottom, 0px)) !important; }
@@ -19695,45 +19640,6 @@ button, [role="button"] { cursor: pointer; }
   margin: 0 auto;
   /* pill needs an anchor */
   position: relative;
-}
-
-/* ── Ambient light pooling into the center notch ───────────────
-   Soft diffused glow sitting behind the raised button, as if
-   light were spilling up through the shell's cutout. A bright
-   near-white core fading through a hint of brand green into full
-   transparency reads as an actual light source rather than a flat
-   colored patch. Painted as ::before on the row (first thing in
-   paint order) so it never sits above the pill or the nav
-   buttons; pointer-events disabled so it never intercepts taps.
-   Intensifies with a slow, gentle pulse only while the Academy
-   button is the active page. */
-.nb-nav-inner::before {
-  content: '';
-  position: absolute;
-  top: -28px;
-  left: 50%;
-  width: 120px;
-  height: 80px;
-  transform: translateX(-50%) translateZ(0);
-  will-change: opacity, transform;
-  background: radial-gradient(ellipse 36px 22px at 50% 40%,
-                rgba(255,255,255,.5) 0%,
-                rgba(95,201,126,.16) 40%,
-                rgba(95,201,126,0) 62%);
-  filter: blur(10px);
-  opacity: .48;
-  pointer-events: none;
-  transition: opacity .35s ease, background .35s ease;
-}
-[data-dark] .nb-nav-inner::before {
-  background: radial-gradient(ellipse 62px 44px at 50% 36%,
-                rgba(200,255,220,.45) 0%,
-                rgba(45,154,88,.36) 45%,
-                rgba(45,154,88,0) 80%);
-  opacity: .58;
-}
-.nb-nav-inner:has(.nb-center-item.active)::before {
-  opacity: .5;
 }
 
 /* ── Sliding background pill ──────────────
@@ -19853,108 +19759,6 @@ button, [role="button"] { cursor: pointer; }
   transition: transform .16s ease-out !important;
 }
 
-/* ── RAISED CENTER BUTTON (Academy) ──────────────
-   Floats above the bar in a filled circle, no label —
-   matches the reference bottom-nav layout.
-───────────────────────────────────────────── */
-/* ── Notch behind the raised center button ──────
-   The real cutout lives on #nb-bottom-nav::before (the shell
-   layer in the "Outer shell" block above), not on this button —
-   it's a true masked hole, not a color-matched circle, and it's
-   scoped to the shell specifically so it never clips this button,
-   which overflows above the shell by design.
-───────────────────────────────────────────── */
-
-@keyframes nbGlowPulse {
-  0%, 100% { opacity: .8; transform: translateX(-50%) scale(1); }
-  50%      { opacity: 1;  transform: translateX(-50%) scale(1.04); }
-}
-@keyframes nbCenterPop {
-  0%   { transform: translateX(-50%) scale(.82) rotate(-6deg); }
-  55%  { transform: translateX(-50%) scale(1.10) rotate(3deg); }
-  100% { transform: translateX(-50%) scale(1) rotate(0deg); }
-}
-
-.nb-nav-item.nb-center-item {
-  min-height: 52px;
-  overflow: visible;
-}
-.nb-center-circle {
-  position: absolute;
-  top: -26px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: linear-gradient(150deg, var(--ink2) 0%, var(--ink) 70%, var(--brand-d) 140%);
-  color: var(--white);
-  border: 3px solid var(--white);
-  box-shadow:
-    0 0 20px 3px rgba(255,255,255,.32),
-    0 20px 38px rgba(15,23,18,.32),
-    0 9px 18px  rgba(15,23,18,.20),
-    0 3px 7px   rgba(15,23,18,.16),
-    inset 0 1px 1px rgba(255,255,255,.26),
-    inset 0 -2px 3px rgba(0,0,0,.26);
-  transition: transform .2s var(--ease-spring), background .25s ease, box-shadow .25s ease;
-}
-/* Glossy top sheen + bottom rim shadow — glassy "sphere" feel.
-   Painted as pseudo-layers (not new markup) so the real icon child
-   stays crisp above them; overflow:hidden clips both to the circle. */
-.nb-center-circle::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(165deg, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 52%);
-  pointer-events: none;
-}
-.nb-center-circle::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: inset 0 -8px 12px rgba(0,0,0,.24), inset 0 2px 2px rgba(255,255,255,.16);
-  pointer-events: none;
-}
-.nb-center-circle svg { width: 22px; height: 22px; position: relative; z-index: 1; }
-.nb-nav-item.nb-center-item:active .nb-center-circle {
-  transform: translateX(-50%) scale(.92);
-}
-.nb-nav-item.nb-center-item.active .nb-center-circle {
-  background: linear-gradient(150deg, var(--brand-l) 0%, var(--brand) 55%, var(--brand-d) 100%);
-  box-shadow:
-    0 2px 6px rgba(15,85,46,.28),
-    inset 0 1px 1px rgba(255,255,255,.34),
-    inset 0 -2px 3px rgba(0,0,0,.20);
-  animation: nbCenterPop .5s var(--ease-spring);
-}
-[data-dark] .nb-center-circle {
-  background: linear-gradient(150deg, var(--brand-l) 0%, var(--brand) 55%, var(--brand-d) 100%);
-  border-color: rgba(255,255,255,.22);
-  box-shadow:
-    0 0 22px 3px rgba(45,154,88,.34),
-    0 20px 40px rgba(0,0,0,.58),
-    0 9px 20px  rgba(0,0,0,.38),
-    0 3px 8px   rgba(0,0,0,.28),
-    inset 0 1px 1px rgba(255,255,255,.18),
-    inset 0 -2px 3px rgba(0,0,0,.32);
-}
-[data-dark] .nb-nav-item.nb-center-item.active .nb-center-circle {
-  background: linear-gradient(150deg, var(--brand-xl) 0%, var(--brand-l) 55%, var(--brand) 100%);
-  box-shadow:
-    0 0 26px 3px rgba(95,201,126,.42),
-    0 20px 42px rgba(0,0,0,.62),
-    0 9px 22px  rgba(0,0,0,.42),
-    0 3px 9px   rgba(0,0,0,.32),
-    inset 0 1px 1px rgba(255,255,255,.24),
-    inset 0 -2px 3px rgba(0,0,0,.30);
-}
 .nb-nav-item:active .nb-lbl {
   transform: translateY(0) !important;
   transition: transform .16s ease-out !important;
