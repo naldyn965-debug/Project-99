@@ -19714,6 +19714,15 @@ button, [role="button"] { cursor: pointer; }
   width: 22px; height: 22px;
   transition: stroke-width .24s ease;
 }
+/* Optical size fix — the graduation-cap glyph is naturally wide and
+   flat (a mortarboard viewed from an angle), so at the shared 22px
+   box it reads visually shorter/lighter than the taller, boxier
+   glyphs used by the other four tabs (person, bag, tree, house).
+   Scoped to this one button only, via attribute selector — no shared
+   rule touched, no other tab affected. */
+#nb-bottom-nav button[data-page="academy"] .nb-ico svg {
+  width: 25px; height: 25px;
+}
 
 /* ── Label ────── */
 .nb-nav-item .nb-lbl {
