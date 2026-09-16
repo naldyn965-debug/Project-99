@@ -21083,6 +21083,25 @@ function nbFmtDate(date){
   .nav.up .nav-bg{backdrop-filter:blur(14px) url(#liquidNav) saturate(200%) brightness(106%);-webkit-backdrop-filter:blur(14px) saturate(200%) brightness(106%);}
 }
 
+/* ── Status-bar inset fix (iOS 26 / Safari 26) ───────────────────
+   Installed to the Home Screen (black-translucent status bar +
+   viewport-fit=cover), the safe-area-inset-top strip is ordinary
+   page content. From Safari 26, WebKit fills that strip with its
+   own Liquid Glass blur whenever it can't sample one flat, opaque
+   colour there — .nav-bg's ~90%-alpha glass + backdrop-filter never
+   qualifies, so on Apple devices the system was stacking its own
+   blur on top of ours, reading as extra haze right under the clock.
+   This paints one fully opaque sliver, exactly the inset's height,
+   above .nav-bg's own background — nothing else about the glass
+   bar changes, and on devices with no inset (desktop, Android) the
+   height resolves to 0 and the sliver is invisible. */
+.nav-bg::before{
+  content:'';position:absolute;top:0;left:0;right:0;
+  height:env(safe-area-inset-top,0px);
+  background:var(--card);
+  pointer-events:none;
+}
+
 /* ── .nb-h2-hero: was a solid gradient, no glass on top. An element
    can't backdrop-filter its own background, so ::after adds a real
    glass PANE above it. Sits above .nb-h2-hero-glow/-motif (z-index:1,
