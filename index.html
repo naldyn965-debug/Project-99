@@ -19615,21 +19615,25 @@ button, [role="button"] { cursor: pointer; }
      correctly over any backdrop: dark mode, scrolled content, etc.
      A plain circle radial-gradient meets the flat top edge at a
      sharp, non-tangent angle (a visible "kink"). This SVG mask traces
-     the opening as a true circular arc (radius 34, hugging the 56px
-     button with a small clearance) blended into the flat top edge by
-     two short cubic-bezier connectors — tangent-matched by construction
-     (verified numerically) at every join: flat→connector horizontal,
-     connector→arc matches the arc's own tangent exactly. A dense
-     sampled-polyline version of this same curve rendered with a visible
-     cusp at the bottom on real devices (mask rasterization doesn't
-     appear to anti-alias many short line segments as smoothly as true
-     curve/arc commands) — arcs and beziers are native primitives, so
-     this is genuinely smooth rather than approximated. Same overall
-     opening size/reach as the old circle (100px wide at the top edge,
-     48px deep); fixed-px mask-size keeps it pixel-consistent regardless
-     of the bar's own responsive width. */
-  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMCwwSDYwMFYxMjBIMFogTTI1MCwwIEMyNjUuMjksMCAyNjMuMDYsNS4wNSAyNzEuMTcsMTguMDIgQTM0LDM0IDAgMCAwIDMyOC44MywxOC4wMiBDMzM2Ljk0LDUuMDUgMzM0LjcxLDAgMzUwLDBaIi8+PC9zdmc+");
-          mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMCwwSDYwMFYxMjBIMFogTTI1MCwwIEMyNjUuMjksMCAyNjMuMDYsNS4wNSAyNzEuMTcsMTguMDIgQTM0LDM0IDAgMCAwIDMyOC44MywxOC4wMiBDMzM2Ljk0LDUuMDUgMzM0LjcxLDAgMzUwLDBaIi8+PC9zdmc+");
+     the opening as a true circular arc blended into the flat top edge
+     by two short cubic-bezier connectors — tangent-matched by
+     construction (verified numerically) at every join. The arc is
+     centered on the BUTTON's own center (10px below this shell's top,
+     not on the flat edge itself — the button sits mostly below the
+     bar) with radius 36 (button's 28px radius + 8px clearance), so the
+     gap around the button is uniform on all sides; centering the arc
+     on the flat edge instead left almost no clearance on the sides and
+     made the button look like it was touching/overlapping the curve.
+     A dense sampled-polyline version of this same curve also rendered
+     with a visible cusp at the bottom on real devices (mask
+     rasterization doesn't anti-alias many short line segments as
+     smoothly as true curve/arc commands) — arcs and beziers are native
+     primitives, so this is genuinely smooth rather than approximated.
+     Roughly the same overall opening size/reach as the old circle
+     (100px wide at the top edge, ~46px deep); fixed-px mask-size keeps
+     it pixel-consistent regardless of the bar's own responsive width. */
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMCwwSDYwMFYxMjBIMFogTTI1MCwwIEMyNjkuMjUsMCAyNTkuMjcsMTIuNzYgMjY5LjQ3LDI5LjA4IEEzNiwzNiAwIDAgMCAzMzAuNTMsMjkuMDggQzM0MC43MywxMi43NiAzMzAuNzUsMCAzNTAsMFoiLz48L3N2Zz4=");
+          mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMCwwSDYwMFYxMjBIMFogTTI1MCwwIEMyNjkuMjUsMCAyNTkuMjcsMTIuNzYgMjY5LjQ3LDI5LjA4IEEzNiwzNiAwIDAgMCAzMzAuNTMsMjkuMDggQzM0MC43MywxMi43NiAzMzAuNzUsMCAzNTAsMFoiLz48L3N2Zz4=");
   -webkit-mask-repeat: no-repeat;
           mask-repeat: no-repeat;
   -webkit-mask-position: 50% 0;
@@ -19653,7 +19657,7 @@ button, [role="button"] { cursor: pointer; }
   top: 0; right: 0; bottom: 0; left: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZD0iTTI1MCwwIEMyNjUuMjksMCAyNjMuMDYsNS4wNSAyNzEuMTcsMTguMDIgQTM0LDM0IDAgMCAwIDMyOC44MywxOC4wMiBDMzM2Ljk0LDUuMDUgMzM0LjcxLDAgMzUwLDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgxNSwyMywxOCwuMTYpIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+");
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZD0iTTI1MCwwIEMyNjkuMjUsMCAyNTkuMjcsMTIuNzYgMjY5LjQ3LDI5LjA4IEEzNiwzNiAwIDAgMCAzMzAuNTMsMjkuMDggQzM0MC43MywxMi43NiAzMzAuNzUsMCAzNTAsMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDE1LDIzLDE4LC4xNikiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=");
   background-repeat: no-repeat;
   background-position: 50% 0;
   background-size: 600px 120px;
@@ -19674,7 +19678,7 @@ button, [role="button"] { cursor: pointer; }
 
 /* Curve edge — dark mode counterpart */
 [data-dark] #nb-bottom-nav::after {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZD0iTTI1MCwwIEMyNjUuMjksMCAyNjMuMDYsNS4wNSAyNzEuMTcsMTguMDIgQTM0LDM0IDAgMCAwIDMyOC44MywxOC4wMiBDMzM2Ljk0LDUuMDUgMzM0LjcxLDAgMzUwLDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwuMTQpIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+");
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNjAwIDEyMCI+PHBhdGggZD0iTTI1MCwwIEMyNjkuMjUsMCAyNTkuMjcsMTIuNzYgMjY5LjQ3LDI5LjA4IEEzNiwzNiAwIDAgMCAzMzAuNTMsMjkuMDggQzM0MC43MywxMi43NiAzMzAuNzUsMCAzNTAsMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LC4xNCkiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=");
 }
 
 /* PWA install banner/FAB offset above the bottom nav — applies at every screen size */
