@@ -1131,7 +1131,10 @@ var modulesHTML=AC_COURSE.modules.map(function(mod,mi){
   rows+'</div>'}).join('');
 
 var feScore=acFEScore();
-var allDone=pct===100;
+/* Hydroponics Professional: also open the comprehensive final exam
+   without requiring every lecture quiz to be completed first —
+   scoped to this course only, no other course is affected. */
+var allDone=pct===100||AC_CID==='hydroponics-professional';
 var btnLabel=doneLessons===0?acIco('rocket',16)+' ابدأ الدورة الآن':
              !allDone?acIco('play',15)+' متابعة من حيث توقفت':
              feScore>=70?acIco('cap',16)+' عرض الشهادة':
