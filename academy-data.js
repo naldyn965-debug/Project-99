@@ -702,6 +702,11 @@ if(h<=0)return m+' دقيقة';
 if(m<=0)return h+' ساعة';
 return h+' ساعة و'+m+' دقيقة'}
 function acIsUnlocked(id){
+/* Hydroponics Professional course: all lectures open freely — no
+   requirement to pass the previous lecture's quiz first, and no
+   inter-module day-gate. Final exam flow is untouched (still gated
+   by acPct()===100 in acRenderHome, unaffected by this bypass). */
+if(AC_CID==='hydroponics-professional')return true;
 var flat=acFlatLessons();
 var idx=flat.indexOf(id);
 if(idx<=0)return true;
