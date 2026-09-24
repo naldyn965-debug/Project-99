@@ -1717,161 +1717,6 @@ body.modal-open { overflow: hidden; }
   ]
 }
 </script>
-
-<!-- NABTEX SURGICAL MOTION LAYER v1.0 — UI/motion only; no business logic/data changes -->
-<style id="nb-motion-layer">
-  :root{
-    --nb-motion-out:cubic-bezier(.22,1,.36,1);
-    --nb-motion-spring:cubic-bezier(.16,1,.3,1);
-    --nb-motion-fast:140ms;
-    --nb-motion-base:260ms;
-  }
-
-  /* Calm page composition */
-  .nb-h2-top,
-  .nb-h2-search,
-  .nb-h2-courses-head,
-  .nb-h2-courses-sec{
-    opacity:1;
-    transform:none;
-  }
-  .nb-motion-enter .nb-h2-top{
-    animation:nbMotionIn 420ms var(--nb-motion-out) both;
-  }
-  .nb-motion-enter .nb-h2-search{
-    animation:nbMotionIn 420ms .08s var(--nb-motion-out) both;
-  }
-  .nb-motion-enter .nb-h2-courses-head{
-    animation:nbMotionIn 420ms .16s var(--nb-motion-out) both;
-  }
-  @keyframes nbMotionIn{
-    from{opacity:0;transform:translateY(8px)}
-    to{opacity:1;transform:none}
-  }
-
-  /* Course cards: tactile, restrained */
-  .nb-h2-course-card{
-    -webkit-tap-highlight-color:transparent;
-    transition:
-      opacity 420ms var(--nb-motion-out),
-      transform 280ms var(--nb-motion-out),
-      box-shadow 220ms ease,
-      border-color 220ms ease;
-  }
-  .nb-h2-course-card.nb-motion-visible{
-    opacity:1;
-    transform:translateY(0);
-  }
-  .nb-h2-course-card .nb-h2-cc-img{
-    transition:transform 320ms var(--nb-motion-out);
-  }
-  @media (hover:hover) and (pointer:fine){
-    .nb-h2-course-card:hover .nb-h2-cc-img{transform:scale(1.02)}
-    .nb-h2-course-card:hover{
-      transform:translateY(-3px);
-      box-shadow:0 10px 24px rgba(0,0,0,.07);
-    }
-  }
-  @media (hover:none) and (pointer:coarse){
-    .nb-h2-course-card:active{
-      transform:scale(.98) !important;
-      transition-duration:80ms !important;
-      box-shadow:0 4px 12px rgba(0,0,0,.06) !important;
-    }
-    .nb-h2-course-card:active .nb-h2-cc-img{transform:scale(1.02)}
-  }
-
-  /* Disable the old continuous shine: interaction should be felt, not watched. */
-  .nb-h2-cc-shine{animation:none !important;opacity:0 !important}
-
-  /* Progress: reveal from zero, then settle at the real value. */
-  .nb-h2-cc-prog-fill,
-  .acad-prog-fill{
-    will-change:width;
-  }
-  .nb-progress-ready .nb-h2-cc-prog-fill,
-  .nb-progress-ready .acad-prog-fill{
-    transition:width 720ms var(--nb-motion-out) !important;
-  }
-
-  /* Percentage counter feels connected to its bar. */
-  .nb-motion-counter{
-    font-variant-numeric:tabular-nums;
-    display:inline-block;
-    min-width:3ch;
-  }
-
-  /* Search: quiet focus lift */
-  .nb-h2-search{
-    transition:transform 220ms var(--nb-motion-out),filter 220ms ease;
-  }
-  .nb-h2-search:focus-within{
-    transform:translateY(-1px);
-    filter:drop-shadow(0 7px 16px rgba(27,107,58,.10));
-  }
-  .sp-bar{
-    transition:border-color 180ms ease,box-shadow 220ms var(--nb-motion-out),transform 220ms var(--nb-motion-out) !important;
-  }
-  .sp-bar:focus-within{
-    transform:translateY(-1px);
-  }
-
-  /* Small tactile feedback for existing controls only. */
-  .nb-motion-press{
-    transition:transform 160ms var(--nb-motion-spring),opacity 160ms ease,box-shadow 200ms ease !important;
-  }
-  .nb-motion-press:active{
-    transform:scale(.98) !important;
-  }
-
-  /* Bottom nav: smoother active state without changing structure. */
-  #nb-bottom-nav .nb-nav-item .nb-ico{
-    transition:transform 260ms var(--nb-motion-spring);
-    will-change:transform;
-  }
-  #nb-bottom-nav .nb-nav-item.active .nb-ico{
-    transform:scale(1.06);
-  }
-  #nb-bottom-nav .nb-nav-item .nb-lbl{
-    transition:color 220ms ease,transform 260ms var(--nb-motion-spring);
-  }
-  #nb-bottom-nav .nb-nav-item.active .nb-lbl{
-    transform:translateY(-1px);
-  }
-  #nb-slide-pill{
-    transition:transform 320ms var(--nb-motion-spring),width 280ms var(--nb-motion-spring),opacity 180ms ease !important;
-  }
-
-  /* One-shot completion feedback — only when the real value reaches 100. */
-  .nb-progress-complete{
-    animation:nbProgressComplete 420ms var(--nb-motion-spring);
-  }
-  @keyframes nbProgressComplete{
-    50%{transform:scale(1.025)}
-  }
-
-  @media(prefers-reduced-motion:reduce){
-    .nb-motion-enter .nb-h2-top,
-    .nb-motion-enter .nb-h2-search,
-    .nb-motion-enter .nb-h2-courses-head,
-    .nb-h2-course-card,
-    .nb-h2-course-card .nb-h2-cc-img,
-    .nb-h2-search,
-    .sp-bar,
-    #nb-bottom-nav .nb-nav-item .nb-ico,
-    #nb-bottom-nav .nb-nav-item .nb-lbl,
-    #nb-slide-pill{
-      animation:none !important;
-      transition:none !important;
-      transform:none !important;
-    }
-    .nb-h2-course-card,
-    .nb-h2-course-card.nb-motion-visible{
-      opacity:1 !important;
-    }
-  }
-</style>
-
 </head>
 <body>
   <!-- Liquid Glass — hidden SVG refraction filters (feDisplacementMap + feSpecularLighting).
@@ -22014,172 +21859,234 @@ document.querySelectorAll('.vcash-overlay').forEach(_watch);
 })();
 </script>
 
+<!-- ══════════════════════════════════════════════════════════════
+     NABTEX MOTION LAYER — additive only (CSS + JS, nothing edited above).
+     Scope: Home dashboard (#nb-dash-content), course cards, header
+     entrance, search results, bottom-nav icon. No data, routes, Firebase
+     or render functions are touched — every real value (progress %, text)
+     is read from the DOM the app already rendered and restored exactly.
+     Delete this whole block to revert.
+══════════════════════════════════════════════════════════════ -->
+<style id="nb-motion-css">
+:root{--nbmo-out:cubic-bezier(.16,1,.3,1)}
 
-<script id="nb-motion-layer-js">
+/* Calm the two perpetual effects on cards (brief: no constant motion) */
+.nb-h2-cc-shine{animation:none}
+
+/* ── CARD: tactile press / restrained hover ─────────────────── */
+.nb-h2-cc-img{transition:transform .5s var(--nbmo-out)}
+.nb-h2-course-card:hover .nb-h2-cc-img,
+.nb-h2-course-card:active .nb-h2-cc-img{transform:scale(1.02)}
+@media (hover:hover) and (pointer:fine){
+  .nb-h2-course-card.nb-h2-in:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 24px -10px rgba(27,107,58,.18),0 3px 10px rgba(0,0,0,.05);
+    border-color:rgba(27,107,58,.22);
+  }
+  .nb-h2-avatar:hover{transform:scale(1.04)}
+}
+.nb-h2-course-card.nb-h2-in:active{transform:scale(.98);transition-duration:.12s}
+@media (hover:none) and (pointer:coarse){
+  .nb-h2-course-card.nb-h2-in:active{transform:scale(.98) !important;transition-duration:.12s !important}
+}
+.nb-h2-cc-cta{font-variant-numeric:tabular-nums}
+
+/* ── Buttons / avatar / search feedback ─────────────────────── */
+.nb-h2-viewall{transition:opacity .2s,background .2s,transform .18s var(--nbmo-out)}
+.nb-h2-viewall:active{transform:scale(.96)}
+.nb-h2-avatar:active{transform:scale(.95)}
+#nb-dash-content .nb-h2-search{transition:background .25s,border-color .25s,box-shadow .25s,transform .3s var(--nbmo-out)}
+#nb-dash-content .nb-h2-search:focus-within{transform:translateY(-1px)}
+.nb-h2-search-inp::placeholder{transition:opacity .2s}
+.nb-h2-search-inp:focus::placeholder{opacity:.5}
+
+/* ── Bottom nav: gentler active icon (was 1.22) ─────────────── */
+.nb-nav-item.active .nb-ico{transform:translateY(-2px) scale(1.12)}
+
+/* ── Search results: vertical settle, capped stagger ────────── */
+@keyframes nbMoResIn{from{opacity:0;transform:translateY(8px)}}
+.sp-result-item{animation-name:nbMoResIn}
+.sp-result-item:nth-child(n+11){animation-delay:315ms !important}
+.sp-results-head{animation:nbMoResIn .35s var(--nbmo-out) both}
+
+/* ── Entrance choreography (only when motion is allowed) ────── */
+@media (prefers-reduced-motion:no-preference){
+  /* header: once, after the splash loader */
+  html[data-nb-mo-hold] .nav-inner{opacity:0}
+  html.nb-mo-go .nav-inner{animation:nbMoHdr .5s var(--nbmo-out) backwards}
+  @keyframes nbMoHdr{from{opacity:0;transform:translateY(-8px)}}
+
+  /* JS arms #nb-dash-content[data-mo]; without JS the app's own
+     animations run untouched. */
+  #nb-dash-content[data-mo] .nb-h2-hero{animation:none;opacity:0;transform:translateY(8px);
+    transition:opacity .5s var(--nbmo-out),transform .5s var(--nbmo-out)}
+  #nb-dash-content[data-mo] .nb-h2-search{opacity:0;transform:translateY(6px);
+    transition:opacity .45s var(--nbmo-out),transform .45s var(--nbmo-out),background .25s,border-color .25s,box-shadow .25s}
+  #nb-dash-content[data-mo] .nb-h2-courses-sec{animation:none}
+  #nb-dash-content[data-mo] .nb-h2-courses-head{opacity:0;transform:translateY(8px);
+    transition:opacity .45s var(--nbmo-out),transform .45s var(--nbmo-out)}
+  #nb-dash-content[data-mo] .nb-h2-hero.mo-in,
+  #nb-dash-content[data-mo] .nb-h2-search.mo-in,
+  #nb-dash-content[data-mo] .nb-h2-courses-head.mo-in{opacity:1;transform:none}
+  #nb-dash-content[data-mo] .nb-h2-search.mo-in:focus-within{transform:translateY(-1px)}
+  /* cards keep their own transition; this is only the pre-reveal state */
+  #nb-dash-content[data-mo] .nb-h2-course-card:not(.mo-in){opacity:0;transform:translateY(12px) scale(.985)}
+
+  /* progress: real width stays inline; held at its previous value until revealed */
+  #nb-dash-content[data-mo] .nb-h2-cc-prog-fill{transition:width .8s var(--nbmo-out)}
+  #nb-dash-content[data-mo] .nb-h2-cc-prog-fill[data-mo-pf]{width:var(--mo-from,0%) !important}
+
+  /* completion tick draws once */
+  #nb-dash-content[data-mo] .nb-h2-course-card.mo-in .nb-h2-cc-done svg polyline{
+    stroke-dasharray:24;animation:nbMoCheck .45s .3s var(--nbmo-out) backwards}
+  @keyframes nbMoCheck{from{stroke-dashoffset:24}}
+}
+
+/* ── Reduced motion: static alternative ─────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  .nb-h2-course-card.nb-h2-in:hover,
+  .nb-h2-course-card.nb-h2-in:active,
+  .nb-h2-avatar:hover,.nb-h2-avatar:active,.nb-h2-viewall:active,
+  #nb-dash-content .nb-h2-search:focus-within{transform:none !important}
+  .nb-h2-course-card.nb-h2-in:active{opacity:.9}
+  .nb-h2-course-card:hover .nb-h2-cc-img,.nb-h2-course-card:active .nb-h2-cc-img{transform:none}
+  .nb-nav-item.active .nb-ico{transform:none}
+  .sp-result-item,.sp-results-head{animation:none !important}
+}
+</style>
+<script id="nb-motion-js">
 (function(){
-  'use strict';
+'use strict';
+try{
+  var root=document.documentElement;
+  var mq=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
+  var reduced=function(){return !!(mq&&mq.matches);};
+  var hasIO='IntersectionObserver' in window;
+  var STEP=65, DUR=700, COUNT_MS=800;
 
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* Hold the entrance until the splash loader starts leaving, so the
+     sequence is actually seen instead of playing underneath it. */
+  var ready=false, waiters=[];
+  function release(){
+    if(ready) return; ready=true;
+    root.removeAttribute('data-nb-mo-hold');
+    if(!reduced()) root.classList.add('nb-mo-go');
+    var w=waiters.splice(0); for(var i=0;i<w.length;i++) w[i]();
+  }
+  function whenReady(fn){ if(ready) fn(); else waiters.push(fn); }
+  (function(){
+    var l=document.getElementById('ldr');
+    if(!l||reduced()||!hasIO||l.classList.contains('out')){ ready=true; return; }
+    root.setAttribute('data-nb-mo-hold','');
+    var m=new MutationObserver(function(){
+      if(l.classList.contains('out')||!l.isConnected){ m.disconnect(); setTimeout(release,120); }
+    });
+    m.observe(l,{attributes:true,attributeFilter:['class']});
+    setTimeout(release,6500); /* failsafe (app's own loader net is 5s) */
+  })();
 
-  function easeFrame(el, target, duration, onDone){
-    if(!el) return;
-    if(reduce){
-      el.style.width = target + '%';
-      if(onDone) onDone();
-      return;
+  /* Real values shown so far this session: revisiting Home with unchanged
+     progress stays static; only a genuine increase animates. */
+  var lastPct={};
+  var io=null, pending=[];
+
+  function getIO(){
+    if(!io&&hasIO) io=new IntersectionObserver(function(entries){
+      for(var i=0;i<entries.length;i++) if(entries[i].isIntersecting){ io.unobserve(entries[i].target); pending.push(entries[i].target); }
+      if(pending.length) whenReady(flush);
+    },{threshold:.12,rootMargin:'0px 0px -4% 0px'});
+    return io;
+  }
+
+  function flush(){
+    if(!pending.length) return;
+    var list=pending.splice(0).filter(function(el){return el.isConnected;});
+    list.sort(function(a,b){return (a.compareDocumentPosition(b)&4)?-1:1;});
+    list.forEach(function(el,i){ reveal(el,Math.min(i*STEP,420)); });
+  }
+
+  function reveal(el,d){
+    el.style.transitionDelay=d+'ms';
+    el.classList.add('mo-in');
+    if(el.classList.contains('nb-h2-course-card')){ el.classList.add('nb-h2-in'); startProgress(el,d); }
+    /* drop the stagger delay so hover/press are never laggy afterwards */
+    setTimeout(function(){ el.style.transitionDelay=''; },d+DUR);
+  }
+
+  function cidOf(card){
+    var m=/openCourse\('([^']+)'/.exec(card.getAttribute('onclick')||'');
+    return m?m[1]:null;
+  }
+
+  function prep(card){
+    var fill=card.querySelector('.nb-h2-cc-prog-fill'); if(!fill) return;
+    var to=parseFloat(fill.style.width); if(!(to>0)) return;
+    var cid=cidOf(card), from=(cid&&lastPct[cid]!=null)?lastPct[cid]:0;
+    if(from>=to){ if(cid) lastPct[cid]=to; return; }
+    var cta=card.querySelector('.nb-h2-cc-cta'), node=null, tpl='';
+    if(cta) for(var n=cta.firstChild;n;n=n.nextSibling)
+      if(n.nodeType===3&&/\d+\s*%/.test(n.nodeValue)&&!/\d[.,٫]\d/.test(n.nodeValue)){ node=n; tpl=n.nodeValue; break; }
+    card.__mo={fill:fill,to:to,from:from,node:node,tpl:tpl,cid:cid};
+    fill.style.setProperty('--mo-from',from+'%');
+    fill.setAttribute('data-mo-pf','');
+  }
+
+  function startProgress(card,d){
+    var p=card.__mo; if(!p) return; card.__mo=null;
+    if(p.cid) lastPct[p.cid]=p.to;
+    var delay=d+220;
+    p.fill.style.transitionDelay=delay+'ms';
+    p.fill.removeAttribute('data-mo-pf');      /* width returns to the real inline value → CSS transition */
+    setTimeout(function(){ p.fill.style.transitionDelay=''; p.fill.style.removeProperty('--mo-from'); },delay+COUNT_MS+100);
+    if(p.node){ p.node.nodeValue=p.tpl.replace(/\d+(?=\s*%)/,String(Math.round(p.from))); countUp(p,delay); }
+  }
+
+  function countUp(p,delay){
+    var t0=0;
+    function step(t){
+      var k=Math.max(0,Math.min((t-t0)/COUNT_MS,1));
+      var e=1-Math.pow(1-k,4);
+      p.node.nodeValue=(k<1)?p.tpl.replace(/\d+(?=\s*%)/,String(Math.round(p.from+(p.to-p.from)*e))):p.tpl;
+      if(k<1) requestAnimationFrame(step);
     }
-    var start = performance.now();
-    function tick(now){
-      var p = Math.min(1,(now-start)/duration);
-      var e = 1-Math.pow(1-p,3);
-      el.style.width = (target*e).toFixed(2) + '%';
-      if(p<1) requestAnimationFrame(tick);
-      else if(onDone) onDone();
-    }
-    requestAnimationFrame(tick);
+    setTimeout(function(){ t0=performance.now(); requestAnimationFrame(step); },delay);
   }
 
-  function animatePercent(el){
-    if(!el || el.dataset.nbCounted==='1') return;
-    var txt = el.textContent || '';
-    var m = txt.match(/(\d+(?:\.\d+)?)\s*%/);
-    if(!m) return;
-    var target = parseFloat(m[1]);
-    el.dataset.nbCounted='1';
-    el.classList.add('nb-motion-counter');
-    if(reduce){ el.textContent=txt; return; }
-
-    var prefix = txt.slice(0,m.index);
-    var suffix = txt.slice(m.index+m[0].length);
-    var start = performance.now(), duration = 620;
-    function tick(now){
-      var p=Math.min(1,(now-start)/duration);
-      var e=1-Math.pow(1-p,3);
-      var value=Math.round(target*e);
-      el.textContent=prefix+value+'%'+suffix;
-      if(p<1) requestAnimationFrame(tick);
-      else el.textContent=prefix+target+'%'+suffix;
-    }
-    el.textContent=prefix+'0%'+suffix;
-    requestAnimationFrame(tick);
-  }
-
-  function animateProgress(root){
-    if(!root || root.dataset.nbProgressInit==='1') return;
-    root.dataset.nbProgressInit='1';
-
-    root.querySelectorAll('.nb-h2-cc-prog-fill,.acad-prog-fill').forEach(function(fill){
-      var inline=fill.getAttribute('style')||'';
-      var m=inline.match(/width\s*:\s*([\d.]+)%/i);
-      var target=m ? parseFloat(m[1]) : parseFloat(fill.dataset.progress||'0');
-      if(!isFinite(target)) target=0;
-      if(!reduce){
-        fill.style.width='0%';
-        requestAnimationFrame(function(){
-          requestAnimationFrame(function(){
-            root.classList.add('nb-progress-ready');
-            easeFrame(fill,target,720,function(){
-              if(target>=100){
-                var host=fill.closest('.nb-h2-course-card,.acad-progress-wrap');
-                if(host) host.classList.add('nb-progress-complete');
-              }
-            });
-          });
-        });
-      }else{
-        fill.style.width=target+'%';
-      }
-    });
-
-    root.querySelectorAll('.nb-h2-cc-cta,.acad-prog-label').forEach(animatePercent);
-  }
-
-  function revealCards(root){
-    if(!root) return;
-    var cards=root.querySelectorAll('.nb-h2-course-card');
-    cards.forEach(function(card,i){
-      card.classList.remove('nb-motion-visible','nb-h2-in');
-      card.style.transitionDelay = reduce ? '0ms' : Math.min(i*65,520)+'ms';
-    });
-
-    if(reduce){
-      cards.forEach(function(card){card.classList.add('nb-motion-visible');});
-      return;
-    }
-
-    if(!('IntersectionObserver' in window)){
-      cards.forEach(function(card){card.classList.add('nb-motion-visible');});
-      return;
-    }
-
-    var io=new IntersectionObserver(function(entries,obs){
-      entries.forEach(function(entry){
-        if(!entry.isIntersecting) return;
-        entry.target.classList.add('nb-motion-visible');
-        obs.unobserve(entry.target);
-      });
-    },{root:null,rootMargin:'0px 0px -8% 0px',threshold:.05});
-
-    cards.forEach(function(card){io.observe(card);});
-  }
-
-  function bindPressFeedback(root){
-    if(!root) return;
-    root.querySelectorAll('.nb-h2-viewall,.nb-h2-search-btn,.acad-start-btn,.nb-nav-item,.sc-go,.sp-bar-btn').forEach(function(el){
-      el.classList.add('nb-motion-press');
+  function disarm(cnt){
+    cnt.removeAttribute('data-mo');
+    cnt.querySelectorAll('.nb-h2-course-card').forEach(function(c){
+      var p=c.__mo; if(!p) return;
+      if(p.node) p.node.nodeValue=p.tpl;
+      p.fill.removeAttribute('data-mo-pf'); c.__mo=null;
     });
   }
 
-  function initRoot(root){
-    if(!root) return;
-    root.classList.add('nb-motion-enter');
-    requestAnimationFrame(function(){
-      revealCards(root);
-      animateProgress(root);
-      bindPressFeedback(root);
+  function arm(cnt){
+    if(reduced()||!hasIO){ disarm(cnt); return; }
+    var hero=cnt.querySelector('.nb-h2-hero');
+    var secs=cnt.querySelectorAll('.nb-h2-courses-sec');
+    if(!hero&&!secs.length) return;                 /* skeleton / empty state */
+    if((hero&&hero.__moArmed)||(!hero&&secs[0].__moArmed)) return;
+    cnt.setAttribute('data-mo','');
+    var obs=getIO(), targets=[];
+    if(hero){ hero.__moArmed=true; targets.push(hero); var s=hero.querySelector('.nb-h2-search'); if(s) targets.push(s); }
+    secs.forEach(function(sec){
+      sec.__moArmed=true;
+      var h=sec.querySelector('.nb-h2-courses-head'); if(h) targets.push(h);
+      sec.querySelectorAll('.nb-h2-course-card').forEach(function(c){ prep(c); targets.push(c); });
     });
+    targets.forEach(function(el){ obs.observe(el); });
   }
 
-  /* Observe dynamic page content without touching its rendering logic. */
-  function scan(){
-    var home=document.querySelector('#home') || document.querySelector('.page.active');
-    if(home) initRoot(home);
-    document.querySelectorAll('.page.active').forEach(initRoot);
+  function init(){
+    var cnt=document.getElementById('nb-dash-content'); if(!cnt) return;
+    new MutationObserver(function(){ arm(cnt); }).observe(cnt,{childList:true});
+    if(cnt.children.length) arm(cnt);
+    if(mq&&mq.addEventListener) mq.addEventListener('change',function(){ if(reduced()) disarm(cnt); });
   }
-
-  var mo=new MutationObserver(function(records){
-    var shouldScan=false;
-    records.forEach(function(r){
-      if(r.addedNodes && r.addedNodes.length) shouldScan=true;
-    });
-    if(shouldScan) requestAnimationFrame(scan);
-  });
-
-  function boot(){
-    var app=document.body;
-    if(app) mo.observe(app,{childList:true,subtree:true});
-    scan();
-
-    /* Existing search input: visual feedback only. */
-    document.addEventListener('focusin',function(e){
-      var t=e.target;
-      if(t && t.matches && t.matches('.nb-h2-search-inp,.sp-bar-inp')) {
-        var wrap=t.closest('.nb-h2-search,.sp-bar');
-        if(wrap) wrap.classList.add('nb-motion-focused');
-      }
-    });
-    document.addEventListener('focusout',function(e){
-      var t=e.target;
-      if(t && t.matches && t.matches('.nb-h2-search-inp,.sp-bar-inp')) {
-        var wrap=t.closest('.nb-h2-search,.sp-bar');
-        if(wrap) wrap.classList.remove('nb-motion-focused');
-      }
-    });
-  }
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
-  else boot();
-})();
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true}); else init();
+}catch(err){ try{ document.documentElement.removeAttribute('data-nb-mo-hold'); }catch(e){} }
+}());
 </script>
 
 </body>
