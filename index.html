@@ -1717,6 +1717,161 @@ body.modal-open { overflow: hidden; }
   ]
 }
 </script>
+
+<!-- NABTEX SURGICAL MOTION LAYER v1.0 — UI/motion only; no business logic/data changes -->
+<style id="nb-motion-layer">
+  :root{
+    --nb-motion-out:cubic-bezier(.22,1,.36,1);
+    --nb-motion-spring:cubic-bezier(.16,1,.3,1);
+    --nb-motion-fast:140ms;
+    --nb-motion-base:260ms;
+  }
+
+  /* Calm page composition */
+  .nb-h2-top,
+  .nb-h2-search,
+  .nb-h2-courses-head,
+  .nb-h2-courses-sec{
+    opacity:1;
+    transform:none;
+  }
+  .nb-motion-enter .nb-h2-top{
+    animation:nbMotionIn 420ms var(--nb-motion-out) both;
+  }
+  .nb-motion-enter .nb-h2-search{
+    animation:nbMotionIn 420ms .08s var(--nb-motion-out) both;
+  }
+  .nb-motion-enter .nb-h2-courses-head{
+    animation:nbMotionIn 420ms .16s var(--nb-motion-out) both;
+  }
+  @keyframes nbMotionIn{
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:none}
+  }
+
+  /* Course cards: tactile, restrained */
+  .nb-h2-course-card{
+    -webkit-tap-highlight-color:transparent;
+    transition:
+      opacity 420ms var(--nb-motion-out),
+      transform 280ms var(--nb-motion-out),
+      box-shadow 220ms ease,
+      border-color 220ms ease;
+  }
+  .nb-h2-course-card.nb-motion-visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .nb-h2-course-card .nb-h2-cc-img{
+    transition:transform 320ms var(--nb-motion-out);
+  }
+  @media (hover:hover) and (pointer:fine){
+    .nb-h2-course-card:hover .nb-h2-cc-img{transform:scale(1.02)}
+    .nb-h2-course-card:hover{
+      transform:translateY(-3px);
+      box-shadow:0 10px 24px rgba(0,0,0,.07);
+    }
+  }
+  @media (hover:none) and (pointer:coarse){
+    .nb-h2-course-card:active{
+      transform:scale(.98) !important;
+      transition-duration:80ms !important;
+      box-shadow:0 4px 12px rgba(0,0,0,.06) !important;
+    }
+    .nb-h2-course-card:active .nb-h2-cc-img{transform:scale(1.02)}
+  }
+
+  /* Disable the old continuous shine: interaction should be felt, not watched. */
+  .nb-h2-cc-shine{animation:none !important;opacity:0 !important}
+
+  /* Progress: reveal from zero, then settle at the real value. */
+  .nb-h2-cc-prog-fill,
+  .acad-prog-fill{
+    will-change:width;
+  }
+  .nb-progress-ready .nb-h2-cc-prog-fill,
+  .nb-progress-ready .acad-prog-fill{
+    transition:width 720ms var(--nb-motion-out) !important;
+  }
+
+  /* Percentage counter feels connected to its bar. */
+  .nb-motion-counter{
+    font-variant-numeric:tabular-nums;
+    display:inline-block;
+    min-width:3ch;
+  }
+
+  /* Search: quiet focus lift */
+  .nb-h2-search{
+    transition:transform 220ms var(--nb-motion-out),filter 220ms ease;
+  }
+  .nb-h2-search:focus-within{
+    transform:translateY(-1px);
+    filter:drop-shadow(0 7px 16px rgba(27,107,58,.10));
+  }
+  .sp-bar{
+    transition:border-color 180ms ease,box-shadow 220ms var(--nb-motion-out),transform 220ms var(--nb-motion-out) !important;
+  }
+  .sp-bar:focus-within{
+    transform:translateY(-1px);
+  }
+
+  /* Small tactile feedback for existing controls only. */
+  .nb-motion-press{
+    transition:transform 160ms var(--nb-motion-spring),opacity 160ms ease,box-shadow 200ms ease !important;
+  }
+  .nb-motion-press:active{
+    transform:scale(.98) !important;
+  }
+
+  /* Bottom nav: smoother active state without changing structure. */
+  #nb-bottom-nav .nb-nav-item .nb-ico{
+    transition:transform 260ms var(--nb-motion-spring);
+    will-change:transform;
+  }
+  #nb-bottom-nav .nb-nav-item.active .nb-ico{
+    transform:scale(1.06);
+  }
+  #nb-bottom-nav .nb-nav-item .nb-lbl{
+    transition:color 220ms ease,transform 260ms var(--nb-motion-spring);
+  }
+  #nb-bottom-nav .nb-nav-item.active .nb-lbl{
+    transform:translateY(-1px);
+  }
+  #nb-slide-pill{
+    transition:transform 320ms var(--nb-motion-spring),width 280ms var(--nb-motion-spring),opacity 180ms ease !important;
+  }
+
+  /* One-shot completion feedback — only when the real value reaches 100. */
+  .nb-progress-complete{
+    animation:nbProgressComplete 420ms var(--nb-motion-spring);
+  }
+  @keyframes nbProgressComplete{
+    50%{transform:scale(1.025)}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    .nb-motion-enter .nb-h2-top,
+    .nb-motion-enter .nb-h2-search,
+    .nb-motion-enter .nb-h2-courses-head,
+    .nb-h2-course-card,
+    .nb-h2-course-card .nb-h2-cc-img,
+    .nb-h2-search,
+    .sp-bar,
+    #nb-bottom-nav .nb-nav-item .nb-ico,
+    #nb-bottom-nav .nb-nav-item .nb-lbl,
+    #nb-slide-pill{
+      animation:none !important;
+      transition:none !important;
+      transform:none !important;
+    }
+    .nb-h2-course-card,
+    .nb-h2-course-card.nb-motion-visible{
+      opacity:1 !important;
+    }
+  }
+</style>
+
 </head>
 <body>
   <!-- Liquid Glass — hidden SVG refraction filters (feDisplacementMap + feSpecularLighting).
@@ -5645,6 +5800,7 @@ body.modal-open { overflow: hidden; }
 .acad-card-top.pd{background:#2a0808 url('https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.bi{background:#1e1033 url('https://images.unsplash.com/photo-1643780668909-580822430155?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.ld{background:#0a2410 url('https://images.unsplash.com/photo-1761637822930-fb1c1a3df94d?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+.acad-card-top.hyd{background:#031c2e url('https://images.unsplash.com/photo-1682629088819-95edaf226223?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-share-btn{position:absolute;top:14px;left:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(10,30,20,.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s;padding:0;appearance:none;-webkit-appearance:none;font:inherit;outline:none}
 .acad-share-btn:hover{background:rgba(10,30,20,.6);transform:translateY(-1px)}
 .acad-share-btn:active{transform:scale(.94)}
@@ -8014,7 +8170,7 @@ body.modal-open { overflow: hidden; }
 .acad-hero--hydroponics-professional{
   background-image:
     linear-gradient(165deg,rgba(3,28,46,.90) 0%,rgba(3,28,46,.72) 35%,rgba(3,28,46,.62) 62%,rgba(3,28,46,.88) 100%),
-    url("https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?auto=format&fit=crop&w=1400&q=75") !important;
+    url("https://images.unsplash.com/photo-1682629088819-95edaf226223?auto=format&fit=crop&w=1400&q=75") !important;
   background-size:100% 100%, cover !important;
   background-position:center, center !important;
 }
@@ -9313,7 +9469,7 @@ const App = {
     if(typeof PD_COURSE!=='undefined') reg.push({cid:'plant-diseases',    course:PD_COURSE, icon:'🦠', grad:'linear-gradient(135deg,#dc2626,#7f1d1d)', paid:true, price:120, oldPrice:250, img:'https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=900&q=70'});
     if(typeof BI_COURSE!=='undefined') reg.push({cid:'bioinformatics',    course:BI_COURSE, icon:'💻', grad:'linear-gradient(135deg,#7c3aed,#4c1d95)', paid:true, price:250, oldPrice:500, img:'https://images.unsplash.com/photo-1643780668909-580822430155?auto=format&fit=crop&w=900&q=70'});
     if(typeof LD_COURSE!=='undefined') reg.push({cid:'landscape-design',  course:LD_COURSE, icon:'🌳', grad:'linear-gradient(135deg,#16a34a,#0a2410)', paid:true, price:150, oldPrice:250, img:'https://images.unsplash.com/photo-1761637822930-fb1c1a3df94d?auto=format&fit=crop&w=900&q=70'});
-    if(typeof HYD_COURSE!=='undefined') reg.push({cid:'hydroponics-professional', course:HYD_COURSE, icon:'💧', grad:'linear-gradient(135deg,#0284c7,#031c2e)', paid:true, price:200, oldPrice:500, img:'https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?auto=format&fit=crop&w=900&q=70'});
+    if(typeof HYD_COURSE!=='undefined') reg.push({cid:'hydroponics-professional', course:HYD_COURSE, icon:'💧', grad:'linear-gradient(135deg,#0284c7,#031c2e)', paid:true, price:200, oldPrice:500, img:'https://images.unsplash.com/photo-1682629088819-95edaf226223?auto=format&fit=crop&w=900&q=70'});
     return reg;
   },
 
@@ -21855,6 +22011,174 @@ document.querySelectorAll('.vcash-overlay').forEach(_watch);
       if(el)setTimeout(function(){el.classList.add('show');},900);
     }
   });
+})();
+</script>
+
+
+<script id="nb-motion-layer-js">
+(function(){
+  'use strict';
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function easeFrame(el, target, duration, onDone){
+    if(!el) return;
+    if(reduce){
+      el.style.width = target + '%';
+      if(onDone) onDone();
+      return;
+    }
+    var start = performance.now();
+    function tick(now){
+      var p = Math.min(1,(now-start)/duration);
+      var e = 1-Math.pow(1-p,3);
+      el.style.width = (target*e).toFixed(2) + '%';
+      if(p<1) requestAnimationFrame(tick);
+      else if(onDone) onDone();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function animatePercent(el){
+    if(!el || el.dataset.nbCounted==='1') return;
+    var txt = el.textContent || '';
+    var m = txt.match(/(\d+(?:\.\d+)?)\s*%/);
+    if(!m) return;
+    var target = parseFloat(m[1]);
+    el.dataset.nbCounted='1';
+    el.classList.add('nb-motion-counter');
+    if(reduce){ el.textContent=txt; return; }
+
+    var prefix = txt.slice(0,m.index);
+    var suffix = txt.slice(m.index+m[0].length);
+    var start = performance.now(), duration = 620;
+    function tick(now){
+      var p=Math.min(1,(now-start)/duration);
+      var e=1-Math.pow(1-p,3);
+      var value=Math.round(target*e);
+      el.textContent=prefix+value+'%'+suffix;
+      if(p<1) requestAnimationFrame(tick);
+      else el.textContent=prefix+target+'%'+suffix;
+    }
+    el.textContent=prefix+'0%'+suffix;
+    requestAnimationFrame(tick);
+  }
+
+  function animateProgress(root){
+    if(!root || root.dataset.nbProgressInit==='1') return;
+    root.dataset.nbProgressInit='1';
+
+    root.querySelectorAll('.nb-h2-cc-prog-fill,.acad-prog-fill').forEach(function(fill){
+      var inline=fill.getAttribute('style')||'';
+      var m=inline.match(/width\s*:\s*([\d.]+)%/i);
+      var target=m ? parseFloat(m[1]) : parseFloat(fill.dataset.progress||'0');
+      if(!isFinite(target)) target=0;
+      if(!reduce){
+        fill.style.width='0%';
+        requestAnimationFrame(function(){
+          requestAnimationFrame(function(){
+            root.classList.add('nb-progress-ready');
+            easeFrame(fill,target,720,function(){
+              if(target>=100){
+                var host=fill.closest('.nb-h2-course-card,.acad-progress-wrap');
+                if(host) host.classList.add('nb-progress-complete');
+              }
+            });
+          });
+        });
+      }else{
+        fill.style.width=target+'%';
+      }
+    });
+
+    root.querySelectorAll('.nb-h2-cc-cta,.acad-prog-label').forEach(animatePercent);
+  }
+
+  function revealCards(root){
+    if(!root) return;
+    var cards=root.querySelectorAll('.nb-h2-course-card');
+    cards.forEach(function(card,i){
+      card.classList.remove('nb-motion-visible','nb-h2-in');
+      card.style.transitionDelay = reduce ? '0ms' : Math.min(i*65,520)+'ms';
+    });
+
+    if(reduce){
+      cards.forEach(function(card){card.classList.add('nb-motion-visible');});
+      return;
+    }
+
+    if(!('IntersectionObserver' in window)){
+      cards.forEach(function(card){card.classList.add('nb-motion-visible');});
+      return;
+    }
+
+    var io=new IntersectionObserver(function(entries,obs){
+      entries.forEach(function(entry){
+        if(!entry.isIntersecting) return;
+        entry.target.classList.add('nb-motion-visible');
+        obs.unobserve(entry.target);
+      });
+    },{root:null,rootMargin:'0px 0px -8% 0px',threshold:.05});
+
+    cards.forEach(function(card){io.observe(card);});
+  }
+
+  function bindPressFeedback(root){
+    if(!root) return;
+    root.querySelectorAll('.nb-h2-viewall,.nb-h2-search-btn,.acad-start-btn,.nb-nav-item,.sc-go,.sp-bar-btn').forEach(function(el){
+      el.classList.add('nb-motion-press');
+    });
+  }
+
+  function initRoot(root){
+    if(!root) return;
+    root.classList.add('nb-motion-enter');
+    requestAnimationFrame(function(){
+      revealCards(root);
+      animateProgress(root);
+      bindPressFeedback(root);
+    });
+  }
+
+  /* Observe dynamic page content without touching its rendering logic. */
+  function scan(){
+    var home=document.querySelector('#home') || document.querySelector('.page.active');
+    if(home) initRoot(home);
+    document.querySelectorAll('.page.active').forEach(initRoot);
+  }
+
+  var mo=new MutationObserver(function(records){
+    var shouldScan=false;
+    records.forEach(function(r){
+      if(r.addedNodes && r.addedNodes.length) shouldScan=true;
+    });
+    if(shouldScan) requestAnimationFrame(scan);
+  });
+
+  function boot(){
+    var app=document.body;
+    if(app) mo.observe(app,{childList:true,subtree:true});
+    scan();
+
+    /* Existing search input: visual feedback only. */
+    document.addEventListener('focusin',function(e){
+      var t=e.target;
+      if(t && t.matches && t.matches('.nb-h2-search-inp,.sp-bar-inp')) {
+        var wrap=t.closest('.nb-h2-search,.sp-bar');
+        if(wrap) wrap.classList.add('nb-motion-focused');
+      }
+    });
+    document.addEventListener('focusout',function(e){
+      var t=e.target;
+      if(t && t.matches && t.matches('.nb-h2-search-inp,.sp-bar-inp')) {
+        var wrap=t.closest('.nb-h2-search,.sp-bar');
+        if(wrap) wrap.classList.remove('nb-motion-focused');
+      }
+    });
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+  else boot();
 })();
 </script>
 
