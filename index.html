@@ -845,11 +845,14 @@ body.modal-open { overflow: hidden; }
 @keyframes mboxUp{from{opacity:0;transform:scale(.93) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .auth-bg{position:fixed;inset:0;z-index:800;display:none;align-items:center;justify-content:center;padding:20px}
 .auth-bg.on{display:flex;animation:bgIn .25s ease}
-.auth-veil{position:absolute;inset:0;background:rgba(8,18,11,.82);backdrop-filter:blur(14px)}
-.auth-box{position:relative;z-index:1;background:var(--bg);border-radius:var(--r4);width:100%;max-width:440px;overflow:hidden;box-shadow:var(--s5),0 0 0 1px rgba(27,107,58,.08);animation:mboxUp .4s var(--ease-spring)}
+.auth-veil{position:absolute;inset:0;background:radial-gradient(560px circle at 18% 12%,rgba(95,201,126,.22),transparent 60%),radial-gradient(520px circle at 88% 88%,rgba(201,135,26,.16),transparent 60%),rgba(8,18,11,.84);backdrop-filter:blur(14px)}
+.auth-box{position:relative;z-index:1;background:var(--bg);border-radius:30px;width:100%;max-width:440px;overflow:hidden;box-shadow:var(--s5),0 0 0 1px rgba(27,107,58,.1);animation:mboxUp .4s var(--ease-spring)}
+.auth-box::after{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 1px 0 rgba(255,255,255,.4);pointer-events:none}
 .auth-top{background:radial-gradient(120% 90% at 50% -10%,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 48%),linear-gradient(160deg,var(--brand-l) 0%,var(--brand-d) 68%);padding:40px 28px 34px;text-align:center;position:relative}
-.auth-logo-mark{width:64px;height:64px;margin:0 auto 16px;border-radius:18px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;box-shadow:0 8px 26px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.25)}
-.auth-logo-mark svg{width:30px;height:30px}
+.auth-logo-mark{position:relative;width:64px;height:64px;margin:0 auto 16px;border-radius:18px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;box-shadow:0 8px 26px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.25)}
+.auth-logo-mark::before{content:'';position:absolute;inset:-11px;border-radius:50%;border:2px solid transparent;border-top-color:var(--gold-l);border-left-color:rgba(255,255,255,.55);animation:authOrbit 3.6s linear infinite;pointer-events:none}
+.auth-logo-mark::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1.5px dashed rgba(255,255,255,.4);animation:authOrbitRev 5.5s linear infinite;pointer-events:none}
+.auth-logo-mark svg{width:30px;height:30px;position:relative;z-index:1}
 .auth-top-t{font-family:var(--f-display);font-size:2.05rem;color:#fff;letter-spacing:.015em}
 .auth-top-t span{color:var(--brand-xl)}
 .auth-top-s{font-size:13px;color:rgba(255,255,255,.56);margin-top:6px}
@@ -858,24 +861,28 @@ body.modal-open { overflow: hidden; }
 .auth-body{padding:28px}
 .auth-tabs{display:flex;background:var(--bg2);border-radius:var(--rpill);padding:4px;gap:4px;border:1px solid var(--line);margin-bottom:24px}
 .at{flex:1;padding:10px;border-radius:var(--rpill);font-size:13px;font-weight:700;color:var(--muted);transition:all .25s var(--ease-spring)}
-.at.on{background:var(--card);color:var(--brand);box-shadow:var(--s1)}
+.at.on{background:var(--card);color:var(--brand);box-shadow:var(--s1),0 0 0 1px rgba(27,107,58,.06)}
 .aform{display:flex;flex-direction:column;gap:14px}
 .fg{display:flex;flex-direction:column;gap:5px}
 .fg label{font-size:11px;font-weight:700;color:var(--brand);letter-spacing:.06em;text-transform:uppercase}
-.fg input,.fg select{padding:12px 14px;border-radius:var(--r3);border:1.5px solid var(--line);background:var(--bg2);color:var(--ink);font-size:16px;transition:border-color .15s,box-shadow .2s}
-.fg input:focus,.fg select:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(27,107,58,.12)}
-.str-bar{height:3px;background:var(--line);border-radius:2px;margin-top:5px;overflow:hidden}
-.str-f{height:100%;width:0;border-radius:2px;transition:width .2s,background .2s}
-.btn-sub{padding:14px;border-radius:var(--rpill);background:var(--brand);color:#fff;font-weight:700;font-size:15px;transition:all .2s var(--ease-spring);box-shadow:0 4px 16px rgba(27,107,58,.32),inset 0 1px 0 rgba(255,255,255,.15)}
+.fg input,.fg select{padding:12px 14px;border-radius:var(--r3);border:1.5px solid var(--line);background:var(--bg2);color:var(--ink);font-size:16px;box-shadow:inset 0 1px 3px rgba(0,0,0,.04);transition:border-color .15s,box-shadow .2s,background .15s}
+.fg input:focus,.fg select:focus{border-color:var(--brand);background:var(--card);box-shadow:0 0 0 3px rgba(27,107,58,.12),inset 0 1px 3px rgba(0,0,0,.03)}
+.str-bar{height:5px;background:var(--line);border-radius:var(--rpill);margin-top:6px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.04)}
+.str-f{height:100%;width:0;border-radius:var(--rpill);transition:width .3s var(--ease-out),background .3s}
+.btn-sub{padding:14px;border-radius:var(--rpill);background:var(--brand);color:#fff;font-weight:700;font-size:15px;position:relative;overflow:hidden;transition:all .2s var(--ease-spring);box-shadow:0 4px 16px rgba(27,107,58,.32),inset 0 1px 0 rgba(255,255,255,.15)}
+.btn-sub::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.25) 50%,transparent 70%);transform:translateX(-100%);transition:transform .6s var(--ease-out)}
+.btn-sub:hover::before{transform:translateX(100%)}
 .btn-sub:hover{background:var(--brand-l);transform:translateY(-2px);box-shadow:0 10px 26px rgba(27,107,58,.5),inset 0 1px 0 rgba(255,255,255,.2)}
 .adiv{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px}
 .adiv::before,.adiv::after{content:'';flex:1;height:1px;background:var(--line)}
-.btn-goo{padding:11px;border-radius:var(--rpill);background:var(--bg2);color:var(--ink);font-weight:700;font-size:14px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s var(--ease-spring)}
+.btn-goo{padding:11px;border-radius:var(--rpill);background:var(--bg2);color:var(--ink);font-weight:700;font-size:14px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:inset 0 1px 2px rgba(0,0,0,.03);transition:all .2s var(--ease-spring)}
 .fp-link{text-align:right}
 .fp-link a,.fp-back a{color:var(--brand);font-size:12.5px;font-weight:700;text-decoration:none}
 .fp-link a:hover,.fp-back a:hover{text-decoration:underline}
 .fp-back{text-align:center}
 .btn-goo:hover{border-color:var(--line2);transform:translateY(-1px);box-shadow:0 0 12px rgba(27,107,58,0.3);}
+@keyframes authOrbit{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes authOrbitRev{from{transform:rotate(360deg)}to{transform:rotate(0deg)}}
 .rip{position:absolute;border-radius:50%;background:rgba(27,107,58,.18);animation:ripA .7s linear;pointer-events:none}
 @keyframes ripA{0%{transform:scale(0);opacity:.7}100%{transform:scale(4);opacity:0}}
 @media(max-width:1100px){
@@ -990,7 +997,7 @@ body.modal-open { overflow: hidden; }
 #stk{bottom:calc(26px + env(safe-area-inset-bottom,0px))}
 .mob-menu{overflow:hidden;max-height:0;opacity:0;transition:max-height .32s var(--ease-out),opacity .28s ease,padding .28s ease;display:flex!important;padding-top:0;padding-bottom:0}
 .mob-menu.open{max-height:420px;opacity:1;padding-top:12px;padding-bottom:20px}
-.toast{max-width:88vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast{max-width:88vw;white-space:normal;word-wrap:break-word}
 .sp-result-item{animation:riIn .4s var(--ease-out) both}
 .pcard{animation-fill-mode:both}
 .cat-card{isolation:isolate}
@@ -1014,7 +1021,7 @@ body.modal-open { overflow: hidden; }
     padding: 16px;
   }
   .auth-box {
-    border-radius: var(--r4);
+    border-radius: 26px;
     max-height: 92vh;
     overflow-y: auto;
     margin: 0;
@@ -5009,7 +5016,7 @@ body.modal-open { overflow: hidden; }
         <div class="fp-link"><a href="#" onclick="event.preventDefault();showForgotPassword()">نسيت كلمة المرور؟</a></div>
         <button type="submit" class="btn-sub">تسجيل الدخول</button>
         <div class="adiv">أو</div>
-        <button type="button" class="btn-goo" onclick="signInWithGoogle()">
+        <button type="button" class="btn-goo" onclick="signInWithGoogle('login')">
           <svg width="17" height="17" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.5 0 6.5 1.2 8.9 3.2l6.6-6.6C35.5 2.7 30.1 0 24 0 14.6 0 6.7 5.6 2.9 13.8l7.7 6C12.5 13.4 17.8 9.5 24 9.5z"/><path fill="#34A853" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.9 7.2l7.6 5.9c4.4-4.1 7.1-10.1 7.1-17.1z"/><path fill="#FBBC05" d="M10.6 28.2c-.5-1.5-.8-3.1-.8-4.7s.3-3.2.8-4.7L2.9 12.8C1.1 16.2 0 20 0 24s1.1 7.8 2.9 11.2l7.7-7z"/><path fill="#EA4335" d="M24 48c6.1 0 11.2-2 15-5.5l-7.6-5.9c-2 1.4-4.5 2.2-7.4 2.2-6.2 0-11.5-4.2-13.4-9.8l-7.7 6C6.7 42.4 14.6 48 24 48z"/></svg>
           متابعة بـ Google
         </button>
@@ -5022,7 +5029,7 @@ body.modal-open { overflow: hidden; }
         <div class="fg"><label>دورك</label><select><option>🌾 مزارع</option><option>👨‍🔬 خبير زراعي</option><option>🎓 طالب</option><option>🏢 شركة</option></select></div>
         <button type="submit" class="btn-sub">إنشاء الحساب</button>
         <div class="adiv">أو</div>
-        <button type="button" class="btn-goo" onclick="signInWithGoogle()">
+        <button type="button" class="btn-goo" onclick="signInWithGoogle('reg')">
           <svg width="17" height="17" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.5 0 6.5 1.2 8.9 3.2l6.6-6.6C35.5 2.7 30.1 0 24 0 14.6 0 6.7 5.6 2.9 13.8l7.7 6C12.5 13.4 17.8 9.5 24 9.5z"/><path fill="#34A853" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.9 7.2l7.6 5.9c4.4-4.1 7.1-10.1 7.1-17.1z"/><path fill="#FBBC05" d="M10.6 28.2c-.5-1.5-.8-3.1-.8-4.7s.3-3.2.8-4.7L2.9 12.8C1.1 16.2 0 20 0 24s1.1 7.8 2.9 11.2l7.7-7z"/><path fill="#EA4335" d="M24 48c6.1 0 11.2-2 15-5.5l-7.6-5.9c-2 1.4-4.5 2.2-7.4 2.2-6.2 0-11.5-4.2-13.4-9.8l-7.7 6C6.7 42.4 14.6 48 24 48z"/></svg>
           التسجيل بـ Google
         </button>
@@ -5031,6 +5038,11 @@ body.modal-open { overflow: hidden; }
         <div class="fg"><label>البريد الإلكتروني</label><input type="email" required placeholder="your@email.com"></div>
         <button type="submit" class="btn-sub">إرسال رابط إعادة التعيين</button>
         <div class="fp-back"><a href="#" onclick="event.preventDefault();backToLogin()">رجوع لتسجيل الدخول</a></div>
+      </form>
+      <form class="aform" id="af-np" style="display:none" onsubmit="hResetPassword(event)">
+        <div class="fg"><label>كلمة المرور الجديدة</label><input type="password" required minlength="8" placeholder="••••••••"></div>
+        <div class="fg"><label>تأكيد كلمة المرور الجديدة</label><input type="password" required minlength="8" placeholder="••••••••"></div>
+        <button type="submit" class="btn-sub">حفظ كلمة المرور الجديدة</button>
       </form>
     </div>
   </div>
@@ -8885,6 +8897,7 @@ let userJoinDate = null;
 let userProvider = 'email';
 let profileEditMode = false;
 let _nbAuthReady = false; // true بعد أول رد فعلي من auth.onAuthStateChanged (نعرف بقى مسجل ولا زائر)
+let _nbResetOobCode = null; // كود إعادة تعيين كلمة المرور الحالي (من رابط الإيميل)
 // ======================== DATABASE ========================
 // (تم حذف قاعدة بيانات النباتات DB بالكامل — إزالة قسم الموسوعة النباتية)
 
@@ -9826,10 +9839,46 @@ async function sendPasswordReset(email) {
   }
 }
 
-async function signInWithGoogle() {
+async function applyNewPassword(newPassword, confirmPassword) {
+  if (newPassword !== confirmPassword) {
+    showToast('❌ كلمتا المرور غير متطابقتين', 'err');
+    return;
+  }
+  try {
+    await auth.confirmPasswordReset(_nbResetOobCode, newPassword);
+    showToast('✅ تم تغيير كلمة المرور بنجاح، سجّل دخولك بكلمة المرور الجديدة', 'ok');
+    _nbResetOobCode = null;
+    history.replaceState(null, '', window.location.pathname + window.location.hash);
+    document.getElementById('af-np').style.display = 'none';
+    document.querySelector('.auth-tabs').style.display = 'flex';
+    swAuth('login');
+  } catch (error) {
+    let msg = 'تعذر تغيير كلمة المرور: ';
+    switch (error.code) {
+      case 'auth/expired-action-code': msg += 'انتهت صلاحية الرابط، اطلب رابط جديد'; break;
+      case 'auth/invalid-action-code': msg += 'الرابط غير صالح، اطلب رابط جديد'; break;
+      case 'auth/weak-password': msg += 'كلمة المرور ضعيفة'; break;
+      default: msg += error.message;
+    }
+    showToast(msg, 'err');
+  }
+}
+
+async function signInWithGoogle(intent) {
   const provider = new firebase.auth.GoogleAuthProvider();
   try {
     const result = await auth.signInWithPopup(provider);
+    const isNewUser = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
+    if (intent === 'login' && isNewUser) {
+      await result.user.delete();
+      showToast('فشل تسجيل الدخول: لا يوجد حساب مسجل بهذا البريد، أنشئ حساب جديد أولاً', 'err');
+      return;
+    }
+    if (intent === 'reg' && isNewUser === false) {
+      await auth.signOut();
+      showToast('فشل التسجيل: هذا الحساب مسجل بالفعل، سجّل الدخول بدلاً من ذلك', 'err');
+      return;
+    }
     showToast(`مرحباً ${result.user.displayName || result.user.email}`, 'ok');
     closeAuth();
     showPage('profile');
@@ -10014,6 +10063,14 @@ function backToLogin() {
   document.getElementById('af-fp').style.display = 'none';
   document.querySelector('.auth-tabs').style.display = 'flex';
   swAuth('login');
+}
+
+function showResetPasswordForm() {
+  document.querySelector('.auth-tabs').style.display = 'none';
+  document.getElementById('af-l').style.display = 'none';
+  document.getElementById('af-r').style.display = 'none';
+  document.getElementById('af-fp').style.display = 'none';
+  document.getElementById('af-np').style.display = 'flex';
 }
 
 function chkStr(val) {
@@ -10494,6 +10551,24 @@ async function hForgotPassword(event) {
   }
 }
 
+async function hResetPassword(event) {
+  event.preventDefault();
+  const form = event.target;
+  const pwInputs = form.querySelectorAll('input[type="password"]');
+  const newPassword = pwInputs[0].value;
+  const confirmPassword = pwInputs[1].value;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'جاري الحفظ...';
+  try {
+    await applyNewPassword(newPassword, confirmPassword);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+  }
+}
+
 /* ═══ Premium Card Ripple Effect ═══ */
 (function initCardRipple() {
   function addRipple(card, rippleClass) {
@@ -10510,6 +10585,20 @@ async function hForgotPassword(event) {
     });
   }
   document.querySelectorAll('.farm-entry-card').forEach(c => addRipple(c, 'fec-ripple'));
+})();
+
+/* ═══ Password Reset Link Handler — يفتح فورم تعيين كلمة مرور جديدة لو الصفحة اتفتحت من رابط إيميل Firebase ═══ */
+(function checkPasswordResetLink() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('mode') !== 'resetPassword' || !params.get('oobCode')) return;
+  const oobCode = params.get('oobCode');
+  auth.verifyPasswordResetCode(oobCode).then(() => {
+    _nbResetOobCode = oobCode;
+    openAuth('login');
+    showResetPasswordForm();
+  }).catch(() => {
+    showToast('⚠️ رابط إعادة تعيين كلمة المرور غير صالح أو منتهي الصلاحية', 'err');
+  });
 })();
 </script>
 
