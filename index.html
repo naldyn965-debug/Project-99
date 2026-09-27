@@ -871,6 +871,10 @@ body.modal-open { overflow: hidden; }
 .adiv{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px}
 .adiv::before,.adiv::after{content:'';flex:1;height:1px;background:var(--line)}
 .btn-goo{padding:11px;border-radius:var(--rpill);background:var(--bg2);color:var(--ink);font-weight:700;font-size:14px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s var(--ease-spring)}
+.fp-link{text-align:right}
+.fp-link a,.fp-back a{color:var(--brand);font-size:12.5px;font-weight:700;text-decoration:none}
+.fp-link a:hover,.fp-back a:hover{text-decoration:underline}
+.fp-back{text-align:center}
 .btn-goo:hover{border-color:var(--line2);transform:translateY(-1px);box-shadow:0 0 12px rgba(27,107,58,0.3);}
 .rip{position:absolute;border-radius:50%;background:rgba(27,107,58,.18);animation:ripA .7s linear;pointer-events:none}
 @keyframes ripA{0%{transform:scale(0);opacity:.7}100%{transform:scale(4);opacity:0}}
@@ -5002,6 +5006,7 @@ body.modal-open { overflow: hidden; }
       <form class="aform" id="af-l" onsubmit="hLogin(event)">
         <div class="fg"><label>البريد الإلكتروني</label><input type="email" required placeholder="your@email.com"></div>
         <div class="fg"><label>كلمة المرور</label><input type="password" required placeholder="••••••••"></div>
+        <div class="fp-link"><a href="#" onclick="event.preventDefault();showForgotPassword()">نسيت كلمة المرور؟</a></div>
         <button type="submit" class="btn-sub">تسجيل الدخول</button>
         <div class="adiv">أو</div>
         <button type="button" class="btn-goo" onclick="signInWithGoogle()">
@@ -5021,6 +5026,11 @@ body.modal-open { overflow: hidden; }
           <svg width="17" height="17" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.5 0 6.5 1.2 8.9 3.2l6.6-6.6C35.5 2.7 30.1 0 24 0 14.6 0 6.7 5.6 2.9 13.8l7.7 6C12.5 13.4 17.8 9.5 24 9.5z"/><path fill="#34A853" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.9 7.2l7.6 5.9c4.4-4.1 7.1-10.1 7.1-17.1z"/><path fill="#FBBC05" d="M10.6 28.2c-.5-1.5-.8-3.1-.8-4.7s.3-3.2.8-4.7L2.9 12.8C1.1 16.2 0 20 0 24s1.1 7.8 2.9 11.2l7.7-7z"/><path fill="#EA4335" d="M24 48c6.1 0 11.2-2 15-5.5l-7.6-5.9c-2 1.4-4.5 2.2-7.4 2.2-6.2 0-11.5-4.2-13.4-9.8l-7.7 6C6.7 42.4 14.6 48 24 48z"/></svg>
           التسجيل بـ Google
         </button>
+      </form>
+      <form class="aform" id="af-fp" style="display:none" onsubmit="hForgotPassword(event)">
+        <div class="fg"><label>البريد الإلكتروني</label><input type="email" required placeholder="your@email.com"></div>
+        <button type="submit" class="btn-sub">إرسال رابط إعادة التعيين</button>
+        <div class="fp-back"><a href="#" onclick="event.preventDefault();backToLogin()">رجوع لتسجيل الدخول</a></div>
       </form>
     </div>
   </div>
@@ -9301,17 +9311,17 @@ const App = {
   _nbHomeCourseRegistry(){
     var reg = [];
     if(typeof AC_COURSE!=='undefined') reg.push({cid:'pest',            course:AC_COURSE, icon:'🛡️', grad:'linear-gradient(135deg,#1b6b3a,#2eaa5c)', paid:false, img:'https://images.unsplash.com/photo-1719665269650-5521f31420f3?auto=format&fit=crop&w=900&q=70'});
-    if(typeof MB_COURSE!=='undefined') reg.push({cid:'mol-bio',         course:MB_COURSE, icon:'🧬', grad:'linear-gradient(135deg,#2563eb,#1e3a8a)', paid:true, price:120, oldPrice:250, img:'https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=900&q=70'});
+    if(typeof MB_COURSE!=='undefined') reg.push({cid:'mol-bio',         course:MB_COURSE, icon:'🧬', grad:'linear-gradient(135deg,#2563eb,#1e3a8a)', paid:true, price:150, oldPrice:250, img:'https://images.unsplash.com/photo-1681911046064-e663d5192921?auto=format&fit=crop&w=900&q=70'});
     if(typeof FQ_COURSE!=='undefined') reg.push({cid:'food-quality',    course:FQ_COURSE, icon:'🥗', grad:'linear-gradient(135deg,#d97706,#92400e)', paid:false, img:'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=900&q=70'});
     if(typeof AG_COURSE!=='undefined') reg.push({cid:'ag-english',      course:AG_COURSE, icon:'🌾', grad:'linear-gradient(135deg,#059669,#065f46)', paid:false, img:'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=900&q=70'});
-    if(typeof FS_COURSE!=='undefined') reg.push({cid:'food-safety',     course:FS_COURSE, icon:'🍽️', grad:'linear-gradient(135deg,#ea580c,#9a3412)', paid:true, price:100, oldPrice:250, img:'https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?auto=format&fit=crop&w=900&q=70'});
+    if(typeof FS_COURSE!=='undefined') reg.push({cid:'food-safety',     course:FS_COURSE, icon:'🍽️', grad:'linear-gradient(135deg,#ea580c,#9a3412)', paid:true, price:130, oldPrice:250, img:'https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?auto=format&fit=crop&w=900&q=70'});
     if(typeof GLP_COURSE!=='undefined') reg.push({cid:'glp',            course:GLP_COURSE, icon:'🧪', grad:'linear-gradient(135deg,#0f55aa,#0b3d7a)', paid:false, img:'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=900&q=70'});
-    if(typeof TC_COURSE!=='undefined') reg.push({cid:'tissue-culture',  course:TC_COURSE, icon:'🧫', grad:'linear-gradient(135deg,#0d9488,#0f766e)', paid:true, price:100, oldPrice:150, img:'https://images.unsplash.com/photo-1622210445956-ca3320a5e7c5?auto=format&fit=crop&w=900&q=70'});
+    if(typeof TC_COURSE!=='undefined') reg.push({cid:'tissue-culture',  course:TC_COURSE, icon:'🧫', grad:'linear-gradient(135deg,#0d9488,#0f766e)', paid:true, price:130, oldPrice:150, img:'https://images.unsplash.com/photo-1622210445956-ca3320a5e7c5?auto=format&fit=crop&w=900&q=70'});
     if(typeof LR_COURSE!=='undefined') reg.push({cid:'land-reclamation',course:LR_COURSE, icon:'🏜️', grad:'linear-gradient(135deg,#b45309,#78350f)', paid:false, img:'https://assets.science.nasa.gov/dynamicimage/assets/science/esd/eo/images/imagerecords/89000/89820/egypt_oli_2017057_detail.jpg?w=1200&h=500&fit=crop'});
     if(typeof PT_COURSE!=='undefined') reg.push({cid:'pesticide-tech',   course:PT_COURSE, icon:'🧪', grad:'linear-gradient(135deg,#c2410c,#7c2d12)', paid:false, img:'https://images.unsplash.com/photo-1715360378677-d6375ac03dbf?auto=format&fit=crop&w=900&q=70'});
-    if(typeof FEED_COURSE!=='undefined') reg.push({cid:'feed-mgmt',      course:FEED_COURSE, icon:'🐄', grad:'linear-gradient(135deg,#92400e,#451a03)', paid:true, price:100, oldPrice:200, img:'https://images.unsplash.com/photo-1752219346775-fe086c57081b?auto=format&fit=crop&w=900&q=70'});
-    if(typeof FMB_COURSE!=='undefined') reg.push({cid:'food-microbiology',course:FMB_COURSE, icon:'🔬', grad:'linear-gradient(135deg,#2563eb,#0a1a3a)', paid:true, price:120, oldPrice:250, img:'https://images.unsplash.com/photo-1631557677599-ee5fe0b3440b?auto=format&fit=crop&w=900&q=70'});
-    if(typeof PD_COURSE!=='undefined') reg.push({cid:'plant-diseases',    course:PD_COURSE, icon:'🦠', grad:'linear-gradient(135deg,#dc2626,#7f1d1d)', paid:true, price:120, oldPrice:250, img:'https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=900&q=70'});
+    if(typeof FEED_COURSE!=='undefined') reg.push({cid:'feed-mgmt',      course:FEED_COURSE, icon:'🐄', grad:'linear-gradient(135deg,#92400e,#451a03)', paid:true, price:130, oldPrice:200, img:'https://images.unsplash.com/photo-1752219346775-fe086c57081b?auto=format&fit=crop&w=900&q=70'});
+    if(typeof FMB_COURSE!=='undefined') reg.push({cid:'food-microbiology',course:FMB_COURSE, icon:'🔬', grad:'linear-gradient(135deg,#2563eb,#0a1a3a)', paid:true, price:150, oldPrice:250, img:'https://images.unsplash.com/photo-1631557677599-ee5fe0b3440b?auto=format&fit=crop&w=900&q=70'});
+    if(typeof PD_COURSE!=='undefined') reg.push({cid:'plant-diseases',    course:PD_COURSE, icon:'🦠', grad:'linear-gradient(135deg,#dc2626,#7f1d1d)', paid:true, price:150, oldPrice:250, img:'https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=900&q=70'});
     if(typeof BI_COURSE!=='undefined') reg.push({cid:'bioinformatics',    course:BI_COURSE, icon:'💻', grad:'linear-gradient(135deg,#7c3aed,#4c1d95)', paid:true, price:250, oldPrice:500, img:'https://images.unsplash.com/photo-1643780668909-580822430155?auto=format&fit=crop&w=900&q=70'});
     if(typeof LD_COURSE!=='undefined') reg.push({cid:'landscape-design',  course:LD_COURSE, icon:'🌳', grad:'linear-gradient(135deg,#16a34a,#0a2410)', paid:true, price:150, oldPrice:250, img:'https://images.unsplash.com/photo-1761637822930-fb1c1a3df94d?auto=format&fit=crop&w=900&q=70'});
     if(typeof HYD_COURSE!=='undefined') reg.push({cid:'hydroponics-professional', course:HYD_COURSE, icon:'💧', grad:'linear-gradient(135deg,#0284c7,#031c2e)', paid:true, price:200, oldPrice:500, img:'https://images.unsplash.com/photo-1682629088819-95edaf226223?auto=format&fit=crop&w=900&q=70'});
@@ -9799,6 +9809,23 @@ async function signUpWithEmail(name, email, password, role, confirmPassword) {
   }
 }
 
+async function sendPasswordReset(email) {
+  try {
+    await auth.sendPasswordResetEmail(email);
+    showToast('✅ تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني', 'ok');
+    backToLogin();
+  } catch (error) {
+    let msg = 'تعذر إرسال رابط إعادة التعيين: ';
+    switch (error.code) {
+      case 'auth/user-not-found': msg += 'البريد الإلكتروني غير مسجل'; break;
+      case 'auth/invalid-email': msg += 'البريد الإلكتروني غير صالح'; break;
+      case 'auth/too-many-requests': msg += 'محاولات كثيرة، حاول لاحقاً'; break;
+      default: msg += error.message;
+    }
+    showToast(msg, 'err');
+  }
+}
+
 async function signInWithGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
   try {
@@ -9946,6 +9973,10 @@ auth.onAuthStateChanged(async (user) => {
 // ======================== UI HELPERS ========================
 function closeAuth() {
   document.getElementById('auth-bg').classList.remove('on');
+  const fpForm = document.getElementById('af-fp');
+  if (fpForm) fpForm.style.display = 'none';
+  const tabs = document.querySelector('.auth-tabs');
+  if (tabs) tabs.style.display = 'flex';
 }
 function openAuth(tab) {
   document.getElementById('auth-bg').classList.add('on');
@@ -9967,6 +9998,22 @@ function swAuth(tab) {
     loginTab.classList.remove('on');
     regTab.classList.add('on');
   }
+}
+
+function showForgotPassword() {
+  const loginEmail = document.querySelector('#af-l input[type="email"]');
+  const fpEmail = document.querySelector('#af-fp input[type="email"]');
+  if (loginEmail && fpEmail) fpEmail.value = loginEmail.value;
+  document.querySelector('.auth-tabs').style.display = 'none';
+  document.getElementById('af-l').style.display = 'none';
+  document.getElementById('af-r').style.display = 'none';
+  document.getElementById('af-fp').style.display = 'flex';
+}
+
+function backToLogin() {
+  document.getElementById('af-fp').style.display = 'none';
+  document.querySelector('.auth-tabs').style.display = 'flex';
+  swAuth('login');
 }
 
 function chkStr(val) {
@@ -10425,6 +10472,22 @@ async function hReg(event) {
   submitBtn.textContent = 'جاري إنشاء الحساب...';
   try {
     await signUpWithEmail(name, email, password, role, confirm);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+  }
+}
+
+async function hForgotPassword(event) {
+  event.preventDefault();
+  const form = event.target;
+  const email = form.querySelector('input[type="email"]').value;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'جاري الإرسال...';
+  try {
+    await sendPasswordReset(email);
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = originalText;
@@ -18101,8 +18164,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="vcash-steps on" id="vcash-step-method">
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 52%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash-method-price-display">120 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 40%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash-method-price-display">150 جنيه</span></div>
           </div>
         </div>
         <div class="vcash-trust-line">🔒 دفع آمن — تفعيل خلال لحظات</div>
@@ -18128,8 +18191,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 52%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash-price-display">120 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 40%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash-price-display">150 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap">
@@ -18166,8 +18229,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card instapay">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 52%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash-ip-price-display">120 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 40%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash-ip-price-display">150 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap" id="vcash-ip-identifiers"></div>
@@ -18347,8 +18410,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="vcash-steps on" id="vcash4-step-method">
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 60%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash4-method-price-display">100 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 48%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash4-method-price-display">130 جنيه</span></div>
           </div>
         </div>
         <div class="vcash-trust-line">🔒 دفع آمن — تفعيل خلال لحظات</div>
@@ -18374,8 +18437,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash4','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 60%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash4-price-display">100 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 48%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash4-price-display">130 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap">
@@ -18412,8 +18475,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash4','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card instapay">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 60%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash4-ip-price-display">100 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 48%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash4-ip-price-display">130 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap" id="vcash4-ip-identifiers"></div>
@@ -18469,8 +18532,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="vcash-steps on" id="vcash5-step-method">
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 33%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">150 جنيه</s><span class="vcash-info-val" id="vcash5-method-price-display">100 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 13%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">150 جنيه</s><span class="vcash-info-val" id="vcash5-method-price-display">130 جنيه</span></div>
           </div>
         </div>
         <div class="vcash-trust-line">🔒 دفع آمن — تفعيل خلال لحظات</div>
@@ -18496,8 +18559,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash5','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 33%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">150 جنيه</s><span class="vcash-info-val" id="vcash5-price-display">100 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 13%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">150 جنيه</s><span class="vcash-info-val" id="vcash5-price-display">130 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap">
@@ -18534,8 +18597,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash5','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card instapay">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 33%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">150 جنيه</s><span class="vcash-info-val" id="vcash5-ip-price-display">100 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 13%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">150 جنيه</s><span class="vcash-info-val" id="vcash5-ip-price-display">130 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap" id="vcash5-ip-identifiers"></div>
@@ -18591,8 +18654,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="vcash-steps on" id="vcash6-step-method">
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 52%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash6-method-price-display">120 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 40%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash6-method-price-display">150 جنيه</span></div>
           </div>
         </div>
         <div class="vcash-trust-line">🔒 دفع آمن — تفعيل خلال لحظات</div>
@@ -18618,8 +18681,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash6','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 52%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash6-price-display">120 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 40%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash6-price-display">150 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap">
@@ -18656,8 +18719,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash6','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card instapay">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 52%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash6-ip-price-display">120 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 40%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash6-ip-price-display">150 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap" id="vcash6-ip-identifiers"></div>
@@ -18713,8 +18776,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="vcash-steps on" id="vcash8-step-method">
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 33%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">150 جنيه</s><span class="vcash-info-val" id="vcash8-method-price-display">100 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 13%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">150 جنيه</s><span class="vcash-info-val" id="vcash8-method-price-display">130 جنيه</span></div>
           </div>
         </div>
         <div class="vcash-trust-line">🔒 دفع آمن — تفعيل خلال لحظات</div>
@@ -18740,8 +18803,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash8','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 33%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">150 جنيه</s><span class="vcash-info-val" id="vcash8-price-display">100 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 13%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">150 جنيه</s><span class="vcash-info-val" id="vcash8-price-display">130 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap">
@@ -18778,8 +18841,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash8','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card instapay">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 33%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">150 جنيه</s><span class="vcash-info-val" id="vcash8-ip-price-display">100 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 13%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">150 جنيه</s><span class="vcash-info-val" id="vcash8-ip-price-display">130 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap" id="vcash8-ip-identifiers"></div>
@@ -18835,8 +18898,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="vcash-steps on" id="vcash7-step-method">
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 50%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">200 جنيه</s><span class="vcash-info-val" id="vcash7-method-price-display">100 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 35%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">200 جنيه</s><span class="vcash-info-val" id="vcash7-method-price-display">130 جنيه</span></div>
           </div>
         </div>
         <div class="vcash-trust-line">🔒 دفع آمن — تفعيل خلال لحظات</div>
@@ -18862,8 +18925,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash7','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 50%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">200 جنيه</s><span class="vcash-info-val" id="vcash7-price-display">100 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 35%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">200 جنيه</s><span class="vcash-info-val" id="vcash7-price-display">130 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap">
@@ -18900,8 +18963,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash7','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card instapay">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 50%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">200 جنيه</s><span class="vcash-info-val" id="vcash7-ip-price-display">100 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 35%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">200 جنيه</s><span class="vcash-info-val" id="vcash7-ip-price-display">130 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap" id="vcash7-ip-identifiers"></div>
@@ -18958,8 +19021,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="vcash-steps on" id="vcash9-step-method">
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 52%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash9-method-price-display">120 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 40%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash9-method-price-display">150 جنيه</span></div>
           </div>
         </div>
         <div class="vcash-trust-line">🔒 دفع آمن — تفعيل خلال لحظات</div>
@@ -18985,8 +19048,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash9','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 52%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash9-price-display">120 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 40%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash9-price-display">150 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap">
@@ -19023,8 +19086,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash9','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card instapay">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 52%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash9-ip-price-display">120 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 40%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash9-ip-price-display">150 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap" id="vcash9-ip-identifiers"></div>
@@ -19079,8 +19142,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="vcash-steps on" id="vcash10-step-method">
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 52%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash10-method-price-display">120 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 40%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash10-method-price-display">150 جنيه</span></div>
           </div>
         </div>
         <div class="vcash-trust-line">🔒 دفع آمن — تفعيل خلال لحظات</div>
@@ -19106,8 +19169,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash10','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 52%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash10-price-display">120 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 40%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash10-price-display">150 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap">
@@ -19144,8 +19207,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="vcash-back-link" onclick="acVcashSetStep('vcash10','method')">→ رجوع لاختيار وسيلة الدفع</button>
         <div class="vcash-info-card instapay">
           <div class="vcash-info-row">
-            <span class="vcash-info-lbl">السعر بعد خصم 52%</span>
-            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash10-ip-price-display">120 جنيه</span></div>
+            <span class="vcash-info-lbl">السعر بعد خصم 40%</span>
+            <div><s style="font-size:12px;opacity:.65;margin-left:6px">250 جنيه</s><span class="vcash-info-val" id="vcash10-ip-price-display">150 جنيه</span></div>
           </div>
           <div class="vcash-info-divider"></div>
           <div class="vcash-num-wrap" id="vcash10-ip-identifiers"></div>
@@ -19653,6 +19716,13 @@ html {
   /* iOS 27/Safari fallback tint لو ملقاش عنصر fixed مؤهل فوق —
      من غيرها ممكن يرجع أبيض افتراضي حتى في الوضع الغامق */
   background-color: var(--bg);
+  /* Stops WebKit's automatic text-size inflation, which recalculates
+     after a rotation and blows up font-size (and any em-based padding
+     riding on it, like the mob-menu links/pill button) without the
+     layout actually changing — this is what makes the top-bar dropdown
+     menu items balloon in size after flipping the screen. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 /* Refined scrollbar — thin & auto-fade */
 ::-webkit-scrollbar         { width: 3px; height: 3px; }
@@ -20562,11 +20632,62 @@ body {
       syncBottomNav(initPage);
     });
 
+    /* ── Rotation repaint fix ──────────────────────────────────
+       iOS/Android WebKit can leave a position:fixed element
+       rendered at its old scroll position after an orientation
+       change, so it appears to float inline inside the page
+       content instead of staying pinned to the bottom, until
+       something forces a repaint. Toggling display off/on and
+       reading offsetHeight forces a synchronous reflow that
+       fixes it. */
+    function _nbFixBottomNavAfterRotate() {
+      var nav = document.getElementById('nb-bottom-nav');
+      if (!nav) return;
+      /* Toggling display alone doesn't always re-anchor this element
+         after a full portrait→landscape→portrait cycle, because it
+         already lives on its own compositor layer (translateZ(0)
+         above) — WebKit can keep that layer's stale position even
+         through a display:none/'' cycle. Also cycling `position`
+         forces the fixed render context itself to be dropped and
+         recreated, which is the more reliable fix for that case. */
+      nav.style.position = 'static';
+      void nav.offsetHeight;
+      nav.style.display = 'none';
+      void nav.offsetHeight; /* force synchronous reflow */
+      nav.style.display = '';
+      nav.style.position = '';
+    }
+
     /* Reposition pill on resize (orientation change, etc.) */
-    window.addEventListener('resize', function () {
+    function _nbHandleViewportResize() {
+      _nbFixBottomNavAfterRotate();
       var active = document.querySelector('#nb-bottom-nav .nb-nav-item.active');
       if (active && !active.classList.contains('nb-center-item')) moveSlidePill(active);
-    }, { passive: true });
+    }
+    window.addEventListener('resize', _nbHandleViewportResize, { passive: true });
+
+    /* 'resize' can fire before iOS finishes settling the new
+       viewport/toolbar size on rotation, so also retry shortly
+       after 'orientationchange' fires — with one extra, later retry
+       for the slower rotation-settle cases. */
+    window.addEventListener('orientationchange', function () {
+      /* Each retry must also re-run moveSlidePill, not just the nav's
+         own repaint fix — otherwise a pill position measured while the
+         flex row was still mid-transition (offsetLeft/offsetWidth not
+         settled yet) stays wrong forever, since nothing later would
+         ever recompute it. That's what was making the pill drift off
+         its tab after a rotation. */
+      setTimeout(_nbHandleViewportResize, 100);
+      setTimeout(_nbHandleViewportResize, 400);
+      setTimeout(_nbHandleViewportResize, 800);
+    });
+
+    /* visualViewport settles at a more reliable point than window
+       'resize' on iOS Safari — listen here too as a fallback path,
+       purely additive to the two listeners above. */
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', _nbHandleViewportResize, { passive: true });
+    }
 
     /* iOS momentum scroll for long scrollable containers */
     document.querySelectorAll(
@@ -21857,236 +21978,6 @@ document.querySelectorAll('.vcash-overlay').forEach(_watch);
     }
   });
 })();
-</script>
-
-<!-- ══════════════════════════════════════════════════════════════
-     NABTEX MOTION LAYER — additive only (CSS + JS, nothing edited above).
-     Scope: Home dashboard (#nb-dash-content), course cards, header
-     entrance, search results, bottom-nav icon. No data, routes, Firebase
-     or render functions are touched — every real value (progress %, text)
-     is read from the DOM the app already rendered and restored exactly.
-     Delete this whole block to revert.
-══════════════════════════════════════════════════════════════ -->
-<style id="nb-motion-css">
-:root{--nbmo-out:cubic-bezier(.16,1,.3,1)}
-
-/* Calm the two perpetual effects on cards (brief: no constant motion) */
-.nb-h2-cc-shine{animation:none}
-
-/* ── CARD: tactile press / restrained hover ─────────────────── */
-.nb-h2-cc-img{transition:transform .5s var(--nbmo-out)}
-.nb-h2-course-card:hover .nb-h2-cc-img,
-.nb-h2-course-card:active .nb-h2-cc-img{transform:scale(1.02)}
-@media (hover:hover) and (pointer:fine){
-  .nb-h2-course-card.nb-h2-in:hover{
-    transform:translateY(-3px);
-    box-shadow:0 10px 24px -10px rgba(27,107,58,.18),0 3px 10px rgba(0,0,0,.05);
-    border-color:rgba(27,107,58,.22);
-  }
-  .nb-h2-avatar:hover{transform:scale(1.04)}
-}
-.nb-h2-course-card.nb-h2-in:active{transform:scale(.98);transition-duration:.12s}
-@media (hover:none) and (pointer:coarse){
-  .nb-h2-course-card.nb-h2-in:active{transform:scale(.98) !important;transition-duration:.12s !important}
-}
-.nb-h2-cc-cta{font-variant-numeric:tabular-nums}
-
-/* ── Buttons / avatar / search feedback ─────────────────────── */
-.nb-h2-viewall{transition:opacity .2s,background .2s,transform .18s var(--nbmo-out)}
-.nb-h2-viewall:active{transform:scale(.96)}
-.nb-h2-avatar:active{transform:scale(.95)}
-#nb-dash-content .nb-h2-search{transition:background .25s,border-color .25s,box-shadow .25s,transform .3s var(--nbmo-out)}
-#nb-dash-content .nb-h2-search:focus-within{transform:translateY(-1px)}
-.nb-h2-search-inp::placeholder{transition:opacity .2s}
-.nb-h2-search-inp:focus::placeholder{opacity:.5}
-
-/* ── Bottom nav: gentler active icon (was 1.22) ─────────────── */
-.nb-nav-item.active .nb-ico{transform:translateY(-2px) scale(1.12)}
-
-/* ── Search results: vertical settle, capped stagger ────────── */
-@keyframes nbMoResIn{from{opacity:0;transform:translateY(8px)}}
-.sp-result-item{animation-name:nbMoResIn}
-.sp-result-item:nth-child(n+11){animation-delay:315ms !important}
-.sp-results-head{animation:nbMoResIn .35s var(--nbmo-out) both}
-
-/* ── Entrance choreography (only when motion is allowed) ────── */
-@media (prefers-reduced-motion:no-preference){
-  /* header: once, after the splash loader */
-  html[data-nb-mo-hold] .nav-inner{opacity:0}
-  html.nb-mo-go .nav-inner{animation:nbMoHdr .5s var(--nbmo-out) backwards}
-  @keyframes nbMoHdr{from{opacity:0;transform:translateY(-8px)}}
-
-  /* JS arms #nb-dash-content[data-mo]; without JS the app's own
-     animations run untouched. */
-  #nb-dash-content[data-mo] .nb-h2-hero{animation:none;opacity:0;transform:translateY(8px);
-    transition:opacity .5s var(--nbmo-out),transform .5s var(--nbmo-out)}
-  #nb-dash-content[data-mo] .nb-h2-search{opacity:0;transform:translateY(6px);
-    transition:opacity .45s var(--nbmo-out),transform .45s var(--nbmo-out),background .25s,border-color .25s,box-shadow .25s}
-  #nb-dash-content[data-mo] .nb-h2-courses-sec{animation:none}
-  #nb-dash-content[data-mo] .nb-h2-courses-head{opacity:0;transform:translateY(8px);
-    transition:opacity .45s var(--nbmo-out),transform .45s var(--nbmo-out)}
-  #nb-dash-content[data-mo] .nb-h2-hero.mo-in,
-  #nb-dash-content[data-mo] .nb-h2-search.mo-in,
-  #nb-dash-content[data-mo] .nb-h2-courses-head.mo-in{opacity:1;transform:none}
-  #nb-dash-content[data-mo] .nb-h2-search.mo-in:focus-within{transform:translateY(-1px)}
-  /* cards keep their own transition; this is only the pre-reveal state */
-  #nb-dash-content[data-mo] .nb-h2-course-card:not(.mo-in){opacity:0;transform:translateY(12px) scale(.985)}
-
-  /* progress: real width stays inline; held at its previous value until revealed */
-  #nb-dash-content[data-mo] .nb-h2-cc-prog-fill{transition:width .8s var(--nbmo-out)}
-  #nb-dash-content[data-mo] .nb-h2-cc-prog-fill[data-mo-pf]{width:var(--mo-from,0%) !important}
-
-  /* completion tick draws once */
-  #nb-dash-content[data-mo] .nb-h2-course-card.mo-in .nb-h2-cc-done svg polyline{
-    stroke-dasharray:24;animation:nbMoCheck .45s .3s var(--nbmo-out) backwards}
-  @keyframes nbMoCheck{from{stroke-dashoffset:24}}
-}
-
-/* ── Reduced motion: static alternative ─────────────────────── */
-@media (prefers-reduced-motion:reduce){
-  .nb-h2-course-card.nb-h2-in:hover,
-  .nb-h2-course-card.nb-h2-in:active,
-  .nb-h2-avatar:hover,.nb-h2-avatar:active,.nb-h2-viewall:active,
-  #nb-dash-content .nb-h2-search:focus-within{transform:none !important}
-  .nb-h2-course-card.nb-h2-in:active{opacity:.9}
-  .nb-h2-course-card:hover .nb-h2-cc-img,.nb-h2-course-card:active .nb-h2-cc-img{transform:none}
-  .nb-nav-item.active .nb-ico{transform:none}
-  .sp-result-item,.sp-results-head{animation:none !important}
-}
-</style>
-<script id="nb-motion-js">
-(function(){
-'use strict';
-try{
-  var root=document.documentElement;
-  var mq=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
-  var reduced=function(){return !!(mq&&mq.matches);};
-  var hasIO='IntersectionObserver' in window;
-  var STEP=65, DUR=700, COUNT_MS=800;
-
-  /* Hold the entrance until the splash loader starts leaving, so the
-     sequence is actually seen instead of playing underneath it. */
-  var ready=false, waiters=[];
-  function release(){
-    if(ready) return; ready=true;
-    root.removeAttribute('data-nb-mo-hold');
-    if(!reduced()) root.classList.add('nb-mo-go');
-    var w=waiters.splice(0); for(var i=0;i<w.length;i++) w[i]();
-  }
-  function whenReady(fn){ if(ready) fn(); else waiters.push(fn); }
-  (function(){
-    var l=document.getElementById('ldr');
-    if(!l||reduced()||!hasIO||l.classList.contains('out')){ ready=true; return; }
-    root.setAttribute('data-nb-mo-hold','');
-    var m=new MutationObserver(function(){
-      if(l.classList.contains('out')||!l.isConnected){ m.disconnect(); setTimeout(release,120); }
-    });
-    m.observe(l,{attributes:true,attributeFilter:['class']});
-    setTimeout(release,6500); /* failsafe (app's own loader net is 5s) */
-  })();
-
-  /* Real values shown so far this session: revisiting Home with unchanged
-     progress stays static; only a genuine increase animates. */
-  var lastPct={};
-  var io=null, pending=[];
-
-  function getIO(){
-    if(!io&&hasIO) io=new IntersectionObserver(function(entries){
-      for(var i=0;i<entries.length;i++) if(entries[i].isIntersecting){ io.unobserve(entries[i].target); pending.push(entries[i].target); }
-      if(pending.length) whenReady(flush);
-    },{threshold:.12,rootMargin:'0px 0px -4% 0px'});
-    return io;
-  }
-
-  function flush(){
-    if(!pending.length) return;
-    var list=pending.splice(0).filter(function(el){return el.isConnected;});
-    list.sort(function(a,b){return (a.compareDocumentPosition(b)&4)?-1:1;});
-    list.forEach(function(el,i){ reveal(el,Math.min(i*STEP,420)); });
-  }
-
-  function reveal(el,d){
-    el.style.transitionDelay=d+'ms';
-    el.classList.add('mo-in');
-    if(el.classList.contains('nb-h2-course-card')){ el.classList.add('nb-h2-in'); startProgress(el,d); }
-    /* drop the stagger delay so hover/press are never laggy afterwards */
-    setTimeout(function(){ el.style.transitionDelay=''; },d+DUR);
-  }
-
-  function cidOf(card){
-    var m=/openCourse\('([^']+)'/.exec(card.getAttribute('onclick')||'');
-    return m?m[1]:null;
-  }
-
-  function prep(card){
-    var fill=card.querySelector('.nb-h2-cc-prog-fill'); if(!fill) return;
-    var to=parseFloat(fill.style.width); if(!(to>0)) return;
-    var cid=cidOf(card), from=(cid&&lastPct[cid]!=null)?lastPct[cid]:0;
-    if(from>=to){ if(cid) lastPct[cid]=to; return; }
-    var cta=card.querySelector('.nb-h2-cc-cta'), node=null, tpl='';
-    if(cta) for(var n=cta.firstChild;n;n=n.nextSibling)
-      if(n.nodeType===3&&/\d+\s*%/.test(n.nodeValue)&&!/\d[.,٫]\d/.test(n.nodeValue)){ node=n; tpl=n.nodeValue; break; }
-    card.__mo={fill:fill,to:to,from:from,node:node,tpl:tpl,cid:cid};
-    fill.style.setProperty('--mo-from',from+'%');
-    fill.setAttribute('data-mo-pf','');
-  }
-
-  function startProgress(card,d){
-    var p=card.__mo; if(!p) return; card.__mo=null;
-    if(p.cid) lastPct[p.cid]=p.to;
-    var delay=d+220;
-    p.fill.style.transitionDelay=delay+'ms';
-    p.fill.removeAttribute('data-mo-pf');      /* width returns to the real inline value → CSS transition */
-    setTimeout(function(){ p.fill.style.transitionDelay=''; p.fill.style.removeProperty('--mo-from'); },delay+COUNT_MS+100);
-    if(p.node){ p.node.nodeValue=p.tpl.replace(/\d+(?=\s*%)/,String(Math.round(p.from))); countUp(p,delay); }
-  }
-
-  function countUp(p,delay){
-    var t0=0;
-    function step(t){
-      var k=Math.max(0,Math.min((t-t0)/COUNT_MS,1));
-      var e=1-Math.pow(1-k,4);
-      p.node.nodeValue=(k<1)?p.tpl.replace(/\d+(?=\s*%)/,String(Math.round(p.from+(p.to-p.from)*e))):p.tpl;
-      if(k<1) requestAnimationFrame(step);
-    }
-    setTimeout(function(){ t0=performance.now(); requestAnimationFrame(step); },delay);
-  }
-
-  function disarm(cnt){
-    cnt.removeAttribute('data-mo');
-    cnt.querySelectorAll('.nb-h2-course-card').forEach(function(c){
-      var p=c.__mo; if(!p) return;
-      if(p.node) p.node.nodeValue=p.tpl;
-      p.fill.removeAttribute('data-mo-pf'); c.__mo=null;
-    });
-  }
-
-  function arm(cnt){
-    if(reduced()||!hasIO){ disarm(cnt); return; }
-    var hero=cnt.querySelector('.nb-h2-hero');
-    var secs=cnt.querySelectorAll('.nb-h2-courses-sec');
-    if(!hero&&!secs.length) return;                 /* skeleton / empty state */
-    if((hero&&hero.__moArmed)||(!hero&&secs[0].__moArmed)) return;
-    cnt.setAttribute('data-mo','');
-    var obs=getIO(), targets=[];
-    if(hero){ hero.__moArmed=true; targets.push(hero); var s=hero.querySelector('.nb-h2-search'); if(s) targets.push(s); }
-    secs.forEach(function(sec){
-      sec.__moArmed=true;
-      var h=sec.querySelector('.nb-h2-courses-head'); if(h) targets.push(h);
-      sec.querySelectorAll('.nb-h2-course-card').forEach(function(c){ prep(c); targets.push(c); });
-    });
-    targets.forEach(function(el){ obs.observe(el); });
-  }
-
-  function init(){
-    var cnt=document.getElementById('nb-dash-content'); if(!cnt) return;
-    new MutationObserver(function(){ arm(cnt); }).observe(cnt,{childList:true});
-    if(cnt.children.length) arm(cnt);
-    if(mq&&mq.addEventListener) mq.addEventListener('change',function(){ if(reduced()) disarm(cnt); });
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true}); else init();
-}catch(err){ try{ document.documentElement.removeAttribute('data-nb-mo-hold'); }catch(e){} }
-}());
 </script>
 
 </body>
