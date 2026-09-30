@@ -331,6 +331,62 @@
           "order": "DESCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "xp_events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "uid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "ts",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "xp_events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "ts",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "xp_wallet",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "wk",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "wx",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "xp_wallet",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "mo",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "mx",
+          "order": "DESCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []

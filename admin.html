@@ -19,6 +19,20 @@
   --rejected:#ef4444;--rejected-bg:rgba(239,68,68,.08);
   --text:#dbeade;--muted:#5a8068;--subtle:#2c4235;
   --r:16px;--t:.22s cubic-bezier(.4,0,.2,1);}
+/* ── Light mode (premium day theme — mirrors nabtex.vercel.app's own light/dark tokens) ── */
+body[data-light]{
+  --bg:#fafef9;--surface:#ffffff;--card:#ffffff;--card-hov:#f3faf4;
+  --border:rgba(27,107,58,.10);--border-md:rgba(27,107,58,.22);
+  --glow:rgba(34,197,94,.16);
+  --pending:#b45309;--pending-bg:rgba(245,158,11,.10);
+  --approved:#16a34a;--approved-bg:rgba(34,197,94,.10);
+  --rejected:#dc2626;--rejected-bg:rgba(239,68,68,.08);
+  --text:#1e2a24;--muted:#6d8f7a;--subtle:#86a293;
+}
+/* iOS Safari reveals <html>'s own background during overscroll/pull-to-refresh
+   bounce, separately from <body>'s — so it needs the light color too, or a
+   dark flash shows at the edges while scrolling in light mode. */
+html[data-light]{background:#fafef9}
 html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;
   background:var(--bg);color:var(--text);font-size:14px;-webkit-font-smoothing:antialiased}
 body::before{content:'';position:fixed;inset:0;
@@ -68,8 +82,23 @@ body::before{content:'';position:fixed;inset:0;
   pointer-events:none;animation:ambientShift 9s ease-in-out infinite alternate}
 @keyframes ambientShift{0%{transform:translate(0,0)}100%{transform:translate(16px,18px) scale(1.08)}}
 .sidebar-head{padding:26px 22px 22px;border-bottom:1px solid var(--border);position:relative}
+/* ── Theme toggle (same icon/shape as the nabtex.vercel.app nav toggle) ── */
+#admin-thm-btn{position:absolute;top:22px;left:22px;width:38px;height:38px;border-radius:50%;
+  display:grid;place-items:center;border:1.5px solid var(--border-md);color:var(--muted);
+  background:var(--card);cursor:pointer;transition:all .22s cubic-bezier(.34,1.56,.64,1);z-index:2}
+#admin-thm-btn:hover{transform:scale(1.1);border-color:var(--emerald);color:var(--emerald)}
+#admin-thm-btn:active{transform:scale(.95)}
+#admin-thm-btn svg{transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s}
+#admin-thm-btn .moon-icon{display:none}
+body[data-light] #admin-thm-btn .sun-icon{display:none}
+body[data-light] #admin-thm-btn .moon-icon{display:block}
 .sidebar-logo-icon{display:flex;align-items:center;gap:10px;margin-bottom:2px}
 .sidebar-logo-svg{filter:drop-shadow(0 0 8px rgba(34,197,94,.35))}
+/* Nabtex brand mark — identical badge/icon to the one in index.html's nav */
+.sidebar-logo-mark{width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(145deg,#2d9a58,#0f552e);display:grid;place-items:center;
+  box-shadow:0 4px 12px rgba(15,85,46,.35);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.sidebar-logo-icon:hover .sidebar-logo-mark{transform:rotate(-8deg) scale(1.1)}
 .sidebar-logo-name{font-size:1rem;font-weight:900;letter-spacing:-.01em}
 .sidebar-logo-sub{font-size:11px;color:var(--muted);margin-top:3px;margin-right:36px}
 .sidebar-section-label{font-size:10px;font-weight:800;color:var(--subtle);
@@ -138,17 +167,25 @@ body::before{content:'';position:fixed;inset:0;
   transition:all var(--t);box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .refresh-btn:hover{background:var(--card-hov);border-color:var(--border-md)}
 .refresh-btn:hover .ricon{transform:rotate(-40deg)}
+/* Notification-status pill: intentionally the smaller, secondary control. */
 #admin-push-btn{padding:7px 14px;font-size:12px;gap:5px}
+/* Refresh: icon-only circular button, matching the theme-toggle button's shape. */
+.icon-btn{width:38px;height:38px;padding:0;border-radius:50%;display:grid;place-items:center;
+  border:1.5px solid var(--border-md);color:var(--muted);background:var(--card);
+  cursor:pointer;transition:all .22s cubic-bezier(.34,1.56,.64,1);flex-shrink:0}
+.icon-btn:hover{transform:scale(1.08);border-color:var(--emerald);color:var(--emerald)}
+.icon-btn:hover .ricon{transform:rotate(-40deg)}
+.icon-btn:active{transform:scale(.93)}
 .ricon{transition:transform .4s var(--t);display:flex;align-items:center}
-.refresh-btn svg,.logout-btn svg{display:block}
+.refresh-btn svg,.logout-btn svg,.icon-btn svg{display:block}
 .controls-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-.tabs{display:flex;gap:4px;background:var(--card);border-radius:12px;
-  padding:5px;border:1px solid var(--border)}
+.tabs{display:flex;gap:4px;justify-content:space-between;background:var(--card);border-radius:12px;
+  padding:5px;border:1px solid var(--border);flex:1;min-width:220px}
 .tab-btn{padding:7px 16px;border-radius:8px;border:none;background:transparent;
   font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit;
   transition:all var(--t);white-space:nowrap}
 .tab-btn.active{background:var(--emerald);color:#fff;box-shadow:0 2px 10px rgba(34,197,94,.35)}
-.search-wrap{flex:1;min-width:200px}
+.search-wrap{flex:1;min-width:220px}
 .search-input{width:100%;padding:10px 14px;background:var(--card);
   border:1px solid var(--border);border-radius:10px;font-size:16px;
   font-family:inherit;direction:rtl;outline:none;color:var(--text);transition:all var(--t)}
@@ -350,6 +387,7 @@ body::before{content:'';position:fixed;inset:0;
 .day-stat.revenue-s  .day-stat-val{color:#c084fc}
 @media(max-width:768px){.app-layout{grid-template-columns:1fr}.sidebar{display:none}.main-content{padding:16px}}
 /* ── Date Navigator ─────────────────────────────── */
+
 .date-nav-wrap{overflow-x:auto;margin-bottom:10px;padding:2px 0 6px;
   scrollbar-width:none;-ms-overflow-style:none;
   direction:ltr;                   /* force LTR so today is on right */
@@ -469,9 +507,100 @@ body::before{content:'';position:fixed;inset:0;
   /* Clearance so content doesn't sit behind the floating nav */
   .sidebar,.main-content{padding-bottom:100px}
 }
+
+/* ══════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES
+   Variables above already repaint most of the UI. These
+   rules only cover spots that use hardcoded dark-only
+   colors (white-overlay "sunken" surfaces, heavy black
+   shadows, and bright pastel accents tuned for a near-
+   black background) so they stay legible and premium-
+   looking on the light background too.
+═══════════════════════════════════════════════════════ */
+body[data-light] .sidebar{background:linear-gradient(170deg,#ffffff 0%,#f7fcf8 55%,#eef8f0 100%)}
+body[data-light] .auth-card{box-shadow:0 24px 64px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.5)}
+body[data-light] .auth-input{background:#f3faf4}
+body[data-light] .google-btn{background:#f3faf4}
+body[data-light] .google-btn:hover{background:#eef8f0;border-color:rgba(27,107,58,.18)}
+body[data-light] .stat-card{background:#f3faf4}
+body[data-light] .stat-card:hover{background:#eef8f0}
+body[data-light] .stat-card.pending  .stat-icon{color:#b45309}
+body[data-light] .stat-card.approved .stat-icon{color:#16a34a}
+body[data-light] .stat-card.rejected .stat-icon{color:#dc2626}
+body[data-light] .stat-card.revenue  .stat-icon{color:#9333ea}
+body[data-light] .stat-card.pending  .stat-val{color:#b45309}
+body[data-light] .stat-card.approved .stat-val{color:#16a34a}
+body[data-light] .stat-card.rejected .stat-val{color:#dc2626}
+body[data-light] .stat-card.revenue  .stat-val{color:#9333ea}
+body[data-light] .course-enroll-row{background:#f3faf4}
+body[data-light] .course-enroll-row:hover{background:#eef8f0}
+body[data-light] .course-enroll-count{color:#16a34a}
+body[data-light] .course-toggle-btn.active{color:#16a34a}
+body[data-light] .course-toggle-btn.active:hover{color:#dc2626}
+body[data-light] .course-toggle-btn.paused{color:#dc2626}
+body[data-light] .course-toggle-btn.paused:hover{color:#16a34a}
+body[data-light] .live-dot{background:#16a34a}
+body[data-light] .sidebar-user-badge{background:#f3faf4}
+body[data-light] .logout-btn{color:#dc2626}
+body[data-light] .refresh-btn{box-shadow:0 2px 8px rgba(0,0,0,.05)}
+body[data-light] .pay-card:hover{box-shadow:0 8px 28px rgba(0,0,0,.07)}
+body[data-light] .detail-item{background:#f3faf4}
+body[data-light] .action-btn.approve{color:#16a34a}
+body[data-light] .action-btn.reject{color:#dc2626}
+body[data-light] .action-btn.delete{color:#dc2626}
+body[data-light] .action-btn.suspend{color:#b45309}
+body[data-light] .action-btn.unsuspend{color:#16a34a}
+body[data-light] .toast{box-shadow:0 8px 28px rgba(0,0,0,.12)}
+body[data-light] .toast.ok{color:#16a34a}
+body[data-light] .toast.err{color:#dc2626}
+body[data-light] .confirm-box{box-shadow:0 24px 64px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.5)}
+body[data-light] .confirm-btn.cancel{background:#f3faf4}
+body[data-light] .confirm-btn.cancel:hover{background:#eef8f0}
+body[data-light] .confirm-note{background:#f3faf4}
+body[data-light] .confirm-price-input{background:#f3faf4}
+body[data-light] .broadcast-open-btn{color:#16a34a}
+body[data-light] .broadcast-close{background:#f3faf4}
+body[data-light] .mkdt-summary-card{background:#f3faf4}
+body[data-light] .mkdt-summary-val{color:#16a34a}
+body[data-light] .mkdt-summary-val.due{color:#b45309}
+body[data-light] .mkdt-day-amount,body[data-light] .mkdt-course-amount{color:#16a34a}
+body[data-light] .mkdt-pdf-btn{background:#f3faf4}
+body[data-light] .mkdt-pdf-btn:hover{background:#eef8f0}
+body[data-light] .mk-total-card{background:#f3faf4}
+body[data-light] .mk-total-val{color:#16a34a}
+body[data-light] .mk-total-val.due{color:#b45309}
+body[data-light] .broadcast-textarea{background:#f3faf4}
+body[data-light] .broadcast-select{background:#f3faf4}
+body[data-light] .day-summary-header svg{color:#16a34a}
+body[data-light] .day-stat{background:#f3faf4}
+body[data-light] .day-stat.approved-s .day-stat-val{color:#16a34a}
+body[data-light] .day-stat.pending-s  .day-stat-val{color:#b45309}
+body[data-light] .day-stat.rejected-s .day-stat-val{color:#dc2626}
+body[data-light] .day-stat.revenue-s  .day-stat-val{color:#9333ea}
+body[data-light] .day-btn.selected .day-num{color:#16a34a}
+body[data-light] .day-btn.selected .day-month{color:rgba(22,163,74,.75)}
+body[data-light] .day-count{color:#16a34a}
+body[data-light] .date-active-label{color:#16a34a}
+body[data-light] .date-clear-btn{color:#16a34a}
+body[data-light] #admin-bottom-nav::before{background:rgba(255,255,255,.85);
+  box-shadow:0 16px 40px rgba(0,0,0,.12),0 4px 14px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.5)}
+body[data-light] #mkdt-delete-btn{color:#dc2626!important}
 </style>
 </head>
 <body data-atab-active="home">
+<script>
+/* Apply the saved light/dark choice before first paint, so the page
+   doesn't flash dark-then-light on load. Independent of the main
+   nabtex.vercel.app site's own theme choice (separate storage key). */
+(function(){
+  try{
+    if(localStorage.getItem('nb-admin-light')==='1'){
+      document.body.setAttribute('data-light','');
+      document.documentElement.setAttribute('data-light','');
+    }
+  }catch(e){}
+})();
+</script>
 
 <!-- ── Auth Screen ───────────────────────────────────────── -->
 <div id="auth-screen">
@@ -497,10 +626,24 @@ body::before{content:'';position:fixed;inset:0;
     <aside class="sidebar">
       <div class="sidebar-head">
         <div class="sidebar-logo-icon">
-          <svg class="sidebar-logo-svg" width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="rgba(34,197,94,0.1)"/><path d="M14 23C14 23 7 18.5 7 12C7 8.13 10.13 5 14 5C17.87 5 21 8.13 21 12C21 18.5 14 23 14 23Z" fill="rgba(34,197,94,0.18)" stroke="#22c55e" stroke-width="1.2"/><line x1="14" y1="23" x2="14" y2="10" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round"/><path d="M14 16C14 16 10.5 13 10.5 10" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round"/><path d="M14 19.5C14 19.5 17.5 16.5 17.5 13.5" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <div class="sidebar-logo-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M12 22V12M12 12C12 8 8 5 4 6M12 12C12 8 16 5 20 6"/><path d="M5 20c2-3 5-5 7-8"/>
+            </svg>
+          </div>
           <div class="sidebar-logo-name">نبتيكس أكاديمي</div>
         </div>
         <div class="sidebar-logo-sub">لوحة تحكم المدفوعات</div>
+        <button id="admin-thm-btn" title="تبديل المظهر" aria-label="تبديل المظهر">
+          <!-- Sun icon (shown in dark mode — tap to switch to light) -->
+          <svg class="sun-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.78" y2="4.22"/>
+          </svg>
+          <!-- Moon icon (shown in light mode — tap to switch to dark) -->
+          <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
       </div>
       <div class="sidebar-section-label">الإحصائيات</div>
       <div class="sidebar-stats">
@@ -568,6 +711,18 @@ body::before{content:'';position:fixed;inset:0;
           <div style="text-align:center;opacity:.35;font-size:12px;padding:6px 0">جاري التحميل...</div>
         </div>
       </div>
+      <div class="sidebar-courses" data-atab="profile">
+        <div class="courses-heading">نظام النقاط XP — بحث وتعديل</div>
+        <input class="broadcast-select" id="xp-q" placeholder="إيميل الطالب أو UID" style="margin-bottom:8px">
+        <button class="broadcast-send-btn" onclick="xpLookup()">بحث عن طالب</button>
+        <div id="xp-student" style="margin-top:10px"></div>
+        <div class="courses-heading" style="margin-top:16px">المتصدرون (الكل)</div>
+        <div id="xp-top"><div style="text-align:center;opacity:.35;font-size:12px;padding:6px 0">جاري التحميل...</div></div>
+        <div class="courses-heading" style="margin-top:16px">آخر معاملات XP</div>
+        <div id="xp-tx"><div style="text-align:center;opacity:.35;font-size:12px;padding:6px 0">جاري التحميل...</div></div>
+        <div class="courses-heading" style="margin-top:16px">سجل استبدال الكريدت</div>
+        <div id="xp-rd"><div style="text-align:center;opacity:.35;font-size:12px;padding:6px 0">جاري التحميل...</div></div>
+      </div>
       <div class="sidebar-footer">
         <div class="sidebar-user-badge">
           <div class="sidebar-user-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
@@ -584,8 +739,8 @@ body::before{content:'';position:fixed;inset:0;
           <div class="main-title">طلبات الدفع</div>
           <div class="main-subtitle" id="last-refresh">—</div>
         </div>
-        <button class="refresh-btn" id="admin-push-btn" onclick="enableAdminPaymentPush()" title="تفعيل إشعار فوري على الموبايل عند وصول طلب دفع جديد، حتى لو الموقع قافل"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5a5 5 0 0 1 10 0c0 3.2 1 4.3 1.5 5H3.5c.5-.7 1.5-1.8 1.5-5z"/><path d="M8.3 16a1.8 1.8 0 0 0 3.4 0"/></svg> إشعارات الدفع</button>
-        <button class="refresh-btn" onclick="loadPayments()"><span class="ricon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></span>تحديث</button>
+        <button class="refresh-btn" id="admin-push-btn" onclick="enableAdminPaymentPush()" title="تفعيل إشعار فوري على الموبايل عند وصول طلب دفع جديد، حتى لو الموقع قافل"><svg style="width:13px;height:13px;flex-shrink:0;display:block" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5a5 5 0 0 1 10 0c0 3.2 1 4.3 1.5 5H3.5c.5-.7 1.5-1.8 1.5-5z"/><path d="M8.3 16a1.8 1.8 0 0 0 3.4 0"/></svg> إشعارات الدفع</button>
+        <button class="icon-btn" onclick="loadPayments()" title="تحديث" aria-label="تحديث"><span class="ricon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></span></button>
       </div>
 
       <div class="controls-row">
@@ -790,7 +945,7 @@ const IC2 = {
   send:  '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;display:inline-block;vertical-align:-2px;margin-inline-end:3px"><path d="M18 2L2 9l6 2.5L11 18l3-8 4-8z"/><path d="M8 11.5L18 2"/></svg>',
   lock:  '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;display:inline-block;vertical-align:-2px;margin-inline-end:3px"><rect x="4" y="9" width="12" height="8" rx="1.6"/><path d="M6.5 9V6.3a3.5 3.5 0 0 1 7 0V9"/></svg>',
   unlock:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;display:inline-block;vertical-align:-2px;margin-inline-end:3px"><rect x="4" y="9" width="12" height="8" rx="1.6"/><path d="M6.5 9V6.3a3.5 3.5 0 0 1 6.5-1.8"/></svg>',
-  bell:  '<svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5a5 5 0 0 1 10 0c0 3.2 1 4.3 1.5 5H3.5c.5-.7 1.5-1.8 1.5-5z"/><path d="M8.3 16a1.8 1.8 0 0 0 3.4 0"/></svg>',
+  bell:  '<svg style="width:13px;height:13px;flex-shrink:0;display:block" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5a5 5 0 0 1 10 0c0 3.2 1 4.3 1.5 5H3.5c.5-.7 1.5-1.8 1.5-5z"/><path d="M8.3 16a1.8 1.8 0 0 0 3.4 0"/></svg>',
   tower: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:-1px;margin-inline-end:3px"><path d="M10 3v14"/><path d="M6.5 6a5 5 0 0 0 0 8"/><path d="M13.5 6a5 5 0 0 1 0 8"/><path d="M3.5 3.5a9 9 0 0 0 0 13"/><path d="M16.5 3.5a9 9 0 0 1 0 13"/></svg>',
   users_sm: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:-1px;margin-inline-end:3px"><path d="M1.5 16c0-2.6 2.1-4.3 5-4.3s5 1.7 5 4.3"/><circle cx="6.5" cy="6.7" r="2.7"/><path d="M11.3 12c1.9.3 3.2 1.7 3.2 4"/><path d="M10.4 3.4a2.7 2.7 0 0 1 0 5.3"/></svg>',
   warnSm: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:-1px;margin-inline-end:3px"><path d="M10 2.5L18.3 17H1.7L10 2.5z"/><line x1="10" y1="7.5" x2="10" y2="11.5"/><circle cx="10" cy="14" r="0.8" fill="currentColor" stroke="none"/></svg>',
@@ -809,6 +964,24 @@ const IC3 = {
   lock:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:40px;height:40px;display:block;margin:0 auto"><rect x="5" y="11" width="14" height="9.5" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg>',
   unlock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:40px;height:40px;display:block;margin:0 auto"><rect x="5" y="11" width="14" height="9.5" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 7.5-2"/></svg>',
 };
+/* ── Theme toggle (light/dark) ─────────────────── */
+(function(){
+  var btn = document.getElementById('admin-thm-btn');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    var isLight = document.body.hasAttribute('data-light');
+    if(isLight){
+      document.body.removeAttribute('data-light');
+      document.documentElement.removeAttribute('data-light');
+      try{ localStorage.setItem('nb-admin-light','0'); }catch(e){}
+    } else {
+      document.body.setAttribute('data-light','');
+      document.documentElement.setAttribute('data-light','');
+      try{ localStorage.setItem('nb-admin-light','1'); }catch(e){}
+    }
+  });
+})();
+
 /* ── State ──────────────────────────────────────── */
 let allPayments = [];
 let currentFilter = 'pending';
@@ -859,6 +1032,7 @@ auth.onAuthStateChanged(async function(user) {
   startPaidCoursesListener();
   startCourseConfigListener();
   startBroadcastLogListener();
+  xpAdminLoad();
 });
 
 function showAuth() {
@@ -2275,6 +2449,79 @@ function showToast(msg, type) {
   setTimeout(function(){ t.remove(); }, 3500);
 }
 
+/* ── XP / Rewards admin ─────────────────────────────────────────────
+   xp_events is create-only (audit trail). Adjustments need a reason and are written
+   together with a matching admin_adjustment event; firestore.rules only allow xp + last to change. */
+const XP_LBL = {lecture_completed:'محاضرة',question_correct:'إجابة صحيحة',quiz_completed:'اختبار',course_completed:'دورة',path_completed:'مسار',mission_completed:'مهمة',streak_bonus:'سلسلة',achievement_bonus:'إنجاز',reward_redemption:'استبدال كريدت',admin_adjustment:'تعديل إداري'};
+function xpEsc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function xpBox(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
+function xpEmpty(t) { return '<div style="text-align:center;opacity:.4;font-size:12px;padding:6px 0">' + t + '</div>'; }
+function xpEvRows(snap) {
+  if (snap.empty) return xpEmpty('لا توجد معاملات');
+  return snap.docs.map(function(d) {
+    const e = d.data(), t = e.ts && e.ts.toDate ? e.ts.toDate().toLocaleString('ar-EG', {dateStyle:'short', timeStyle:'short'}) : '';
+    return '<div class="broadcast-log-item"><b>' + xpEsc(XP_LBL[e.type] || e.type) + '</b> ' +
+      (e.type === 'reward_redemption' ? '' : '<span style="color:var(--emerald)">' + (e.amt > 0 ? '+' : '') + e.amt + ' XP</span>') +
+      '<div style="opacity:.6;font-size:11px;cursor:pointer" onclick="xpLookup(\'' + xpEsc(e.uid) + '\')">' +
+      xpEsc(e.cid ? (COURSE_LABELS[e.cid] || e.cid) : '') + (e.note ? ' — ' + xpEsc(e.note) : '') + ' • ' + xpEsc(String(e.uid).slice(0, 6)) + '… • ' + t + '</div></div>';
+  }).join('');
+}
+function xpAdminLoad() {
+  db.collection('xp_events').orderBy('ts','desc').limit(20).get().then(function(s) { xpBox('xp-tx', xpEvRows(s)); }).catch(function(e) { xpBox('xp-tx', xpEmpty('تعذر التحميل')); console.warn(e); });
+  db.collection('xp_events').where('type','==','reward_redemption').orderBy('ts','desc').limit(15).get().then(function(s) { xpBox('xp-rd', xpEvRows(s)); }).catch(function(e) { xpBox('xp-rd', xpEmpty('تعذر التحميل')); console.warn(e); });
+  db.collection('xp_wallet').orderBy('xp','desc').limit(10).get().then(function(s) {
+    xpBox('xp-top', s.empty ? xpEmpty('لا توجد بيانات') : s.docs.map(function(d, i) {
+      const w = d.data();
+      return '<div class="broadcast-log-item" style="cursor:pointer" onclick="xpLookup(\'' + xpEsc(d.id) + '\')">' + (i + 1) + '. ' + xpEsc(w.nm || 'طالب') + ' <span style="color:var(--emerald);float:left">' + w.xp + ' XP</span></div>';
+    }).join(''));
+  }).catch(function(e) { xpBox('xp-top', xpEmpty('تعذر التحميل')); console.warn(e); });
+}
+async function xpLookup(v) {
+  const q = String(v || document.getElementById('xp-q').value || '').trim();
+  if (!q) return;
+  xpBox('xp-student', xpEmpty('جاري البحث...'));
+  try {
+    let uid = q;
+    if (q.indexOf('@') > -1) {
+      const us = await db.collection('users').where('email','==',q.toLowerCase()).limit(1).get();
+      if (us.empty) { xpBox('xp-student', xpEmpty('لا يوجد طالب بهذا الإيميل')); return; }
+      uid = us.docs[0].id;
+    }
+    const ws = await db.collection('xp_wallet').doc(uid).get();
+    if (!ws.exists) { xpBox('xp-student', xpEmpty('لا يوجد حساب XP لهذا الطالب بعد')); return; }
+    const w = ws.data(), un = w.xp - (w.spent || 0);
+    const ev = await db.collection('xp_events').where('uid','==',uid).orderBy('ts','desc').limit(10).get();
+    xpBox('xp-student',
+      '<div class="broadcast-log-item"><b>' + xpEsc(w.nm || 'طالب') + '</b> — ' + w.xp + ' XP<div style="opacity:.7;font-size:11.5px">كريدت: ' + Math.floor(un / 1000) + ' + ' + (un % 1000) + ' XP • مستبدل: ' + Math.floor((w.spent || 0) / 1000) +
+      ' • سلسلة: ' + (w.st || 0) + ' (أفضل ' + (w.bs || 0) + ') • دورات: ' + (w.cc || 0) + ' • إجابات صحيحة: ' + (w.qc || 0) + '</div></div>' +
+      '<input class="broadcast-select" id="xp-amt" type="number" step="1" placeholder="+50 أو -20 XP" style="margin:8px 0 6px">' +
+      '<input class="broadcast-select" id="xp-note" maxlength="200" placeholder="سبب التعديل (إلزامي)" style="margin-bottom:8px">' +
+      '<button class="broadcast-send-btn" onclick="xpAdjust(\'' + xpEsc(uid) + '\')">تعديل XP (مُسجَّل)</button>' +
+      '<div style="margin-top:10px">' + xpEvRows(ev) + '</div>');
+  } catch (e) { console.warn(e); xpBox('xp-student', xpEmpty('تعذر البحث')); }
+}
+async function xpAdjust(uid) {
+  const amt = parseInt(document.getElementById('xp-amt').value, 10), note = document.getElementById('xp-note').value.trim();
+  if (!Number.isInteger(amt) || amt === 0) { showToast('أدخل رقماً صحيحاً غير صفر', 'err'); return; }
+  if (note.length < 3) { showToast('اكتب سبب التعديل (3 أحرف على الأقل)', 'err'); return; }
+  if (!window.confirm('تعديل ' + amt + ' XP لهذا الطالب؟\nالسبب: ' + note + '\nسيُسجَّل في سجل المعاملات ولا يمكن حذفه.')) return;
+  const key = 'adj_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), eid = uid + '_' + key;
+  const wR = db.collection('xp_wallet').doc(uid), eR = db.collection('xp_events').doc(eid);
+  try {
+    await db.runTransaction(async function(tx) {
+      const s = await tx.get(wR);
+      if (!s.exists) throw new Error('nowallet');
+      const w = s.data(), xp = w.xp + amt;
+      if (xp - (w.spent || 0) < 0) throw new Error('neg');
+      tx.set(eR, { uid: uid, type: 'admin_adjustment', key: key, amt: amt, note: note, by: auth.currentUser.uid, ts: firebase.firestore.FieldValue.serverTimestamp() });
+      tx.update(wR, { xp: xp, last: eid });
+    });
+    showToast('تم التعديل وتسجيله', 'ok'); xpLookup(uid); xpAdminLoad();
+  } catch (e) {
+    console.warn(e);
+    showToast(e.message === 'neg' ? 'التعديل يجعل الرصيد سالباً' : e.message === 'nowallet' ? 'لا يوجد حساب XP لهذا الطالب' : 'تعذر التعديل', 'err');
+  }
+}
 
 </script>
 </body>
