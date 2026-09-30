@@ -712,15 +712,15 @@ body[data-light] #mkdt-delete-btn{color:#dc2626!important}
         </div>
       </div>
       <div class="sidebar-courses" data-atab="profile">
-        <div class="courses-heading">نظام النقاط XP — بحث وتعديل</div>
+        <div class="courses-heading"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-inline-end:6px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>نظام النقاط XP — بحث وتعديل</div>
         <input class="broadcast-select" id="xp-q" placeholder="إيميل الطالب أو UID" style="margin-bottom:8px">
         <button class="broadcast-send-btn" onclick="xpLookup()">بحث عن طالب</button>
         <div id="xp-student" style="margin-top:10px"></div>
-        <div class="courses-heading" style="margin-top:16px">المتصدرون (الكل)</div>
+        <div class="courses-heading" style="margin-top:16px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-inline-end:6px"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>المتصدرون (الكل)</div>
         <div id="xp-top"><div style="text-align:center;opacity:.35;font-size:12px;padding:6px 0">جاري التحميل...</div></div>
-        <div class="courses-heading" style="margin-top:16px">آخر معاملات XP</div>
+        <div class="courses-heading" style="margin-top:16px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-inline-end:6px"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>آخر معاملات XP</div>
         <div id="xp-tx"><div style="text-align:center;opacity:.35;font-size:12px;padding:6px 0">جاري التحميل...</div></div>
-        <div class="courses-heading" style="margin-top:16px">سجل استبدال الكريدت</div>
+        <div class="courses-heading" style="margin-top:16px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-inline-end:6px"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>سجل استبدال الكريدت</div>
         <div id="xp-rd"><div style="text-align:center;opacity:.35;font-size:12px;padding:6px 0">جاري التحميل...</div></div>
       </div>
       <div class="sidebar-footer">
@@ -2456,6 +2456,14 @@ const XP_LBL = {lecture_completed:'محاضرة',question_correct:'إجابة ص
 function xpEsc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function xpBox(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
 function xpEmpty(t) { return '<div style="text-align:center;opacity:.4;font-size:12px;padding:6px 0">' + t + '</div>'; }
+/* Composite index missing? fall back to a client-side sort so the panel still works. */
+function xpFallback(q, n) {
+  return q.limit(200).get().then(function(s) {
+    const ms = function(d) { const t = d.data().ts; return t && t.toMillis ? t.toMillis() : Infinity; };
+    const docs = s.docs.slice().sort(function(a, b) { return ms(b) - ms(a); }).slice(0, n);
+    return { empty: !docs.length, docs: docs };
+  });
+}
 function xpEvRows(snap) {
   if (snap.empty) return xpEmpty('لا توجد معاملات');
   return snap.docs.map(function(d) {
@@ -2468,7 +2476,8 @@ function xpEvRows(snap) {
 }
 function xpAdminLoad() {
   db.collection('xp_events').orderBy('ts','desc').limit(20).get().then(function(s) { xpBox('xp-tx', xpEvRows(s)); }).catch(function(e) { xpBox('xp-tx', xpEmpty('تعذر التحميل')); console.warn(e); });
-  db.collection('xp_events').where('type','==','reward_redemption').orderBy('ts','desc').limit(15).get().then(function(s) { xpBox('xp-rd', xpEvRows(s)); }).catch(function(e) { xpBox('xp-rd', xpEmpty('تعذر التحميل')); console.warn(e); });
+  const rq = db.collection('xp_events').where('type','==','reward_redemption');
+  rq.orderBy('ts','desc').limit(15).get().catch(function() { return xpFallback(rq, 15); }).then(function(s) { xpBox('xp-rd', xpEvRows(s)); }).catch(function(e) { xpBox('xp-rd', xpEmpty('تعذر التحميل')); console.warn(e); });
   db.collection('xp_wallet').orderBy('xp','desc').limit(10).get().then(function(s) {
     xpBox('xp-top', s.empty ? xpEmpty('لا توجد بيانات') : s.docs.map(function(d, i) {
       const w = d.data();
@@ -2490,7 +2499,8 @@ async function xpLookup(v) {
     const ws = await db.collection('xp_wallet').doc(uid).get();
     if (!ws.exists) { xpBox('xp-student', xpEmpty('لا يوجد حساب XP لهذا الطالب بعد')); return; }
     const w = ws.data(), un = w.xp - (w.spent || 0);
-    const ev = await db.collection('xp_events').where('uid','==',uid).orderBy('ts','desc').limit(10).get();
+    const eq = db.collection('xp_events').where('uid','==',uid);
+    const ev = await eq.orderBy('ts','desc').limit(10).get().catch(function() { return xpFallback(eq, 10); });
     xpBox('xp-student',
       '<div class="broadcast-log-item"><b>' + xpEsc(w.nm || 'طالب') + '</b> — ' + w.xp + ' XP<div style="opacity:.7;font-size:11.5px">كريدت: ' + Math.floor(un / 1000) + ' + ' + (un % 1000) + ' XP • مستبدل: ' + Math.floor((w.spent || 0) / 1000) +
       ' • سلسلة: ' + (w.st || 0) + ' (أفضل ' + (w.bs || 0) + ') • دورات: ' + (w.cc || 0) + ' • إجابات صحيحة: ' + (w.qc || 0) + '</div></div>' +
