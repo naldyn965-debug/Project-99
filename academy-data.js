@@ -730,7 +730,7 @@ MIS={m1:['أكمل محاضرة',1,'dl'],m2:['أجب 5 أسئلة بشكل صح�
 BONUS={mission_completed:1,streak_bonus:1,achievement_bonus:1,daily_visit:1,daily_gift:1},
 ELIG={'mol-bio':'تقنيات البيولوجيا الجزيئية','food-safety':'سلامة الغذاء','glp':'ممارسات المعامل الجيدة والسلامة الحيوية','tissue-culture':'زراعة الأنسجة النباتية','pesticide-tech':'تكنولوجيا المبيدات والاستخدام الآمن','feed-mgmt':'إدارة الأعلاف وبرامج التغذية','food-microbiology':'الميكروبيولوجيا الغذائية','plant-diseases':'أمراض النبات والإدارة المتكاملة','bioinformatics':'المعلوماتية الحيوية','landscape-design':'الاندسكيب الزراعي','hydroponics-professional':'الزراعة المائية الاحترافية'},
 EVL={lecture_completed:'إكمال محاضرة',question_correct:'إجابة صحيحة',quiz_completed:'إكمال اختبار',course_completed:'إتمام دورة',path_completed:'إتمام مسار',mission_completed:'مهمة يومية',streak_bonus:'مكافأة سلسلة',achievement_bonus:'مكافأة إنجاز',reward_redemption:'استبدال كريدت بدورة',admin_adjustment:'تعديل من الإدارة',daily_visit:'زيارة يومية',daily_gift:'هدية الحماسة اليومية'};
-var _seen={},_capDay=0,_q=Promise.resolve();
+var _seen={},_capDay=0,_q=Promise.resolve(),_err='';
 var IP={
 book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
 cap:'<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
@@ -823,7 +823,7 @@ return tx.get(wR).then(function(ws){
 var w=Object.assign(W0(u),ws.exists?ws.data():{}),m=mut(w,type,f);
 tx.set(eR,m.e);tx.set(wR,m.t);return{w:w,t:m.t,e:m.e}})})
 })
-.catch(function(x){delete _seen[eid];console.warn('[XP]',type,(x&&x.code)||x);return null})}
+.catch(function(x){delete _seen[eid];_err=type+' - '+((x&&x.code)||(x&&x.message)||'error');console.warn('[XP]',type,(x&&x.code)||x);return null})}
 /* Missions / streak milestones / achievements that the latest wallet state has earned. */
 function follow(w){
 var p=Promise.resolve(),d=dayN();
@@ -853,12 +853,12 @@ function flame(z){return'<svg viewBox="0 0 24 24" width="'+z+'" height="'+z+'" a
 function sfl(on){return'<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="'+(on?'#fb5607':'none')+'" stroke="'+(on?'#e63946':'#b9bfc7')+'" stroke-width="1.6" stroke-linejoin="round" d="'+FO+'"/></svg>'}
 function visit(){
 var u=uid(),D=DB(),d=dayN();if(!u||!D)return Promise.resolve(null);
-if(_vp&&_vday===d)return _vp;_vday=d;
+if(_vp&&_vday===d)return _vp;_vday=d;_err='';
 _vp=getW().then(function(w){if(w.vd>=d)return null;
 return award('daily_visit',{key:'dv_'+d}).then(function(r){
 if(r){if(r.t.ru>(r.w.rm===r.t.rm?r.w.ru:0))T('تم استخدام استعادة الحماسة — سلسلتك محفوظة','ok');
 else if(r.w.vd>0&&r.w.vs>1&&r.t.vs===1)T('انقطعت سلسلة الحماسة — ابدأ من جديد اليوم','inf')}
-return r})}).catch(function(x){_vp=null;console.warn('[XP] visit',x);return null});
+if(!r&&_err)_vp=null;return r})}).catch(function(x){_vp=null;console.warn('[XP] visit',x);return null});
 return _vp}
 function fireHTML(w){
 var d=dayN(),vs=w.vd>0?w.vs:0,col=w.vg===d,ready=w.vd===d&&!col,left=Math.max(0,REST-(w.rm===monN()?w.ru:0)),nx=0,pv=0,i;
@@ -868,7 +868,7 @@ return'<div class="nbxf"><div class="nbxf-h"><div class="nbxf-fl">'+flame(30)+'<
 '<div class="nbxf-bar"><i style="width:'+Math.max(4,Math.min(100,pct))+'%"></i></div>'+
 '<div class="nbxf-st"><div class="nbxf-s" title="تُستخدم تلقائياً لو فاتك يوم"><span class="nbxf-si">'+ic('cal',18)+'</span><span class="nbxf-sx"><small>استعادة الحماسة هذا الشهر</small><b>'+left+'/'+REST+'</b></span></div><div class="nbxf-s"><span class="nbxf-si">'+ic('trophy',18)+'</span><span class="nbxf-sx"><small>أفضل سلسلة</small><b><em>'+w.vb+'</em> '+(w.vb===1?'يوم':'أيام')+'</b></span></div></div>'+
 '<div class="nbxf-f">'+
-(ready?'<button class="nbxf-btn" onclick="NBXP.gift(this)">'+ic('gift',16)+' اجمع هديتك +5 XP</button>':col?'<div class="nbxf-done">'+ic('check',16)+' تم جمع هدية اليوم — عُد غداً</div>':'<div class="nbxf-done">جاري تسجيل زيارتك...</div>')+'</div></div>'}
+(ready?'<button class="nbxf-btn" onclick="NBXP.gift(this)">'+ic('gift',16)+' اجمع هديتك +5 XP</button>':col?'<div class="nbxf-done">'+ic('check',16)+' تم جمع هدية اليوم — عُد غداً</div>':(_err?'<button class="nbxf-btn" onclick="NBXP.retry(this)">إعادة المحاولة</button><div style="flex:1 1 100%;text-align:center;font-size:11px;color:var(--muted,#6b7280)">تعذر تسجيل الزيارة ('+String(_err).replace(/[<>&"]/g,'')+')</div>':'<div class="nbxf-done">جاري تسجيل زيارتك...</div>'))+'</div></div>'}
 function css(){
 if(document.getElementById('nbxp-css'))return;
 var s=document.createElement('style');s.id='nbxp-css';
@@ -901,10 +901,11 @@ course:function(c){c=sx(c);return award('course_completed',{key:'crs_'+c,cid:c})
 render:function(id){
 var el=document.getElementById(id);if(!el||!uid()||!DB())return;css();
 visit().then(getW).then(function(w){var fe=document.getElementById('nbxp-fire');if(fe)fe.innerHTML=fireHTML(w);return Promise.all([w,board()])}).then(function(r){el.innerHTML=view(r[0],r[1])}).catch(function(x){console.warn('[XP] profile',x);el.innerHTML=''})},
+retry:function(btn){if(btn)btn.disabled=true;_vp=null;_vday=0;_err='';NBXP.render('nbxp-card')},
 gift:function(btn){
-if(!uid()||!DB())return;if(btn){if(btn.disabled)return;btn.disabled=true}
+if(!uid()||!DB())return;_err='';if(btn){if(btn.disabled)return;btn.disabled=true}
 visit().then(getW).then(function(w){var d=dayN();if(w.vd!==d||w.vg===d)return null;return award('daily_gift',{key:'dg_'+d})})
-.then(function(){NBXP.render('nbxp-card')}).catch(function(){if(btn)btn.disabled=false;T('تعذر جمع الهدية — حاول مرة أخرى','err')})},
+.then(function(r){if(!r&&_err)T('تعذر جمع الهدية ('+String(_err).replace(/[<>&"]/g,'')+')','err');NBXP.render('nbxp-card')}).catch(function(){if(btn)btn.disabled=false;T('تعذر جمع الهدية — حاول مرة أخرى','err')})},
 pick:function(){
 var box=document.getElementById('nbxp-pk'),u=uid();if(!box||!u)return;
 DB().collection('users').doc(u).get().then(function(s){
