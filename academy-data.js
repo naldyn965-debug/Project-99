@@ -857,8 +857,9 @@ function doVisit(d){
 var u=uid(),D=DB(),eid=u+'_dv_'+d;if(_seen[eid])return Promise.resolve(null);_seen[eid]=1;
 var eR=D.collection('xp_events').doc(eid),sR=D.collection('xp_streak').doc(u);
 return D.runTransaction(function(tx){return tx.get(eR).then(function(es){if(es.exists)return null;
-return tx.get(sR).then(function(ss){var s=Object.assign(S0(u),ss.exists?ss.data():{});if(s.vd>=d)return null;var n=vnext(s,d);
-tx.set(eR,{uid:u,type:'daily_visit',key:'dv_'+d,amt:0,ts:firebase.firestore.FieldValue.serverTimestamp()});tx.set(sR,n);return{s:s,n:n}})})})
+tx.set(eR,{uid:u,type:'daily_visit',key:'dv_'+d,amt:0,ts:firebase.firestore.FieldValue.serverTimestamp()});return true})})
+.then(function(created){if(!created)return null;
+return D.runTransaction(function(tx){return tx.get(sR).then(function(ss){var s=Object.assign(S0(u),ss.exists?ss.data():{});if(s.vd>=d)return null;var n=vnext(s,d);tx.set(sR,n);return{s:s,n:n}})})})
 .catch(function(x){delete _seen[eid];_err='daily_visit - '+((x&&x.code)||(x&&x.message)||'error');console.warn('[XP] daily_visit',(x&&x.code)||x);return null})}
 function visit(){
 var u=uid(),D=DB(),d=dayN();if(!u||!D)return Promise.resolve(null);
