@@ -2452,7 +2452,7 @@ function showToast(msg, type) {
 /* ── XP / Rewards admin ─────────────────────────────────────────────
    xp_events is create-only (audit trail). Adjustments need a reason and are written
    together with a matching admin_adjustment event; firestore.rules only allow xp + last to change. */
-const XP_LBL = {lecture_completed:'محاضرة',question_correct:'إجابة صحيحة',quiz_completed:'اختبار',course_completed:'دورة',path_completed:'مسار',mission_completed:'مهمة',streak_bonus:'سلسلة',achievement_bonus:'إنجاز',reward_redemption:'استبدال كريدت',admin_adjustment:'تعديل إداري'};
+const XP_LBL = {lecture_completed:'محاضرة',question_correct:'إجابة صحيحة',quiz_completed:'اختبار',course_completed:'دورة',path_completed:'مسار',mission_completed:'مهمة',streak_bonus:'سلسلة',achievement_bonus:'إنجاز',reward_redemption:'استبدال كريدت',admin_adjustment:'تعديل إداري',daily_visit:'زيارة يومية',daily_gift:'هدية الحماسة'};
 function xpEsc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function xpBox(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
 function xpEmpty(t) { return '<div style="text-align:center;opacity:.4;font-size:12px;padding:6px 0">' + t + '</div>'; }
@@ -2475,7 +2475,7 @@ function xpEvRows(snap) {
   }).join('');
 }
 function xpAdminLoad() {
-  db.collection('xp_events').orderBy('ts','desc').limit(20).get().then(function(s) { xpBox('xp-tx', xpEvRows(s)); }).catch(function(e) { xpBox('xp-tx', xpEmpty('تعذر التحميل')); console.warn(e); });
+  db.collection('xp_events').orderBy('ts','desc').limit(80).get().then(function(s) { const docs = s.docs.filter(function(d) { return d.data().type !== 'daily_visit'; }).slice(0, 20); xpBox('xp-tx', xpEvRows({ empty: !docs.length, docs: docs })); }).catch(function(e) { xpBox('xp-tx', xpEmpty('تعذر التحميل')); console.warn(e); });
   const rq = db.collection('xp_events').where('type','==','reward_redemption');
   rq.orderBy('ts','desc').limit(15).get().catch(function() { return xpFallback(rq, 15); }).then(function(s) { xpBox('xp-rd', xpEvRows(s)); }).catch(function(e) { xpBox('xp-rd', xpEmpty('تعذر التحميل')); console.warn(e); });
   db.collection('xp_wallet').orderBy('xp','desc').limit(10).get().then(function(s) {
@@ -2500,7 +2500,9 @@ async function xpLookup(v) {
     if (!ws.exists) { xpBox('xp-student', xpEmpty('لا يوجد حساب XP لهذا الطالب بعد')); return; }
     const w = ws.data(), un = w.xp - (w.spent || 0);
     const eq = db.collection('xp_events').where('uid','==',uid);
-    const ev = await eq.orderBy('ts','desc').limit(10).get().catch(function() { return xpFallback(eq, 10); });
+    const ev0 = await eq.orderBy('ts','desc').limit(40).get().catch(function() { return xpFallback(eq, 40); });
+    const evd = ev0.docs.filter(function(d) { return d.data().type !== 'daily_visit'; }).slice(0, 10);
+    const ev = { empty: !evd.length, docs: evd };
     xpBox('xp-student',
       '<div class="broadcast-log-item"><b>' + xpEsc(w.nm || 'طالب') + '</b> — ' + w.xp + ' XP<div style="opacity:.7;font-size:11.5px">كريدت: ' + Math.floor(un / 1000) + ' + ' + (un % 1000) + ' XP • مستبدل: ' + Math.floor((w.spent || 0) / 1000) +
       ' • سلسلة: ' + (w.st || 0) + ' (أفضل ' + (w.bs || 0) + ') • دورات: ' + (w.cc || 0) + ' • إجابات صحيحة: ' + (w.qc || 0) + '</div></div>' +
