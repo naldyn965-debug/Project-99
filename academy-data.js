@@ -817,7 +817,7 @@ var u=uid(),D=DB();if(!u||!D)return Promise.resolve(null);
 var eid=u+'_'+f.key;if(_seen[eid])return Promise.resolve(null);_seen[eid]=1;
 var eR=D.collection('xp_events').doc(eid),wR=D.collection('xp_wallet').doc(u);
 return D.runTransaction(function(tx){
-return tx.get(eR).then(function(es){
+return tx.get(eR).catch(function(){return{exists:false}}).then(function(es){
 if(es.exists)return null;
 return tx.get(wR).then(function(ws){
 var w=Object.assign(W0(u),ws.exists?ws.data():{}),m=mut(w,type,f);
