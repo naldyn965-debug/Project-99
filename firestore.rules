@@ -244,6 +244,7 @@ service cloud.firestore {
         : e.type == 'daily_gift' ? xpB('vd') == xpDay() && xpB('vg') != xpDay()
         : true;
     }
+    function xpMn() { let t = request.time + duration.value(2, 'h'); return t.year() * 12 + t.month(); }
     // Enthusiasm streak: restores = missed days bridged automatically, max 3 per calendar month; otherwise the streak restarts at 1.
     function xpRu0(mn)       { return xpB('rm') == mn ? xpB('ru') : 0; }
     function xpRestore(d, mn) { return xpB('vd') != 0 && d - xpB('vd') - 1 > 0 && xpRu0(mn) + (d - xpB('vd') - 1) <= 3; }
@@ -252,16 +253,12 @@ service cloud.firestore {
       let a = request.resource.data;
       let e = getAfter(xpEv(a.last)).data;
       let d = xpDay();
-      let t = request.time + duration.value(2, 'h');
       let same = xpB('dn') == d;
       let bx = same ? xpB('dx') : 0;
       let nom = xpNom(e);
       let cap = e.type in ['lecture_completed', 'question_correct', 'quiz_completed'];
       let amt = cap ? (bx + nom <= 50 ? nom : 50 - bx) : nom;
       let cr = cap && bx < 10 && bx + amt >= 10;
-      let mn = t.year() * 12 + t.month();
-      let isV = e.type == 'daily_visit';
-      let isG = e.type == 'daily_gift';
       return a.keys().hasOnly(['uid','nm','xp','spent','dn','dx','dl','dq','dz','lc','qc','zc','zs','cc','pc','st','sd','bs','ld','wk','wx','mo','mx','ac','sb','ml','last','vs','vb','vd','vg','rm','ru'])
         && a.uid == uid && a.nm is string && a.nm.size() <= 20
         && !exists(xpEv(a.last)) && e.uid == uid && nom >= 0 && e.amt == amt && xpKeyOk(e) && xpCondOk(e, a)
@@ -277,18 +274,18 @@ service cloud.firestore {
         && a.cc == xpB('cc') + (e.type == 'course_completed' ? 1 : 0)
         && a.pc == xpB('pc') + (e.type == 'path_completed' ? 1 : 0)
         && a.wk == math.floor((d + 3) / 7) && a.wx == (xpB('wk') == a.wk ? xpB('wx') : 0) + e.amt
-        && a.mo == t.year() * 12 + t.month() && a.mx == (xpB('mo') == a.mo ? xpB('mx') : 0) + e.amt
+        && a.mo == xpMn() && a.mx == (xpB('mo') == a.mo ? xpB('mx') : 0) + e.amt
         && a.sd == (cr ? d : xpB('sd'))
         && a.st == (cr ? (xpB('sd') == d - 1 ? xpB('st') + 1 : 1) : xpB('st'))
         && a.bs == (a.st > xpB('bs') ? a.st : xpB('bs'))
         && a.ld == xpB('ld') + (cr ? 1 : 0)
         && a.spent == xpB('spent') + (e.type == 'reward_redemption' ? 1000 : 0)
-        && a.vs == (isV ? xpNvs(d, mn) : xpB('vs'))
-        && a.vb == (isV ? (xpNvs(d, mn) > xpB('vb') ? xpNvs(d, mn) : xpB('vb')) : xpB('vb'))
-        && a.vd == (isV ? d : xpB('vd'))
-        && a.vg == (isG ? d : xpB('vg'))
-        && a.rm == (isV ? mn : xpB('rm'))
-        && a.ru == (isV ? (xpRestore(d, mn) ? xpRu0(mn) + d - xpB('vd') - 1 : xpRu0(mn)) : xpB('ru'));
+        && a.vs == (e.type == 'daily_visit' ? xpNvs(d, xpMn()) : xpB('vs'))
+        && a.vb == (e.type == 'daily_visit' ? (xpNvs(d, xpMn()) > xpB('vb') ? xpNvs(d, xpMn()) : xpB('vb')) : xpB('vb'))
+        && a.vd == (e.type == 'daily_visit' ? d : xpB('vd'))
+        && a.vg == (e.type == 'daily_gift' ? d : xpB('vg'))
+        && a.rm == (e.type == 'daily_visit' ? xpMn() : xpB('rm'))
+        && a.ru == (e.type == 'daily_visit' ? (xpRestore(d, xpMn()) ? xpRu0(xpMn()) + d - xpB('vd') - 1 : xpRu0(xpMn())) : xpB('ru'));
     }
     // audited admin adjustment: only xp + last change, and a matching admin_adjustment event must be created with it
     function xpAdminOk(uid) {
