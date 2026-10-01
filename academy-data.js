@@ -722,12 +722,12 @@ function acSaveFE(score){var p=acProg();p.fe=score;acSave(p);try{if(score>=70)NB
 var NBXP=(function(){
 var CAP=50,CRED=1000,LV=[0,100,300,700,1500,3000,5000],
 LVN=['مبتدئ','متعلّم','مجتهد','متمكّن','خبير','محترف','أستاذ'],
-NOM={lecture_completed:5,question_correct:2,quiz_completed:5,course_completed:50,path_completed:100,mission_completed:5,reward_redemption:0,daily_visit:0,daily_gift:5},REST=3,MIL=[7,14,30,60,100,365],
+NOM={lecture_completed:5,question_correct:2,quiz_completed:5,course_completed:50,path_completed:100,mission_completed:5,reward_redemption:0,daily_gift:5},REST=3,MIL=[7,14,30,60,100,365],
 CAPPED={lecture_completed:1,question_correct:1,quiz_completed:1},
 STK={3:10,7:20,14:40,30:80,60:150,100:250},
 ACH={first_lecture:[5,'أول محاضرة','book'],first_course:[25,'أول دورة','cap'],streak7:[15,'7 أيام متتالية','flame'],correct100:[50,'100 إجابة صحيحة','target'],courses3:[30,'3 دورات','medal'],path_done:[25,'إتمام مسار','compass']},
 MIS={m1:['أكمل محاضرة',1,'dl'],m2:['أجب 5 أسئلة بشكل صحيح',5,'dq'],m3:['أنهِ اختباراً',1,'dz']},
-BONUS={mission_completed:1,streak_bonus:1,achievement_bonus:1,daily_visit:1,daily_gift:1},
+BONUS={mission_completed:1,streak_bonus:1,achievement_bonus:1,daily_gift:1},
 ELIG={'mol-bio':'تقنيات البيولوجيا الجزيئية','food-safety':'سلامة الغذاء','glp':'ممارسات المعامل الجيدة والسلامة الحيوية','tissue-culture':'زراعة الأنسجة النباتية','pesticide-tech':'تكنولوجيا المبيدات والاستخدام الآمن','feed-mgmt':'إدارة الأعلاف وبرامج التغذية','food-microbiology':'الميكروبيولوجيا الغذائية','plant-diseases':'أمراض النبات والإدارة المتكاملة','bioinformatics':'المعلوماتية الحيوية','landscape-design':'الاندسكيب الزراعي','hydroponics-professional':'الزراعة المائية الاحترافية'},
 EVL={lecture_completed:'إكمال محاضرة',question_correct:'إجابة صحيحة',quiz_completed:'إكمال اختبار',course_completed:'إتمام دورة',path_completed:'إتمام مسار',mission_completed:'مهمة يومية',streak_bonus:'مكافأة سلسلة',achievement_bonus:'مكافأة إنجاز',reward_redemption:'استبدال كريدت بدورة',admin_adjustment:'تعديل من الإدارة',daily_visit:'زيارة يومية',daily_gift:'هدية الحماسة اليومية'};
 var _seen={},_capDay=0,_q=Promise.resolve(),_err='';
@@ -759,7 +759,7 @@ function wkN(d){return Math.floor((d+3)/7)}
 function lvl(xp){var i=LV.length-1;while(i>0&&xp<LV[i])i--;return i}
 function nm(){return((currentUser.displayName||'').trim().split(/\s+/)[0]||'طالب').slice(0,20)}
 function T(m,k){if(typeof showToast==='function')showToast(m,k||'ok')}
-function W0(u){return{uid:u,nm:'',xp:0,spent:0,dn:0,dx:0,dl:0,dq:0,dz:0,lc:0,qc:0,zc:0,zs:0,cc:0,pc:0,st:0,sd:0,bs:0,ld:0,wk:0,wx:0,mo:0,mx:0,ac:[],sb:[],ml:[],last:'',vs:0,vb:0,vd:0,vg:0,rm:0,ru:0}}
+function W0(u){return{uid:u,nm:'',xp:0,spent:0,dn:0,dx:0,dl:0,dq:0,dz:0,lc:0,qc:0,zc:0,zs:0,cc:0,pc:0,st:0,sd:0,bs:0,ld:0,wk:0,wx:0,mo:0,mx:0,ac:[],sb:[],ml:[],last:''}}
 function nomOf(t,f){return t==='streak_bonus'?STK[f.n]:t==='achievement_bonus'?ACH[f.aid][0]:NOM[t]}
 /* Builds the event + the next wallet state for one event (pure — no I/O). */
 function mut(w,type,f){
@@ -779,9 +779,6 @@ if(type==='reward_redemption')t.spent=w.spent+CRED;
 if(type==='achievement_bonus')t.ac=w.ac.concat([f.aid]);
 if(type==='streak_bonus')t.sb=w.sb.concat([f.n]);
 if(type==='mission_completed')t.ml=w.ml.filter(function(k){return k.indexOf(d+'_')===0}).concat([d+'_'+f.m]);
-if(type==='daily_visit'){var g=d-w.vd-1,mn=monN(),ru=w.rm===mn?w.ru:0,rs=w.vd>0&&g>0&&ru+g<=REST;
-t.vs=w.vd===0?1:(g===0||rs)?w.vs+1:1;t.vb=Math.max(w.vb,t.vs);t.vd=d;t.rm=mn;t.ru=rs?ru+g:ru}
-if(type==='daily_gift')t.vg=d;
 t.last=w.uid+'_'+f.key;
 return{e:e,t:t}}
 /* One compact toast per learning action: events fired within ~1.2s are merged into a single line. */
@@ -851,15 +848,28 @@ return DB().collection('xp_wallet').orderBy('xp','desc').limit(50).get().then(fu
 var _vp=null,_vday=0,FO='M12 2c.5 3-1 4.5-2.5 6.3C8 10.1 6 12 6 15.2 6 18.6 8.7 22 12 22s6-3.4 6-6.8c0-2-.9-3.6-2-5-.3 1-.8 1.8-1.6 2.3C14.8 9.6 14.6 5.2 12 2z',FI='M12 22c-1.9 0-3.3-1.6-3.3-3.6 0-1.6 1-2.6 1.9-3.8.5-.7.9-1.5 1.1-2.5 1.6 1.5 3.6 3.4 3.6 6.1 0 2-1.4 3.8-3.3 3.8z';
 function flame(z){return'<svg viewBox="0 0 24 24" width="'+z+'" height="'+z+'" aria-hidden="true"><defs><linearGradient id="nbxg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e63946"/><stop offset=".55" stop-color="#fb5607"/><stop offset="1" stop-color="#ffb703"/></linearGradient></defs><path fill="url(#nbxg)" d="'+FO+'"/><path fill="#fff3c4" opacity=".92" d="'+FI+'"/></svg>'}
 function sfl(on){return'<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="'+(on?'#fb5607':'none')+'" stroke="'+(on?'#e63946':'#b9bfc7')+'" stroke-width="1.6" stroke-linejoin="round" d="'+FO+'"/></svg>'}
+function S0(u){return{uid:u,vs:0,vb:0,vd:0,rm:0,ru:0,last:''}}
+function getS(){var u=uid();return DB().collection('xp_streak').doc(u).get().then(function(s){return Object.assign(S0(u),s.exists?s.data():{})})}
+function getG(){var u=uid();return DB().collection('xp_events').doc(u+'_dg_'+dayN()).get().then(function(s){return s.exists})}
+function vnext(s,d){var g=d-s.vd-1,mn=monN(),ru=s.rm===mn?s.ru:0,rs=s.vd>0&&g>0&&ru+g<=REST,vs=s.vd===0?1:(g===0||rs)?s.vs+1:1;
+return{uid:s.uid,vs:vs,vb:Math.max(s.vb,vs),vd:d,rm:mn,ru:rs?ru+g:ru,last:s.uid+'_dv_'+d}}
+function doVisit(d){
+var u=uid(),D=DB(),eid=u+'_dv_'+d;if(_seen[eid])return Promise.resolve(null);_seen[eid]=1;
+var eR=D.collection('xp_events').doc(eid),sR=D.collection('xp_streak').doc(u);
+return D.runTransaction(function(tx){return tx.get(eR).then(function(es){if(es.exists)return null;
+return tx.get(sR).then(function(ss){var s=Object.assign(S0(u),ss.exists?ss.data():{});if(s.vd>=d)return null;var n=vnext(s,d);
+tx.set(eR,{uid:u,type:'daily_visit',key:'dv_'+d,amt:0,ts:firebase.firestore.FieldValue.serverTimestamp()});tx.set(sR,n);return{s:s,n:n}})})})
+.catch(function(x){delete _seen[eid];_err='daily_visit - '+((x&&x.code)||(x&&x.message)||'error');console.warn('[XP] daily_visit',(x&&x.code)||x);return null})}
 function visit(){
 var u=uid(),D=DB(),d=dayN();if(!u||!D)return Promise.resolve(null);
 if(_vp&&_vday===d)return _vp;_vday=d;_err='';
-_vp=getW().then(function(w){if(w.vd>=d)return null;
-return award('daily_visit',{key:'dv_'+d}).then(function(r){
-if(r){if(r.t.ru>(r.w.rm===r.t.rm?r.w.ru:0))T('تم استخدام استعادة الحماسة — سلسلتك محفوظة','ok');
-else if(r.w.vd>0&&r.w.vs>1&&r.t.vs===1)T('انقطعت سلسلة الحماسة — ابدأ من جديد اليوم','inf')}
+_vp=getS().then(function(s){if(s.vd>=d)return null;
+return doVisit(d).then(function(r){
+if(r){if(r.n.ru>(r.s.rm===r.n.rm?r.s.ru:0))T('تم استخدام استعادة الحماسة — سلسلتك محفوظة','ok');
+else if(r.s.vd>0&&r.s.vs>1&&r.n.vs===1)T('انقطعت سلسلة الحماسة — ابدأ من جديد اليوم','inf')}
 if(!r&&_err)_vp=null;return r})}).catch(function(x){_vp=null;console.warn('[XP] visit',x);return null});
 return _vp}
+function fmerge(s,g){return{vs:s.vs,vb:s.vb,vd:s.vd,rm:s.rm,ru:s.ru,vg:g?dayN():0}}
 function fireHTML(w){
 var d=dayN(),vs=w.vd>0?w.vs:0,col=w.vg===d,ready=w.vd===d&&!col,left=Math.max(0,REST-(w.rm===monN()?w.ru:0)),nx=0,pv=0,i;
 for(i=0;i<MIL.length;i++){if(MIL[i]>vs){nx=MIL[i];break}pv=MIL[i]}
@@ -900,11 +910,11 @@ return award('quiz_completed',{key:'qz_'+c+'_'+l,cid:c,lid:l,sc:sc}).then(functi
 course:function(c){c=sx(c);return award('course_completed',{key:'crs_'+c,cid:c}).then(paths)},
 render:function(id){
 var el=document.getElementById(id);if(!el||!uid()||!DB())return;css();
-visit().then(getW).then(function(w){var fe=document.getElementById('nbxp-fire');if(fe)fe.innerHTML=fireHTML(w);return Promise.all([w,board()])}).then(function(r){el.innerHTML=view(r[0],r[1])}).catch(function(x){console.warn('[XP] profile',x);el.innerHTML=''})},
+visit().then(function(){return Promise.all([getS(),getG(),getW()])}).then(function(r){var fe=document.getElementById('nbxp-fire');if(fe)fe.innerHTML=fireHTML(fmerge(r[0],r[1]));return Promise.all([r[2],board()])}).then(function(r){el.innerHTML=view(r[0],r[1])}).catch(function(x){console.warn('[XP] profile',x);el.innerHTML=''})},
 retry:function(btn){if(btn)btn.disabled=true;_vp=null;_vday=0;_err='';NBXP.render('nbxp-card')},
 gift:function(btn){
 if(!uid()||!DB())return;_err='';if(btn){if(btn.disabled)return;btn.disabled=true}
-visit().then(getW).then(function(w){var d=dayN();if(w.vd!==d||w.vg===d)return null;return award('daily_gift',{key:'dg_'+d})})
+visit().then(function(){return Promise.all([getS(),getG()])}).then(function(r){var d=dayN();if(r[0].vd!==d||r[1])return null;return award('daily_gift',{key:'dg_'+d})})
 .then(function(r){if(!r&&_err)T('تعذر جمع الهدية ('+String(_err).replace(/[<>&"]/g,'')+')','err');NBXP.render('nbxp-card')}).catch(function(){if(btn)btn.disabled=false;T('تعذر جمع الهدية — حاول مرة أخرى','err')})},
 pick:function(){
 var box=document.getElementById('nbxp-pk'),u=uid();if(!box||!u)return;
