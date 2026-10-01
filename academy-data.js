@@ -867,8 +867,14 @@ _vp=getS().then(function(s){if(s.vd>=d)return null;
 return doVisit(d).then(function(r){
 if(r){if(r.n.ru>(r.s.rm===r.n.rm?r.s.ru:0))T('تم استخدام استعادة الحماسة — سلسلتك محفوظة','ok');
 else if(r.s.vd>0&&r.s.vs>1&&r.n.vs===1)T('انقطعت سلسلة الحماسة — ابدأ من جديد اليوم','inf')}
-if(!r&&_err)_vp=null;return r})}).catch(function(x){_vp=null;console.warn('[XP] visit',x);return null});
+if(!r&&_err)_vp=null;return r})}).catch(function(x){_vp=null;_err=_err||('visit - '+((x&&x.code)||(x&&x.message)||'error'));console.warn('[XP] visit',x);return null});
 return _vp}
+function diag(btn){
+var u=uid(),D=DB(),box=document.getElementById('nbxf-dg'),out=[];if(!u||!D||!box)return;if(btn)btn.disabled=true;box.textContent='...';
+var tests=[['read xp_streak',function(){return D.collection('xp_streak').doc(u).get()}],['read xp_events (new doc)',function(){return D.collection('xp_events').doc(u+'_probe').get()}],['read xp_wallet',function(){return D.collection('xp_wallet').doc(u).get()}],['read admins/me',function(){return D.collection('admins').doc(u).get()}]];
+var p=Promise.resolve();
+tests.forEach(function(x){p=p.then(function(){return x[1]().then(function(){out.push('OK    '+x[0])},function(e){out.push('FAIL  '+x[0]+' -> '+((e&&e.code)||(e&&e.message)||'error'))})})});
+p.then(function(){out.push('last error: '+(_err||'-'));out.push('device time: '+new Date().toISOString().slice(0,16)+' UTC | day '+dayN());box.innerHTML='<pre style="margin:0;white-space:pre-wrap;direction:ltr;text-align:left;font-size:11px;line-height:1.6;color:var(--muted,#6b7280)">'+out.join('\n').replace(/[<>&]/g,'')+'</pre>';if(btn)btn.disabled=false})}
 function fmerge(s,g){return{vs:s.vs,vb:s.vb,vd:s.vd,rm:s.rm,ru:s.ru,vg:g?dayN():0}}
 function fireHTML(w){
 var d=dayN(),vs=w.vd>0?w.vs:0,col=w.vg===d,ready=w.vd===d&&!col,left=Math.max(0,REST-(w.rm===monN()?w.ru:0)),nx=0,pv=0,i;
@@ -878,7 +884,7 @@ return'<div class="nbxf"><div class="nbxf-h"><div class="nbxf-fl">'+flame(30)+'<
 '<div class="nbxf-bar"><i style="width:'+Math.max(4,Math.min(100,pct))+'%"></i></div>'+
 '<div class="nbxf-st"><div class="nbxf-s" title="تُستخدم تلقائياً لو فاتك يوم"><span class="nbxf-si">'+ic('cal',18)+'</span><span class="nbxf-sx"><small>استعادة الحماسة هذا الشهر</small><b>'+left+'/'+REST+'</b></span></div><div class="nbxf-s"><span class="nbxf-si">'+ic('trophy',18)+'</span><span class="nbxf-sx"><small>أفضل سلسلة</small><b><em>'+w.vb+'</em> '+(w.vb===1?'يوم':'أيام')+'</b></span></div></div>'+
 '<div class="nbxf-f">'+
-(ready?'<button class="nbxf-btn" onclick="NBXP.gift(this)">'+ic('gift',16)+' اجمع هديتك +5 XP</button>':col?'<div class="nbxf-done">'+ic('check',16)+' تم جمع هدية اليوم — عُد غداً</div>':(_err?'<button class="nbxf-btn" onclick="NBXP.retry(this)">إعادة المحاولة</button><div style="flex:1 1 100%;text-align:center;font-size:11px;color:var(--muted,#6b7280)">تعذر تسجيل الزيارة ('+String(_err).replace(/[<>&"]/g,'')+')</div>':'<div class="nbxf-done">جاري تسجيل زيارتك...</div>'))+'</div></div>'}
+(ready?'<button class="nbxf-btn" onclick="NBXP.gift(this)">'+ic('gift',16)+' اجمع هديتك +5 XP</button>':col?'<div class="nbxf-done">'+ic('check',16)+' تم جمع هدية اليوم — عُد غداً</div>':(_err?'<button class="nbxf-btn" onclick="NBXP.retry(this)">إعادة المحاولة</button><button class="nbxf-btn" style="background:var(--card,#fff);color:var(--brand,#1B6B3A);border:1px solid var(--line,#e5e7eb);box-shadow:none" onclick="NBXP.diag(this)">فحص المشكلة</button><div id="nbxf-dg" style="flex:1 1 100%"></div><div style="flex:1 1 100%;text-align:center;font-size:11px;color:var(--muted,#6b7280)">تعذر تسجيل الزيارة ('+String(_err).replace(/[<>&"]/g,'')+')</div>':'<div class="nbxf-done">جاري تسجيل زيارتك...</div>'))+'</div></div>'}
 function css(){
 if(document.getElementById('nbxp-css'))return;
 var s=document.createElement('style');s.id='nbxp-css';
@@ -910,7 +916,8 @@ return award('quiz_completed',{key:'qz_'+c+'_'+l,cid:c,lid:l,sc:sc}).then(functi
 course:function(c){c=sx(c);return award('course_completed',{key:'crs_'+c,cid:c}).then(paths)},
 render:function(id){
 var el=document.getElementById(id);if(!el||!uid()||!DB())return;css();
-visit().then(function(){return Promise.all([getS(),getG(),getW()])}).then(function(r){var fe=document.getElementById('nbxp-fire');if(fe)fe.innerHTML=fireHTML(fmerge(r[0],r[1]));return Promise.all([r[2],board()])}).then(function(r){el.innerHTML=view(r[0],r[1])}).catch(function(x){console.warn('[XP] profile',x);el.innerHTML=''})},
+visit().then(function(){return Promise.all([getS().catch(function(x){_err=_err||('read xp_streak - '+((x&&x.code)||'error'));return S0(uid())}),getG().catch(function(){return false}),getW()])}).then(function(r){var fe=document.getElementById('nbxp-fire');if(fe)fe.innerHTML=fireHTML(fmerge(r[0],r[1]));return Promise.all([r[2],board()])}).then(function(r){el.innerHTML=view(r[0],r[1])}).catch(function(x){console.warn('[XP] profile',x);el.innerHTML=''})},
+diag:function(btn){diag(btn)},
 retry:function(btn){if(btn)btn.disabled=true;_vp=null;_vday=0;_err='';NBXP.render('nbxp-card')},
 gift:function(btn){
 if(!uid()||!DB())return;_err='';if(btn){if(btn.disabled)return;btn.disabled=true}
