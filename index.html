@@ -4723,8 +4723,8 @@ body.modal-open { overflow: hidden; }
     #pg-profile .nbxf-n{flex:none;width:76px;height:76px;border-radius:50%;border:5px solid rgba(27,107,58,.10);background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
     #pg-profile .nbxf-n b{display:block;font-size:1.6rem;font-weight:900;line-height:1;letter-spacing:-.02em;color:var(--brand);background:none;-webkit-background-clip:border-box;background-clip:border-box;-webkit-text-fill-color:currentColor}
     #pg-profile .nbxf-n small{margin-top:3px;font-size:10.5px;font-weight:700;color:var(--muted)}
-    #pg-profile .nbxf-bar{height:8px;border-radius:8px;background:rgba(27,107,58,.10);margin:20px 0 0}
-    #pg-profile .nbxf-bar i{border-radius:8px;background:linear-gradient(90deg,var(--brand-l),var(--brand));box-shadow:none}
+    #pg-profile .nbxf-bar{height:8px;border-radius:8px;background:rgba(251,86,7,.14);margin:20px 0 0}
+    #pg-profile .nbxf-bar i{border-radius:8px;background:linear-gradient(90deg,#e63946,#fb5607,#ffb703,#fb5607,#e63946);background-size:200% 100%;box-shadow:none}
     #pg-profile .nbxf-st{display:flex;align-items:stretch;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
     #pg-profile .nbxf-s{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:8px}
     #pg-profile .nbxf-s+.nbxf-s{flex:0 0 auto}
@@ -4740,8 +4740,8 @@ body.modal-open { overflow: hidden; }
     #pg-profile .nbxf-btn{flex:1 1 100%;justify-content:center;min-height:46px;padding:11px 18px;border-radius:9999px;background:linear-gradient(135deg,var(--brand-l),var(--brand));box-shadow:0 6px 16px rgba(27,107,58,.24);transition:transform .15s,box-shadow .2s}
     #pg-profile .nbxf-btn:active{transform:scale(.98)}
     #pg-profile .nbxf-done{flex:1 1 100%;justify-content:center;min-height:42px;padding:10px 14px;border-radius:14px;background:rgba(27,107,58,.07);font-size:12.5px}
-    @media(prefers-reduced-motion:no-preference){#pg-profile .nbxf-bar i{animation:prfBarIn .9s var(--ease-out) both}}
-    @keyframes prfBarIn{from{width:0}}
+    @media(prefers-reduced-motion:no-preference){#pg-profile .nbxf-bar i{animation:prfBarIn .9s var(--ease-out) both,nbxfFlow 2.4s linear infinite,nbxfPulse 1.6s ease-in-out infinite alternate}}
+    @keyframes prfBarIn{from{width:0}}@keyframes nbxfFlow{to{background-position:200% 0}}@keyframes nbxfPulse{from{filter:brightness(1)}to{filter:brightness(1.15)}}
     /* ── Level / XP card ── */
     #pg-profile .nbxp{max-width:700px;margin:0 auto;padding:20px;border-radius:24px;border:1px solid var(--line);box-shadow:0 1px 2px rgba(16,40,26,.04),0 10px 28px rgba(16,40,26,.06)}
     #pg-profile .nbxp-h{gap:14px}

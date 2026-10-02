@@ -877,12 +877,12 @@ tests.forEach(function(x){p=p.then(function(){return x[1]().then(function(){out.
 p.then(function(){out.push('last error: '+(_err||'-'));out.push('device time: '+new Date().toISOString().slice(0,16)+' UTC | day '+dayN());box.innerHTML='<pre style="margin:0;white-space:pre-wrap;direction:ltr;text-align:left;font-size:11px;line-height:1.6;color:var(--muted,#6b7280)">'+out.join('\n').replace(/[<>&]/g,'')+'</pre>';if(btn)btn.disabled=false})}
 function fmerge(s,g){return{vs:s.vs,vb:s.vb,vd:s.vd,rm:s.rm,ru:s.ru,vg:g?dayN():0}}
 function fireHTML(w){
-var d=dayN(),vs=w.vd>0?w.vs:0,col=w.vg===d,ready=w.vd===d&&!col,left=Math.max(0,REST-(w.rm===monN()?w.ru:0)),nx=0,pv=0,i;
+var d=dayN(),vs=w.vd>0?w.vs:0,col=w.vg===d,ready=w.vd===d&&!col,used=Math.min(REST,w.rm===monN()?w.ru:0),nx=0,pv=0,i;
 for(i=0;i<MIL.length;i++){if(MIL[i]>vs){nx=MIL[i];break}pv=MIL[i]}
 var pct=nx?(vs-pv)/(nx-pv)*100:100;
 return'<div class="nbxf"><div class="nbxf-h"><div class="nbxf-fl">'+flame(30)+'</div><div class="nbxf-m"><b>أيام الحماسة</b><span>افتح نبتيكس كل يوم واجمع هديتك</span></div><div class="nbxf-n"><b>'+vs+'</b><small>'+(vs===1?'يوم':'أيام')+'</small></div></div>'+
 '<div class="nbxf-bar"><i style="width:'+Math.max(4,Math.min(100,pct))+'%"></i></div>'+
-'<div class="nbxf-st"><div class="nbxf-s" title="تُستخدم تلقائياً لو فاتك يوم"><span class="nbxf-si">'+ic('cal',18)+'</span><span class="nbxf-sx"><small>استعادة الحماسة هذا الشهر</small><b>'+left+'/'+REST+'</b></span></div><div class="nbxf-s"><span class="nbxf-si">'+ic('trophy',18)+'</span><span class="nbxf-sx"><small>أفضل سلسلة</small><b><em>'+w.vb+'</em> '+(w.vb===1?'يوم':'أيام')+'</b></span></div></div>'+
+'<div class="nbxf-st"><div class="nbxf-s" title="تُستخدم تلقائياً لو فاتك يوم"><span class="nbxf-si">'+ic('cal',18)+'</span><span class="nbxf-sx"><small>استعادة الحماسة هذا الشهر</small><b>'+used+'/'+REST+'</b></span></div><div class="nbxf-s"><span class="nbxf-si">'+ic('trophy',18)+'</span><span class="nbxf-sx"><small>أفضل سلسلة</small><b><em>'+w.vb+'</em> '+(w.vb===1?'يوم':'أيام')+'</b></span></div></div>'+
 '<div class="nbxf-f">'+
 (ready?'<button class="nbxf-btn" onclick="NBXP.gift(this)">'+ic('gift',16)+' اجمع هديتك +5 XP</button>':col?'<div class="nbxf-done">'+ic('check',16)+' تم جمع هدية اليوم — عُد غداً</div>':(_err?'<button class="nbxf-btn" onclick="NBXP.retry(this)">إعادة المحاولة</button><button class="nbxf-btn" style="background:var(--card,#fff);color:var(--brand,#1B6B3A);border:1px solid var(--line,#e5e7eb);box-shadow:none" onclick="NBXP.diag(this)">فحص المشكلة</button><div id="nbxf-dg" style="flex:1 1 100%"></div><div style="flex:1 1 100%;text-align:center;font-size:11px;color:var(--muted,#6b7280)">تعذر تسجيل الزيارة ('+String(_err).replace(/[<>&"]/g,'')+')</div>':'<div class="nbxf-done">جاري تسجيل زيارتك...</div>'))+'</div></div>'}
 function css(){
