@@ -906,7 +906,7 @@ Object.keys(ACH).forEach(function(a){h+='<span class="'+(w.ac.indexOf(a)>-1?'on'
 return h+'</div>'+tt('trophy','أعلى 15 متصدر')+'<div id="nbxp-pn">'+rows(lb)+'</div></div>'}
 function rows(lb){
 if(!lb.length)return'<div class="nbxp-e">لا توجد بيانات بعد — ابدأ التعلّم لتظهر هنا</div>';
-return lb.slice(0,15).map(function(r,i){return'<div class="nbxp-r'+(r.me?' me':'')+'"><i>'+(i<3?ic('trophy',15,['#d4a017','#8e99a4','#b87333'][i]):i+1)+'</i><span>'+acEsc(r.nm)+(r.me?' (أنت)':'')+'</span><em>'+r.v+' XP</em></div>'}).join('')}
+return lb.slice(0,15).map(function(r,i){return'<div class="nbxp-r'+(i<3?' top t'+(i+1):'')+(r.me?' me':'')+'"><i>'+(i<3?ic('trophy',15,['#fff','#3a2400','#1b1f26'][i]):i+1)+'</i><span>'+acEsc(r.nm)+(r.me?' (أنت)':'')+'</span><em>'+r.v+' XP</em></div>'}).join('')}
 (function boot(n){if(uid()&&DB()){visit();return}if(n<45)setTimeout(function(){boot(n+1)},2000)})(0);
 return{
 correct:function(c,l,i){c=sx(c);l=sx(l);return award('question_correct',{key:'q_'+c+'_'+l+'_'+i,cid:c,lid:l,i:i})},
