@@ -722,14 +722,14 @@ function acSaveFE(score){var p=acProg();p.fe=score;acSave(p);try{if(score>=70)NB
 var NBXP=(function(){
 var CAP=50,CRED=1000,LV=[0,100,300,700,1500,3000,5000],
 LVN=['مبتدئ','متعلّم','مجتهد','متمكّن','خبير','محترف','أستاذ'],
-NOM={lecture_completed:5,question_correct:2,quiz_completed:5,course_completed:50,path_completed:100,mission_completed:5,reward_redemption:0,daily_gift:5},REST=3,MIL=[7,14,30,60,100,365],
-CAPPED={lecture_completed:1,question_correct:1,quiz_completed:1},
-STK={3:10,7:20,14:40,30:80,60:150,100:250},
-ACH={first_lecture:[5,'أول محاضرة','book'],first_course:[25,'أول دورة','cap'],streak7:[15,'7 أيام متتالية','flame'],correct100:[50,'100 إجابة صحيحة','target'],courses3:[30,'3 دورات','medal'],path_done:[25,'إتمام مسار','compass']},
-MIS={m1:['أكمل محاضرة',1,'dl'],m2:['أجب 5 أسئلة بشكل صحيح',5,'dq'],m3:['أنهِ اختباراً',1,'dz']},
-BONUS={mission_completed:1,streak_bonus:1,achievement_bonus:1,daily_gift:1},
+NOM={lecture_completed:0,question_correct:0,quiz_completed:0,course_completed:0,path_completed:0,mission_completed:0,reward_redemption:0,daily_gift:5},REST=3,MIL=[7,14,30,60,100,365],
+CAPPED={mission_completed:1},
+STK={3:0,7:0,14:0,30:0,60:0,100:0},
+ACH={first_lecture:[0,'أول محاضرة','book'],first_course:[0,'أول دورة','cap'],streak7:[0,'7 أيام متتالية','flame'],correct100:[0,'100 إجابة صحيحة','target'],courses3:[0,'3 دورات','medal'],path_done:[0,'إتمام مسار','compass']},
+MIS={m1:['أكمل محاضرة',1,'dl',15],m2:['أجب 5 أسئلة بشكل صحيح',5,'dq',20],m3:['أنهِ اختباراً',1,'dz',15]},
+BONUS={mission_completed:1,streak_bonus:1,achievement_bonus:1,daily_gift:1,level_bonus:1},LVU={mission_completed:1,daily_gift:1,level_bonus:1},
 ELIG={'mol-bio':'تقنيات البيولوجيا الجزيئية','food-safety':'سلامة الغذاء','glp':'ممارسات المعامل الجيدة والسلامة الحيوية','tissue-culture':'زراعة الأنسجة النباتية','pesticide-tech':'تكنولوجيا المبيدات والاستخدام الآمن','feed-mgmt':'إدارة الأعلاف وبرامج التغذية','food-microbiology':'الميكروبيولوجيا الغذائية','plant-diseases':'أمراض النبات والإدارة المتكاملة','bioinformatics':'المعلوماتية الحيوية','landscape-design':'الاندسكيب الزراعي','hydroponics-professional':'الزراعة المائية الاحترافية'},
-EVL={lecture_completed:'إكمال محاضرة',question_correct:'إجابة صحيحة',quiz_completed:'إكمال اختبار',course_completed:'إتمام دورة',path_completed:'إتمام مسار',mission_completed:'مهمة يومية',streak_bonus:'مكافأة سلسلة',achievement_bonus:'مكافأة إنجاز',reward_redemption:'استبدال كريدت بدورة',admin_adjustment:'تعديل من الإدارة',daily_visit:'زيارة يومية',daily_gift:'هدية الحماسة اليومية'};
+EVL={lecture_completed:'إكمال محاضرة',question_correct:'إجابة صحيحة',quiz_completed:'إكمال اختبار',course_completed:'إتمام دورة',path_completed:'إتمام مسار',mission_completed:'مهمة يومية',streak_bonus:'مكافأة سلسلة',achievement_bonus:'مكافأة إنجاز',reward_redemption:'استبدال كريدت بدورة',admin_adjustment:'تعديل من الإدارة',daily_visit:'زيارة يومية',daily_gift:'هدية الحماسة اليومية',level_bonus:'مكافأة ترقية مستوى'};
 var _seen={},_capDay=0,_q=Promise.resolve(),_err='';
 var IP={
 book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
@@ -759,8 +759,10 @@ function wkN(d){return Math.floor((d+3)/7)}
 function lvl(xp){var i=LV.length-1;while(i>0&&xp<LV[i])i--;return i}
 function nm(){return((currentUser.displayName||'').trim().split(/\s+/)[0]||'طالب').slice(0,20)}
 function T(m,k){if(typeof showToast==='function')showToast(m,k||'ok')}
-function W0(u){return{uid:u,nm:'',xp:0,spent:0,dn:0,dx:0,dl:0,dq:0,dz:0,lc:0,qc:0,zc:0,zs:0,cc:0,pc:0,st:0,sd:0,bs:0,ld:0,wk:0,wx:0,mo:0,mx:0,ac:[],sb:[],ml:[],last:''}}
-function nomOf(t,f){return t==='streak_bonus'?STK[f.n]:t==='achievement_bonus'?ACH[f.aid][0]:NOM[t]}
+function W0(u){return{uid:u,nm:'',xp:0,spent:0,dn:0,dx:0,dl:0,dq:0,dz:0,lc:0,qc:0,zc:0,zs:0,cc:0,pc:0,st:0,sd:0,bs:0,ld:0,wk:0,wx:0,mo:0,mx:0,ac:[],sb:[],ml:[],lb:0,last:''}}
+function gx(v){return 5+2*(((v>0?v:1)-1)%7)}
+/* daily gift: 5,7,9,11,13,15,17 XP over the streak week, then back to 5 (mirrors xpGift() in firestore.rules) */
+function nomOf(t,f){return t==='streak_bonus'?STK[f.n]:t==='achievement_bonus'?ACH[f.aid][0]:t==='daily_gift'?gx(f.vs):t==='mission_completed'?MIS[f.m][3]:t==='level_bonus'?10*(f.n+1):NOM[t]}
 /* Builds the event + the next wallet state for one event (pure — no I/O). */
 function mut(w,type,f){
 var d=dayN(),same=w.dn===d,bx=same?w.dx:0,nom=nomOf(type,f),cap=!!CAPPED[type],
@@ -778,6 +780,7 @@ t.bs=Math.max(w.bs,t.st);
 if(type==='reward_redemption')t.spent=w.spent+CRED;
 if(type==='achievement_bonus')t.ac=w.ac.concat([f.aid]);
 if(type==='streak_bonus')t.sb=w.sb.concat([f.n]);
+if(type==='level_bonus')t.lb=f.n;
 if(type==='mission_completed')t.ml=w.ml.filter(function(k){return k.indexOf(d+'_')===0}).concat([d+'_'+f.m]);
 t.last=w.uid+'_'+f.key;
 return{e:e,t:t}}
@@ -808,7 +811,7 @@ else if(a.length)T(a.join(' · '),'ok')}
 /* Idempotent award: in-session guard + deterministic doc id + transactional "already exists" check. */
 function award(type,f){
 var p=_q.then(function(){return doAward(type,f)});_q=p.catch(function(){});
-return p.then(function(r){if(!r)return null;toast(r);return BONUS[type]?r:follow(r.t).then(function(){return r})})}
+return p.then(function(r){if(!r)return null;toast(r);return BONUS[type]?(LVU[type]?lvb(r.t).then(function(){return r}):r):follow(r.t).then(function(){return r})})}
 function doAward(type,f){
 var u=uid(),D=DB();if(!u||!D)return Promise.resolve(null);
 var eid=u+'_'+f.key;if(_seen[eid])return Promise.resolve(null);_seen[eid]=1;
@@ -816,11 +819,18 @@ var eR=D.collection('xp_events').doc(eid),wR=D.collection('xp_wallet').doc(u);
 return D.runTransaction(function(tx){
 return tx.get(eR).then(function(es){
 if(es.exists)return null;
+/* once the lecture's quiz was completed (qz_ event exists), retakes award no per-question XP */
+return(type==='question_correct'?tx.get(D.collection('xp_events').doc(u+'_qz_'+f.cid+'_'+f.lid)):Promise.resolve(null)).then(function(qd){
+if(qd&&qd.exists)return null;
 return tx.get(wR).then(function(ws){
 var w=Object.assign(W0(u),ws.exists?ws.data():{}),m=mut(w,type,f);
-tx.set(eR,m.e);tx.set(wR,m.t);return{w:w,t:m.t,e:m.e}})})
+tx.set(eR,m.e);tx.set(wR,m.t);return{w:w,t:m.t,e:m.e}})})})
 })
 .catch(function(x){delete _seen[eid];_err=type+' - '+((x&&x.code)||(x&&x.message)||'error');console.warn('[XP]',type,(x&&x.code)||x);return null})}
+/* Level-up bonus: 20 XP for reaching level 2, then +10 per level (30,40,50,60,70). Granted in order via wallet.lb; mirrors firestore.rules. */
+function lvb(w){var p=Promise.resolve(),L=lvl(w.xp),n;
+for(n=(w.lb||0)+1;n<=L;n++)(function(k){p=p.then(function(){return award('level_bonus',{key:'lv_'+k,n:k})})})(n);
+return p}
 /* Missions / streak milestones / achievements that the latest wallet state has earned. */
 function follow(w){
 var p=Promise.resolve(),d=dayN();
@@ -829,6 +839,7 @@ Object.keys(MIS).forEach(function(m){if(w[MIS[m][2]]>=MIS[m][1]&&w.ml.indexOf(d+
 Object.keys(STK).forEach(function(k){var n=+k;if(w.st>=n&&w.sb.indexOf(n)<0)q('streak_bonus',{key:'st_'+n,n:n})});
 var A={first_lecture:w.lc>=1,first_course:w.cc>=1,streak7:w.bs>=7,correct100:w.qc>=100,courses3:w.cc>=3,path_done:w.pc>=1};
 Object.keys(A).forEach(function(a){if(A[a]&&w.ac.indexOf(a)<0)q('achievement_bonus',{key:'ach_'+a,aid:a})});
+p=p.then(function(){return lvb(w)});
 return p}
 /* Learning path = every course in the path has a passed final exam (fe>=70). */
 function paths(){
@@ -884,7 +895,7 @@ return'<div class="nbxf"><div class="nbxf-h"><div class="nbxf-fl">'+flame(30)+'<
 '<div class="nbxf-bar"><i style="width:'+Math.max(4,Math.min(100,pct))+'%"></i></div>'+
 '<div class="nbxf-st"><div class="nbxf-s" title="تُستخدم تلقائياً لو فاتك يوم"><span class="nbxf-si">'+ic('cal',18)+'</span><span class="nbxf-sx"><small>استعادة الحماسة هذا الشهر</small><b>'+used+'/'+REST+'</b></span></div><div class="nbxf-s"><span class="nbxf-si">'+ic('trophy',18)+'</span><span class="nbxf-sx"><small>أفضل سلسلة</small><b><em>'+w.vb+'</em> '+(w.vb===1?'يوم':'أيام')+'</b></span></div></div>'+
 '<div class="nbxf-f">'+
-(ready?'<button class="nbxf-btn" onclick="NBXP.gift(this)">'+ic('gift',16)+' اجمع هديتك +5 XP</button>':col?'<div class="nbxf-done">'+ic('check',16)+' تم جمع هدية اليوم — عُد غداً</div>':(_err?'<button class="nbxf-btn" onclick="NBXP.retry(this)">إعادة المحاولة</button><button class="nbxf-btn" style="background:var(--card,#fff);color:var(--brand,#1B6B3A);border:1px solid var(--line,#e5e7eb);box-shadow:none" onclick="NBXP.diag(this)">فحص المشكلة</button><div id="nbxf-dg" style="flex:1 1 100%"></div><div style="flex:1 1 100%;text-align:center;font-size:11px;color:var(--muted,#6b7280)">تعذر تسجيل الزيارة ('+String(_err).replace(/[<>&"]/g,'')+')</div>':'<div class="nbxf-done">جاري تسجيل زيارتك...</div>'))+'</div></div>'}
+(ready?'<button class="nbxf-btn" onclick="NBXP.gift(this)">'+ic('gift',16)+' اجمع هديتك +'+gx(vs)+' XP</button>':col?'<div class="nbxf-done">'+ic('check',16)+' تم جمع هدية اليوم — عُد غداً</div>':(_err?'<button class="nbxf-btn" onclick="NBXP.retry(this)">إعادة المحاولة</button><button class="nbxf-btn" style="background:var(--card,#fff);color:var(--brand,#1B6B3A);border:1px solid var(--line,#e5e7eb);box-shadow:none" onclick="NBXP.diag(this)">فحص المشكلة</button><div id="nbxf-dg" style="flex:1 1 100%"></div><div style="flex:1 1 100%;text-align:center;font-size:11px;color:var(--muted,#6b7280)">تعذر تسجيل الزيارة ('+String(_err).replace(/[<>&"]/g,'')+')</div>':'<div class="nbxf-done">جاري تسجيل زيارتك...</div>'))+'</div></div>'}
 function css(){
 if(document.getElementById('nbxp-css'))return;
 var s=document.createElement('style');s.id='nbxp-css';
@@ -898,7 +909,7 @@ var st=(w.sd>=d-1)?w.st:0,h='<div class="nbxp" data-lv="'+L+'"><div class="nbxp-
 bar(nx?(w.xp-cur)/(nx-cur)*100:100)+'<div class="nbxp-sm"><span>'+(nx?'باقي '+(nx-w.xp)+' XP للمستوى التالي':'وصلت لأعلى مستوى')+'</span>'+(gap!==''?'<span>'+gap+' XP للمركز الأعلى</span>':'')+'</div>'+
 tt('cal','اليوم')+'<div class="nbxp-sm"><span>'+ic('bolt',13,'#d4a017')+' XP اليوم: <b>'+dx+' / '+CAP+'</b></span><span>'+ic('flame',13,'#e8590c')+' سلسلة التعلّم: <b>'+st+'</b> يوم</span></div>'+bar(dx/CAP*100)+
 tt('tasks','المهام اليومية');
-Object.keys(MIS).forEach(function(m){var v=same?w[MIS[m][2]]:0,dn=v>=MIS[m][1];h+='<div class="nbxp-ms"><span class="'+(dn?'d':'p')+'">'+ic(dn?'check':'circle',17)+'</span><span>'+MIS[m][0]+'</span><em>'+Math.min(v,MIS[m][1])+'/'+MIS[m][1]+'</em></div>'});
+Object.keys(MIS).forEach(function(m){var v=same?w[MIS[m][2]]:0,dn=v>=MIS[m][1];h+='<div class="nbxp-ms"><span class="'+(dn?'d':'p')+'">'+ic(dn?'check':'circle',17)+'</span><span>'+MIS[m][0]+' <small style="opacity:.65;font-weight:800">+'+MIS[m][3]+' XP</small></span><em>'+Math.min(v,MIS[m][1])+'/'+MIS[m][1]+'</em></div>'});
 h+=tt('chart','إحصائياتك')+'<div class="nbxp-g"><div class="nbxp-c">'+ic('cap',18)+'<b>'+w.cc+'</b><span>دورات مكتملة</span></div><div class="nbxp-c">'+ic('target',18)+'<b>'+w.qc+'</b><span>إجابات صحيحة</span></div><div class="nbxp-c">'+ic('chart',18)+'<b>'+(w.zc?Math.round(w.zs/w.zc)+'%':'—')+'</b><span>متوسط الاختبارات ('+w.zc+')</span></div><div class="nbxp-c">'+ic('flame',18,'#e8590c')+'<b>'+w.bs+'</b><span>أطول سلسلة • '+w.ld+' يوم تعلّم</span></div></div>'+
 tt('wallet','محفظة المكافآت')+'<div class="nbxp-w"><b>'+cr+' كريدت دورة + '+rem+' XP</b><div class="nbxp-sm"><span>1000 XP = 1 كريدت دورة (XP ليست نقداً)</span><span>'+rem+'/1000</span></div>'+bar(rem/CRED*100)+'<button class="nbxp-btn" id="nbxp-rd" '+(cr>0?'':'disabled')+' onclick="NBXP.pick()">'+ic('gift',14)+' استبدل كريدت بدورة</button><div id="nbxp-pk"></div></div>'+
 tt('award','الإنجازات')+'<div class="nbxp-ac">';
@@ -921,7 +932,7 @@ diag:function(btn){diag(btn)},
 retry:function(btn){if(btn)btn.disabled=true;_vp=null;_vday=0;_err='';NBXP.render('nbxp-card')},
 gift:function(btn){
 if(!uid()||!DB())return;_err='';if(btn){if(btn.disabled)return;btn.disabled=true}
-visit().then(function(){return Promise.all([getS(),getG()])}).then(function(r){var d=dayN();if(r[0].vd!==d||r[1])return null;return award('daily_gift',{key:'dg_'+d})})
+visit().then(function(){return Promise.all([getS(),getG()])}).then(function(r){var d=dayN();if(r[0].vd!==d||r[1])return null;return award('daily_gift',{key:'dg_'+d,vs:r[0].vs})})
 .then(function(r){if(!r&&_err)T('تعذر جمع الهدية ('+String(_err).replace(/[<>&"]/g,'')+')','err');NBXP.render('nbxp-card')}).catch(function(){if(btn)btn.disabled=false;T('تعذر جمع الهدية — حاول مرة أخرى','err')})},
 pick:function(){
 var box=document.getElementById('nbxp-pk'),u=uid();if(!box||!u)return;
