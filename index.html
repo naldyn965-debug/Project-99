@@ -53,7 +53,7 @@
      PWA — THEME & STATUS BAR
 ═══════════════════════════════════════════════════════ -->
 <meta name="theme-color" content="#1B6B3A" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0b160d" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#1f2d25" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
 
 <!-- ═══════════════════════════════════════════════════════
@@ -22181,6 +22181,56 @@ document.querySelectorAll('.vcash-overlay').forEach(_watch);
   });
 })();
 </script>
+
+<style id="nb-dark-soften">
+/* ═══════════════════════════════════════════════════════════════
+   DARK THEME — أنعم + فصل بصري بين الأجزاء
+   إضافة فقط (override) — كل القواعد مقيّدة بـ [data-dark]
+   فالوضع الفاتح والـ JS والوظائف مش متأثرة. للتراجع: امسح البلوك ده.
+═══════════════════════════════════════════════════════════════ */
+
+/* 1) الألوان: من أسود-أخضر شبه مطفي إلى أخضر غابات هادي (طبقات واضحة) */
+[data-dark]{
+  --bg:#16211b;--bg2:#1b2820;--bg3:#223229;
+  --card:#1f2d25;--glass:rgba(31,45,37,.88);
+  --ink:#e6f1e9;--ink2:#c6dacb;--slate:#9dc1a9;--muted:#84a590;
+  --line:rgba(190,235,205,.09);--line2:rgba(190,235,205,.17);
+}
+
+/* 2) الشريط العلوي: سطح أفتح من الصفحة + خط فاصل + ظل ناعم */
+[data-dark] .nav-bg,
+[data-dark] .nav.up .nav-bg{
+  background:var(--glass);
+  box-shadow:inset 0 -1px 0 rgba(190,235,205,.12),0 10px 28px -12px rgba(0,0,0,.55);
+}
+[data-dark] .nav-icon-btn{background:rgba(255,255,255,.05)}
+
+/* 3) الشريط السفلي: كان أغمق من الصفحة (يختفي فيها) — دلوقتي سطح عايم أفتح */
+[data-dark] #nb-bottom-nav::before{
+  background:rgba(40,58,48,.84);
+  border:1px solid rgba(190,235,205,.16);
+  backdrop-filter:blur(30px) saturate(160%) brightness(100%);
+  -webkit-backdrop-filter:blur(30px) saturate(160%) brightness(100%);
+  box-shadow:0 14px 36px rgba(0,0,0,.45),0 3px 10px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.09);
+}
+
+/* 4) شريط تبويبات الأكاديمية (كان لونه ثابت غامق) */
+[data-dark] #pg-academy .mkt-subnav,
+[data-dark] #acad-social-subnav{
+  background:var(--glass) !important;
+  border-bottom-color:var(--line2) !important;
+}
+
+/* 5) كروت صفحة "ملفي": عمق خفيف بدل ظل الوضع الفاتح اللي مش بيبان */
+[data-dark] #pg-profile .nbxf,
+[data-dark] #pg-profile .nbxp{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 10px 28px rgba(0,0,0,.28);
+}
+/* أرقام السلسلة كانت أخضر غامق (تباين 2.5:1) → أخضر فاتح مقروء */
+[data-dark] #pg-profile .nbxf-n b,
+[data-dark] #pg-profile .nbxf-sx b,
+[data-dark] #pg-profile .nbxf-si{color:var(--brand-xl,#5fc97e)}
+</style>
 
 </body>
 </html>
