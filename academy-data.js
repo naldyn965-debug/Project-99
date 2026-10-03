@@ -894,7 +894,7 @@ function bar(p){return'<div class="nbxp-bar"><i style="width:'+Math.max(0,Math.m
 function view(w,lb){
 var d=dayN(),L=lvl(w.xp),cur=LV[L],nx=LV[L+1],same=w.dn===d,dx=same?w.dx:0,un=w.xp-w.spent,cr=Math.floor(un/CRED),rem=un%CRED,
 rk=0,gap='',i;for(i=0;i<lb.length;i++)if(lb[i].me){rk=i+1;if(i>0)gap=lb[i-1].v-lb[i].v;break}
-var st=(w.sd>=d-1)?w.st:0,h='<div class="nbxp"><div class="nbxp-h"><div class="nbxp-lv">'+(L+1)+'</div><div class="nbxp-hm"><b>المستوى '+(L+1)+' — '+LVN[L]+'</b><span>'+w.xp+' XP'+(nx?' • التالي عند '+nx:' • أعلى مستوى')+'</span></div><div class="nbxp-rk">'+(rk?'#'+rk:'—')+'<small>ترتيبك</small></div></div>'+
+var st=(w.sd>=d-1)?w.st:0,h='<div class="nbxp" data-lv="'+L+'"><div class="nbxp-h"><div class="nbxp-lv">'+(L+1)+'</div><div class="nbxp-hm"><b>المستوى '+(L+1)+' — '+LVN[L]+'</b><span>'+w.xp+' XP'+(nx?' • التالي عند '+nx:' • أعلى مستوى')+'</span></div><div class="nbxp-rk">'+(rk?'#'+rk:'—')+'<small>ترتيبك</small></div></div>'+
 bar(nx?(w.xp-cur)/(nx-cur)*100:100)+'<div class="nbxp-sm"><span>'+(nx?'باقي '+(nx-w.xp)+' XP للمستوى التالي':'وصلت لأعلى مستوى')+'</span>'+(gap!==''?'<span>'+gap+' XP للمركز الأعلى</span>':'')+'</div>'+
 tt('cal','اليوم')+'<div class="nbxp-sm"><span>'+ic('bolt',13,'#d4a017')+' XP اليوم: <b>'+dx+' / '+CAP+'</b></span><span>'+ic('flame',13,'#e8590c')+' سلسلة التعلّم: <b>'+st+'</b> يوم</span></div>'+bar(dx/CAP*100)+
 tt('tasks','المهام اليومية');
