@@ -14,9 +14,27 @@ service cloud.firestore {
       return isAuth() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
+    // ── USERS: access fields (paidCourses / suspendedCourses) are no longer self-editable ──
+    // Admin: unrestricted. Student: every other field stays freely writable, but paidCourses may grow by
+    // exactly ONE course, and only in the same write that creates a brand-new reward_redemption event
+    // (the 1000-XP spend itself is validated by the xp_events / xp_wallet rules below).
+    function uOld(f) { return resource == null ? [] : resource.data.get(f, []); }
+    function uNew(f) { return request.resource.data.get(f, []); }
+    function uRdOk(uid) {
+      let w = getAfter(/databases/$(database)/documents/xp_wallet/$(uid)).data;
+      let e = getAfter(/databases/$(database)/documents/xp_events/$(w.last)).data;
+      return e.type == 'reward_redemption' && e.uid == uid
+        && !exists(/databases/$(database)/documents/xp_events/$(w.last))
+        && uNew('paidCourses') == uOld('paidCourses').concat([e.cid]);
+    }
+
     match /users/{uid} {
       allow read:  if true;
-      allow write: if isSelf(uid) || isAdmin();
+      allow create, update: if (isSelf(uid)
+          && uNew('suspendedCourses') == uOld('suspendedCourses')
+          && (uNew('paidCourses') == uOld('paidCourses') || uRdOk(uid)))
+        || isAdmin();
+      allow delete: if isSelf(uid) || isAdmin();
     }
 
     match /admins/{uid} {
@@ -68,7 +86,8 @@ service cloud.firestore {
                     && request.resource.data.uid == request.auth.uid
                     && request.resource.data.courseId is string
                     && request.resource.data.phone is string
-                    && request.resource.data.transactionRef is string;
+                    && request.resource.data.transactionRef is string
+                    && request.resource.data.status == 'pending';   // only admin.html can set approved/rejected
       allow update: if isAdmin();
       allow delete: if isAdmin();
     }
