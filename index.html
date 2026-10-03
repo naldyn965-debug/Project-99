@@ -4720,8 +4720,12 @@ body.modal-open { overflow: hidden; }
     #pg-profile .nbxf-fl svg{width:26px;height:26px}
     #pg-profile .nbxf-m b{font-size:1.2rem;font-weight:800;line-height:1.3;color:var(--ink)}
     #pg-profile .nbxf-m span{display:block;margin-top:3px;font-size:12.5px;line-height:1.6;color:var(--muted)}
-    #pg-profile .nbxf-n{flex:none;width:76px;height:76px;border-radius:50%;border:5px solid rgba(27,107,58,.10);background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+    #pg-profile .nbxf-n{flex:none;width:76px;height:76px;border-radius:50%;position:relative;border:5px solid rgba(251,86,7,.14);background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
     #pg-profile .nbxf-n b{display:block;font-size:1.6rem;font-weight:900;line-height:1;letter-spacing:-.02em;color:var(--brand);background:none;-webkit-background-clip:border-box;background-clip:border-box;-webkit-text-fill-color:currentColor}
+    @property --q{syntax:'<number>';inherits:false;initial-value:0}
+    #pg-profile .nbxf-n::before{--q:var(--p,0);content:"";position:absolute;inset:-5px;padding:5px;border-radius:50%;pointer-events:none;background:conic-gradient(from 0deg,#ffb703 0,#fb5607 calc(var(--q)*.6%),#e63946 calc(var(--q)*1%),transparent 0);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);filter:drop-shadow(0 0 3px rgba(251,86,7,.45))}
+    @keyframes nbxfRing{from{--q:0}}
+    @media(prefers-reduced-motion:no-preference){#pg-profile .nbxf-n::before{animation:nbxfRing 1.1s var(--ease-out) both}}
     #pg-profile .nbxf-n small{margin-top:3px;font-size:10.5px;font-weight:700;color:var(--muted)}
     #pg-profile .nbxf-bar{height:8px;border-radius:8px;background:rgba(251,86,7,.14);margin:20px 0 0}
     #pg-profile .nbxf-bar i{border-radius:8px;background:linear-gradient(90deg,#e63946,#fb5607,#ffb703,#fb5607,#e63946);background-size:200% 100%;box-shadow:none}
