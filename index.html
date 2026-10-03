@@ -22251,5 +22251,55 @@ document.querySelectorAll('.vcash-overlay').forEach(_watch);
 }
 </style>
 
+<style id="nb-scroll-perf">
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL PERFORMANCE — تخفيف اللاج أثناء التمرير
+   السبب: عناصر زجاجية (backdrop-filter) تقيلة ثابتة على الشاشة، المتصفح
+   بيعيد حساب الـ blur بتاعها مع كل فريم سكرول.
+   الحل: نفس الشكل الزجاجي بقيم أخف. إضافة فقط (override) — لا تغيير في
+   الـ HTML/JS. للتراجع: امسح البلوك ده.
+═══════════════════════════════════════════════════════════════ */
+
+/* 1) الهيدر: شيل فلتر الـ SVG (feTurbulence + feDisplacementMap) اللي كان
+      بيتحسب مع كل فريم + وحّد قيمة الـ blur فمفيش أنيميشن فلتر عند أول سكرول */
+.nav-bg,
+.nav.up .nav-bg{
+  backdrop-filter:blur(16px) saturate(160%);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  transition:box-shadow .3s ease;
+}
+
+/* 2) الشريط السفلي: blur أصغر + بدون brightness، مع تعويض بسيط في الشفافية
+      عشان النص اللي وراه ميبانش */
+#nb-bottom-nav::before{
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+}
+[data-dark] #nb-bottom-nav::before{
+  background:rgba(40,58,48,.88);
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+}
+
+/* 3) أشرطة ثابتة تانية (تبويبات السوق، شريط المزرعة) */
+.mkt-subnav,
+.farm-topbar{
+  backdrop-filter:blur(16px) saturate(150%);
+  -webkit-backdrop-filter:blur(16px) saturate(150%);
+}
+
+/* 4) كروت كورسات الرئيسية: كل كارت كان ليه backdrop-filter لوحده داخل
+      سكرول أفقي. الخلفية وراها لون صفحة سادة فمفيش فرق ظاهر. */
+.nb-h2-course-card,
+[data-dark] .nb-h2-course-card{
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+/* لون الكارت في الدارك كان ثابت على الدرجة القديمة، فبقى مندمج مع الخلفية
+   الجديدة — بنوحده مع لون الكروت (--card) */
+[data-dark] .nb-h2-course-card{background:rgba(31,45,37,.9)}
+</style>
+
 </body>
 </html>
