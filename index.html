@@ -22232,5 +22232,24 @@ document.querySelectorAll('.vcash-overlay').forEach(_watch);
 [data-dark] #pg-profile .nbxf-si{color:var(--brand-xl,#5fc97e)}
 </style>
 
+<style id="nb-logo-refine">
+/* ═══════════════════════════════════════════════════════════════
+   LOGO (الهيدر) — خلفية خضراء أهدأ + رمز أبرز ومفصول عنها
+   إضافة فقط (override) على .logo-mark — لا تغيير في الـ HTML أو الـ JS
+   للتراجع: امسح البلوك ده.
+═══════════════════════════════════════════════════════════════ */
+.logo-mark{
+  /* تدرّج هادي بدل التدرّج الحاد القديم + ظل واحد ناعم */
+  background:linear-gradient(160deg,#2b8350 0%,#1f6d3e 100%);
+  box-shadow:0 2px 8px rgba(27,107,58,.20),inset 0 0 0 1px rgba(255,255,255,.12);
+}
+.logo-mark svg{
+  /* الرمز أكبر وأسمك وبظل خفيف يفصله عن الخلفية */
+  width:23px;height:23px;
+  stroke-width:2.4;
+  filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.25));
+}
+</style>
+
 </body>
 </html>
