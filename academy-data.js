@@ -704,6 +704,7 @@ if(h<=0)return m+' دقيقة';
 if(m<=0)return h+' ساعة';
 return h+' ساعة و'+m+' دقيقة'}
 function acIsUnlocked(id){
+if(AC_CID==='biofertilizers-professional')return true;
 var flat=acFlatLessons();
 var idx=flat.indexOf(id);
 if(idx<=0)return true;
@@ -1504,7 +1505,7 @@ var btnLabel=doneLessons===0?acIco('rocket',16)+' ابدأ الدورة الآن
 var btnAction=!allDone?'NAcademy.openFirst()':feScore>=70?'NAcademy.goCert()':'NAcademy.goFinalExam()';
 var finalExamHTML='<div class="acad-module-block" style="margin-top:8px">'+
 '<div class="acad-module-name" style="color:#c9871a;padding:16px 18px 0">الاختبار النهائي الشامل</div>'+
-(allDone?
+(allDone||AC_CID==='biofertilizers-professional'?
 '<div class="acad-fe-row'+(feScore>=70?' passed':feScore>=0?' failed':'')+'" onclick="NAcademy.goFinalExam()" role="button">'+
 
 /* Score circle — left side */
