@@ -1362,7 +1362,7 @@ hydBottom+
 var bfBadge='<span class="acad-pop-badge">'+STAR_ICO+'Free</span>';
 var bfBottom=(bfDone>0?'<div class="acad-progress-wrap" style="margin-top:16px"><div class="acad-prog-label"><span>التقدم في الدورة</span><span>'+bfPct+'%</span></div><div class="acad-prog-track"><div class="acad-prog-fill" style="width:'+bfPct+'%"></div></div></div>':'<div class="acad-cat-card-cta">ابدأ الدورة '+ARROW_ICO+'</div>');
 var bfCard='<div class="acad-cat-card premium" onclick="NAcademy.openCourse(\'biofertilizers-professional\')" role="button" style="border-color:rgba(5,150,105,.25)">'+
-'<div class="acad-cat-card-top" style="background:#062018">'+bfBadge+'</div>'+
+'<div class="acad-cat-card-top" style="background:#062018 url(\'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=900&q=70\') center/cover no-repeat">'+bfBadge+'</div>'+
 '<div class="acad-cat-card-body">'+
 '<div class="acad-cat-card-kicker" style="color:#059669">'+BF_COURSE.kicker+'</div>'+
 '<div class="acad-cat-card-title">'+BF_COURSE.title+'</div>'+
