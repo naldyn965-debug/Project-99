@@ -226,7 +226,7 @@ service cloud.firestore {
     }
     function xpCourse(c) {
       return c in ['pest','mol-bio','food-quality','ag-english','food-safety','glp','land-reclamation','tissue-culture',
-                   'pesticide-tech','feed-mgmt','food-microbiology','plant-diseases','bioinformatics','landscape-design','hydroponics-professional'];
+                   'pesticide-tech','feed-mgmt','food-microbiology','plant-diseases','bioinformatics','landscape-design','hydroponics-professional','biofertilizers-professional'];
     }
     function xpKeyOk(e) {
       return e.key.size() < 120 && (

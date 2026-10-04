@@ -5779,6 +5779,7 @@ body.modal-open { overflow: hidden; }
 .acad-card-top.bi{background:#1e1033 url('https://images.unsplash.com/photo-1643780668909-580822430155?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.ld{background:#0a2410 url('https://images.unsplash.com/photo-1761637822930-fb1c1a3df94d?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.hyd{background:#031c2e url('https://images.unsplash.com/photo-1682629088819-95edaf226223?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+.acad-card-top.bf{background:linear-gradient(135deg,#062018 0%,#0b4a37 55%,#059669 130%)}
 .acad-share-btn{position:absolute;top:14px;left:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(10,30,20,.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s;padding:0;appearance:none;-webkit-appearance:none;font:inherit;outline:none}
 .acad-share-btn:hover{background:rgba(10,30,20,.6);transform:translateY(-1px)}
 .acad-share-btn:active{transform:scale(.94)}
@@ -8152,6 +8153,13 @@ body.modal-open { overflow: hidden; }
   background-size:100% 100%, cover !important;
   background-position:center, center !important;
 }
+.acad-hero--biofertilizers-professional{
+  background-image:
+    linear-gradient(165deg,rgba(6,32,24,.90) 0%,rgba(6,32,24,.72) 35%,rgba(6,32,24,.62) 62%,rgba(6,32,24,.88) 100%),
+    linear-gradient(135deg,#062018 0%,#0b4a37 55%,#059669 130%) !important;
+  background-size:100% 100%, cover !important;
+  background-position:center, center !important;
+}
 
 /* ── Per-Learning-Path hero backgrounds (distinct photos from the
    course heroes, matched to each path's own theme — kept in sync with
@@ -9449,6 +9457,7 @@ const App = {
     if(typeof BI_COURSE!=='undefined') reg.push({cid:'bioinformatics',    course:BI_COURSE, icon:'💻', grad:'linear-gradient(135deg,#7c3aed,#4c1d95)', paid:true, price:250, oldPrice:500, img:'https://images.unsplash.com/photo-1643780668909-580822430155?auto=format&fit=crop&w=900&q=70'});
     if(typeof LD_COURSE!=='undefined') reg.push({cid:'landscape-design',  course:LD_COURSE, icon:'🌳', grad:'linear-gradient(135deg,#16a34a,#0a2410)', paid:true, price:150, oldPrice:250, img:'https://images.unsplash.com/photo-1761637822930-fb1c1a3df94d?auto=format&fit=crop&w=900&q=70'});
     if(typeof HYD_COURSE!=='undefined') reg.push({cid:'hydroponics-professional', course:HYD_COURSE, icon:'💧', grad:'linear-gradient(135deg,#0284c7,#031c2e)', paid:true, price:200, oldPrice:500, img:'https://images.unsplash.com/photo-1682629088819-95edaf226223?auto=format&fit=crop&w=900&q=70'});
+    if(typeof BF_COURSE!=='undefined') reg.push({cid:'biofertilizers-professional', course:BF_COURSE, icon:'🦠', grad:'linear-gradient(135deg,#059669,#062018)', paid:false, img:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA5MDAgNTAwJz48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9J2cnIHgxPScwJyB5MT0nMCcgeDI9JzEnIHkyPScxJz48c3RvcCBvZmZzZXQ9JzAnIHN0b3AtY29sb3I9JyMwNjIwMTgnLz48c3RvcCBvZmZzZXQ9Jy42JyBzdG9wLWNvbG9yPScjMGI0YTM3Jy8+PHN0b3Agb2Zmc2V0PScxJyBzdG9wLWNvbG9yPScjMDU5NjY5Jy8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9JzkwMCcgaGVpZ2h0PSc1MDAnIGZpbGw9J3VybCgjZyknLz48ZyBmaWxsPSdub25lJyBzdHJva2U9JyM2ZWU3YjcnIHN0cm9rZS1vcGFjaXR5PScuMjUnIHN0cm9rZS13aWR0aD0nMyc+PGNpcmNsZSBjeD0nNzAwJyBjeT0nMTQwJyByPSc5MCcvPjxjaXJjbGUgY3g9JzY0MCcgY3k9JzMzMCcgcj0nNTUnLz48Y2lyY2xlIGN4PSc3ODAnIGN5PSczODAnIHI9JzM0Jy8+PGNpcmNsZSBjeD0nMTgwJyBjeT0nMTIwJyByPSc0NicvPjwvZz48ZyBmaWxsPScjMzRkMzk5JyBmaWxsLW9wYWNpdHk9Jy4xNCc+PGNpcmNsZSBjeD0nNzAwJyBjeT0nMTQwJyByPSc2MCcvPjxjaXJjbGUgY3g9JzY0MCcgY3k9JzMzMCcgcj0nMzAnLz48Y2lyY2xlIGN4PSc3ODAnIGN5PSczODAnIHI9JzE4Jy8+PC9nPjwvc3ZnPg=='});
     return reg;
   },
 
@@ -22249,56 +22258,6 @@ document.querySelectorAll('.vcash-overlay').forEach(_watch);
   stroke-width:2.4;
   filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.25));
 }
-</style>
-
-<style id="nb-scroll-perf">
-/* ═══════════════════════════════════════════════════════════════
-   SCROLL PERFORMANCE — تخفيف اللاج أثناء التمرير
-   السبب: عناصر زجاجية (backdrop-filter) تقيلة ثابتة على الشاشة، المتصفح
-   بيعيد حساب الـ blur بتاعها مع كل فريم سكرول.
-   الحل: نفس الشكل الزجاجي بقيم أخف. إضافة فقط (override) — لا تغيير في
-   الـ HTML/JS. للتراجع: امسح البلوك ده.
-═══════════════════════════════════════════════════════════════ */
-
-/* 1) الهيدر: شيل فلتر الـ SVG (feTurbulence + feDisplacementMap) اللي كان
-      بيتحسب مع كل فريم + وحّد قيمة الـ blur فمفيش أنيميشن فلتر عند أول سكرول */
-.nav-bg,
-.nav.up .nav-bg{
-  backdrop-filter:blur(16px) saturate(160%);
-  -webkit-backdrop-filter:blur(16px) saturate(160%);
-  transition:box-shadow .3s ease;
-}
-
-/* 2) الشريط السفلي: blur أصغر + بدون brightness، مع تعويض بسيط في الشفافية
-      عشان النص اللي وراه ميبانش */
-#nb-bottom-nav::before{
-  background:rgba(255,255,255,.86);
-  backdrop-filter:blur(18px) saturate(150%);
-  -webkit-backdrop-filter:blur(18px) saturate(150%);
-}
-[data-dark] #nb-bottom-nav::before{
-  background:rgba(40,58,48,.88);
-  backdrop-filter:blur(18px) saturate(150%);
-  -webkit-backdrop-filter:blur(18px) saturate(150%);
-}
-
-/* 3) أشرطة ثابتة تانية (تبويبات السوق، شريط المزرعة) */
-.mkt-subnav,
-.farm-topbar{
-  backdrop-filter:blur(16px) saturate(150%);
-  -webkit-backdrop-filter:blur(16px) saturate(150%);
-}
-
-/* 4) كروت كورسات الرئيسية: كل كارت كان ليه backdrop-filter لوحده داخل
-      سكرول أفقي. الخلفية وراها لون صفحة سادة فمفيش فرق ظاهر. */
-.nb-h2-course-card,
-[data-dark] .nb-h2-course-card{
-  backdrop-filter:none;
-  -webkit-backdrop-filter:none;
-}
-/* لون الكارت في الدارك كان ثابت على الدرجة القديمة، فبقى مندمج مع الخلفية
-   الجديدة — بنوحده مع لون الكروت (--card) */
-[data-dark] .nb-h2-course-card{background:rgba(31,45,37,.9)}
 </style>
 
 </body>
