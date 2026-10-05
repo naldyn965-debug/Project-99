@@ -20037,6 +20037,7 @@ document.addEventListener('DOMContentLoaded', function() {
 .nbco-center{text-align:center;padding-top:34px}.nbco-center .nbco-p{margin-bottom:18px}
 .nbco-ring{position:relative;width:104px;height:104px;border-radius:50%;margin:0 auto 22px;display:grid;place-items:center;background:radial-gradient(circle,#e3f5ea 55%,#f1faf4 56%);font-size:44px;color:var(--g)}
 .nbco-ring::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(45,154,88,.25);animation:nbcoRing 2.2s infinite}
+.nbco-ring.pop{animation:nbcoPop .65s cubic-bezier(.34,1.56,.64,1)}
 .nbco-ring.ok{background:var(--g);color:#fff;animation:nbcoPop .6s cubic-bezier(.34,1.56,.64,1)}.nbco-ring.ok svg{stroke-width:3;stroke-dasharray:30;animation:nbcoDraw .6s .3s both}
 .nbco-ring i{position:absolute;left:50%;top:50%;width:4px;height:12px;margin:-6px -2px;border-radius:3px;background:var(--c,#2d9a58);transform:rotate(var(--a)) translateY(-70px);animation:nbcoSpark 1s .35s both}
 .nbco-ord{background:var(--gs);border-radius:16px;padding:12px;margin:0 0 16px;cursor:pointer}.nbco-ord small{display:block;color:var(--mu);font-size:12px;margin-bottom:2px}.nbco-ord b{color:var(--g);font-size:17px;direction:ltr;display:inline-block;letter-spacing:.03em}
@@ -20083,6 +20084,34 @@ function copy(v,msg){
  try{var t=document.createElement('textarea');t.value=v;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);toast(msg,'ok')}catch(e){}
 }
 function brandSvg(p){var g='nbcoLg-'+p;return '<svg viewBox="2 4 20 20" aria-hidden="true"><defs><linearGradient id="'+g+'" x1="4" y1="5" x2="20" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#34a862"/><stop offset="1" stop-color="#0f552e"/></linearGradient></defs><g stroke="url(#'+g+')" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12M12 12C12 8 8 5 4 6M12 12C12 8 16 5 20 6"/><path d="M5 20c2-3 5-5 7-8" opacity=".5"/></g></svg>'}
+/* ── صوت نجاح الدفع: Web Audio مُولَّد برمجيًا (بدون ملفات/مكتبات) — يُفتح عند ضغطة المستخدم ويُشغَّل عند نجاح الإرسال فقط ── */
+var AC=null;
+function sndUnlock(){
+ try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;
+  if(!AC)AC=new C();
+  if(AC.state==='suspended'){var r=AC.resume();if(r&&r.catch)r.catch(function(){})}
+  var u=AC.createBufferSource();u.buffer=AC.createBuffer(1,1,22050);u.connect(AC.destination);u.start(0);
+ }catch(e){}
+}
+function sndChime(c,t){
+ var out=c.createGain(),lp=c.createBiquadFilter(),dl=c.createDelay(),fb=c.createGain(),wet=c.createGain();
+ out.gain.value=.2;lp.type='lowpass';lp.frequency.value=5500;dl.delayTime.value=.14;fb.gain.value=.3;wet.gain.value=.32;
+ out.connect(lp);lp.connect(c.destination);lp.connect(dl);dl.connect(fb);fb.connect(dl);dl.connect(wet);wet.connect(c.destination);
+ [[1318.51,0,.6],[1975.53,.12,1.2]].forEach(function(n){
+  [[1,1],[2,.16],[3,.05]].forEach(function(h){
+   var o=c.createOscillator(),g=c.createGain(),st=t+n[1],d=n[2]*(h[0]===1?1:.5);
+   o.type='sine';o.frequency.value=n[0]*h[0];
+   g.gain.setValueAtTime(.0001,st);g.gain.exponentialRampToValueAtTime(h[1],st+.01);g.gain.exponentialRampToValueAtTime(.0001,st+d);
+   o.connect(g);g.connect(out);o.start(st);o.stop(st+d+.05);
+  });
+ });
+ return [out,lp,dl,fb,wet];
+}
+function sndSuccess(){
+ try{if(!AC)return;var ns=sndChime(AC,AC.currentTime+.03);
+  setTimeout(function(){ns.forEach(function(n){try{n.disconnect()}catch(e){}})},4000)}catch(e){}
+}
+window.nbcoChime=function(){sndUnlock();sndSuccess()};
 function sparks(c){var h='';for(var i=0;i<8;i++)h+='<i style="--a:'+(i*45)+'deg;--c:'+(i%2?'#e8a33d':'#2d9a58')+'"></i>';return h}
 
 function build(ov){
@@ -20178,10 +20207,15 @@ function build(ov){
    if(ok&&ov.classList.contains('on'))activate();
   },function(){})}catch(e){}
  }
+ function celebrate(){
+  if(!st.snd||Date.now()-st.snd>20000)return;st.snd=0;
+  sndSuccess();try{if(navigator.vibrate)navigator.vibrate([14,50,26])}catch(e){}
+  var rg=root.querySelector('[data-s=received] .nbco-ring');if(rg){rg.classList.remove('pop');void rg.offsetWidth;rg.classList.add('pop')}
+ }
  function received(){
   var d=O('pending-ref-display'),m=d&&/رقم الطلب:\s*([A-Za-z0-9]+)/.exec(d.textContent||'');
   st.ord=m?m[1]:'';var o=Q('ord');o.textContent=st.ord?'#'+st.ord:'';o.parentNode.hidden=!st.ord;
-  if(st.s!=='active')go('received');watch();
+  if(st.s!=='active')go('received');watch();celebrate();
  }
  function refresh(){
   var T=function(s){var e=ov.querySelector(s);return e?e.textContent.trim():''};
@@ -20200,7 +20234,7 @@ function build(ov){
    else Q('pip').querySelector('.nbco-hint').hidden=false;
    Q('ipr').innerHTML=h}
  }
- function reset(){[fFrom,fMe,fCode].forEach(function(f){f.value='';clr(f)});busy(false);unwatch()}
+ function reset(){[fFrom,fMe,fCode].forEach(function(f){f.value='';clr(f)});busy(false);unwatch();st.snd=0}
  function opened(){
   refresh();var pend=O('step-pending')&&O('step-pending').classList.contains('on');
   reset();setM('vf');if(pend)received();else go('pay');
@@ -20227,7 +20261,7 @@ function build(ov){
    var from=en(fFrom.value).trim(),ip=hasIP&&st.m==='ip',k=ip?'ip-':'';
    var set=function(n,v){var el=O(k+n);if(el)el.value=v};
    set('phone',ip?from:from.replace(/[\s\-]/g,''));set('ref',me);set('refcode',fCode.value.trim());
-   var b=O(k+'submit-btn');if(!b)return;b.click();if(b.disabled)busy(true);
+   var b=O(k+'submit-btn');if(!b)return;st.snd=Date.now();sndUnlock();b.click();if(b.disabled)busy(true);
   }
   else if(a==='cord')copy(st.ord,'تم نسخ رقم الطلب');
   else if(a==='go'){closeM();if(window.NAcademy&&NAcademy.openCourse)NAcademy.openCourse(cid)}
