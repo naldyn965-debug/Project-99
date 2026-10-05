@@ -20033,6 +20033,7 @@ document.addEventListener('DOMContentLoaded', function() {
 .nbco .nbco-btn:focus-visible{border-radius:99px}.nbco .nbco-cp:focus-visible{border-radius:99px}.nbco .nbco-ib:focus-visible{border-radius:50%}.nbco .nbco-tab:focus-visible{border-radius:15px}.nbco-in::placeholder{color:#a9b6ae}
 .nbco-in.err{border-color:#d64545;animation:nbcoShake .4s}.nbco-em{color:#c23a3a;font-size:12.5px;font-weight:700;min-height:18px;margin:6px 2px 8px}
 .nbco-note{display:flex;gap:9px;align-items:flex-start;background:var(--gs);border-radius:14px;padding:12px 14px;font-size:12.5px;line-height:1.6;color:#3b5a46;margin:0 0 22px}.nbco-note svg{margin-top:2px;color:var(--g)}
+.nbco-ex{display:inline-block;margin-inline-start:2px;padding:1px 9px;border-radius:8px;background:#fff;border:1px solid #cfe3d6;color:var(--g);font-weight:800;font-size:13.5px;letter-spacing:.12em;line-height:1.5;vertical-align:baseline}
 .nbco-center{text-align:center;padding-top:34px}.nbco-center .nbco-p{margin-bottom:18px}
 .nbco-ring{position:relative;width:104px;height:104px;border-radius:50%;margin:0 auto 22px;display:grid;place-items:center;background:radial-gradient(circle,#e3f5ea 55%,#f1faf4 56%);font-size:44px;color:var(--g)}
 .nbco-ring::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(45,154,88,.25);animation:nbcoRing 2.2s infinite}
@@ -20144,9 +20145,9 @@ function build(ov){
    [].forEach.call(tb.querySelectorAll('.nbco-tab'),function(b){var on=b.getAttribute('data-a')==='m-'+st.m;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
    Q('pvf').hidden=ip;Q('pip').hidden=!ip}
   Q('vp').textContent=ip?'أدخل اسم حساب انستاباي (Username / IPA) الذي أرسلت منه المبلغ.':'أدخل رقم Vodafone Cash الذي أرسلت منه المبلغ.';
-  Q('vn').textContent=ip?'استخدم نفس الحساب الذي تم إرسال المبلغ منه للتحقق من عملية الدفع.':'استخدم نفس الرقم الذي تم إرسال المبلغ منه للتحقق من عملية الدفع.';
+  Q('vn').innerHTML=ip?'استخدم نفس الحساب الذي تم إرسال المبلغ منه للتحقق من عملية الدفع.':'استخدم نفس الرقم الذي تم إرسال المبلغ منه للتحقق من عملية الدفع. وإذا لم يتوفر لديك الرقم، اكتب رقم العملية الموجود في رسالة التحويل، مثال: <bdi dir="ltr" class="nbco-ex">02**********</bdi>';
   Q('vl').textContent=ip?'اسم حساب انستاباي المرسل منه':'رقم Vodafone Cash المرسل منه';
-  var f=fFrom;f.type=ip?'text':'tel';f.setAttribute('inputmode',ip?'email':'numeric');f.maxLength=ip?60:11;
+  var f=fFrom;f.type=ip?'text':'tel';f.setAttribute('inputmode',ip?'email':'numeric');f.maxLength=ip?60:12;
   f.placeholder=ip?'example@instapay':'01012345678';f.setAttribute('autocapitalize','none');f.setAttribute('autocorrect','off');f.spellcheck=false;
   f.value='';clr(f);
  }
@@ -20217,8 +20218,8 @@ function build(ov){
    var v=en(fFrom.value).trim();
    if(st.m==='ip'){if(v.length<3)return bad(fFrom,'برجاء إدخال اسم حساب انستاباي')}
    else{if(!v)return bad(fFrom,'برجاء إدخال رقم Vodafone Cash الذي أرسلت منه المبلغ');
-    if(/[^\d\s+\-]/.test(v))return bad(fFrom,'رقم الهاتف يجب أن يحتوي على أرقام فقط');
-    v=v.replace(/[\s\-]/g,'');if(v.replace(/\D/g,'').length<10)return bad(fFrom,'رقم الهاتف غير مكتمل')}
+    if(/[^\d\s+\-]/.test(v))return bad(fFrom,'برجاء إدخال أرقام فقط');
+    v=v.replace(/[\s\-]/g,'');var dl=v.replace(/\D/g,'').length;if(dl<10)return bad(fFrom,'الرقم غير مكتمل');if(dl>12)return bad(fFrom,'الرقم أطول من المطلوب (12 رقمًا كحد أقصى)')}
    fFrom.value=v;go('data');setTimeout(function(){try{fMe.focus({preventScroll:true})}catch(x){}},420);
   }
   else if(a==='send'){
