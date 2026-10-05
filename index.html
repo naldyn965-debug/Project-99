@@ -19976,9 +19976,8 @@ document.addEventListener('DOMContentLoaded', function() {
 .nbco[data-st=received] .nbco-top,.nbco[data-st=active] .nbco-top{display:none}
 .nbco-ib{width:38px;height:38px;border-radius:50%;border:0;background:#f2f6f3;color:var(--tx);font-size:18px;display:grid;place-items:center;cursor:pointer;transition:background .2s,transform .15s}
 .nbco-ib:active{transform:scale(.92)}.nbco-ib:disabled{opacity:.4}
-.nbco-brand{display:flex;align-items:center;gap:8px;direction:ltr;font-family:var(--f-display,inherit);font-weight:800;font-size:22px;line-height:1;letter-spacing:.01em;color:var(--tx)}
-.nbco-brand b{color:var(--g);font-weight:inherit}
-.nbco-brand svg{width:36px;height:36px;fill:none;stroke-width:2.4;overflow:visible;filter:drop-shadow(0 3px 5px rgba(27,107,58,.30));animation:nbcoLogo .8s cubic-bezier(.34,1.56,.64,1) both}
+.nbco-brand{display:flex;align-items:center;gap:7px;direction:ltr;font-weight:800;font-size:17px;line-height:1;color:var(--g)}
+.nbco-brand svg{width:22px;height:22px;fill:none;stroke-width:2.5;overflow:visible;filter:drop-shadow(0 1px 2px rgba(27,107,58,.25));animation:nbcoLogo .7s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes nbcoLogo{from{opacity:0;transform:scale(.6) rotate(-12deg)}to{opacity:1;transform:none}}
 .nbco [hidden]{display:none!important}.nbco-s{display:none}.nbco-s.on{display:block}
 .nbco-s.on>*{animation:nbcoIn .55s cubic-bezier(.22,1,.36,1) both}
@@ -20092,7 +20091,7 @@ function build(ov){
  var fid='nbco-'+p+'-',st={s:'pay',un:null,busy:false,ord:'',num:'',m:'vf'};
  var root=document.createElement('div');root.className='nbco';
  root.innerHTML=
- '<div class="nbco-top"><button type="button" class="nbco-ib" data-a="back" aria-label="رجوع"></button><div class="nbco-brand">'+brandSvg(p)+'<span><b>N</b>abtex</span></div><span style="width:38px"></span></div>'+
+ '<div class="nbco-top"><button type="button" class="nbco-ib" data-a="back" aria-label="رجوع"></button><div class="nbco-brand">'+brandSvg(p)+'<span>Nabtex</span></div><span style="width:38px"></span></div>'+
  '<div class="nbco-prog" hidden></div>'+
  '<section class="nbco-s" data-s="pay">'+
   '<div class="nbco-course"><div class="nbco-cico" data-f="ico"></div><div><h2 data-f="title"></h2><p data-f="sub"></p></div></div>'+
