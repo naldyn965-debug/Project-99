@@ -19997,14 +19997,23 @@ document.addEventListener('DOMContentLoaded', function() {
 .nbco-off{background:#dff3e6;color:var(--g);font-size:12px;font-weight:800;padding:4px 11px;border-radius:99px}
 .nbco-lbl,.nbco-fl{font-size:13px;font-weight:800;margin:0 0 8px;color:var(--tx)}.nbco-fl em{font-style:normal;font-weight:600;color:var(--mu);font-size:12px;margin-inline-start:4px}
 .nbco-method{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;padding:14px 16px;border:1px solid var(--ln);border-radius:20px;background:#fbfdfc;margin-bottom:10px}
-.nbco-mi{width:46px;height:46px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);display:grid;place-items:center;overflow:hidden}.nbco-mi img{width:34px;height:auto}.nbco-mi svg{font-size:22px;color:#e53030}
+.nbco-mi{width:46px;height:46px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);display:grid;place-items:center;overflow:hidden}.nbco-mi img{width:34px;height:auto}.nbco-method[hidden]{display:none}.nbco-mi svg{font-size:22px;color:#e53030}
 .nbco-method b{display:block;font-size:14.5px}.nbco-hint b{display:inline;font-size:inherit}.nbco-num{display:block;direction:ltr;text-align:right;font-size:18px;font-weight:800;letter-spacing:.04em;margin-top:2px}
 .nbco-cp{border:0;background:var(--gs);color:var(--g);font:inherit;font-size:12.5px;font-weight:800;padding:8px 14px;border-radius:99px;display:flex;gap:6px;align-items:center;cursor:pointer;transition:all .25s}.nbco-cp.ok{background:var(--g);color:#fff}
 .nbco-hint{grid-column:1/-1;margin:8px 0 0;padding-top:10px;border-top:1px dashed var(--ln);font-size:13px;color:#47604f}
-.nbco-ipx{font-size:12.5px;color:var(--mu);margin:0 4px 14px}
-.nbco-ipd{margin:0 0 14px;border:1px solid var(--ln);border-radius:16px;padding:0 14px;font-size:13px}.nbco-ipd summary{padding:12px 0;font-weight:700;cursor:pointer;color:var(--g)}
-.nbco-ipd .vcash-num-lbl{color:var(--mu);font-size:12px;opacity:1;margin:6px 0 2px}.nbco-ipd .vcash-num{color:var(--tx);font-size:16px;text-align:right}
-.nbco-ipd .vcash-copy-btn{background:var(--gs);color:var(--g);margin-bottom:8px}.nbco-ipd .vcash-info-divider{background:var(--ln);margin:6px 0}
+.nbco-tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#eff4f1;border-radius:20px;padding:5px;margin-bottom:12px}
+.nbco-tabs::before{content:"";position:absolute;top:5px;bottom:5px;right:5px;width:calc((100% - 16px)/2);background:#fff;border-radius:15px;box-shadow:0 3px 12px rgba(27,107,58,.16);transition:transform .38s cubic-bezier(.22,1,.36,1)}
+.nbco-tabs[data-m=ip]::before{transform:translateX(calc(-100% - 6px))}
+.nbco-tab{position:relative;z-index:1;border:0;background:transparent;height:50px;border-radius:15px;display:flex;align-items:center;justify-content:center;gap:9px;font:inherit;font-size:14px;font-weight:800;color:var(--mu);cursor:pointer;transition:color .25s,transform .15s}
+.nbco-tab:active{transform:scale(.97)}.nbco-tab.on{color:var(--tx)}
+.nbco-tab img{height:24px;width:auto;max-width:48px;object-fit:contain;filter:grayscale(1);opacity:.55;transition:filter .3s,opacity .3s}.nbco-tab.on img{filter:none;opacity:1}
+.nbco-tab svg{font-size:20px}
+.nbco-pp{animation:nbcoIn .4s cubic-bezier(.22,1,.36,1) both}
+.nbco-idrow{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0}
+.nbco-idrow+.nbco-idrow{border-top:1px solid var(--ln)}
+.nbco-idrow small{display:block;font-size:12px;color:var(--mu);font-weight:700;margin-bottom:2px}
+.nbco-idrow .nbco-num{margin-top:0;word-break:break-all;font-size:17px}
+.nbco-ipmsg{grid-column:1/-1;font-size:13px;color:#47604f;padding:6px 0}
 .nbco-q{font-size:17px;font-weight:800;margin:18px 0 12px}
 .nbco-btn{width:100%;height:54px;border-radius:99px;font:inherit;font-size:15.5px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;border:1.5px solid transparent;margin-bottom:10px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .25s,opacity .2s}
 .nbco-btn:active{transform:scale(.975)}.nbco-btn svg{font-size:18px}
@@ -20074,7 +20083,7 @@ function build(ov){
  var p=ov.id.replace('-overlay',''),box=ov.querySelector('.vcash-box');
  if(!box||ov._nb||!CID[p])return;
  var cid=CID[p],hasIP=!!$(p+'-ip-submit-btn'),O=function(n){return $(p+'-'+n)};
- var fid='nbco-'+p+'-',st={s:'pay',un:null,busy:false,ord:'',num:''};
+ var fid='nbco-'+p+'-',st={s:'pay',un:null,busy:false,ord:'',num:'',m:'vf'};
  var root=document.createElement('div');root.className='nbco';
  root.innerHTML=
  '<div class="nbco-top"><button type="button" class="nbco-ib" data-a="back" aria-label="رجوع"></button><div class="nbco-brand">'+I.lf+'Nabtex</div><span style="width:38px"></span></div>'+
@@ -20082,18 +20091,19 @@ function build(ov){
  '<section class="nbco-s" data-s="pay">'+
   '<div class="nbco-course"><div class="nbco-cico" data-f="ico"></div><div><h2 data-f="title"></h2><p data-f="sub"></p></div></div>'+
   '<div class="nbco-price"><div><span class="nbco-amt" data-f="amt"></span><span class="nbco-cur">جنيه</span></div><div class="nbco-oldw" data-f="oldw"><span class="nbco-off" data-f="off"></span><s data-f="old"></s></div></div>'+
-  '<div class="nbco-lbl">ادفع عبر</div>'+
-  '<div class="nbco-method"><div class="nbco-mi" data-f="mi"></div><div><b>Vodafone Cash</b><span class="nbco-num" data-f="num"></span></div><button type="button" class="nbco-cp" data-a="copy">'+I.cp+'<span>نسخ</span></button><p class="nbco-hint">أرسل <b data-f="amt2"></b> جنيه إلى الرقم الموضح أعلاه.</p></div>'+
-  '<div class="nbco-ipx" data-f="ipx" hidden></div><details class="nbco-ipd" data-f="ipd" hidden><summary>الدفع عبر InstaPay بدلًا من ذلك</summary><div data-f="ipb"></div></details>'+
+  '<div class="nbco-lbl">'+(hasIP?'اختر وسيلة الدفع':'ادفع عبر')+'</div>'+
+  (hasIP?'<div class="nbco-tabs" data-f="tabs" data-m="vf" role="tablist"><button type="button" class="nbco-tab on" data-a="m-vf" role="tab" aria-selected="true"><span data-f="tvf"></span><span>Vodafone Cash</span></button><button type="button" class="nbco-tab" data-a="m-ip" role="tab" aria-selected="false"><span data-f="tip"></span><span>InstaPay</span></button></div>':'')+
+  '<div class="nbco-method nbco-pp" data-f="pvf"><div class="nbco-mi" data-f="mi"></div><div><b>Vodafone Cash</b><span class="nbco-num" data-f="num"></span></div><button type="button" class="nbco-cp" data-a="copy">'+I.cp+'<span>نسخ</span></button><p class="nbco-hint">أرسل <b data-f="amt2"></b> جنيه إلى الرقم الموضح أعلاه.</p></div>'+
+  (hasIP?'<div class="nbco-method nbco-pp" data-f="pip" hidden><div class="nbco-mi" data-f="mi2"></div><div><b>InstaPay</b></div><span></span><div data-f="ipr" style="display:contents"></div><p class="nbco-hint">أرسل <b data-f="amt3"></b> جنيه إلى حساب انستاباي الموضح أعلاه.</p></div>':'')+
   '<div class="nbco-q">هل أرسلت المبلغ؟</div>'+
   '<button type="button" class="nbco-btn p" data-a="sent"><span>نعم، تم التحويل</span>'+I.fw+'</button>'+
   '<button type="button" class="nbco-btn s" data-a="no">لا، لم أرسل بعد</button>'+
   '<div class="nbco-sec">'+I.lk+'<span>بياناتك آمنة ومشفرة</span></div></section>'+
  '<section class="nbco-s" data-s="verify"><div class="nbco-stp">الخطوة 2 من 3</div><h2 class="nbco-h">تأكيد عملية التحويل</h2>'+
-  '<p class="nbco-p">أدخل رقم '+(hasIP?'Vodafone Cash أو انستاباي':'Vodafone Cash')+' الذي أرسلت منه المبلغ.</p>'+
-  '<label class="nbco-fl" for="'+fid+'from">رقم '+(hasIP?'Vodafone Cash أو انستاباي':'Vodafone Cash')+' المرسل منه</label>'+
-  '<input class="nbco-in" id="'+fid+'from" type="text" dir="ltr" autocomplete="off" maxlength="40" placeholder="01012345678" enterkeyhint="next"><div class="nbco-em"></div>'+
-  '<div class="nbco-note">'+I.inf+'<span>استخدم نفس الرقم الذي تم إرسال المبلغ منه للتحقق من عملية الدفع.</span></div>'+
+  '<p class="nbco-p" data-f="vp"></p>'+
+  '<label class="nbco-fl" for="'+fid+'from" data-f="vl"></label>'+
+  '<input class="nbco-in" id="'+fid+'from" type="tel" dir="ltr" autocomplete="off" enterkeyhint="next"><div class="nbco-em"></div>'+
+  '<div class="nbco-note">'+I.inf+'<span data-f="vn"></span></div>'+
   '<button type="button" class="nbco-btn p" data-a="next"><span>متابعة</span>'+I.fw+'</button></section>'+
  '<section class="nbco-s" data-s="data"><div class="nbco-stp">الخطوة 3 من 3</div><h2 class="nbco-h">بيانات التواصل</h2>'+
   '<p class="nbco-p">أدخل رقم هاتفك الشخصي للتواصل معك بخصوص تفعيل الكورس.</p>'+
@@ -20119,7 +20129,22 @@ function build(ov){
      secs=root.querySelectorAll('.nbco-s'),prog=root.querySelector('.nbco-prog'),back=root.querySelector('[data-a=back]'),
      fFrom=$(fid+'from'),fMe=$(fid+'me'),fCode=$(fid+'code');
  var logo=ov.querySelector('.vcash-method-card.vodafone img');
- Q('mi').innerHTML=logo?'<img alt="Vodafone" src="'+logo.src+'">':I.wl;
+ var logoIP=ov.querySelector('.vcash-method-card.instapay img'),vfI=logo?'<img alt="" src="'+logo.src+'">':I.wl;
+ Q('mi').innerHTML=vfI;
+ if(hasIP){Q('tvf').innerHTML=vfI;Q('tip').innerHTML=logoIP?'<img alt="" src="'+logoIP.src+'">':I.wl;Q('mi2').innerHTML=logoIP?'<img alt="" src="'+logoIP.src+'">':I.wl}
+ function esc(x){return String(x).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+ function setM(m){
+  st.m=hasIP&&m==='ip'?'ip':'vf';var ip=st.m==='ip';
+  if(hasIP){var tb=Q('tabs');tb.setAttribute('data-m',st.m);
+   [].forEach.call(tb.querySelectorAll('.nbco-tab'),function(b){var on=b.getAttribute('data-a')==='m-'+st.m;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
+   Q('pvf').hidden=ip;Q('pip').hidden=!ip}
+  Q('vp').textContent=ip?'أدخل اسم حساب انستاباي (Username / IPA) الذي أرسلت منه المبلغ.':'أدخل رقم Vodafone Cash الذي أرسلت منه المبلغ.';
+  Q('vn').textContent=ip?'استخدم نفس الحساب الذي تم إرسال المبلغ منه للتحقق من عملية الدفع.':'استخدم نفس الرقم الذي تم إرسال المبلغ منه للتحقق من عملية الدفع.';
+  Q('vl').textContent=ip?'اسم حساب انستاباي المرسل منه':'رقم Vodafone Cash المرسل منه';
+  var f=fFrom;f.type=ip?'text':'tel';f.setAttribute('inputmode',ip?'email':'numeric');f.maxLength=ip?60:11;
+  f.placeholder=ip?'example@instapay':'01012345678';f.setAttribute('autocapitalize','none');f.setAttribute('autocorrect','off');f.spellcheck=false;
+  f.value='';clr(f);
+ }
 
  function progHTML(n){var L=['الدفع','التحقق','البيانات'],h='';
   for(var i=1;i<=3;i++){h+='<div class="nbco-pn '+(i<n?'d':i===n?'c':'')+'"><i>'+(i<n?I.ck:i)+'</i><span>'+L[i-1]+'</span></div>';if(i<3)h+='<div class="nbco-pl'+(i<n?' f':'')+'"></div>'}
@@ -20161,37 +20186,41 @@ function build(ov){
   Q('amt').textContent=amt;Q('amt2').textContent=amt;Q('old').textContent=oldv?oldv+' جنيه':'';Q('off').innerHTML=off?'خصم <bdi dir="ltr">'+off+'%</bdi>':'';
   Q('oldw').hidden=!(oldv||off);Q('old').hidden=!oldv;Q('off').hidden=!off;
   st.num=(O('number')||{}).textContent||'';Q('num').textContent=st.num;
-  var ids=ov.querySelectorAll('#'+p+'-ip-identifiers .vcash-num'),vals=[].map.call(ids,function(e){return e.textContent.trim()});
-  var ipx=Q('ipx'),ipd=Q('ipd');ipx.hidden=ipd.hidden=true;
-  if(hasIP&&vals.length){
-   if(vals.every(function(v){return v===st.num.trim()})){ipx.textContent='يمكنك أيضًا التحويل عبر InstaPay إلى نفس الرقم.';ipx.hidden=false}
-   else{Q('ipb').innerHTML=O('ip-identifiers').innerHTML;ipd.hidden=false;ipd.open=false}
-  }
+  Q('amt2').textContent=amt;
+  if(hasIP){Q('amt3').textContent=amt;var ids=ov.querySelectorAll('#'+p+'-ip-identifiers .vcash-num'),h='';
+   [].forEach.call(ids,function(e){var l=e.previousElementSibling,lb=l&&l.classList.contains('vcash-num-lbl')?l.textContent.trim():'',v=e.textContent.trim();
+    if(v)h+='<div class="nbco-idrow"><div><small>'+esc(lb)+'</small><span class="nbco-num">'+esc(v)+'</span></div><button type="button" class="nbco-cp" data-a="cpv" data-v="'+esc(v)+'">'+I.cp+'<span>نسخ</span></button></div>'});
+   if(!h){var m=O('ip-identifiers');h='<div class="nbco-ipmsg">'+esc(m?m.textContent.trim():'تواصل مع الدعم للحصول على بيانات التحويل')+'</div>';Q('pip').querySelector('.nbco-hint').hidden=true}
+   else Q('pip').querySelector('.nbco-hint').hidden=false;
+   Q('ipr').innerHTML=h}
  }
  function reset(){[fFrom,fMe,fCode].forEach(function(f){f.value='';clr(f)});busy(false);unwatch()}
  function opened(){
   refresh();var pend=O('step-pending')&&O('step-pending').classList.contains('on');
-  reset();if(pend)received();else go('pay');
+  reset();setM('vf');if(pend)received();else go('pay');
  }
 
  root.addEventListener('click',function(e){
   var t=e.target.closest('[data-a]');if(!t||st.busy)return;var a=t.getAttribute('data-a');
   if(a==='close')closeM();
   else if(a==='back')go(st.s==='data'?'verify':'pay');
-  else if(a==='copy'){copy(st.num,'تم نسخ رقم فودافون كاش');var c=t.querySelector('span');c.textContent='تم النسخ';t.classList.add('ok');setTimeout(function(){c.textContent='نسخ';t.classList.remove('ok')},1800)}
+  else if(a==='copy'||a==='cpv'){copy(a==='cpv'?t.getAttribute('data-v'):st.num,a==='cpv'?'تم النسخ':'تم نسخ رقم فودافون كاش');var c=t.querySelector('span');c.textContent='تم النسخ';t.classList.add('ok');setTimeout(function(){c.textContent='نسخ';t.classList.remove('ok')},1800)}
+  else if(a==='m-vf'||a==='m-ip')setM(a.slice(2));
   else if(a==='sent'){go('verify');setTimeout(function(){try{fFrom.focus({preventScroll:true})}catch(x){}},420)}
   else if(a==='no'){closeM();toast('يمكنك العودة لإتمام الاشتراك بعد التحويل','inf')}
   else if(a==='next'){
-   var v=en(fFrom.value).trim();if(!v)return bad(fFrom,'برجاء إدخال الرقم الذي أرسلت منه المبلغ');
-   if(/^[\d\s+\-]+$/.test(v)){if(v.replace(/\D/g,'').length<10)return bad(fFrom,'رقم الهاتف غير مكتمل')}
-   else if(!hasIP||v.length<3)return bad(fFrom,'برجاء إدخال رقم الهاتف المُرسِل');
+   var v=en(fFrom.value).trim();
+   if(st.m==='ip'){if(v.length<3)return bad(fFrom,'برجاء إدخال اسم حساب انستاباي')}
+   else{if(!v)return bad(fFrom,'برجاء إدخال رقم Vodafone Cash الذي أرسلت منه المبلغ');
+    if(/[^\d\s+\-]/.test(v))return bad(fFrom,'رقم الهاتف يجب أن يحتوي على أرقام فقط');
+    v=v.replace(/[\s\-]/g,'');if(v.replace(/\D/g,'').length<10)return bad(fFrom,'رقم الهاتف غير مكتمل')}
    fFrom.value=v;go('data');setTimeout(function(){try{fMe.focus({preventScroll:true})}catch(x){}},420);
   }
   else if(a==='send'){
    var me=en(fMe.value).replace(/\s/g,'');if(!/^\d{10,11}$/.test(me))return bad(fMe,'برجاء إدخال رقم هاتفك الشخصي بشكل صحيح');
-   var from=en(fFrom.value).trim(),isPh=/^[\d\s+\-]+$/.test(from),ip=hasIP&&!isPh,k=ip?'ip-':'';
+   var from=en(fFrom.value).trim(),ip=hasIP&&st.m==='ip',k=ip?'ip-':'';
    var set=function(n,v){var el=O(k+n);if(el)el.value=v};
-   set('phone',isPh?from.replace(/[\s\-]/g,''):from);set('ref',me);set('refcode',fCode.value.trim());
+   set('phone',ip?from:from.replace(/[\s\-]/g,''));set('ref',me);set('refcode',fCode.value.trim());
    var b=O(k+'submit-btn');if(!b)return;b.click();if(b.disabled)busy(true);
   }
   else if(a==='cord')copy(st.ord,'تم نسخ رقم الطلب');
