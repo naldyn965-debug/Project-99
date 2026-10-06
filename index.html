@@ -5652,15 +5652,16 @@ body.modal-open { overflow: hidden; }
 </script>
 
 <style id="pwsel-css">
-/* Password fields — iOS text-selection handles (blue knobs) were being painted over by the field itself:
-   (1) the global :focus-visible ring (2.5px outline, 3px offset) covered the outer half of each knob,
-   (2) the input's own opaque background covered the inner half.
-   The white background moves to the wrapper (same colour / radius / size, so nothing shifts) and the extra
-   ring is dropped for these fields only — the existing border-colour + soft-shadow focus style stays.
-   Presentation only: no markup, JS or auth logic is touched. */
-#auth-bg .authx-pw{background:var(--card);border-radius:16px}
-#auth-bg .authx-pw input[data-pw]{background-color:transparent}
-#auth-bg .authx-pw input[data-pw]:focus-visible{outline:none}
+/* Auth inputs (login / register / forgot / reset) — make text selection visible. Presentation only.
+   1) ::selection was 10% green = invisible on every field, so a selected value looked untouched.
+   2) the global :focus-visible ring (2.5px outline) was painted over the iOS selection handles.
+   3) the field fill was fully opaque; iOS draws the selection handles/bars UNDER the card's scrolled
+      content, so an opaque fill hid them. A 60% fill is visually the same (card colour is almost the
+      page colour) but lets the handles show through. */
+#auth-bg .fg input::selection{background:rgba(27,107,58,.32);color:inherit}
+[data-dark] #auth-bg .fg input::selection{background:rgba(95,201,126,.4);color:inherit}
+#auth-bg .fg input:focus-visible{outline:none}
+#auth-bg .fg input{background-color:color-mix(in srgb,var(--card) 60%,transparent)}
 </style>
 
 <style id="authx-topline-css">
