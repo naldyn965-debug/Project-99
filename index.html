@@ -5651,6 +5651,23 @@ body.modal-open { overflow: hidden; }
 })();
 </script>
 
+<style id="pwsel-css">
+/* Password fields — iOS text-selection handles (blue knobs) were being painted over by the field itself:
+   (1) the global :focus-visible ring (2.5px outline, 3px offset) covered the outer half of each knob,
+   (2) the input's own opaque background covered the inner half.
+   The white background moves to the wrapper (same colour / radius / size, so nothing shifts) and the extra
+   ring is dropped for these fields only — the existing border-colour + soft-shadow focus style stays.
+   Presentation only: no markup, JS or auth logic is touched. */
+#auth-bg .authx-pw{background:var(--card);border-radius:16px}
+#auth-bg .authx-pw input[data-pw]{background-color:transparent}
+#auth-bg .authx-pw input[data-pw]:focus-visible{outline:none}
+</style>
+
+<style id="authx-topline-css">
+/* Login / register card: remove the animated green accent strip on the card's top edge (presentation only). */
+#auth-bg .auth-box::before{display:none}
+</style>
+
 <!-- ══════════════════════════════════════════════════════════════
      🛒 AGRICULTURAL MARKETPLACE — INDEPENDENT MODULE PAGE
 ══════════════════════════════════════════════════════════════ -->
