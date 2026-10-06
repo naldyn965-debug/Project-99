@@ -23247,5 +23247,19 @@ document.querySelectorAll('.vcash-overlay').forEach(_watch);
 [data-dark] .logo-mark stop:last-child{stop-color:#2f9d5a}
 </style>
 
+<style id="nb-logo-balance">
+/* ═══════════════════════════════════════════════════════════════
+   LOGO (الهيدر) — توازن حجم رمز النبتة مع كلمة Nabtex
+   إضافة فقط (override) — لا تغيير في الـ HTML أو الـ JS ولا في أي عنصر تاني.
+   الرمز: 28px → 34px (نفس الشكل والتدرّج والسُمك النسبي).
+   الصندوق 36 → 40px والمسافة 10 → 6px: مجموعهم ثابت (46px) فعرض اللوجو الكلي
+   ومحاذاة الحافة اليمنى وأماكن الأزرار المجاورة ما بتتحركش.
+   لتكبير/تصغير الرمز عدّل --nb-mark فقط. للتراجع: امسح البلوك ده.
+═══════════════════════════════════════════════════════════════ */
+.nav .logo{--nb-mark:34px;gap:6px}
+.nav .logo-mark{width:calc(var(--nb-mark) + 6px);height:calc(var(--nb-mark) + 6px)}
+.nav .logo-mark svg{width:var(--nb-mark);height:var(--nb-mark)}
+</style>
+
 </body>
 </html>
