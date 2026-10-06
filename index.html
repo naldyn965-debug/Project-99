@@ -5263,7 +5263,8 @@ body.modal-open { overflow: hidden; }
         <div class="fg"><label>البريد الإلكتروني</label><input type="email" required placeholder="your@email.com"></div>
         <div class="fg"><label>كلمة المرور</label><div class="authx-pw"><input type="password" required minlength="8" oninput="chkStr(this.value)" data-pw autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="أدخل كلمة المرور"><button type="button" class="authx-eye" onclick="authxTogglePw(this)" aria-label="إظهار كلمة المرور" aria-pressed="false"><svg class="e-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="e-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 6.1A10 10 0 0112 6c6.4 0 10 6 10 6a17 17 0 01-3.2 3.9M6.6 7.6C3.8 9.4 2 12 2 12s3.6 7 10 7c1.7 0 3.2-.4 4.5-1"/><path d="M9.9 9.9a3 3 0 004.2 4.2"/></svg></button></div><div class="str-bar"><div class="str-f" id="str-f"></div></div></div>
         <div class="fg"><label>تأكيد كلمة المرور</label><div class="authx-pw"><input type="password" required minlength="8" data-pw autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="أعد إدخال كلمة المرور"><button type="button" class="authx-eye" onclick="authxTogglePw(this)" aria-label="إظهار كلمة المرور" aria-pressed="false"><svg class="e-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="e-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 6.1A10 10 0 0112 6c6.4 0 10 6 10 6a17 17 0 01-3.2 3.9M6.6 7.6C3.8 9.4 2 12 2 12s3.6 7 10 7c1.7 0 3.2-.4 4.5-1"/><path d="M9.9 9.9a3 3 0 004.2 4.2"/></svg></button></div></div>
-        <div class="fg"><label>دورك</label><select><option>🌾 مزارع</option><option>👨‍🔬 خبير زراعي</option><option>🎓 طالب</option><option>🏢 شركة</option></select></div>
+        <!-- role select intentionally hidden: hReg() needs it; the option marked selected (طالب) is submitted -->
+        <div class="fg" style="display:none" aria-hidden="true"><label>دورك</label><select><option>🌾 مزارع</option><option>👨‍🔬 خبير زراعي</option><option selected>🎓 طالب</option><option>🏢 شركة</option></select></div>
         <button type="submit" class="btn-sub">إنشاء الحساب</button>
         <div class="adiv">أو</div>
         <button type="button" class="btn-goo" onclick="signInWithGoogle('reg')">
@@ -5344,7 +5345,6 @@ body.modal-open { overflow: hidden; }
 #auth-bg .fg input[type="email"]{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238aa497' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='3'/%3E%3Cpath d='M3 8l9 6 9-6'/%3E%3C/svg%3E")}
 #auth-bg .fg input[type="password"],#auth-bg .fg input[data-pw]{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238aa497' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='9' rx='3'/%3E%3Cpath d='M8 11V8a4 4 0 018 0v3'/%3E%3C/svg%3E")}
 #auth-bg .fg input[type="text"]:not([data-pw]){background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238aa497' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c1-4 4-6 8-6s7 2 8 6'/%3E%3C/svg%3E")}
-#auth-bg .fg select{-webkit-appearance:none;appearance:none;padding-left:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238aa497' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='7' width='18' height='13' rx='3'/%3E%3Cpath d='M9 7V5.5A1.5 1.5 0 0110.5 4h3A1.5 1.5 0 0115 5.5V7M3 13h18'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238aa497' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-position:right 15px center,left 15px center;background-size:20px,16px}
 #auth-bg .fg .authx-pw input{padding-left:50px}
 #auth-bg .str-bar{height:3px;margin-top:0;background:var(--line)}
 #af-r.aform{gap:12px}
@@ -5397,7 +5397,7 @@ body.modal-open { overflow: hidden; }
 #auth-bg .aform > .fg:nth-of-type(1){--i:4}#auth-bg .aform > .fg:nth-of-type(2){--i:5}
 #auth-bg .aform > .fg:nth-of-type(3){--i:6}#auth-bg .aform > .fg:nth-of-type(4){--i:7}
 #auth-bg .aform > .fg:nth-of-type(5){--i:8}
-#af-l{--cta:7}#af-r{--cta:9}#af-fp{--cta:5}#af-np{--cta:6}
+#af-l{--cta:7}#af-r{--cta:8}#af-fp{--cta:5}#af-np{--cta:6}
 #auth-bg .fp-link{--i:6}
 #auth-bg .aform .btn-sub{--i:var(--cta)}
 #auth-bg .aform .adiv,#auth-bg .aform .btn-goo,#auth-bg .aform .authx-alt,#auth-bg .aform .fp-back{--i:calc(var(--cta) + 1)}
@@ -10340,6 +10340,10 @@ async function signInWithGoogle(intent) {
       await auth.signOut();
       showToast('فشل التسجيل: هذا الحساب مسجل بالفعل، سجّل الدخول بدلاً من ذلك', 'err');
       return;
+    }
+    if (isNewUser) {
+      // الدور الافتراضي لحسابات Google الجديدة: طالب (نفس التسجيل بالإيميل)
+      db.collection('users').doc(result.user.uid).set({ role: '🎓 طالب' }, { merge: true }).catch(console.error);
     }
     showToast(`مرحباً ${result.user.displayName || result.user.email}`, 'ok');
     closeAuth();
