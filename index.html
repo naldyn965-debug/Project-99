@@ -5670,15 +5670,14 @@ body.modal-open { overflow: hidden; }
 </style>
 
 <style id="authx-illus-css">
-/* Login / register header illustration — separate the character from its backdrop and balance the backdrop
-   between themes (presentation only; same shapes, same animations, only colours/alphas).
-   Light: glow + disc were too faint (pale green on near-white)  -> stronger.
-   Dark : the same bright glow + a green disc sat right on the green hoodie/backpack -> calmer glow and a
-          lighter neutral disc, so the dark-green character reads clearly against it. */
-#auth-bg{--axh-g:rgba(52,176,96,.62);--axh-g0:rgba(52,176,96,0);--axh-y:rgba(228,178,60,.5);--axh-y0:rgba(228,178,60,0);--axh-blob:#d5ebdd}
-[data-dark] #auth-bg{--axh-g:rgba(95,201,126,.27);--axh-g0:rgba(95,201,126,0);--axh-y:rgba(233,196,106,.17);--axh-y0:rgba(233,196,106,0);--axh-blob:rgba(206,236,220,.1)}
-#auth-bg .authx-illus::before{background:radial-gradient(44% 50% at 34% 52%,var(--axh-g),var(--axh-g0) 70%),radial-gradient(38% 46% at 68% 54%,var(--axh-y),var(--axh-y0) 72%)}
-#auth-bg .ax-blob{fill:var(--axh-blob)}
+/* Login / register header illustration — colours/alphas only (same shapes, same animations). Presentation only.
+   Light: glow + disc were too faint and read as two detached stains -> stronger glow, a soft centre glow that
+          ties them to the character, a cleaner gold, and a thin ring so the disc is clearly separated.
+   Dark : unchanged look (calmer glow + lighter neutral disc); the centre glow and ring are switched off. */
+#auth-bg{--axh-g:rgba(52,176,96,.5);--axh-g0:rgba(52,176,96,0);--axh-y:rgba(250,200,100,.55);--axh-y0:rgba(250,200,100,0);--axh-c:rgba(70,190,115,.42);--axh-c0:rgba(70,190,115,0);--axh-blob:#cdeadb;--axh-ring:rgba(30,140,80,.22)}
+[data-dark] #auth-bg{--axh-g:rgba(95,201,126,.27);--axh-g0:rgba(95,201,126,0);--axh-y:rgba(233,196,106,.17);--axh-y0:rgba(233,196,106,0);--axh-c:rgba(95,201,126,0);--axh-c0:rgba(95,201,126,0);--axh-blob:rgba(206,236,220,.1);--axh-ring:rgba(206,236,220,0)}
+#auth-bg .authx-illus::before{background:radial-gradient(44% 50% at 34% 52%,var(--axh-g),var(--axh-g0) 70%),radial-gradient(38% 46% at 68% 54%,var(--axh-y),var(--axh-y0) 72%),radial-gradient(26% 42% at 50% 66%,var(--axh-c),var(--axh-c0) 70%)}
+#auth-bg .ax-blob{fill:var(--axh-blob);stroke:var(--axh-ring);stroke-width:1.2}
 </style>
 
 <!-- ══════════════════════════════════════════════════════════════
