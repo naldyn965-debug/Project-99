@@ -27,25 +27,89 @@ service cloud.firestore {
     }
     function fsPrice(plan) { return plan == 'monthly' ? 149 : (plan == 'annual' ? 999 : -1); }
 
+    // ── AI ASSISTANT SUBSCRIPTIONS (المساعد الذكي) — منفصلة عن اشتراكات إدارة المزرعة ─────────────
+    // ai_subscriptions/{uid}: trial = 2 days (client creates it ONCE, pinned to server time); paidUntil/plan are written by admin only.
+    // Daily points (ai_usage) are capped HERE, so the limits hold even if someone bypasses the UI or calls Firestore directly.
+    //   plan1 (149 EGP): 10 chat + 5 diagnosis · plan2 (199 EGP): 15 + 10 · plan3 PRO (300 EGP): 20 + 15 · 2-day trial: 3 + 2 · Farm Management access (trial/paid): 3 + 3
+    //   per kind the highest applicable source wins. Keep these numbers identical to aiAllowance() in api/farm-ai.js.
+    //   AI-FREE-PLAN: the 2-day trial no longer grants points; every signed-in account gets a permanent free plan = 2 chat + 2 diagnosis per day.
+    //   (old chat line: ... : ((aiTrialOk(uid) || aiFarmOk(uid)) ? 3 : 0))) · old diag line: ... : (aiFarmOk(uid) ? 3 : (aiTrialOk(uid) ? 2 : 0))))
+    function aiDoc(uid) { return /databases/$(database)/documents/ai_subscriptions/$(uid); }
+    // AI-PRICE: Nabtex AI Basic 149 / Plus 199 / Pro 299 (previous: plan1 99). Study plans (study1/2/3) stay 99 / 199 / 299.
+    // (older: plan1 149, plan3 300)
+    function aiPrice(plan) { return plan == 'plan1' ? 149 : (plan == 'plan2' ? 199 : (plan == 'plan3' ? 299 : (plan == 'study1' ? 99 : (plan == 'study2' ? 199 : (plan == 'study3' ? 299 : -1))))); }
+    // STUDY-SPLIT: «ذاكر مع نبتيكس» plans (study1/2/3) = same chat points + prices as plan1/2/3 but NO diagnosis points (diag stays at the free-plan allowance). Old aiPrice (to roll back): plan1 ? 99 : (plan2 ? 199 : (plan3 ? 299 : -1))
+    // STUDY-COUPON: كود خصم لباقات «ذاكر» (study1/2/3) بس. study_coupons/{CODE} = { active: true, pct: 50 (رقم صحيح 1..90), expiresAt: timestamp (اختياري) } — الأدمن بس يكتب. الكود لمرة واحدة لكل حساب (coupon_uses).
+    // السعر بعد الخصم = aiPrice × (100 − pct) / 100 مقرَّبًا لأعلى جنيه (99→50 · 199→100 · 299→150 عند 50%). للتراجع: امسح الدوال الأربع دي + سطر coupon في ai_subscription_payments + match study_coupons.
+    function cpDoc(code) { return /databases/$(database)/documents/study_coupons/$(code); }
+    function cpValid(c) {
+      return c.get('active', false) == true
+        && c.get('expiresAt', timestamp.date(2100, 1, 1)) > request.time
+        && c.get('pct', 0) is int && c.get('pct', 0) >= 1 && c.get('pct', 0) <= 90;
+    }
+    function cpUse(code) { return /databases/$(database)/documents/coupon_uses/$(request.auth.uid + '_' + code); }
+    function cpAmount(c, plan) { return math.ceil(aiPrice(plan) * (100 - c.pct) / 100.0); }
+    function cpOk(code, plan, amount) {
+      return code is string && code.matches('[A-Z0-9_-]{3,24}')
+        && plan in ['study1', 'study2', 'study3']
+        && exists(cpDoc(code))
+        && cpValid(get(cpDoc(code)).data)
+        && !exists(cpUse(code)) && existsAfter(cpUse(code))   // لمرة واحدة لكل حساب: مستند الاستخدام لازم يتكتب في نفس الـ batch ومكانش موجود قبلها
+        && amount == cpAmount(get(cpDoc(code)).data, plan);
+    }
+    function aiPlanIs(uid, p) {
+      return exists(aiDoc(uid)) && get(aiDoc(uid)).data.get('paidUntil', timestamp.value(0)) > request.time
+        && get(aiDoc(uid)).data.get('plan', '') == p;
+    }
+    // AI-FREE-PLAN: removed (unused after the trial was dropped — the console flags unused functions). Old (to roll back):
+    //   function aiTrialOk(uid) { return exists(aiDoc(uid)) && get(aiDoc(uid)).data.get('trialStartedAt', timestamp.value(0)) + duration.value(2, 'd') > request.time; }
+    function aiPlanIn(uid, ps) {
+      return exists(aiDoc(uid)) && get(aiDoc(uid)).data.get('paidUntil', timestamp.value(0)) > request.time
+        && get(aiDoc(uid)).data.get('plan', '') in ps;
+    }
+    function aiFarmOk(uid) {
+      return exists(fsDoc(uid)) && (
+        get(fsDoc(uid)).data.get('trialStartedAt', timestamp.value(0)) + duration.value(7, 'd') > request.time
+        || get(fsDoc(uid)).data.get('paidUntil', timestamp.value(0)) > request.time);
+    }
+    // STUDY-SPLIT: study plans share the chat limits of plan1/2/3. Old (to roll back): aiPlanIs(uid, 'plan3') ? 20 : (aiPlanIs(uid, 'plan2') ? 15 : (aiPlanIs(uid, 'plan1') ? 10 : (aiFarmOk(uid) ? 3 : 2)))
+    function aiChatLim(uid) { return aiPlanIn(uid, ['plan3', 'study3']) ? 20 : (aiPlanIn(uid, ['plan2', 'study2']) ? 15 : (aiPlanIn(uid, ['plan1', 'study1']) ? 10 : (aiFarmOk(uid) ? 3 : 2))); }
+    function aiDiagLim(uid) { return aiPlanIs(uid, 'plan3') ? 15 : (aiPlanIs(uid, 'plan2') ? 10 : (aiPlanIs(uid, 'plan1') ? 5 : (aiFarmOk(uid) ? 3 : 2))); }
+    function aiUN(k) { return request.resource.data.get(k, 0); }
+    function aiUO(k) { return resource.data.get(k, 0); }
+    function aiUsageBounds(uid) {
+      return aiUN('chat') <= aiChatLim(uid) && aiUN('diag') <= aiDiagLim(uid) && aiUN('diagFin') <= 2 * aiUN('diag');
+    }
+
     // ── USERS: access fields (paidCourses / suspendedCourses) are no longer self-editable ──
     // Admin: unrestricted. Student: every other field stays freely writable, but paidCourses may grow by
-    // exactly ONE course, and only in the same write that creates a brand-new reward_redemption event
-    // (the 1000-XP spend itself is validated by the xp_events / xp_wallet rules below).
+    // exactly ONE course, and only for a course whose reward_redemption event (xp_events/{uid}_rd_{course}) already exists.
+    // That event can only be created by the xp_events / xp_wallet rules below, which validate the 1000-XP spend.
+    // The grant is a SEPARATE request after the spend commit: the spend (event + wallet) already uses most of the
+    // 1,000-expressions-per-request budget, so a third write (users) in the same commit exceeded it -> permission-denied.
+    // Old (to roll back, together with the matching redeem() in academy-data.js): same-commit check
+    //   let w = getAfter(/databases/$(database)/documents/xp_wallet/$(uid)).data;
+    //   let e = getAfter(/databases/$(database)/documents/xp_events/$(w.last)).data;
+    //   return e.type == 'reward_redemption' && e.uid == uid && !exists(/databases/$(database)/documents/xp_events/$(w.last))
+    //     && uNew('paidCourses') == uOld('paidCourses').concat([e.cid]);
     function uOld(f) { return resource == null ? [] : resource.data.get(f, []); }
     function uNew(f) { return request.resource.data.get(f, []); }
+    // ROLE-UI: uiRole اختياري، ولو موجود لازم يكون واحدة من 3 قيم. (isSelf(uid) أصلاً بيحصر الكتابة على وثيقة المستخدم نفسه.)
+    // للتراجع: امسح الدالة دي + سطر '&& uiRoleOk()' في match /users.
+    function uiRoleOk() { return !('uiRole' in request.resource.data) || request.resource.data.uiRole in ['farmer', 'student', 'both']; }
     function uRdOk(uid) {
-      let w = getAfter(/databases/$(database)/documents/xp_wallet/$(uid)).data;
-      let e = getAfter(/databases/$(database)/documents/xp_events/$(w.last)).data;
-      return e.type == 'reward_redemption' && e.uid == uid
-        && !exists(/databases/$(database)/documents/xp_events/$(w.last))
-        && uNew('paidCourses') == uOld('paidCourses').concat([e.cid]);
+      let n = uNew('paidCourses');
+      let c = n[n.size() - 1];
+      let e = get(/databases/$(database)/documents/xp_events/$(uid + '_rd_' + c)).data;
+      return n == uOld('paidCourses').concat([c]) && e.type == 'reward_redemption' && e.uid == uid;
     }
 
     match /users/{uid} {
       allow read:  if true;
       allow create, update: if (isSelf(uid)
           && uNew('suspendedCourses') == uOld('suspendedCourses')
-          && (uNew('paidCourses') == uOld('paidCourses') || uRdOk(uid)))
+          && (uNew('paidCourses') == uOld('paidCourses') || uRdOk(uid))
+          && uiRoleOk())   // ROLE-UI
         || isAdmin();
       allow delete: if isSelf(uid) || isAdmin();
     }
@@ -58,7 +122,7 @@ service cloud.firestore {
     // ── FARM DATA: owner-only (userId). Writes also require an active trial/paid subscription.
     //    Reads stay owner-only with no subscription check, so data is NEVER lost or hidden from its owner on expiry.
     match /farms/{docId} {
-      allow read:   if isAuth() && resource.data.userId == request.auth.uid;
+      allow read:   if (isAuth() && resource.data.userId == request.auth.uid) || isAdmin();
       allow create: if isAuth() && request.resource.data.userId == request.auth.uid && farmAccess();
       allow update: if isAuth() && resource.data.userId == request.auth.uid
                     && request.resource.data.userId == request.auth.uid && farmAccess();
@@ -347,6 +411,25 @@ service cloud.firestore {
         && a.xp == resource.data.xp + e.amt && a.xp >= 0
         && a.diff(resource.data).affectedKeys().hasOnly(['xp', 'last']);
     }
+    // REDEEM-LEAN: استبدال 1000 XP بدورة — مسار خفيف مخصوص. المحفظة بتتغيّر في spent (+1000) و last (و nm) فقط، والـ xp والعدّادات ما بتتغيّرش.
+    // الاستبدال كان بيمرّ على xpWalletOk الكبيرة (عشرات المقارنات + قوائم الدورات) وده بيقرّب/بيعدّي حد 1000 تعبير للطلب -> permission-denied.
+    // الترتيب مقصود: الفحص الرخيص (diff) الأول عشان باقي أنواع الأحداث تخرج من المسار ده بسرعة وتكمل على xpWalletOk زي ما هي.
+    // للتراجع: امسح الدالة دي وشيل (isSelf(uid) && xpRedeemOk(uid)) || من match /xp_wallet/{uid}، ورجّع redeem() في academy-data.js (انظر REDEEM-LEAN هناك).
+    function xpRedeemOk(uid) {
+      let a = request.resource.data;
+      return resource != null
+        && a.diff(resource.data).affectedKeys().hasOnly(['spent', 'last', 'nm'])
+        && a.spent == xpB('spent') + 1000
+        && a.xp - a.spent >= 0
+        && a.get('nm', '') is string && a.get('nm', '').size() <= 20
+        && a.last == uid + '_rd_' + getAfter(xpEv(a.last)).data.cid
+        && !exists(xpEv(a.last))
+        && getAfter(xpEv(a.last)).data.type == 'reward_redemption'
+        && getAfter(xpEv(a.last)).data.uid == uid
+        && getAfter(xpEv(a.last)).data.amt == 0
+        && getAfter(xpEv(a.last)).data.key == 'rd_' + getAfter(xpEv(a.last)).data.cid
+        && getAfter(xpEv(a.last)).data.cid in ['mol-bio','food-safety','glp','tissue-culture','pesticide-tech','feed-mgmt','food-microbiology','plant-diseases','bioinformatics','landscape-design','hydroponics-professional','biofertilizers-professional'];
+    }
     // display-name sync: the owner may change only nm (leaderboard name) on an existing wallet doc
     function xpNameOk() {
       let a = request.resource.data;
@@ -387,7 +470,7 @@ service cloud.firestore {
 
     match /xp_wallet/{uid} {
       allow read: if isAuth();
-      allow create, update: if (isSelf(uid) && xpWalletOk(uid)) || (isAdmin() && xpAdminOk(uid)) || (isSelf(uid) && xpNameOk());
+      allow create, update: if (isSelf(uid) && xpRedeemOk(uid)) || (isSelf(uid) && xpWalletOk(uid)) || (isAdmin() && xpAdminOk(uid)) || (isSelf(uid) && xpNameOk());   // REDEEM-LEAN (old: without the xpRedeemOk branch)
       allow delete: if false;
     }
 
@@ -429,7 +512,11 @@ service cloud.firestore {
                     && request.resource.data.amount == fsPrice(request.resource.data.plan)
                     && request.resource.data.currency == 'EGP'
                     && request.resource.data.phone is string
-                    && request.resource.data.phone.matches('[0-9+]{10,15}')
+                    // فودافون كاش: رقم الهاتف المُحوَّل منه — InstaPay: اسم الحساب (Username / IPA) زي دفع الكورسات
+                    && (
+                         (request.resource.data.paymentMethod == 'vodafone_cash' && request.resource.data.phone.matches('[0-9+]{10,15}'))
+                      || (request.resource.data.paymentMethod == 'instapay' && request.resource.data.phone.matches('[A-Za-z0-9._@+-]{3,60}'))
+                       )
                     && request.resource.data.transactionRef is string
                     && request.resource.data.transactionRef.matches('[A-Za-z0-9]{6,40}')
                     && request.resource.data.refKey == request.resource.data.transactionRef.lower()
@@ -446,6 +533,115 @@ service cloud.firestore {
     match /farm_subscription_audit/{logId} {
       allow read: if isAdmin();
       allow write: if false;
+    }
+
+    // ── AI ASSISTANT SUBSCRIPTIONS ──
+    match /ai_subscriptions/{uid} {
+      allow read:   if isSelf(uid) || isAdmin();
+      // one-time 2-day trial: create-only for the user (a second set() is an update → denied); admin may create/update (paid plan activation)
+      allow create: if isAdmin()
+                    || (isSelf(uid)
+                        && request.resource.data.keys().hasOnly(['uid', 'trialStartedAt', 'createdAt'])
+                        && request.resource.data.keys().hasAll(['uid', 'trialStartedAt', 'createdAt'])
+                        && request.resource.data.uid == uid
+                        && request.resource.data.trialStartedAt == request.time
+                        && request.resource.data.createdAt == request.time);
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    // Manual payment requests for the AI assistant. Doc id = {uid}_{refKey}; price pinned by the rule; status starts as 'pending';
+    // only an admin can approve/reject (update).
+    match /ai_subscription_payments/{pid} {
+      allow read:   if (isAuth() && resource.data.uid == request.auth.uid) || isAdmin();
+      allow create: if isAuth()
+                    && request.resource.data.keys().hasOnly(['uid','email','plan','amount','currency','phone','transactionRef','refKey','paymentMethod','status','createdAt','coupon'])   // STUDY-COUPON (old: without 'coupon')
+                    && request.resource.data.keys().hasAll(['uid','plan','amount','currency','phone','transactionRef','refKey','paymentMethod','status','createdAt'])
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.plan in ['plan1', 'plan2', 'plan3', 'study1', 'study2', 'study3']   // STUDY-SPLIT (old: ['plan1', 'plan2', 'plan3'])
+                    && (request.resource.data.keys().hasAny(['coupon'])
+                          ? cpOk(request.resource.data.coupon, request.resource.data.plan, request.resource.data.amount)
+                          : request.resource.data.amount == aiPrice(request.resource.data.plan))   // STUDY-COUPON (old: request.resource.data.amount == aiPrice(request.resource.data.plan))
+                    && request.resource.data.currency == 'EGP'
+                    && request.resource.data.phone is string
+                    && (
+                         (request.resource.data.paymentMethod == 'vodafone_cash' && request.resource.data.phone.matches('[0-9+]{10,15}'))
+                      || (request.resource.data.paymentMethod == 'instapay' && request.resource.data.phone.matches('[A-Za-z0-9._@+-]{3,60}'))
+                       )
+                    && request.resource.data.transactionRef is string
+                    && request.resource.data.transactionRef.matches('[A-Za-z0-9]{6,40}')
+                    && request.resource.data.refKey == request.resource.data.transactionRef.lower()
+                    && pid == request.auth.uid + '_' + request.resource.data.refKey
+                    && request.resource.data.paymentMethod in ['vodafone_cash', 'instapay']
+                    && request.resource.data.status == 'pending'
+                    && request.resource.data.createdAt == request.time
+                    && request.resource.data.get('email', '') is string
+                    && request.resource.data.get('email', '').size() <= 160;
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    // STUDY-COUPON: أكواد خصم «ذاكر». أي مستخدم مسجّل يقدر يقرأ كود لو عارف اسمه (get بس — مفيش list)، والكتابة للأدمن فقط.
+    match /study_coupons/{code} {
+      allow get: if isAuth();
+      allow list: if isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // STUDY-COUPON: مستند استخدام الكود (لمرة واحدة لكل حساب). create-only للمستخدم، وبيتكتب مع طلب الدفع في نفس الـ batch (راجع cpOk). الأدمن يقدر يمسحه لو الطلب اترفض ويحب يرجّع الخصم للعميل.
+    match /coupon_uses/{useId} {
+      allow get: if isAuth() && useId.matches(request.auth.uid + '_.*');
+      allow list: if isAdmin();
+      allow create: if isAuth()
+                    && request.resource.data.keys().hasOnly(['uid', 'code', 'createdAt'])
+                    && request.resource.data.keys().hasAll(['uid', 'code', 'createdAt'])
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.code is string
+                    && request.resource.data.code.matches('[A-Z0-9_-]{3,24}')
+                    && useId == request.auth.uid + '_' + request.resource.data.code
+                    && request.resource.data.createdAt == request.time;
+      allow update, delete: if isAdmin();
+    }
+
+    // Audit trail for AI subscription approvals (admin only)
+    match /ai_subscription_audit/{logId} {
+      allow read, create: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // Daily AI points: doc id = {uid}_{YYYY-MM-DD (Cairo)}. The server (api/farm-ai.js) spends points with the user's own token;
+    // a write can only add exactly ONE point and never beyond the user's allowance. No decrement, no delete.
+    match /ai_usage/{uday} {
+      allow read:   if isAuth() && uday.matches(request.auth.uid + '_.*');
+      allow create: if isAuth()
+                    && request.resource.data.keys().hasOnly(['uid', 'day', 'chat', 'diag', 'diagFin'])
+                    && request.resource.data.keys().hasAll(['uid', 'day'])
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.day is string
+                    && request.resource.data.day.matches('[0-9]{4}-[0-9]{2}-[0-9]{2}')
+                    && uday == request.auth.uid + '_' + request.resource.data.day
+                    && aiUN('chat') + aiUN('diag') + aiUN('diagFin') == 1
+                    && aiUsageBounds(request.auth.uid);
+      allow update: if isAuth()
+                    && resource.data.uid == request.auth.uid
+                    && request.resource.data.keys().hasOnly(['uid', 'day', 'chat', 'diag', 'diagFin'])
+                    && request.resource.data.uid == resource.data.uid
+                    && request.resource.data.day == resource.data.day
+                    && ((aiUN('chat') == aiUO('chat') + 1 && aiUN('diag') == aiUO('diag') && aiUN('diagFin') == aiUO('diagFin'))
+                     || (aiUN('diag') == aiUO('diag') + 1 && aiUN('chat') == aiUO('chat') && aiUN('diagFin') == aiUO('diagFin'))
+                     || (aiUN('diagFin') == aiUO('diagFin') + 1 && aiUN('chat') == aiUO('chat') && aiUN('diag') == aiUO('diag')))
+                    && aiUsageBounds(request.auth.uid);
+      allow delete: if false;
+    }
+
+    // ── STUDY SESSIONS (ذاكر مع نبتكس) — مزامنة آخر الجلسات (نص بس، من غير صور) بين أجهزة نفس الحساب ──
+    // دوك واحد لكل مستخدم: study_sessions/{uid} = { items: { s_<id>: {ts,u,t,d} }, upd }. صاحبه بس يقرأ/يكتب، وحد أقصى 30 جلسة في الدوك (والكود بيكتفي بنافذة صغيرة بحجم محدود).
+    match /study_sessions/{uid} {
+      allow read:   if isSelf(uid);
+      allow create, update: if isSelf(uid)
+          && request.resource.data.keys().hasOnly(['items', 'upd'])
+          && (!('items' in request.resource.data) || (request.resource.data.items is map && request.resource.data.items.size() <= 30));
+      allow delete: if isSelf(uid);
     }
 
     match /{document=**} {
