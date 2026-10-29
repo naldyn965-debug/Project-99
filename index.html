@@ -32738,13 +32738,13 @@ window.NbFarmLoc = { row: row, get: get, open: open };
     if (nv === 'farmer') go('farm'); else if (nv === 'student') go('home');
   }
 
-  /* ── تاب «النقاط» (كارت النقاط ولوحة الأوائل جوه صفحة الملف الشخصي) ── */
+  /* ── تاب «النقاط»: كارت النقاط ولوحة الأوائل = #nbxp-card جوه صفحة الملف (أما #nbxp-fire فده السلسلة اليومية بس) ── */
   function goPoints() {
     st.ptsFlag = true;
     try { showPage('profile'); } catch (e) {}
     setTimeout(function () {
-      var el = document.getElementById('nbxp-fire');
-      if (!el) return;
+      var el = document.getElementById('nbxp-card');
+      if (!el || el.offsetHeight < 20) return;   /* الكارت فاضي/فشل تحميله: ماننزلش لمكان فاضي */
       var y = el.getBoundingClientRect().top + (window.pageYOffset || 0) - 76;
       window.scrollTo({ top: y < 0 ? 0 : y, behavior: 'smooth' });
     }, 420);
@@ -32846,14 +32846,19 @@ window.NbFarmLoc = { row: row, get: get, open: open };
           if (st.ptsFlag && pg === 'profile' && pts) {
             [].forEach.call(n.querySelectorAll('.nb-nav-item'), function (b) { b.classList.remove('active'); b.setAttribute('aria-current', 'false'); });
             pts.classList.add('active'); pts.setAttribute('aria-current', 'page');
-          }
-          st.ptsFlag = false;   /* العلامة بتتستهلك مرة: ضغطة «ملفي» بعدها بتنوّر «ملفي» عادي */
+          } else { st.ptsFlag = false; }   /* العلامة بتفضل طول ما إحنا في الملف، وبتتشال لما يتفتح أي صفحة تانية أو يتضغط تاب تاني */
           repill();
         } else { st.ptsFlag = false; }
       } catch (e) {}
       return r;
     };
   }
+
+  /* ضغطة على أي تاب غير «النقاط» (مثلاً «ملفي») بتشيل علامة النقاط — capture عشان تسبق onclick بتاع التاب */
+  document.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest ? e.target.closest('#nb-bottom-nav .nb-nav-item') : null;
+    if (b && !b.classList.contains('nbr-points')) st.ptsFlag = false;
+  }, true);
 
   /* ── ربط الأزرار ── */
   document.addEventListener('click', function (e) {
