@@ -112,7 +112,7 @@
      downloading it in parallel while parsing <head>, instead of only discovering
      it once the parser reaches the <script src="academy-data.js"> tag mid-document.
      Does not change execution order/timing — same script tag, same position. -->
-<link rel="preload" as="script" href="academy-data.js?v=4">
+<link rel="preload" as="script" href="academy-data.js?v=6">
 
 <!-- Firebase SDKs moved to body — see just before Firebase initialization -->
 
@@ -4389,15 +4389,11 @@ body.modal-open { overflow: hidden; }
     <div class="nav-links">
       <!-- تم نقل الرئيسية / مزرعتي / السوق / الأكاديمية للشريط السفلي -->
       <a href="#" class="nl" id="nl-goals" onclick="showPage('goals');return false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-left:5px;flex-shrink:0"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>أهداف المنصة</a>
+      <a href="#" class="nl" onclick="if(window.NbArena){NbArena.open()}return false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-left:5px;flex-shrink:0"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>ساحة نبتيكس</a>
       <a href="#" class="nl" onclick="showPage('privacy');return false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-left:5px;flex-shrink:0"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>سياسة الخصوصية</a>
       <a href="#" class="nl" onclick="showPage('ip-policy');return false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-left:5px;flex-shrink:0"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>الملكية الفكرية</a>
     </div>
     <div class="nav-actions" id="nav-actions">
-      <!-- ROLE-UI: تبديل سريع (للّي اختار «الاتنين» بس). للتراجع: امسح الـ div ده. -->
-      <div class="nbr-chip" id="nbr-chip" role="group" aria-label="تبديل الواجهة" hidden>
-        <button type="button" data-r="farmer" aria-pressed="false" aria-label="واجهة المزارع" title="واجهة المزارع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22V12M12 12C12 8 8 5 4 6M12 12C12 8 16 5 20 6"/><path d="M5 20c2-3 5-5 7-8"/></svg></button>
-        <button type="button" data-r="student" aria-pressed="false" aria-label="واجهة الطالب" title="واجهة الطالب"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></button>
-      </div>
       <button class="nav-icon-btn" id="thm-btn" title="تبديل المظهر" aria-label="تبديل المظهر">
         <!-- Sun icon (shown in dark mode) -->
         <svg class="sun-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -4463,6 +4459,7 @@ body.modal-open { overflow: hidden; }
   <div class="mob-menu" id="mob-menu">
     <!-- تم نقل الرئيسية / مزرعتي / السوق / الأكاديمية للشريط السفلي -->
     <a href="#" class="nl" onclick="showPage('goals');closeMob();return false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>أهداف المنصة</a>
+    <a href="#" class="nl" onclick="closeMob();if(window.NbArena){NbArena.open()}return false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>ساحة نبتيكس</a>
     <a href="#" class="nl" onclick="showPage('privacy');closeMob();return false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>سياسة الخصوصية</a>
     <a href="#" class="nl" onclick="showPage('ip-policy');closeMob();return false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>الملكية الفكرية</a>
     <a href="#" class="nl" onclick="showPage('market');closeMob();return false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>السوق الزراعي</a>
@@ -5071,15 +5068,6 @@ body.modal-open { overflow: hidden; }
         <!-- Body -->
         <div class="prf-body">
           <div id="nbxp-fire"><div class="nbsk nbsk-fire" aria-hidden="true"><div class="nbsk-r"><i class="nbsk-c"></i><div class="nbsk-t"><i class="nbsk-l" style="width:58%"></i><i class="nbsk-l" style="width:86%"></i></div></div><i class="nbsk-bar"></i><div class="nbsk-r"><i class="nbsk-s"></i><i class="nbsk-s"></i></div><i class="nbsk-pill"></i></div></div>
-          <!-- ROLE-UI: اختيار الواجهة من الملف الشخصي. للتراجع: امسح الـ div ده. -->
-          <div class="nbr-prf" id="nbr-prf" style="display:none">
-            <div class="nbr-prf-h"><b>واجهتي</b><small>بتغيّر ترتيب الشريط السفلي والصفحة الأولى. مفيش حاجة بتتمسح.</small></div>
-            <div class="nbr-seg" role="radiogroup" aria-label="واجهتي">
-              <button type="button" role="radio" data-r="farmer" aria-checked="false">مزارع</button>
-              <button type="button" role="radio" data-r="student" aria-checked="false">طالب</button>
-              <button type="button" role="radio" data-r="both" aria-checked="false">الاتنين</button>
-            </div>
-          </div>
           <div class="prf-info" style="display:none">
             <div class="prf-info-row">
               <span class="prf-info-label">
@@ -6607,6 +6595,7 @@ body.modal-open { overflow: hidden; }
 .acad-card-top.ld{background:#0a2410 url('https://images.unsplash.com/photo-1761637822930-fb1c1a3df94d?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.hyd{background:#031c2e url('https://images.unsplash.com/photo-1682629088819-95edaf226223?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-card-top.bf{background:#062018 url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
+.acad-card-top.bc{background:#062730 url('https://images.unsplash.com/photo-1614935151651-0bea6508db6b?auto=format&fit=crop&w=1200&q=72') center/cover no-repeat}
 .acad-share-btn{position:absolute;top:14px;left:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(10,30,20,.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s;padding:0;appearance:none;-webkit-appearance:none;font:inherit;outline:none}
 .acad-share-btn:hover{background:rgba(10,30,20,.6);transform:translateY(-1px)}
 .acad-share-btn:active{transform:scale(.94)}
@@ -8992,6 +8981,13 @@ body.modal-open { overflow: hidden; }
   background-size:100% 100%, cover !important;
   background-position:center, center !important;
 }
+.acad-hero--biochemistry-professional{
+  background-image:
+    linear-gradient(165deg,rgba(6,39,48,.90) 0%,rgba(6,39,48,.72) 35%,rgba(6,39,48,.62) 62%,rgba(6,39,48,.88) 100%),
+    url("https://images.unsplash.com/photo-1614935151651-0bea6508db6b?auto=format&fit=crop&w=1400&q=75") !important;
+  background-size:100% 100%, cover !important;
+  background-position:center, center !important;
+}
 
 /* ── Per-Learning-Path hero backgrounds (distinct photos from the
    course heroes, matched to each path's own theme — kept in sync with
@@ -9664,7 +9660,7 @@ body.modal-open { overflow: hidden; }
 
 </div>
 
-<script src="academy-data.js?v=4"></script>
+<script src="academy-data.js?v=6"></script>
 
 
 <div id="tw"></div>
@@ -9676,6 +9672,7 @@ body.modal-open { overflow: hidden; }
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
+<script src="arena.js?v=15" defer></script>   <!-- NABTEX ARENA (إضافة مستقلة) -->
 
 <script>
 // ======================== FIREBASE CONFIG ========================
@@ -10185,6 +10182,7 @@ const App = {
     if(typeof LD_COURSE!=='undefined') reg.push({cid:'landscape-design',  course:LD_COURSE, icon:'🌳', grad:'linear-gradient(135deg,#16a34a,#0a2410)', paid:true, price:150, oldPrice:250, img:'https://images.unsplash.com/photo-1761637822930-fb1c1a3df94d?auto=format&fit=crop&w=900&q=70'});
     if(typeof HYD_COURSE!=='undefined') reg.push({cid:'hydroponics-professional', course:HYD_COURSE, icon:'💧', grad:'linear-gradient(135deg,#0284c7,#031c2e)', paid:true, price:200, oldPrice:500, img:'https://images.unsplash.com/photo-1682629088819-95edaf226223?auto=format&fit=crop&w=900&q=70'});
     if(typeof BF_COURSE!=='undefined') reg.push({cid:'biofertilizers-professional', course:BF_COURSE, icon:'🦠', grad:'linear-gradient(135deg,#059669,#062018)', paid:true, price:200, oldPrice:400, img:'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=900&q=70'});
+    if(typeof BC_COURSE!=='undefined') reg.push({cid:'biochemistry-professional', course:BC_COURSE, icon:'🧪', grad:'linear-gradient(135deg,#0891b2,#062730)', paid:false, img:'https://images.unsplash.com/photo-1614935151651-0bea6508db6b?auto=format&fit=crop&w=900&q=70'});
     return reg;
   },
 
@@ -10458,8 +10456,6 @@ async function loadUserProfile() {
       const role = userDoc.data().role || 'مزارع';
       userRole = role;
       userType = userDoc.data().userType || null;
-      /* ROLE-UI: تمرير uiRole من نفس القراءة الموجودة (صفر reads إضافية). للتراجع: امسح السطر ده. */
-      try { window._nbUiRoleData = { uid: currentUser.uid, role: userDoc.data().uiRole || null }; if (window.NbRoleUI) window.NbRoleUI.sync(currentUser.uid, userDoc.data().uiRole || null); } catch (e) { console.error(e); }
       if (profileRoleSpan) profileRoleSpan.textContent = role;
       if (userDoc.data().createdAt) {
         const createdDate = userDoc.data().createdAt.toDate();
@@ -10934,7 +10930,6 @@ async function nbCheckVerified(silent) {
         showToast('✅ تم إنشاء الحساب بنجاح', 'ok');
         showPage('profile');
         setTimeout(() => loadUserProfile(), 500);
-        try { if (window.NbRoleUI) window.NbRoleUI.promptSoon(); } catch (e) { console.error(e); }   /* ROLE-UI: شاشة «انت مين؟» لحساب جديد. للتراجع: امسح السطر ده. */
       }
     } else {
       if (temp) { try { await auth.signOut(); } catch (e) { console.error(e); } }
@@ -11009,7 +11004,6 @@ async function signInWithGoogle(intent) {
     if (isNewUser) {
       // الدور الافتراضي لحسابات Google الجديدة: طالب (نفس التسجيل بالإيميل)
       db.collection('users').doc(result.user.uid).set({ role: '🎓 طالب' }, { merge: true }).catch(console.error);
-      try { if (window.NbRoleUI) window.NbRoleUI.promptSoon(); } catch (e) { console.error(e); }   /* ROLE-UI: شاشة «انت مين؟» لحساب جديد. للتراجع: امسح السطر ده. */
     }
     showToast(`مرحباً ${result.user.displayName || result.user.email}`, 'ok');
     closeAuth();
@@ -24681,45 +24675,6 @@ try{[].forEach.call(document.querySelectorAll('.vcash-overlay'),function(ov){try
       </span>
       <span class="nb-lbl">ملفي</span>
     </button>
-    <!-- ROLE-UI: أزرار إضافية (السوق / ذاكر / النقاط) — مخفية افتراضياً وبتظهر بس مع واجهة دور. للتراجع: امسح الـ 3 أزرار (.nbr-x). -->
-    <button class="nb-nav-item nbr-x nbr-market" data-page="market"
-            onclick="showPage('market');window.scrollTo(0,0);" aria-label="السوق الزراعي">
-      <span class="nb-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
-             aria-hidden="true" focusable="false">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 01-8 0"/>
-        </svg>
-      </span>
-      <span class="nb-lbl">السوق</span>
-    </button>
-    <button class="nb-nav-item nbr-x nbr-study" data-page="study"
-            onclick="if(window.NbFarmAI&&typeof window.NbFarmAI.openStudy==='function'){window.NbFarmAI.openStudy(this);}" aria-label="ذاكر مع نبتيكس" aria-haspopup="dialog">
-      <span class="nb-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
-             aria-hidden="true" focusable="false">
-          <path d="M2 4h6a4 4 0 014 4v13a3 3 0 00-3-3H2z"/>
-          <path d="M22 4h-6a4 4 0 00-4 4v13a3 3 0 013-3h7z"/>
-        </svg>
-      </span>
-      <span class="nb-lbl">ذاكر</span>
-    </button>
-    <button class="nb-nav-item nbr-x nbr-points" data-page="points"
-            onclick="if(window.NbRoleUI){window.NbRoleUI.goPoints();}" aria-label="النقاط ولوحة الأوائل">
-      <span class="nb-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
-             aria-hidden="true" focusable="false">
-          <path d="M8 21h8M12 17v4"/>
-          <path d="M7 4h10v5a5 5 0 01-10 0z"/>
-          <path d="M17 5h3v2a3 3 0 01-3 3M7 5H4v2a3 3 0 003 3"/>
-        </svg>
-      </span>
-      <span class="nb-lbl">النقاط</span>
-    </button>
   </div>
 </nav>
 
@@ -32556,340 +32511,6 @@ window.NbFarmLoc = { row: row, get: get, open: open };
       }, 600);
     }, 250);
   }catch(e){}
-})();
-</script>
-
-<!-- ROLE-UI (المرحلة 1): واجهة حسب الدور (مزارع / طالب / الاتنين) داخل نفس التطبيق.
-     الحقل: users/{uid}.uiRole = 'farmer' | 'student' | 'both' (حقل جديد — الحقل القديم role نص حر ومابنلمسوش).
-     مفيش uiRole أو قيمته غير صالحة = التطبيق زي ما هو بالظبط. ?role=farmer|student = عرض مؤقت للجلسة ومابيكتبش في Firestore.
-     للتراجع: امسح (1) الكتلة دي (style#nbr-css + script)، (2) أزرار .nbr-x جوه #nb-bottom-nav، (3) #nbr-chip في #nav-actions، (4) #nbr-prf في صفحة الملف،
-     (5) 3 سطور بتعليق ROLE-UI (loadUserProfile / تسجيل Google الجديد / nbCheckVerified)، (6) uiRoleOk في firestore.rules. -->
-<style id="nbr-css">
-/* أزرار الشريط الإضافية مخفية افتراضياً — بتظهر بس لما واجهة دور تكون شغالة */
-#nb-bottom-nav .nbr-x{display:none!important}
-/* ── واجهة المزارع: مزرعتي | AI | السوق | الرئيسية | ملفي ── */
-#nb-bottom-nav[data-nbr="farmer"] .nb-nav-item[data-page="farm"]{order:1}
-#nb-bottom-nav[data-nbr="farmer"] .nb-nav-item[data-page="ai"]{order:2}
-#nb-bottom-nav[data-nbr="farmer"] .nbr-market{display:flex!important;order:3}
-#nb-bottom-nav[data-nbr="farmer"] .nb-nav-item[data-page="home"]{order:4}
-#nb-bottom-nav[data-nbr="farmer"] .nb-nav-item[data-page="profile"]{order:5}
-#nb-bottom-nav[data-nbr="farmer"] .nb-nav-item[data-page="academy"]{display:none!important}
-/* ── واجهة الطالب: ذاكر | الكورسات | النقاط | ملفي ── */
-#nb-bottom-nav[data-nbr="student"] .nbr-study{display:flex!important;order:1}
-#nb-bottom-nav[data-nbr="student"] .nb-nav-item[data-page="academy"]{order:2}
-#nb-bottom-nav[data-nbr="student"] .nbr-points{display:flex!important;order:3}
-#nb-bottom-nav[data-nbr="student"] .nb-nav-item[data-page="profile"]{order:4}
-#nb-bottom-nav[data-nbr="student"] .nb-nav-item[data-page="home"],
-#nb-bottom-nav[data-nbr="student"] .nb-nav-item[data-page="ai"],
-#nb-bottom-nav[data-nbr="student"] .nb-nav-item[data-page="farm"]{display:none!important}
-/* ── زر التبديل السريع (للّي اختار «الاتنين») ── */
-.nbr-chip{display:inline-flex;align-items:center;gap:2px;padding:3px;margin-inline-end:6px;border-radius:9999px;background:var(--bg3);border:1px solid var(--line)}
-.nbr-chip[hidden]{display:none!important}
-.nbr-chip button{width:30px;height:30px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:background .2s,color .2s}
-.nbr-chip button[aria-pressed="true"]{background:var(--brand);color:#fff}
-.nbr-chip button:focus-visible{outline:2.5px solid var(--brand);outline-offset:2px}
-.nbr-chip svg{width:16px;height:16px;display:block}
-/* ── صف «واجهتي» في الملف الشخصي ── */
-.nbr-prf{margin:12px 0}
-.nbr-prf-h{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}
-.nbr-prf-h b{font-size:14px;font-weight:800;color:var(--ink)}
-.nbr-prf-h small{font-size:12px;color:var(--muted);line-height:1.6}
-.nbr-seg{display:flex;gap:4px;padding:4px;background:var(--bg3);border:1px solid var(--line);border-radius:9999px}
-.nbr-seg button{flex:1;min-height:40px;border:0;border-radius:9999px;background:transparent;color:var(--slate);font:700 13.5px var(--f-ui);cursor:pointer;transition:background .2s,color .2s}
-.nbr-seg button[aria-checked="true"]{background:var(--brand);color:#fff}
-.nbr-seg button:focus-visible{outline:2.5px solid var(--brand);outline-offset:2px}
-/* ── شاشة «انت مين؟» (bottom sheet) ── */
-.nbr-bg{position:fixed;inset:0;z-index:9000;display:flex;align-items:flex-end;justify-content:center;background:rgba(14,28,20,.46);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;transition:opacity .22s ease}
-.nbr-bg[hidden]{display:none}
-.nbr-bg.on{opacity:1}
-.nbr-sheet{width:100%;max-width:480px;max-height:92vh;overflow:auto;box-sizing:border-box;padding:10px 18px calc(18px + env(safe-area-inset-bottom,0px));background:var(--bg);color:var(--ink);border-radius:26px 26px 0 0;box-shadow:var(--s5);font-family:var(--f-ui);transform:translateY(28px);transition:transform .34s var(--ease-out)}
-.nbr-bg.on .nbr-sheet{transform:none}
-@media(min-width:600px){.nbr-bg{align-items:center}.nbr-sheet{border-radius:26px;padding-bottom:22px}}
-.nbr-grab{width:40px;height:4px;margin:0 auto 14px;border-radius:4px;background:var(--line2)}
-.nbr-sheet h2{margin:0 0 4px;font-size:22px;font-weight:800;line-height:1.3}
-.nbr-sheet p{margin:0 0 14px;font-size:13.5px;line-height:1.7;color:var(--slate)}
-.nbr-opt{display:flex;align-items:center;gap:14px;width:100%;min-height:76px;box-sizing:border-box;padding:12px 14px;margin:0 0 10px;text-align:start;background:var(--white);color:inherit;border:1.5px solid var(--line2);border-radius:20px;font-family:inherit;cursor:pointer;transition:border-color .18s,background .18s,transform .12s}
-.nbr-opt:hover{border-color:var(--brand)}
-.nbr-opt:active{transform:scale(.985)}
-.nbr-opt[data-sug="1"]{border-color:var(--brand);background:var(--brand-pale)}
-.nbr-opt:focus-visible{outline:2.5px solid var(--brand);outline-offset:2px}
-.nbr-ic{flex:none;width:48px;height:48px;display:grid;place-items:center;border-radius:16px;background:var(--brand-mist);color:var(--brand)}
-.nbr-ic svg{width:26px;height:26px;display:block}
-.nbr-tx{display:flex;flex-direction:column;gap:2px;min-width:0}
-.nbr-tx b{font-size:16.5px;font-weight:800}
-.nbr-tx small{font-size:12.5px;line-height:1.5;color:var(--muted)}
-.nbr-skip{display:block;margin:6px auto 0;padding:10px 18px;border:0;border-radius:12px;background:none;color:var(--slate);font:700 13.5px var(--f-ui);cursor:pointer}
-.nbr-skip:focus-visible{outline:2.5px solid var(--brand);outline-offset:2px}
-@media (prefers-reduced-motion:reduce){.nbr-bg,.nbr-sheet,.nbr-opt{transition:none}}
-</style>
-<script>
-(function () {
-  'use strict';
-  var ROLES = ['farmer', 'student', 'both'];
-  var H0 = location.hash || '';       /* الـ hash وقت التحميل — عشان مانهبطش فوق deep link */
-  var S0 = location.search || '';
-  function valid(r) { return ROLES.indexOf(r) > -1; }
-  function ssGet(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
-  function ssSet(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
-  function ssDel(k) { try { sessionStorage.removeItem(k); } catch (e) {} }
-
-  /* الحالة كلها في الذاكرة (Firestore هو المصدر الأساسي؛ sessionStorage مجرد cache للجلسة) */
-  var st = { uid: null, saved: null, synced: false, temp: null, view: null, want: false, asked: false, ptsFlag: false, on: false };
-
-  /* ── ?role=farmer|student: عرض مؤقت للجلسة، مايكتبش في Firestore ولا يغيّر اختيار محفوظ ── */
-  try {
-    var sp = new URLSearchParams(location.search), q = sp.get('role');
-    if (q !== null) {
-      if (q === 'farmer' || q === 'student') { st.temp = q; ssSet('nbr:temp', q); }
-      sp.delete('role');
-      var qs = sp.toString();
-      history.replaceState(history.state, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
-    } else {
-      var tmp = ssGet('nbr:temp');
-      if (tmp === 'farmer' || tmp === 'student') st.temp = tmp;
-    }
-  } catch (e) {}
-
-  function nav() { return document.getElementById('nb-bottom-nav'); }
-  function toast(m, t) { try { showToast(m, t || 'ok'); } catch (e) {} }
-
-  /* الواجهة الفعّالة دلوقتي: 'farmer' | 'student' | null (= النسخة الحالية) */
-  function eff() {
-    if (st.saved === 'farmer' || st.saved === 'student') return st.saved;
-    if (st.saved === 'both') return st.view;
-    if (!st.uid || st.synced) return st.temp;   /* زائر، أو مستخدم من غير اختيار محفوظ */
-    return null;
-  }
-
-  /* الـ pill بتتحرك بـ offsetLeft — لازم نعيد ضبطها لما الأزرار تتبدل/تتعاد ترتيبها */
-  function repill() {
-    if (!st.on) return;
-    var run = function () {
-      var n = nav(), p = document.getElementById('nb-slide-pill');
-      if (!n || !p) return;
-      var items = n.querySelectorAll('.nb-nav-item.active'), a = null;
-      for (var i = 0; i < items.length; i++) { if (items[i].offsetWidth > 0) { a = items[i]; break; } }
-      if (a) {
-        p.style.transform = 'translateX(' + a.offsetLeft + 'px)';
-        p.style.width = a.offsetWidth + 'px';
-        p.style.opacity = '1';
-      } else if (eff()) { p.style.opacity = '0'; }
-    };
-    requestAnimationFrame(function () { requestAnimationFrame(run); });
-  }
-
-  function apply() {
-    var v = eff(), n = nav();
-    if (v) st.on = true;
-    if (n) { if (v) n.setAttribute('data-nbr', v); else n.removeAttribute('data-nbr'); }
-    var chip = document.getElementById('nbr-chip');
-    if (chip) {
-      chip.hidden = !(st.uid && st.saved === 'both');
-      [].forEach.call(chip.querySelectorAll('button'), function (b) {
-        b.setAttribute('aria-pressed', b.getAttribute('data-r') === st.view ? 'true' : 'false');
-      });
-    }
-    var prf = document.getElementById('nbr-prf');
-    if (prf) {
-      prf.style.display = st.uid ? '' : 'none';
-      [].forEach.call(prf.querySelectorAll('button'), function (b) {
-        b.setAttribute('aria-checked', b.getAttribute('data-r') === st.saved ? 'true' : 'false');
-      });
-    }
-    repill();
-  }
-
-  function go(pg) { try { showPage(pg); window.scrollTo(0, 0); } catch (e) {} }
-
-  /* الهبوط على «مزرعتي» — مرة واحدة في أول الجلسة، ولو مفيش deep link ولا ?app= */
-  function maybeLand() {
-    if (ssGet('nbr:landed')) return;
-    ssSet('nbr:landed', '1');
-    if (!st.uid || eff() !== 'farmer') return;
-    if (!(H0 === '' || H0 === '#' || H0 === '#pg:home')) return;
-    if (/(^|[?&])app=/.test(S0)) return;
-    if (typeof currentPage !== 'undefined' && currentPage !== 'home') return;
-    var bg = document.getElementById('nbr-bg');
-    if (bg && !bg.hidden) return;
-    try { history.replaceState({ page: 'farm' }, '', '#pg:farm'); } catch (e) {}   /* من غير إدخال إضافي في سجل الرجوع */
-    try { showPage('farm'); } catch (e) {}
-  }
-
-  /* ── حفظ اختيار الدور (المستخدم هو اللي اختار بنفسه) ── */
-  function setRole(r) {
-    if (!valid(r) || !st.uid) return;
-    var uid = st.uid;
-    st.saved = r; st.view = null; ssDel('nbr:view'); ssSet('nbr:' + uid, r);
-    apply();
-    try {
-      db.collection('users').doc(uid).set({ uiRole: r }, { merge: true }).catch(function (e) {
-        console.error(e);
-        toast('تعذّر حفظ اختيارك — هيفضل شغال في الجلسة دي بس', 'err');
-      });
-    } catch (e) { console.error(e); }
-  }
-
-  /* ── التبديل السريع لـ «الاتنين»: الضغط على الفعّال تاني يرجّع النسخة الحالية ── */
-  function setView(v) {
-    if (st.saved !== 'both' || (v !== 'farmer' && v !== 'student')) return;
-    var nv = (st.view === v) ? null : v;
-    st.view = nv; ssSet('nbr:view', nv || '');
-    apply();
-    if (nv === 'farmer') go('farm'); else if (nv === 'student') go('home');
-  }
-
-  /* ── تاب «النقاط»: كارت النقاط ولوحة الأوائل = #nbxp-card جوه صفحة الملف (أما #nbxp-fire فده السلسلة اليومية بس) ── */
-  function goPoints() {
-    st.ptsFlag = true;
-    try { showPage('profile'); } catch (e) {}
-    setTimeout(function () {
-      var el = document.getElementById('nbxp-card');
-      if (!el || el.offsetHeight < 20) return;   /* الكارت فاضي/فشل تحميله: ماننزلش لمكان فاضي */
-      var y = el.getBoundingClientRect().top + (window.pageYOffset || 0) - 76;
-      window.scrollTo({ top: y < 0 ? 0 : y, behavior: 'smooth' });
-    }, 420);
-  }
-
-  /* ── شاشة «انت مين؟» ── */
-  var ICO = {
-    farmer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22V12M12 12C12 8 8 5 4 6M12 12C12 8 16 5 20 6"/><path d="M5 20c2-3 5-5 7-8"/></svg>',
-    student: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
-    both: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l10 5-10 5L2 7z"/><path d="M2 12l10 5 10-5"/><path d="M2 17l10 5 10-5"/></svg>'
-  };
-  var lastFocus = null;
-  function buildSheet() {
-    var bg = document.getElementById('nbr-bg');
-    if (bg) return bg;
-    bg = document.createElement('div');
-    bg.id = 'nbr-bg'; bg.className = 'nbr-bg'; bg.hidden = true;
-    bg.innerHTML =
-      '<div class="nbr-sheet" role="dialog" aria-modal="true" aria-labelledby="nbr-t">' +
-        '<div class="nbr-grab" aria-hidden="true"></div>' +
-        '<h2 id="nbr-t">انت مين؟</h2>' +
-        '<p>اختار الأقرب ليك وهنرتّب التطبيق على اهتمامك. تقدر تغيّره في أي وقت من «ملفي».</p>' +
-        '<button type="button" class="nbr-opt" data-r="farmer"><span class="nbr-ic">' + ICO.farmer + '</span><span class="nbr-tx"><b>مزارع</b><small>مزرعتي والمساعد الذكي والسوق في الأول</small></span></button>' +
-        '<button type="button" class="nbr-opt" data-r="student"><span class="nbr-ic">' + ICO.student + '</span><span class="nbr-tx"><b>طالب</b><small>ذاكر والكورسات والنقاط ولوحة الأوائل</small></span></button>' +
-        '<button type="button" class="nbr-opt" data-r="both"><span class="nbr-ic">' + ICO.both + '</span><span class="nbr-tx"><b>الاتنين</b><small>كل حاجة زي ما هي، وتبدّل بينهم بضغطة</small></span></button>' +
-        '<button type="button" class="nbr-skip" data-skip="1">مش دلوقتي</button>' +
-      '</div>';
-    bg.addEventListener('click', function (e) {
-      if (e.target === bg) { closeSheet(); return; }
-      var b = e.target.closest ? e.target.closest('button') : null;
-      if (!b) return;
-      if (b.getAttribute('data-skip')) { closeSheet(); return; }
-      var r = b.getAttribute('data-r');
-      if (valid(r)) { setRole(r); closeSheet(); if (r === 'farmer') go('farm'); }
-    });
-    document.body.appendChild(bg);
-    return bg;
-  }
-  function onKey(e) { if (e.key === 'Escape') closeSheet(); }
-  function openSheet() {
-    var bg = buildSheet();
-    st.asked = true;
-    [].forEach.call(bg.querySelectorAll('.nbr-opt'), function (b) {
-      if (st.temp && b.getAttribute('data-r') === st.temp) b.setAttribute('data-sug', '1'); else b.removeAttribute('data-sug');
-    });
-    lastFocus = document.activeElement;
-    bg.hidden = false;
-    requestAnimationFrame(function () { bg.classList.add('on'); });
-    document.addEventListener('keydown', onKey);
-    var first = bg.querySelector('.nbr-opt[data-sug="1"]') || bg.querySelector('.nbr-opt');
-    if (first) setTimeout(function () { try { first.focus({ preventScroll: true }); } catch (e) {} }, 60);
-  }
-  function closeSheet() {
-    var bg = document.getElementById('nbr-bg');
-    if (!bg || bg.hidden) return;
-    bg.classList.remove('on');
-    document.removeEventListener('keydown', onKey);
-    setTimeout(function () { bg.hidden = true; }, 240);
-    try { if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true }); } catch (e) {}
-  }
-
-  /* الشاشة بتظهر بس لحساب جديد (من 2 نقطة تسجيل)، ومرة واحدة، ومش فوق deep link ولا فوق دفع/تأكيد إيميل */
-  function tryPrompt(k) {
-    if (!st.want || st.asked || !st.uid || st.saved) return;
-    if (/^#pg:[^:]+:/.test(location.hash)) return;
-    if (document.querySelector('.vcash-overlay.on, #nbvf-bg.on')) {
-      if (k < 8) setTimeout(function () { tryPrompt(k + 1); }, 1500);
-      return;
-    }
-    openSheet();
-  }
-  function promptSoon() {
-    st.want = true;
-    if (st.synced) setTimeout(function () { tryPrompt(0); }, 900);
-  }
-
-  /* ── بيتنده من loadUserProfile بعد قراءة users/{uid} (مفيش قراءة إضافية) ── */
-  function sync(uid, role) {
-    if (st.uid && st.uid !== uid) st.view = null;
-    st.uid = uid;
-    st.saved = valid(role) ? role : null;      /* قيمة غير صالحة = كأنها مش موجودة */
-    st.synced = true;
-    if (st.saved) ssSet('nbr:' + uid, st.saved); else ssDel('nbr:' + uid);
-    if (st.saved === 'both' && !st.view) { var v = ssGet('nbr:view'); if (v === 'farmer' || v === 'student') st.view = v; }
-    apply();
-    maybeLand();
-    if (st.want) setTimeout(function () { tryPrompt(0); }, 900);
-  }
-
-  /* ── لف showPage مرة واحدة: بس علامة «النقاط» وإعادة ضبط الـ pill ── */
-  var _sp = window.showPage;
-  if (typeof _sp === 'function') {
-    window.showPage = function (pg) {
-      var r = _sp.apply(this, arguments);
-      try {
-        var n = nav();
-        if (n && eff()) {
-          var pts = n.querySelector('.nbr-points');
-          if (st.ptsFlag && pg === 'profile' && pts) {
-            [].forEach.call(n.querySelectorAll('.nb-nav-item'), function (b) { b.classList.remove('active'); b.setAttribute('aria-current', 'false'); });
-            pts.classList.add('active'); pts.setAttribute('aria-current', 'page');
-          } else { st.ptsFlag = false; }   /* العلامة بتفضل طول ما إحنا في الملف، وبتتشال لما يتفتح أي صفحة تانية أو يتضغط تاب تاني */
-          repill();
-        } else { st.ptsFlag = false; }
-      } catch (e) {}
-      return r;
-    };
-  }
-
-  /* ضغطة على أي تاب غير «النقاط» (مثلاً «ملفي») بتشيل علامة النقاط — capture عشان تسبق onclick بتاع التاب */
-  document.addEventListener('click', function (e) {
-    var b = e.target && e.target.closest ? e.target.closest('#nb-bottom-nav .nb-nav-item') : null;
-    if (b && !b.classList.contains('nbr-points')) st.ptsFlag = false;
-  }, true);
-
-  /* ── ربط الأزرار ── */
-  document.addEventListener('click', function (e) {
-    var t = e.target && e.target.closest ? e.target.closest('#nbr-chip button, #nbr-prf button') : null;
-    if (!t) return;
-    var r = t.getAttribute('data-r');
-    if (t.closest('#nbr-chip')) { setView(r); return; }
-    if (valid(r) && r !== st.saved) { setRole(r); toast('تم تغيير واجهتك'); }
-  });
-
-  /* ── حالة الدخول: خروج/تبديل حساب = رجوع للنسخة الحالية ── */
-  try {
-    auth.onAuthStateChanged(function (u) {
-      if (!u) {
-        if (st.uid) ssDel('nbr:' + st.uid);
-        ssDel('nbr:view');
-        st.uid = null; st.saved = null; st.synced = false; st.view = null; st.want = false;
-        apply();
-        return;
-      }
-      if (st.uid && st.uid !== u.uid) { st.saved = null; st.synced = false; st.view = null; }
-      st.uid = u.uid;
-      if (!st.saved) { var c = ssGet('nbr:' + u.uid); if (valid(c)) st.saved = c; }   /* cache الجلسة: يمنع وميض الشريط القديم */
-      if (st.saved === 'both' && !st.view) { var v = ssGet('nbr:view'); if (v === 'farmer' || v === 'student') st.view = v; }
-      apply();
-      setTimeout(function () { if (st.uid === u.uid && !st.synced) sync(u.uid, st.saved); }, 5000);   /* لو القراءة اتأخرت أو مفيش وثيقة */
-    });
-  } catch (e) { console.error(e); }
-
-  window.NbRoleUI = { sync: sync, promptSoon: promptSoon, goPoints: goPoints, setRole: setRole, open: openSheet, _st: st };
-  if (window._nbUiRoleData && window._nbUiRoleData.uid) sync(window._nbUiRoleData.uid, window._nbUiRoleData.role);   /* لو loadUserProfile سبقنا */
 })();
 </script>
 
