@@ -10333,27 +10333,42 @@ const App = {
       '<span>ذاكر مع نبتيكس</span>'+
     '</button>'+
     '</div>'+
-    /* ── اختصارات سريعة (إضافة مستقلة — كلاسات nb-qa-* فقط، نفس وجهات التنقّل بتاعة الشريط السفلي) ──
-       للتراجع: امسح الكتلة دي + كتلة CSS اسمها nb-home-quick-actions ── */
-    '<section class="nb-h2-courses-sec nb-qa" aria-labelledby="nb-qa-title">'+
+    /* ── خدمات نبتيكس (بديل قسم «ماذا تريد أن تنجز اليوم؟») — كلاسات nb-svc-* فقط، نفس وجهات الفتح الأصلية + ساحة نبتيكس + ذاكر + السوق.
+       للتراجع: امسح الكتلة دي + كتلة CSS اسمها nb-home-services، وارجع الكتلة القديمة (محفوظة في تعليق بعد القسم ده). ── */
+    '<section class="nb-h2-courses-sec nb-svc" aria-labelledby="nb-svc-title">'+
       '<div class="nb-h2-courses-head">'+
-        '<h2 class="nb-h2-courses-title" id="nb-qa-title">ماذا تريد أن تنجز اليوم؟</h2>'+
+        '<h2 class="nb-h2-courses-title" id="nb-svc-title">خدمات نبتيكس</h2>'+
       '</div>'+
-      '<div class="nb-qa-grid">'+
-        '<button type="button" class="nb-qa-card nb-qa-card--ai" style="--qa-i:0" aria-haspopup="dialog" onclick="if(window.NbFarmAI&&typeof window.NbFarmAI.open===\'function\'){window.NbFarmAI.open(this);}">'+
-          '<span class="nb-qa-top"><span class="nb-qa-ic" aria-hidden="true"><svg width="28" height="28" viewBox="0.3 0.8 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.25))"><g transform="translate(-1.2 1.4)"><path d="M12 22V12M12 12C12 8 8 5 4 6M12 12C12 8 16 5 20 6"/><path d="M5 20c2-3 5-5 7-8" opacity=".5"/></g><path d="M21.3 1.2Q21.8 2.9 23.5 3.4Q21.8 3.9 21.3 5.6Q20.8 3.9 19.1 3.4Q20.8 2.9 21.3 1.2Z" fill="#fff" stroke="none"/></svg></span><span class="nb-qa-go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></span></span>'+
-          '<span class="nb-qa-tx"><span class="nb-qa-t"><bdi dir="ltr">Nabtex AI</bdi></span><span class="nb-qa-d">استشارة زراعية وتشخيص أمراض النبات بالصورة</span></span>'+
-        '</button>'+
-        '<button type="button" class="nb-qa-card nb-qa-card--farm" style="--qa-i:1" onclick="showPage(\'farm\');window.scrollTo(0,0);">'+
-          '<span class="nb-qa-top"><span class="nb-qa-ic" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 21V10l9-6 9 6v11"/><path d="M3 21h18"/><path d="M9 21v-6h6v6"/><path d="M9 15l6 6M15 15l-6 6" opacity=".55"/></svg></span><span class="nb-qa-go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></span></span>'+
-          '<span class="nb-qa-tx"><span class="nb-qa-t">إدارة المزرعة</span><span class="nb-qa-d">تابع حقولك ومحاصيلك وعملياتك</span></span>'+
-        '</button>'+
-        '<button type="button" class="nb-qa-card nb-qa-card--acad" style="--qa-i:2" onclick="showPage(\'academy\');window.scrollTo(0,0);">'+
-          '<span class="nb-qa-top"><span class="nb-qa-ic" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><span class="nb-qa-go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></span></span>'+
-          '<span class="nb-qa-tx"><span class="nb-qa-t">الأكاديمية</span><span class="nb-qa-d">دورات احترافية واختبارات وشهادات إتمام</span></span>'+
-        '</button>'+
+      '<div class="nb-svc-grid">'+
+        '<button type="button" class="nb-svc-card nb-svc-card--ai" style="--i:0" aria-haspopup="dialog" onclick="if(window.NbFarmAI&&typeof window.NbFarmAI.open===\'function\'){window.NbFarmAI.open(this);}"><span class="nb-svc-top"><span class="nb-svc-ic" aria-hidden="true"><svg width="26" height="26" viewBox="0.3 0.8 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.25))"><g transform="translate(-1.2 1.4)"><path d="M12 22V12M12 12C12 8 8 5 4 6M12 12C12 8 16 5 20 6"/><path d="M5 20c2-3 5-5 7-8" opacity=".5"/></g><path d="M21.3 1.2Q21.8 2.9 23.5 3.4Q21.8 3.9 21.3 5.6Q20.8 3.9 19.1 3.4Q20.8 2.9 21.3 1.2Z" fill="#fff" stroke="none"/></svg></span><span class="nb-svc-go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></span></span><span class="nb-svc-tx"><span class="nb-svc-t"><bdi dir="ltr">Nabtex AI</bdi></span><span class="nb-svc-d">استشارة زراعية وتشخيص أمراض النبات بالصورة</span></span></button>'+
+        '<button type="button" class="nb-svc-card nb-svc-card--study" style="--i:1" aria-haspopup="dialog" onclick="if(window.NbFarmAI&&typeof window.NbFarmAI.openStudy===\'function\'){window.NbFarmAI.openStudy(this);}"><span class="nb-svc-top"><span class="nb-svc-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 5.5C4.5 4 8 4 12 6.5c4-2.5 7.5-2.5 10-1v13c-2.5-1.5-6-1.5-10 1-4-2.5-7.5-2.5-10-1z"/><path d="M12 6.5v13"/></svg></span><span class="nb-svc-go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></span></span><span class="nb-svc-tx"><span class="nb-svc-t">ذاكر مع نبتيكس</span><span class="nb-svc-d">ارفع محاضراتك واحصل على شرح واختبار فوري</span></span></button>'+
+        '<button type="button" class="nb-svc-card nb-svc-card--acad" style="--i:2" onclick="showPage(\'academy\');window.scrollTo(0,0);"><span class="nb-svc-top"><span class="nb-svc-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><span class="nb-svc-go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></span></span><span class="nb-svc-tx"><span class="nb-svc-t">الأكاديمية</span><span class="nb-svc-d">دورات احترافية واختبارات وشهادات إتمام</span></span></button>'+
+        '<button type="button" class="nb-svc-card nb-svc-card--arena" style="--i:3" onclick="if(window.NbArena&&typeof window.NbArena.open===\'function\'){window.NbArena.open();}else{alert(\'الساحة غير متاحة الآن\');}"><span class="nb-svc-top"><span class="nb-svc-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><span class="nb-svc-go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></span></span><span class="nb-svc-tx"><span class="nb-svc-t">ساحة نبتيكس</span><span class="nb-svc-d">تنافس مع أصدقائك في مسابقات زراعية</span></span></button>'+
+        '<button type="button" class="nb-svc-card nb-svc-card--farm" style="--i:4" onclick="showPage(\'farm\');window.scrollTo(0,0);"><span class="nb-svc-top"><span class="nb-svc-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 21V10l9-6 9 6v11"/><path d="M3 21h18"/><path d="M9 21v-6h6v6"/></svg></span><span class="nb-svc-go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></span></span><span class="nb-svc-tx"><span class="nb-svc-t">إدارة المزرعة</span><span class="nb-svc-d">تابع حقولك ومحاصيلك وعملياتك</span></span></button>'+
+        '<button type="button" class="nb-svc-card nb-svc-card--mkt" style="--i:5" onclick="showPage(\'market\');window.scrollTo(0,0);"><span class="nb-svc-top"><span class="nb-svc-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></span><span class="nb-svc-go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></span></span><span class="nb-svc-tx"><span class="nb-svc-t">السوق الزراعي</span><span class="nb-svc-d">بيع واشتري المنتجات الزراعية بسهولة</span></span></button>'+
       '</div>'+
     '</section>'+
+    /* القديم (للتراجع) — قسم «ماذا تريد أن تنجز اليوم؟» (3 كروت) — كان هنا، والـ CSS بتاعه (nb-home-quick-actions) لسه موجود:
+           '<section class="nb-h2-courses-sec nb-qa" aria-labelledby="nb-qa-title">'+
+             '<div class="nb-h2-courses-head">'+
+               '<h2 class="nb-h2-courses-title" id="nb-qa-title">ماذا تريد أن تنجز اليوم؟</h2>'+
+             '</div>'+
+             '<div class="nb-qa-grid">'+
+               '<button type="button" class="nb-qa-card nb-qa-card--ai" style="--qa-i:0" aria-haspopup="dialog" onclick="if(window.NbFarmAI&&typeof window.NbFarmAI.open===\'function\'){window.NbFarmAI.open(this);}">'+
+                 '<span class="nb-qa-top"><span class="nb-qa-ic" aria-hidden="true"><svg width="28" height="28" viewBox="0.3 0.8 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.25))"><g transform="translate(-1.2 1.4)"><path d="M12 22V12M12 12C12 8 8 5 4 6M12 12C12 8 16 5 20 6"/><path d="M5 20c2-3 5-5 7-8" opacity=".5"/></g><path d="M21.3 1.2Q21.8 2.9 23.5 3.4Q21.8 3.9 21.3 5.6Q20.8 3.9 19.1 3.4Q20.8 2.9 21.3 1.2Z" fill="#fff" stroke="none"/></svg></span><span class="nb-qa-go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></span></span>'+
+                 '<span class="nb-qa-tx"><span class="nb-qa-t"><bdi dir="ltr">Nabtex AI</bdi></span><span class="nb-qa-d">استشارة زراعية وتشخيص أمراض النبات بالصورة</span></span>'+
+               '</button>'+
+               '<button type="button" class="nb-qa-card nb-qa-card--farm" style="--qa-i:1" onclick="showPage(\'farm\');window.scrollTo(0,0);">'+
+                 '<span class="nb-qa-top"><span class="nb-qa-ic" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 21V10l9-6 9 6v11"/><path d="M3 21h18"/><path d="M9 21v-6h6v6"/><path d="M9 15l6 6M15 15l-6 6" opacity=".55"/></svg></span><span class="nb-qa-go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></span></span>'+
+                 '<span class="nb-qa-tx"><span class="nb-qa-t">إدارة المزرعة</span><span class="nb-qa-d">تابع حقولك ومحاصيلك وعملياتك</span></span>'+
+               '</button>'+
+               '<button type="button" class="nb-qa-card nb-qa-card--acad" style="--qa-i:2" onclick="showPage(\'academy\');window.scrollTo(0,0);">'+
+                 '<span class="nb-qa-top"><span class="nb-qa-ic" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><span class="nb-qa-go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></span></span>'+
+                 '<span class="nb-qa-tx"><span class="nb-qa-t">الأكاديمية</span><span class="nb-qa-d">دورات احترافية واختبارات وشهادات إتمام</span></span>'+
+               '</button>'+
+             '</div>'+
+           '</section>'+
+    */
     continueHTML+
     '<div class="nb-h2-courses-sec">'+
       '<div class="nb-h2-courses-head">'+
@@ -26722,6 +26737,71 @@ function nbFmtDate(date){
   .nb-qa-card,.nb-qa-card *,.nb-qa-card::after{animation:none!important;transition:none!important}
   .nb-qa-card--ai::after{display:none}
 }
+</style>
+
+<style id="nb-home-services">
+/* ══ الرئيسية › «خدمات نبتيكس» — شبكة موحّدة لكل الخدمات (6 كروت) ══
+   إضافة مستقلة: كل الكلاسات nb-svc-* ولا تلمس أي كلاس موجود. للتراجع: امسح هذه الكتلة + كتلة nb-svc في _renderUnifiedHome.
+   • الترتيب في الموبايل (عمودين): [Nabtex AI · ذاكر] [الأكاديمية · الساحة] [المزرعة · السوق] — كل صف عائلة لون واحدة
+   • اللون في الأيقونة فقط؛ الكارت أبيض موحّد بإطار رفيع • الحركة transform/opacity فقط ومتوقفة مع prefers-reduced-motion */
+.nb-svc{--svc-out:cubic-bezier(.16,1,.3,1)}
+.nb-svc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:2px 0 4px}
+.nb-svc-card{
+  --c1:#1B6B3A;--c2:#2eaa5c;--soft:rgba(27,107,58,.10);--tx:#1B6B3A;
+  position:relative;display:flex;flex-direction:column;align-items:stretch;gap:12px;
+  min-width:0;min-height:132px;padding:14px;
+  font-family:inherit;text-align:start;color:var(--ink);
+  border:1px solid var(--line);border-radius:20px;background:var(--card);
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 12px 24px -18px rgba(0,0,0,.22);
+  cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  animation:nbSvcIn .55s var(--svc-out) calc(.12s + var(--i,0) * 60ms) backwards;
+  transition:transform .25s var(--svc-out),box-shadow .25s ease,border-color .25s ease;
+}
+@keyframes nbSvcIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.nb-svc-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nb-svc-ic{
+  flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 8px 14px -8px var(--c1);
+}
+.nb-svc-go{flex:none;display:grid;place-items:center;width:24px;height:24px;color:var(--muted);opacity:.7;transition:transform .25s var(--svc-out),color .25s,opacity .25s}
+.nb-svc-tx{display:flex;flex-direction:column;gap:4px;min-width:0}
+.nb-svc-t{font-size:14.5px;font-weight:800;line-height:1.35;color:var(--ink)}
+.nb-svc-d{
+  font-size:11.5px;line-height:1.65;font-weight:600;color:var(--slate);
+  min-height:3.3em;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+}
+.nb-svc-card:active{transform:scale(.97)}
+.nb-svc-card:focus-visible{outline:2.5px solid var(--tx);outline-offset:2px}
+@media (hover:hover){
+  .nb-svc-card:hover{transform:translateY(-3px);border-color:var(--tx);box-shadow:0 2px 8px rgba(0,0,0,.05),0 18px 30px -18px rgba(0,0,0,.28)}
+  .nb-svc-card:hover .nb-svc-go{transform:translateX(-3px);color:var(--tx);opacity:1}
+}
+/* عائلات الألوان: الذكاء = بنفسجي · التعلّم والمنافسة = ذهبي · الزراعة والسوق = أخضر */
+.nb-svc-card--ai{--c1:#6d28d9;--c2:#9333ea;--tx:#6d28d9}
+.nb-svc-card--study{--c1:#4f46e5;--c2:#7c6cf0;--tx:#4f46e5}
+.nb-svc-card--acad{--c1:#b97a12;--c2:#e2a93b;--tx:#a86b0b}
+.nb-svc-card--arena{--c1:#c2410c;--c2:#f59e42;--tx:#c2410c}
+.nb-svc-card--farm{--c1:#1B6B3A;--c2:#2eaa5c;--tx:#1B6B3A}
+.nb-svc-card--mkt{--c1:#0f766e;--c2:#2bb5a0;--tx:#0f766e}
+/* الوضع الداكن */
+[data-dark] .nb-svc-card{box-shadow:0 2px 10px rgba(0,0,0,.3)}
+[data-dark] .nb-svc-card--ai{--tx:#c4b5fd}
+[data-dark] .nb-svc-card--study{--tx:#a5b4fc}
+[data-dark] .nb-svc-card--acad{--tx:#fbbf24}
+[data-dark] .nb-svc-card--arena{--tx:#fdba74}
+[data-dark] .nb-svc-card--farm{--tx:#5fc97e}
+[data-dark] .nb-svc-card--mkt{--tx:#5eead4}
+/* شاشات ضيّقة جدًا: عمود واحد بدل ما النص يتزنق */
+@media (max-width:339px){.nb-svc-grid{grid-template-columns:minmax(0,1fr)}.nb-svc-card{min-height:0}.nb-svc-d{min-height:0}}
+/* شاشات أعرض: 3 أعمدة */
+@media (min-width:640px){
+  .nb-svc-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .nb-svc-card{min-height:148px;padding:16px}
+  .nb-svc-t{font-size:15.5px}.nb-svc-d{font-size:12.5px}
+}
+@media (prefers-contrast:more){.nb-svc-card{border-color:var(--ink)}.nb-svc-d{color:var(--ink)}}
+@media (prefers-reduced-motion:reduce){.nb-svc-card,.nb-svc-card *{animation:none!important;transition:none!important}}
 </style>
 
 <!-- ══════════════════════════════════════════════════════════════
