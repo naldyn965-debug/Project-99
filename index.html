@@ -24762,7 +24762,7 @@ try{[].forEach.call(document.querySelectorAll('.vcash-overlay'),function(ov){try
     </button>
     <!-- Arena (ساحة نبتيكس) — بدل «مزرعتي»؛ بيفتح نفس الـ overlay بتاع المنيو (NbArena.open). القديم (للتراجع): تاب مزرعتي = data-page="farm" + onclick="showPage('farm');window.scrollTo(0,0);" + أيقونة النبتة + label «مزرعتي» -->
     <button class="nb-nav-item" data-page="arena"
-            onclick="if(window.NbArena){NbArena.open()}return false" aria-label="ساحة نبتيكس">
+            onclick="(function(){var o=function(){var A=window.NbArena;return A&&typeof A.open==='function'?(A.open(),1):0};if(o())return;var d=0,go=function(){if(d)return;d=1;if(!o())console.error('[arena] NbArena غير معرّف — راجع arena.js')};var el=document.querySelector('script[src^=arena]');if(!el){el=document.createElement('script');el.src='arena.js?v=15';document.head.appendChild(el)}el.addEventListener('load',go,{once:true});el.addEventListener('error',function(){console.error('[arena] arena.js فشل التحميل')},{once:true});setTimeout(go,2500)})();return false" aria-label="ساحة نبتيكس">
       <span class="nb-ico">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
