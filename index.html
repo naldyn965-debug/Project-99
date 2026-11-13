@@ -14075,9 +14075,20 @@ document.addEventListener('click', e => {
         { view:'analytics', svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>', label:'التحليلات' },
         { view:'archive',   svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>', label:'الأرشيف' },
         { view:'expenses',  svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>', label:'المصروفات' },
+        /* FARM-AI-ENTRIES: عنصرين بيفتحوا Nabtex AI (مش صفحات) — لازم يفضلوا آخر القائمة عشان FarmNav بيربط الصفحات بالـ index */
+        { act:'diag', svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>', label:'تشخيص الأمراض بالصور' },
+        { act:'farm', svg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15v4M17 17h4"/></svg>', label:'تحليل المزرعة' },
       ];
 
       var navHtml = navItems.map(function(n, i) {
+        if (n.act) {   /* FARM-AI-ENTRIES */
+          var go = n.act === 'diag' ? 'openDiag' : 'openFarmAsk';
+          return (n.act === 'diag' ? '<p class="farm-sb-label" style="margin-top:16px">المساعد الذكي</p>' : '') +
+            '<button type="button" class="farm-nav-item farm-nav-act" aria-haspopup="dialog" onclick="farmSbToggle(false);if(window.NbFarmAI&&window.NbFarmAI.' + go + '){window.NbFarmAI.' + go + '();}" style="animation-delay:' + (i * 0.06) + 's">' +
+            '<span class="farm-nav-icon" aria-hidden="true">' + n.svg + '</span>' +
+            '<span class="farm-nav-label">' + n.label + '</span>' +
+          '</button>';
+        }
         var active = farmState.currentView === n.view ? ' farm-nav-active' : '';
         return '<button type="button"' + (active ? ' aria-current="page"' : '') + ' class="farm-nav-item' + active + '" onclick="FarmNav(\'' + n.view + '\')" style="animation-delay:' + (i * 0.06) + 's">' +
           '<span class="farm-nav-icon" aria-hidden="true">' + n.svg + '</span>' +
@@ -24750,18 +24761,18 @@ try{[].forEach.call(document.querySelectorAll('.vcash-overlay'),function(ov){try
       </span>
       <span class="nb-lbl">الرئيسية</span>
     </button>
-    <!-- AI (Nabtex AI) — بدل «مزرعتي» في الموضع الثاني؛ بيفتح واجهة المساعد المستقلة (NbFarmAI.open) بنفس شرط الوصول القديم -->
-    <button class="nb-nav-item" data-page="ai"
-            onclick="if(window.NbFarmAI&&typeof window.NbFarmAI.open==='function'){window.NbFarmAI.open(this);}" aria-label="المساعد الذكي Nabtex AI" aria-haspopup="dialog">
+    <!-- ذاكر (ذاكر مع نبتيكس) — بدل تاب «AI»؛ بيفتح Nabtex AI على وضع المذاكرة (NbFarmAI.openStudy). «تشخيص بالصور» و«تحليل المزرعة» اتنقلوا لقائمة نظام إدارة المزرعة. القديم (للتراجع): data-page="ai" + onclick="if(window.NbFarmAI&&typeof window.NbFarmAI.open==='function'){window.NbFarmAI.open(this);}" + أيقونة النجمة + label «AI» -->
+    <button class="nb-nav-item" data-page="study"
+            onclick="if(window.NbFarmAI&&typeof window.NbFarmAI.openStudy==='function'){window.NbFarmAI.openStudy(this);}" aria-label="ذاكر مع نبتيكس" aria-haspopup="dialog">
       <span class="nb-ico">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
              aria-hidden="true" focusable="false">
-          <path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/>
-          <path d="M19 15v4M17 17h4"/>
+          <path d="M2 5.5C4.5 4 8 4 12 6.5c4-2.5 7.5-2.5 10-1v13c-2.5-1.5-6-1.5-10 1-4-2.5-7.5-2.5-10-1z"/>
+          <path d="M12 6.5v13"/>
         </svg>
       </span>
-      <span class="nb-lbl">AI</span>
+      <span class="nb-lbl">ذاكر</span>
     </button>
     <!-- Academy (الكورسات) -->
     <button class="nb-nav-item" data-page="academy"
@@ -31753,6 +31764,29 @@ window.NbFarmAI.openStudy = function(opener){
   }catch(e){}
   return window.NbFarmAI.open(opener);
 };
+/* FARM-AI-ENTRIES: مدخلين من قائمة نظام إدارة المزرعة — «تشخيص الأمراض بالصور» (تاب التشخيص) و«تحليل المزرعة» (تاب اسأل بمصدر «مزرعتي على نبتكس») — بنفس بوابة الدخول/الاشتراك بتاعة open (بنلفّها من غير ما نعدّلها). بيحدّدوا المصدر قبل الفتح وبعدين بيختاروا التاب بنفس معالج الضغط الأصلي. للتراجع: امسح الكتلة دي + عنصري القائمة في farmShell (act). */
+function _nbaiOpenAt(tabName, opener){
+  try{
+    if(user()){
+      lsSet('nbai:src', 'farm');
+      if(SCR && SCR._setSrc && !OPEN) SCR._setSrc('farm');
+    }
+  }catch(e){}
+  var r = window.NbFarmAI.open(opener), n = 0, t = setInterval(function(){
+    n++;
+    try{
+      if(OPEN && SCR && SCR.querySelector){
+        clearInterval(t);
+        var b = SCR.querySelector('.nbai-tab[data-t="' + tabName + '"]');
+        if(b && b.getAttribute('aria-selected') !== 'true') b.click();
+      }
+    }catch(e){}
+    if(n > 100) clearInterval(t);
+  }, 50);
+  return r;
+}
+window.NbFarmAI.openDiag = function(opener){ return _nbaiOpenAt('diag', opener); };
+window.NbFarmAI.openFarmAsk = function(opener){ return _nbaiOpenAt('ask', opener); };
 /* AI-WARMUP: تحميل حالة الاشتراك والرصيد في الخلفية بعد ما الصفحة تهدا (مرة واحدة في الجلسة)، عشان أول ضغطة على «AI» أو «ذاكر مع نبتيكس» تلاقي الحالة جاهزة وتفتح فورًا. للتراجع: امسح الكتلة دي بس. */
 (function(){
   var done = false;
