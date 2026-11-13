@@ -25953,6 +25953,35 @@ body {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   BOTTOM NAV — تصغير الشريط والأيقونات بنسب متناسقة (CSS فقط)
+   الأحجام القديمة: شريط ~66px · أيقونة 22px (الكورسات 25px) ·
+   نص 9.5px · تكبير الأيقونة النشطة 1.22
+   للتراجع: امسح البلوك ده.
+═══════════════════════════════════════════════════════════════ */
+#nb-bottom-nav {
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  width: calc(100% - 40px);
+  max-width: 440px;
+}
+#nb-bottom-nav::before { border-radius: 26px; }
+#nb-bottom-nav .nb-nav-inner { padding: 5px 5px 4px; }
+#nb-bottom-nav #nb-slide-pill { top: 4px; bottom: 4px; }
+#nb-bottom-nav .nb-nav-item {
+  min-height: 44px;
+  padding: 6px 3px 5px;
+  gap: 2px;
+  border-radius: 14px;
+}
+#nb-bottom-nav .nb-nav-item .nb-ico svg { width: 19px; height: 19px; }
+#nb-bottom-nav button[data-page="academy"] .nb-ico svg { width: 21.5px; height: 21.5px; }
+#nb-bottom-nav .nb-nav-item .nb-lbl { font-size: 9px; letter-spacing: .01em; }
+#nb-bottom-nav .nb-nav-item.active .nb-ico { transform: translateY(-2px) scale(1.12); }
+#nb-bottom-nav .nb-nav-item.active .nb-ico svg { stroke-width: 2.45; }
+/* مسافة الأزرار العايمة فوق الشريط بعد ما بقى أقصر */
+#pwa-install-banner { bottom: calc(78px + env(safe-area-inset-bottom, 0px)) !important; }
+#pwa-fab            { bottom: calc(82px + env(safe-area-inset-bottom, 0px)) !important; }
+
 /* ─── HERO ANIMATIONS — REMOVED ──────────────────────────────
    particle canvas + floating orbs + scroll indicator
 ─────────────────────────────────────────────────────────────── */
