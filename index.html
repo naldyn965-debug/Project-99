@@ -31608,7 +31608,9 @@ function hideScreen(){
     var done = function(){
       if(fin) return; fin = true;
       if(OPEN || !ov) return;   /* اتفتحت تاني وهي بتقفل */
+      var _ca = ov._closeAn;   /* CLOSE-ANIM-FIX: أنيميشن الخروج (fill:'forwards') كان بيفضل ماسك الشاشة شفافة (opacity 0) بعد ما تتقفل، فلما «ذاكر» تتفتح تاني كانت بتتفتح مخفية وتبان الرئيسية بس. هنا بنلغيه بعد ما الشاشة تتخبّى. للتراجع: امسح السطر ده والسطر اللي بعد سطر _closeAn بس. */
       ov._closeAn = null; ov.hidden = true; ov.style.height = ''; ov.style.top = '';
+      try{ if(_ca && _ca.cancel) _ca.cancel(); }catch(e){}   /* CLOSE-ANIM-FIX */
       if(ov._afterHide){ var _ah = ov._afterHide; ov._afterHide = null; try{ _ah(); }catch(e){} }   /* STUDY-BACK-HOME */
       if(o2 && o2.isConnected){ try{ o2.focus({ preventScroll: true }); }catch(e){} }
     };
