@@ -29470,6 +29470,45 @@ html[dir="ltr"] .nbai-ov .nbsv-dr.is-closing .nbsv-pn{animation-name:nbsv-out-l}
 .nbai-ov .nbai-qm-b:focus-visible{outline:2px solid var(--ai-ring);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.nbai-ov .nbai-qm-b,.nbai-ov .nbai-qm-ic,.nbai-ov .nbai-qm-sw,.nbai-ov .nbai-qm-sw i{transition:none}}
 </style>
+<style id="nb-doc-focus">
+/* NB-DOC-FOCUS: تنظيم بصري لكارت الملف (.nbdc) في «ذاكر مع نبتكس» — CSS فقط (مفيش تغيير في الـ JS ولا الـ IDs ولا منطق الدفعات/النقاط).
+   المشكلة: الكارت كان بيفضل بحجمه الكامل (معاينة 96px + زر + صف تنقّل) طول وقت الشرح، فمساحة قراءة الشرح بتضيق.
+   الحل على مرحلتين:
+   1) أثناء الشرح الفعلي (الزر الرئيسي معطّل بنص «جاري شرح…»): المعاينة وصف التنقّل بيختفوا، والزر بيتحوّل لشريط حالة نحيف بنبضة هادية.
+   2) بعد ما المحادثة تبدأ (فيه رسائل فعلية): الكارت كله بيتدمج (رأس أصغر، شريط أرفع، زر 42px بسطر واحد، معاينة مصغّرة لو الطالب فتحها بزر العين).
+   الحالة الأولى (قبل أول شرح، الترحيب ظاهر) ما اتغيّرتش. للتراجع: امسح الـ style ده بس. */
+
+/* 1) أثناء الشرح */
+.nbai-ov .nbdc:has(.nbdc-go[disabled]:not(.is-sec)) :is(.nbdc-nav,.nbdc-row:not(:has(.is-load))){display:none}
+.nbai-ov .nbdc .nbdc-go[disabled]:not(.is-sec){flex-direction:row;gap:9px;min-height:38px;padding:4px 14px;border-radius:14px;background:var(--ai-soft);color:var(--ai-tx);opacity:1;box-shadow:inset 0 0 0 1px var(--ai-ring)}
+.nbai-ov .nbdc .nbdc-go[disabled]:not(.is-sec)>small{display:none}
+.nbai-ov .nbdc .nbdc-go[disabled]:not(.is-sec)::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--ai-tx);animation:nbdf-pulse 1.3s ease-in-out infinite}
+.nbai-ov .nbdc:has(.nbdc-go[disabled]:not(.is-sec)) .nbdc-tg{display:none}
+@keyframes nbdf-pulse{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+
+/* 2) بعد بداية المحادثة: كارت مدمج */
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc{margin-top:6px;padding:8px 10px 10px;border-radius:18px;box-shadow:none}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc :is(.nbdc-ic,.nbdc-tg,.nbdc-x){width:32px;height:32px}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-ic{border-radius:10px;box-shadow:none}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc :is(.nbdc-ic,.nbdc-tg,.nbdc-x) svg{width:16px;height:16px}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-nm{font-size:12.5px;line-height:1.4}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-sb{font-size:11px;line-height:1.4}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-bar{margin-top:8px}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-bar.is-seg{height:5px}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-ok{margin-top:8px;padding:4px 6px 4px 8px;font-size:11.5px;line-height:1.5}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-nw{min-height:28px;padding:0 11px;font-size:11px}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-row{margin-top:8px}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-th{width:48px;height:64px;border-radius:10px}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-act{margin-top:8px}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-go:not([disabled]){flex-direction:row;flex-wrap:wrap;gap:0 8px;min-height:42px;padding:4px 14px;border-radius:14px}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-go:not([disabled])>small::before{content:"·";margin-inline-end:8px}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-nav{margin-top:6px}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-nv{min-height:36px;padding:0 10px;border-radius:12px;font-size:12px}
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbdc .nbdc-sb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 3) «وضع الأسئلة الفائق»: بيختفي أول ما المحادثة تبدأ (بعد الإرسال) ويظهر تاني في «جلسة جديدة». الحالة (qm) والـ JS ما اتغيّروش — إخفاء بصري بس. للتراجع: امسح السطر ده. */
+.nbai-ov .nbai-pane.nbai-study:has(.nbai-th>.nbai-m:not(.nbai-greet)) .nbai-qm{display:none}
+@media (prefers-reduced-motion:reduce){.nbai-ov .nbdc .nbdc-go[disabled]:not(.is-sec)::before{animation:none;opacity:1}}
+</style>
 <style id="nb-ai-qmode-visual">
 /* STUDY-QMODE-VISUAL: فصل بصري كامل بين «وضع الشرح» و«وضع الأسئلة الفائق» داخل «ذاكر مع نبتيكس» فقط — بصري بحت (مفيش تغيير في الـ IDs أو الـ handlers أو منطق الحصص/الطلبات).
    • الفكرة: كلاس .nbai-qmode بيتحط على .nbai-ov (الواجهة بتاعة Nabtex AI بس) لما src='study' و«وضع الأسئلة الفائق» شغّال. كل ألوان الواجهة أصلًا شغّالة بمتغيرات --ai-* فتتبدّل لباليت «إلكتريك» (نيلي ← أزرق ← تركواز) بدل البنفسجي.
