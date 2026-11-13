@@ -29396,6 +29396,17 @@ html[dir="ltr"] .nbai-ov .nbsv-dr.is-closing .nbsv-pn{animation-name:nbsv-out-l}
 .nbdc-row[hidden]{display:none}
 .nbdc-th{padding:0;font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform 160ms var(--ai-ease)}
 .nbdc-th:active{transform:scale(.95)}
+/* STUDY-DOC-OFF: إلغاء/استرجاع صفحة من الدفعة — خاص بـ .nbdc-th بس (الصور العادية .nbst-x ماتتأثرش) */
+.nbdc-pvb{position:absolute;inset:0;z-index:1;display:block;width:100%;height:100%;margin:0;padding:0;border:0;background:none;font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.nbdc-th .nbst-no{pointer-events:none}
+.nbdc-off{position:absolute;z-index:3;top:6px;inset-inline-start:6px;display:grid;place-items:center;width:22px;height:22px;padding:0;border:0;border-radius:50%;background:rgba(15,23,42,.55);color:#fff;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:transform 160ms var(--ai-ease),background 180ms;-webkit-tap-highlight-color:transparent}
+.nbdc-off::after{content:"";position:absolute;inset:-8px}
+.nbdc-off:active{transform:scale(.88)}
+.nbdc-off[disabled]{opacity:.5;cursor:default}
+.nbdc-th.is-off img{opacity:.3;filter:grayscale(1)}
+.nbdc-th.is-off .nbst-no{background:#6b7280}
+.nbdc-th.is-off .nbdc-off{background:var(--ai-g)}
+.nbai-ov :is(.nbdc-pvb,.nbdc-off):focus-visible{outline:2.5px solid var(--ai-tx);outline-offset:-3px}
 
 .nbdc-act{margin-top:10px}
 .nbdc-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
@@ -31405,6 +31416,15 @@ function buildScreen(){
   function dcBt(n){ return n === 1 ? 'دفعة' : (n === 2 ? 'دفعتين' : (n <= 10 ? n + ' دفعات' : n + ' دفعة')); }
   function dcSet(el, h){ if(el._h !== h){ el._h = h; el.innerHTML = h; } }   /* بنكتب بس لو المحتوى اتغيّر (من غير وميض ولا إعادة تشغيل حركات) */
 
+  /* STUDY-DOC-OFF: إلغاء/استرجاع صفحة من الدفعة قبل الشرح — الصفحات الملغية (D.off) بتتشال من stImgs فمش بتتبعت ومش بتتحسب مشروحة. للتراجع: امسح كل سطور STUDY-DOC-OFF (JS + CSS) */
+  var DCO = { x: dcSvg('<path d="M6 6l12 12M18 6 6 18"/>', 12, 3), add: dcSvg('<path d="M12 5v14M5 12h14"/>', 12, 3) };
+  function dcOnPages(D){ return D.pages.filter(function(p){ return !(D.off && D.off[p.n]); }); }   /* STUDY-DOC-OFF: صفحات الدفعة المحدّدة (غير الملغية) */
+  function dcNote(ns){   /* STUDY-DOC-OFF: أرقام الصفحات كمدى (1–4، 6–12) — لو متصلة بيطلع نفس الصيغة القديمة بالظبط */
+    var r = [], s0 = ns[0], e0 = s0, i;
+    for(i = 1; i <= ns.length; i++){ if(ns[i] === e0 + 1){ e0 = ns[i]; continue; } r.push(s0 === e0 ? '' + s0 : s0 + '–' + e0); s0 = ns[i]; e0 = s0; }
+    return ns.length === 1 ? 'الصفحة ' + ns[0] : 'الصفحات ' + r.join('، ');
+  }
+
   /* ── العناصر: كارت الملف (قبل شريط الصور) + زر الرفع جنب زر الصور + input الملف ── */
   var dcEl = document.createElement('div');
   dcEl.className = 'nbdc'; dcEl.hidden = true; dcEl.setAttribute('role', 'region'); dcEl.setAttribute('aria-label', 'ملف المذاكرة');
@@ -31455,7 +31475,11 @@ function buildScreen(){
     /* معاينة صفحات الدفعة الحالية (صفحة تظهر أول ما تتجهّز) */
     h = '';
     if(D && D.open){
-      D.pages.forEach(function(p, k){ h += '<button type="button" class="nbst-th nbdc-th" data-dc="pv" data-i="' + k + '" aria-label="معاينة صفحة ' + p.n + '"><img src="' + p.pv + '" alt="صفحة ' + p.n + '"><span class="nbst-no" aria-hidden="true">' + p.n + '</span></button>'; });
+      D.pages.forEach(function(p, k){   /* STUDY-DOC-OFF: القديم (للتراجع): <button class="nbst-th nbdc-th" data-dc="pv" …><img><span class="nbst-no"></span></button> */
+        var off = !!(D.off && D.off[p.n]), lk = busy || stLoad > 0;
+        h += '<div class="nbst-th nbdc-th' + (off ? ' is-off' : '') + '"><button type="button" class="nbdc-pvb" data-dc="pv" data-i="' + k + '" aria-label="معاينة صفحة ' + p.n + (off ? ' (ملغية)' : '') + '"><img src="' + p.pv + '" alt="صفحة ' + p.n + '"></button><span class="nbst-no" aria-hidden="true">' + p.n + '</span>' +
+          '<button type="button" class="nbdc-off" data-dc="off" data-i="' + k + '" aria-pressed="' + (off ? 'true' : 'false') + '" aria-label="' + (off ? 'استرجاع صفحة ' : 'إلغاء صفحة ') + p.n + '" title="' + (off ? 'استرجاع الصفحة' : 'إلغاء الصفحة') + '"' + (lk ? ' disabled' : '') + '>' + (off ? DCO.add : DCO.x) + '</button></div>';
+      });
       for(i = D.pages.length + D.bad; i < D.want; i++) h += '<div class="nbst-th is-load" aria-busy="true"><span class="nbai-wz-spin" aria-hidden="true"></span></div>';
     }
     dcRow.hidden = !h; dcSet(dcRow, h);
@@ -31471,7 +31495,8 @@ function buildScreen(){
       else if(stLoad > 0) h = '<button type="button" class="nbdc-go" disabled><span>بجهّز ' + dcRg(from, to) + '…</span><small>' + D.pages.length + ' من ' + D.want + '</small></button>';
       else if(allDone) h = '<button type="button" class="nbdc-go is-sec" disabled><span>' + dcRg(from, to) + ' اتشرحوا</span><small>اختار دفعة تانية بالأسهم</small></button>';
       else if(!D.pages.length) h = '<button type="button" class="nbdc-go is-sec" data-dc="retry"><span>حمّل ' + dcRg(from, to) + '</span><small>اضغط لتجهيز الصفحات</small></button>';
-      else h = '<button type="button" class="nbdc-go" data-dc="go"><span>اشرح ' + dcRg(from, to) + '</span><small>بنقطة واحدة</small></button>';
+      else if(!dcOnPages(D).length) h = '<button type="button" class="nbdc-go is-sec" disabled><span>كل الصفحات ملغية</span><small>رجّع صفحة واحدة على الأقل</small></button>';   /* STUDY-DOC-OFF */
+      else { var offN = D.pages.length - dcOnPages(D).length; h = '<button type="button" class="nbdc-go" data-dc="go"><span>اشرح ' + (offN ? dcPg(D.pages.length - offN) : dcRg(from, to)) + '</span><small>بنقطة واحدة' + (offN ? ' · ملغي ' + offN : '') + '</small></button>'; }   /* STUDY-DOC-OFF: القديم (للتراجع): else h = '<button … data-dc="go"><span>اشرح ' + dcRg(from, to) + '</span><small>بنقطة واحدة</small></button>'; */
       if(!endMode && (pv >= 0 || nx >= 0)) nh = '<button type="button" class="nbdc-nv" data-dc="prev" aria-label="الدفعة السابقة اللي لسه ماتشرحتش"' + (wait || pv < 0 ? ' disabled' : '') + '>' + DCI.prev + '<span>السابقة</span></button>' +
         '<span class="nbdc-nl">باقي ' + dcBt(left) + '</span>' +
         '<button type="button" class="nbdc-nv" data-dc="next" aria-label="الدفعة التالية اللي لسه ماتشرحتش"' + (wait || nx < 0 ? ' disabled' : '') + '><span>التالية</span>' + DCI.next + '</button>';
@@ -31548,7 +31573,7 @@ function buildScreen(){
     var old = DOC; if(old && old.pdf){ try{ old.pdf.destroy(); }catch(e){} }
     dcTok++; stImgs = []; stLoad = 0; dcOpening = '';
     if(dcAuto && stQi.value.trim() === dcAuto){ stQi.value = ''; fit(); } dcAuto = '';
-    DOC = { name: file.name || 'document.pdf', pdf: pdf, total: pdf.numPages, at: 0, done: {}, pages: [], want: 0, bad: 0, win: null, open: true, last: null, need: false };
+    DOC = { name: file.name || 'document.pdf', pdf: pdf, total: pdf.numPages, at: 0, done: {}, pages: [], want: 0, bad: 0, win: null, open: true, last: null, need: false, off: {} };
     dcBatch();
   }
   function dcClose(){
@@ -31598,7 +31623,7 @@ function buildScreen(){
   function dcBatch(){
     var D = DOC; if(!D) return;
     var N = dcSize(), from = D.at + 1, to = Math.min(D.total, D.at + N), tk = ++dcTok;
-    D.pages = []; D.bad = 0; D.win = [from, to]; D.want = to - from + 1; D.need = false;
+    D.pages = []; D.bad = 0; D.win = [from, to]; D.want = to - from + 1; D.need = false; D.off = {};   /* STUDY-DOC-OFF: دفعة جديدة = كل الصفحات محدّدة */
     stImgs = []; stLoad = D.want; show('', false); paintStrip();
     (function next(no){
       if(tk !== dcTok || DOC !== D || !card.isConnected) return;
@@ -31624,22 +31649,32 @@ function buildScreen(){
     D.at = at; D.last = null; D.need = false; D.open = true;
     dcBatch();
   }
+  function dcOff(k){   /* STUDY-DOC-OFF: إلغاء صفحة من الدفعة (أو استرجاعها) — stImgs بتتبني من الصفحات المحدّدة بس */
+    var D = DOC, p = D && D.pages[k]; if(!p || busy || stLoad) return;
+    if(!D.off) D.off = {};
+    if(D.off[p.n]) delete D.off[p.n]; else D.off[p.n] = 1;
+    stImgs = dcOnPages(D).map(function(q){ return { d: q.d, qc: null, pg: q.n }; });
+    show('', false); paintStrip();
+  }
   function dcGo(){
     var D = DOC; if(!D || busy || stLoad) return;
     if(!D.pages.length){ dcBatch(); return; }
-    var same = stImgs.length === D.pages.length && D.pages.every(function(p, i){ return stImgs[i] && stImgs[i].d === p.d; });
-    if(!same){ stImgs = D.pages.map(function(p){ return { d: p.d, qc: null, pg: p.n }; }); paintStrip(); }
+    var P = dcOnPages(D);   /* STUDY-DOC-OFF: القديم (للتراجع): D.pages بدل P في السطرين اللي تحت */
+    if(!P.length){ show('رجّع صفحة واحدة على الأقل عشان أشرحها.', true); return; }
+    var same = stImgs.length === P.length && P.every(function(p, i){ return stImgs[i] && stImgs[i].d === p.d; });
+    if(!same){ stImgs = P.map(function(p){ return { d: p.d, qc: null, pg: p.n }; }); paintStrip(); }
     runStudy();
   }
 
   /* ── ربط runStudy: قبل الإرسال (ملاحظة تلقائية بالصفحات لو الطالب ماكتبش حاجة) وبعد نجاح الشرح (تقدّم المؤشر) ── */
   function dcPre(){
     dcRun = null;
-    var D = DOC; if(!D || !D.pages.length || stImgs.length !== D.pages.length) return;
-    for(var i = 0; i < D.pages.length; i++) if(!stImgs[i] || stImgs[i].d !== D.pages[i].d) return;
-    var a = D.pages[0].n, b = D.pages[D.pages.length - 1].n, v = stQi.value.trim();
-    dcRun = { D: D, pages: D.pages.map(function(p){ return p.n; }), to: D.win ? D.win[1] : b };
-    if(!v || v === dcAuto){ dcAuto = (a === b ? 'الصفحة ' + a : 'الصفحات ' + a + '–' + b) + ' من «' + dcShort(D.name) + '»'; stQi.value = dcAuto; }
+    var D = DOC; if(!D) return;
+    var P = dcOnPages(D); if(!P.length || stImgs.length !== P.length) return;   /* STUDY-DOC-OFF: المقارنة بالصفحات المحدّدة بس (القديم: D.pages) */
+    for(var i = 0; i < P.length; i++) if(!stImgs[i] || stImgs[i].d !== P[i].d) return;
+    var b = P[P.length - 1].n, v = stQi.value.trim();
+    dcRun = { D: D, pages: P.map(function(p){ return p.n; }), to: D.win ? D.win[1] : b };
+    if(!v || v === dcAuto){ dcAuto = dcNote(dcRun.pages) + ' من «' + dcShort(D.name) + '»'; stQi.value = dcAuto; }   /* STUDY-DOC-OFF: القديم (للتراجع): (a === b ? 'الصفحة ' + a : 'الصفحات ' + a + '–' + b) */
     D.last = null;
   }
   function dcDone(S){
@@ -31732,6 +31767,7 @@ function buildScreen(){
     else if(a === 'new') dcAsk();
     else if(a === 'retry') dcBatch();
     else if(a === 'pv') dcLbOpen(+b.getAttribute('data-i'));
+    else if(a === 'off') dcOff(+b.getAttribute('data-i'));   /* STUDY-DOC-OFF */
   });
   dcBtn.addEventListener('click', dcAsk);
   dcFile.addEventListener('change', function(){ var f = this.files && this.files[0]; try{ this.value = ''; }catch(e){} dcPick(f); });
