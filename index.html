@@ -31886,6 +31886,47 @@ if(window.AiSub && typeof window.AiSub.onChange === 'function') window.AiSub.onC
 @media(prefers-reduced-motion:reduce){.nbsp{display:none}}
 </style>
 
+<style id="nb-study-green">
+/* STUDY-GREEN: «ذاكر مع نبتيكس» بقى بالأخضر الفاتح (نفس لون زر «ذاكر مع نبتيكس» في الرئيسية) بدل البنفسجي — شاشة المذاكرة + بوابة الدخول.
+   • شاشة المذاكرة: تبديل متغيّرات اللون بس (--aq1..3 و --ai-*) وقت وضع المذاكرة، فكل عنصر شغّال بالمتغيّرات (اللوجو، الأزرار، العدّاد، العناوين، الحدود) بيتلوّن أخضر لوحده.
+     «وضع الأسئلة الفائق» (.nbai-qmode) فاضل بباليته الأصلية (نيلي ← أزرق ← تركواز) ومفيش أي تأثير عليه، ولا على Nabtex AI العادي ولا التشخيص.
+   • البوابة (.nbsp): فاتحة (نعناعي) زي الزر في النهار، وأخضر غامق في الوضع الداكن.
+   للتراجع: امسح الكتلة دي بس. */
+.nbai-ov:not(.nbai-qmode):has(.nbai-pane.nbai-study:not([hidden])){--aq1:#238a4f;--aq2:#2f9d5c;--aq3:#45b873;--ai-tx:#1b6b3a;--ai-soft:rgba(45,154,88,.10);--ai-soft2:rgba(45,154,88,.18);--ai-ring:rgba(45,154,88,.34);--ai-glow:rgba(27,107,58,.5)}
+[data-dark] .nbai-ov:not(.nbai-qmode):has(.nbai-pane.nbai-study:not([hidden])){--ai-tx:#86e0a6;--ai-soft:rgba(45,154,88,.18);--ai-soft2:rgba(45,154,88,.28);--ai-ring:rgba(95,201,126,.42);--ai-glow:rgba(46,170,92,.5)}
+.nbai-ov:not(.nbai-qmode):has(.nbai-pane.nbai-study:not([hidden]))::before{background:radial-gradient(70% 30% at 92% -4%,rgba(45,154,88,.12),transparent 72%),radial-gradient(60% 28% at 6% 104%,rgba(27,107,58,.08),transparent 72%),var(--bg)}
+[data-dark] .nbai-ov:not(.nbai-qmode):has(.nbai-pane.nbai-study:not([hidden]))::before{background:radial-gradient(70% 30% at 92% -4%,rgba(46,170,92,.2),transparent 72%),radial-gradient(60% 28% at 6% 104%,rgba(27,107,58,.2),transparent 72%),var(--bg)}
+.nbai-ov:where(:not(.nbai-qmode)) .nbai-pane.nbai-study .nbai-cm{box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 10px 26px -16px rgba(27,107,58,.35),0 2px 6px -3px rgba(16,24,40,.08)}
+/* موجة الرجوع من «الأسئلة الفائق» لوضع المذاكرة بقت خضراء */
+.nbai-ov .nbai-qwash.is-off::before{background:radial-gradient(circle,rgba(45,154,88,.3) 0%,rgba(79,191,127,.14) 30%,transparent 62%)}
+[data-dark] .nbai-ov .nbai-qwash.is-off::before{background:radial-gradient(circle,rgba(46,170,92,.4) 0%,rgba(79,191,127,.16) 30%,transparent 62%)}
+
+/* ── بوابة «دخول عالم المذاكرة» ── */
+.nbsp{--sp-in:rgba(255,255,255,.9);--sp-g1:rgba(45,154,88,.25);--sp-g2:rgba(45,154,88,.45);color:#1b6b3a;background:#d9efe1}
+.nbsp-bg{background:radial-gradient(120% 80% at 50% 40%,#f4fbf6 0%,#e3f4e9 38%,#d3ecdc 74%,#c2e3cf 100%)}
+.nbsp-glow{background:radial-gradient(circle at 22% 28%,rgba(255,255,255,.85),transparent 42%),radial-gradient(circle at 80% 72%,rgba(45,154,88,.22),transparent 42%),radial-gradient(circle at 70% 18%,rgba(127,209,160,.35),transparent 36%)}
+.nbsp-st i{background:#2d9a58;box-shadow:0 0 7px rgba(45,154,88,.55)}
+.nbsp-orb{background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.95),rgba(255,255,255,.55) 62%);border:1px solid rgba(45,154,88,.28);box-shadow:inset 0 1px 0 var(--sp-in),0 0 44px var(--sp-g1)}
+.nbsp-orb::before,.nbsp-orb::after{border-color:rgba(45,154,88,.5)}
+.nbsp-ic{stroke:#1b6b3a}
+.nbsp-t{color:#1b6b3a;text-shadow:0 2px 14px rgba(255,255,255,.8)}
+.nbsp-s{color:rgba(27,107,58,.72)}
+.nbsp-pg{background:rgba(27,107,58,.14)}
+.nbsp-pg i{background:linear-gradient(90deg,#2d9a58,#7fd1a0)}
+@keyframes nbspGlow{0%,100%{box-shadow:inset 0 1px 0 var(--sp-in),0 0 44px var(--sp-g1)}50%{box-shadow:inset 0 1px 0 var(--sp-in),0 0 70px var(--sp-g2)}}
+[data-dark] .nbsp{--sp-in:rgba(255,255,255,.35);--sp-g1:rgba(46,170,92,.5);--sp-g2:rgba(127,209,160,.75);color:#fff;background:#06170f}
+[data-dark] .nbsp-bg{background:radial-gradient(120% 80% at 50% 40%,#14573a 0%,#0d3b27 38%,#08241a 74%,#04130d 100%)}
+[data-dark] .nbsp-glow{background:radial-gradient(circle at 22% 28%,rgba(46,170,92,.5),transparent 42%),radial-gradient(circle at 80% 72%,rgba(127,209,160,.18),transparent 42%),radial-gradient(circle at 70% 18%,rgba(190,240,210,.2),transparent 36%)}
+[data-dark] .nbsp-st i{background:#fff;box-shadow:0 0 7px rgba(190,240,210,.9)}
+[data-dark] .nbsp-orb{background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.3),rgba(255,255,255,.06) 62%);border-color:rgba(255,255,255,.3)}
+[data-dark] .nbsp-orb::before,[data-dark] .nbsp-orb::after{border-color:rgba(190,240,210,.6)}
+[data-dark] .nbsp-ic{stroke:#fff}
+[data-dark] .nbsp-t{color:#fff;text-shadow:0 2px 18px rgba(46,170,92,.6)}
+[data-dark] .nbsp-s{color:rgba(255,255,255,.74)}
+[data-dark] .nbsp-pg{background:rgba(255,255,255,.14)}
+[data-dark] .nbsp-pg i{background:linear-gradient(90deg,#9fe0b8,#fff)}
+</style>
+
 <style id="nb-ai-limit-pw">
 /* LIMIT-PAYWALL: دخول ناعم لشاشة الباقات لما النقاط تخلص (بس لما تتفتح بـ limit) — الخلفية تظهر بهدوء، الصندوق يطلع بحركة طويلة هادية، وبعدين الأيقونة والعنوان والباقات والزر يدخلوا ورا بعض. للتراجع: امسح الكتلة دي. */
 .aipw.aipw-lim{animation:aipwLimFade .5s ease both}
