@@ -32538,6 +32538,16 @@ if(window.AiSub && typeof window.AiSub.onChange === 'function') window.AiSub.onC
   .nb-h2-study:hover{transform:none}
 }
 </style>
+<style id="nb-hero-btns-compact">
+/* HERO-BTNS-COMPACT: تصغير متناسق لزرّي «ذاكر مع نبتيكس» و«خدمات نبتيكس» في كارت الترحيب (الرئيسية) — مقاسات فقط (ارتفاع/خط/أيقونة/مسافة/عرض)، مفيش تغيير في الألوان ولا الحركات ولا الـ JS ولا الوظائف.
+   الهرمية محفوظة: الرئيسي أعلى بـ 4px من الثانوي، والاتنين بنفس العرض ومتمركزين. للتراجع: امسح الـ style ده بس. */
+.nb-h2-study,.nb-svc-toggle{width:min(100%,304px);margin-inline:auto;padding:0 clamp(14px,4.4vw,20px);gap:7px}
+.nb-h2-study{min-height:clamp(36px,9.4vw,40px);margin-top:10px;font-size:clamp(13px,3.6vw,14.5px)}
+.nb-h2-study svg{width:clamp(15px,4.1vw,17px);height:clamp(15px,4.1vw,17px)}
+.nb-svc-toggle{min-height:clamp(32px,8.6vw,36px);margin-top:10px;font-size:clamp(12.5px,3.4vw,13.5px)}
+.nb-svc-tic svg{width:clamp(15px,4.1vw,16px);height:clamp(15px,4.1vw,16px)}
+.nb-svc-chev svg{width:14px;height:14px}
+</style>
 <script>
 /* PURPLE-PREMIUM (مع كتلة الـ CSS اللي فوق): بيحدّث موضع الإضاءة داخل الزر + موجة الضغط. تفويض أحداث على document (الزر بيتبني ديناميكيًا) — مفيش تأثير على onclick بتاعه. للتراجع: امسح الـ <script> ده. */
 (function(){
