@@ -4457,10 +4457,8 @@ body.modal-open { overflow: hidden; }
   <div class="mob-menu" id="mob-menu">
     <!-- تم نقل الرئيسية / مزرعتي / السوق / الأكاديمية للشريط السفلي -->
     <a href="#" class="nl" onclick="showPage('goals');closeMob();return false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>أهداف المنصة</a>
-    <a href="#" class="nl" onclick="closeMob();if(window.NbArena){NbArena.open()}return false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>ساحة نبتيكس</a>
     <a href="#" class="nl" onclick="showPage('privacy');closeMob();return false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>سياسة الخصوصية</a>
     <a href="#" class="nl" onclick="showPage('ip-policy');closeMob();return false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>الملكية الفكرية</a>
-    <a href="#" class="nl" onclick="showPage('market');closeMob();return false"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:8px;flex-shrink:0"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>السوق الزراعي</a>
     <!-- زرار تبديل المظهر (اتنقل من الشريط العلوي — نفس الـ id والـ listener) -->
     <button type="button" class="nl" id="thm-btn" title="تبديل المظهر" aria-label="تبديل المظهر">
         <!-- Sun icon (shown in dark mode) -->
@@ -25664,6 +25662,307 @@ body {
 [data-dark] .nb-dl-btn {
   border-color: rgba(75,184,112,.25) !important;
   background: rgba(27,107,58,.12) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PREMIUM DROPDOWN MENU (#mob-menu) — تحسين شكل القائمة فقط
+   CSS فقط: بدون أي تغيير في الـ JS أو الـ ids أو الـ onclick.
+   - الإضافات دي بتتحط بعد القواعد القديمة عشان تكسبها في الـ cascade
+   - display بتاع #mobLogin/#mobRegister/#mobLogout بيتحكم فيه الـ JS
+     inline، فمش بنفرضه هنا بـ !important
+═══════════════════════════════════════════════════════════════ */
+
+/* ── الحاوية: لوحة زجاجية بزوايا ناعمة وظل عميق ── */
+.mob-menu {
+  padding-left: 16px;
+  padding-right: 16px;
+  gap: 4px;
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 28px 28px;
+  background:
+    radial-gradient(120% 90px at 50% 0, rgba(45,154,88,.10), transparent 70%),
+    var(--glass);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(24px) saturate(1.4);
+  box-shadow:
+    0 28px 48px -18px rgba(10,40,22,.28),
+    0 8px 18px -10px rgba(10,40,22,.12);
+}
+.mob-menu.open {
+  max-height: 640px;
+  max-height: min(640px, calc(100dvh - 80px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-top: 12px;
+  padding-bottom: 18px;
+}
+[data-dark] .mob-menu {
+  background:
+    radial-gradient(120% 90px at 50% 0, rgba(75,184,112,.10), transparent 70%),
+    var(--glass);
+  box-shadow:
+    0 28px 52px -16px rgba(0,0,0,.7),
+    0 0 0 1px rgba(75,184,112,.06) inset;
+}
+
+/* ── الصف: أيقونة داخل مربع ناعم + نص + سهم ── */
+.mob-menu .nl {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 54px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0;
+  text-align: start;
+  transition:
+    background .22s ease,
+    border-color .22s ease,
+    color .2s ease,
+    transform .2s var(--ease-out) !important;
+}
+
+/* مربع الأيقونة (بيغطي كل أيقونات الصفوف، بما فيها شمس/قمر المظهر) */
+.mob-menu .nl > svg,
+.mob-menu #thm-btn svg {
+  box-sizing: border-box;
+  width: 38px;
+  height: 38px;
+  padding: 9px;
+  margin: 0 !important;
+  vertical-align: middle !important;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  color: var(--brand);
+  background: linear-gradient(145deg, var(--brand-pale), var(--brand-mist));
+  transition:
+    background .25s ease,
+    color .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease,
+    transform .3s var(--ease-spring);
+}
+[data-dark] .mob-menu .nl > svg,
+[data-dark] .mob-menu #thm-btn svg {
+  color: var(--brand-xl);
+  border-color: rgba(75,184,112,.2);
+  background: rgba(75,184,112,.10);
+}
+
+/* سهم التنقل (بيستخدم ::after الموجود للصفوف بس) */
+.mob-menu .nl::after {
+  content: '';
+  position: static;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin-inline-start: auto;
+  margin-inline-end: 6px;
+  right: auto; left: auto; bottom: auto;
+  border: 0;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  border-radius: 1px;
+  background: none;
+  opacity: .32;
+  transform: rotate(45deg);
+  transition: transform .25s var(--ease-out), opacity .2s ease;
+}
+
+/* hover (للأجهزة اللي فيها ماوس بس) */
+@media (hover: hover) and (pointer: fine) {
+  .mob-menu .nl:hover {
+    background: var(--brand-pale);
+    border-color: var(--line);
+    color: var(--brand);
+  }
+  [data-dark] .mob-menu .nl:hover { color: var(--brand-xl); }
+  .mob-menu .nl:hover::after {
+    opacity: .85;
+    transform: translateX(-3px) rotate(45deg);
+  }
+  .mob-menu .nl:hover > svg,
+  .mob-menu #thm-btn:hover svg {
+    color: #fff;
+    border-color: transparent;
+    background: linear-gradient(145deg, var(--brand-l), var(--brand-d));
+    box-shadow: 0 8px 16px -6px rgba(27,107,58,.55);
+    transform: scale(1.06) rotate(-4deg);
+  }
+}
+/* ضغط (لمس) */
+.mob-menu .nl:active {
+  transform: scale(.985) !important;
+  background: var(--brand-mist);
+}
+.mob-menu .nl:active > svg {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(145deg, var(--brand-l), var(--brand-d));
+}
+.mob-menu .nl:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* ── زرار المظهر: فاصل رفيع + مفتاح تبديل (switch) ── */
+.mob-menu #thm-btn { margin-top: 12px; }
+.mob-menu #thm-btn::before {
+  content: '';
+  position: absolute;
+  top: -7px; left: 14px; right: 14px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line2), transparent);
+  pointer-events: none;
+}
+.mob-menu #thm-btn::after {
+  box-sizing: border-box;
+  width: 42px;
+  height: 24px;
+  margin-inline-end: 4px;
+  padding: 3px;
+  border: 0;
+  border-radius: 99px;
+  opacity: 1;
+  transform: none;
+  background:
+    radial-gradient(circle at 50% 50%, #fff 0 8.4px, transparent 9px) 100% 50% / 18px 18px no-repeat content-box,
+    var(--line2);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.12);
+  transition: background-position .3s var(--ease-spring), background-color .3s ease;
+}
+.mob-menu #thm-btn.is-dark::after {
+  background:
+    radial-gradient(circle at 50% 50%, #fff 0 8.4px, transparent 9px) 0% 50% / 18px 18px no-repeat content-box,
+    var(--brand);
+}
+.mob-menu #thm-btn:hover::after { opacity: 1; transform: none; }
+
+/* ── زرار تحميل التطبيق: بطاقة CTA هادية ── */
+.mob-menu .nb-dl-btn {
+  margin-top: 8px;
+  margin-bottom: 6px;
+  min-height: 58px;
+  color: var(--brand-d) !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(27,107,58,.26) !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, rgba(27,107,58,.07), rgba(95,201,126,.20)) !important;
+  box-shadow: 0 10px 22px -14px rgba(27,107,58,.55), inset 0 1px 0 rgba(255,255,255,.6);
+}
+[data-dark] .mob-menu .nb-dl-btn {
+  color: var(--brand-xl) !important;
+  border-color: rgba(75,184,112,.28) !important;
+  background: linear-gradient(135deg, rgba(27,107,58,.18), rgba(75,184,112,.10)) !important;
+  box-shadow: 0 10px 22px -14px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.05);
+}
+.mob-menu .nb-dl-btn::after { display: none; }
+.mob-menu .nb-dl-btn > svg {
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  stroke: #fff;
+  background: linear-gradient(145deg, var(--brand-l), var(--brand-d));
+  box-shadow: 0 8px 16px -6px rgba(27,107,58,.6);
+}
+[data-dark] .mob-menu .nb-dl-btn > svg { color: #fff; border: 0; background: linear-gradient(145deg, var(--brand-l), var(--brand-d)); }
+@media (hover: hover) and (pointer: fine) {
+  .mob-menu .nb-dl-btn:hover {
+    background: linear-gradient(135deg, rgba(27,107,58,.12), rgba(95,201,126,.30)) !important;
+    border-color: rgba(27,107,58,.4) !important;
+    color: var(--brand-d) !important;
+  }
+  [data-dark] .mob-menu .nb-dl-btn:hover { color: var(--brand-xl) !important; }
+  .mob-menu .nb-dl-btn:hover > svg { transform: translateY(2px) scale(1.04); }
+}
+
+/* ── أزرار الحساب (دخول / تسجيل / خروج) ── */
+.mob-menu #mobLogin,
+.mob-menu #mobRegister,
+.mob-menu #mobLogout {
+  justify-content: center;
+  text-align: center;
+  min-height: 0;
+  padding: 13px 14px;
+  margin-top: 2px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.mob-menu #mobLogin::after,
+.mob-menu #mobRegister::after,
+.mob-menu #mobLogout::after { display: none; }
+.mob-menu #mobLogin {
+  color: var(--ink);
+  border: 1.5px solid var(--line2);
+  background: var(--card);
+}
+.mob-menu #mobRegister {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--brand-l), var(--brand-d));
+  box-shadow: 0 12px 22px -12px rgba(27,107,58,.7);
+}
+.mob-menu #mobLogout {
+  color: var(--red);
+  border-color: rgba(192,57,43,.16);
+  background: rgba(192,57,43,.05);
+}
+[data-dark] .mob-menu #mobLogout {
+  color: #ff8f84;
+  border-color: rgba(255,143,132,.2);
+  background: rgba(255,143,132,.07);
+}
+@media (hover: hover) and (pointer: fine) {
+  .mob-menu #mobLogin:hover { color: var(--brand); border-color: var(--brand); background: var(--brand-pale); }
+  .mob-menu #mobRegister:hover { color: #fff; background: linear-gradient(135deg, var(--brand-l), var(--brand)); border-color: transparent; }
+  .mob-menu #mobLogout:hover { color: var(--red); background: rgba(192,57,43,.10); border-color: rgba(192,57,43,.28); }
+  [data-dark] .mob-menu #mobLogout:hover { color: #ff8f84; }
+}
+.mob-menu #mobRegister:active { background: linear-gradient(135deg, var(--brand-l), var(--brand-d)); }
+
+/* ── دخول الصفوف بالتتابع عند فتح القائمة ── */
+@keyframes nbMobItemIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: none; }
+}
+.mob-menu.open > .nl { animation: nbMobItemIn .42s var(--ease-out) backwards; }
+.mob-menu.open > .nl:nth-child(1) { animation-delay: .04s; }
+.mob-menu.open > .nl:nth-child(2) { animation-delay: .085s; }
+.mob-menu.open > .nl:nth-child(3) { animation-delay: .13s; }
+.mob-menu.open > .nl:nth-child(4) { animation-delay: .175s; }
+.mob-menu.open > .nl:nth-child(5) { animation-delay: .22s; }
+.mob-menu.open > .nl:nth-child(6) { animation-delay: .265s; }
+.mob-menu.open > .nl:nth-child(7) { animation-delay: .31s; }
+.mob-menu.open > .nl:nth-child(8) { animation-delay: .355s; }
+@media (prefers-reduced-motion: reduce) {
+  .mob-menu.open > .nl { animation: none; }
+  .mob-menu .nl, .mob-menu .nl > svg, .mob-menu .nl::after { transition: none !important; }
+}
+
+/* ── الشاشات الواسعة: بطاقة عايمة تحت زرار القائمة بدل شريط بعرض الشاشة ── */
+@media (min-width: 769px) {
+  .mob-menu {
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    right: auto;
+    width: 372px;
+    max-width: calc(100vw - 40px);
+    margin-top: 6px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+  }
 }
 
 /* ─── HERO ANIMATIONS — REMOVED ──────────────────────────────
